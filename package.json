@@ -1,0 +1,26 @@
+{
+  "name": "PGA-SE-KSTH",
+  "version": "1.0.0",
+  "description": "Current docs available :)",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky",
+    "init": "npm install && pip install -r ./docs/requirements.txt && cd ./Rest-API && dotnet tool restore",
+    "commitlint": "commitlint --edit",
+    "scan-secrets": "gitleaks-secret-scanner"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "concurrently": "^9.2.0",
+    "gitleaks-secret-scanner": "^1.2.2",
+    "husky": "^9.0.0"
+  },
+  "dependencies": {
+    "debug": "^4.3.6",
+    "run": "^1.5.0"
+  }
+}

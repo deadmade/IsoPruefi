@@ -21,7 +21,7 @@
             
               python -m venv .venv
               source .venv/bin/activate
-              pip install -r docs/requirements.txt
+              pip install -r documentation/requirements.txt
 
               cd frontend
               npm install

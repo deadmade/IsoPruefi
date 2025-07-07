@@ -1,0 +1,20 @@
+site_name: PGA-SE-KSTH-Docs
+nav:
+  - Home: home.md
+  - Build: build.md
+  - Code Documentation: 
+    - Rest-API: code/Rest-API/index.md
+theme:
+  name: material
+  features:
+    - instant_navigation
+    - content.code.copy
+plugins:
+  - search
+  - include_dir_to_nav
+  - git-revision-date-localized
+  - git-authors
+markdown_extensions:
+  - pymdownx.extra
+  - pymdownx.highlight
+  - pymdownx.superfences

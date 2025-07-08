@@ -1,0 +1,30 @@
+name: docs
+on:
+  push:
+    branches:
+      - 'main'
+      - 'sprint*'    # matches sprint0, sprint1, etc
+  pull_request:
+    branches:
+      - 'sprint*'
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+          
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material
+
+      - run: pip install -r ./documentation/requirements.txt
+      - run: cd ./documentation && mkdocs gh-deploy --force

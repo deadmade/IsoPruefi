@@ -1,7 +1,8 @@
-site_name: PGA-SE-KSTH-Docs
+site_name: IsoPrüfi
 nav:
-  - Home: home.md
+  - Home: index.md
   - Build: build.md
+  - Dev-Guidelines: guidelines.md
   - Code Documentation: 
     - Rest-API: code/Rest-API/index.md
 theme:

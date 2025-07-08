@@ -5,7 +5,7 @@
 
   outputs = { self, nixpkgs, ... } @ inputs: let
     system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
+    pkgs = import nixpkgs {system = system; config.allowUnfree = true;};
   in {
     devShells.${system}.default = pkgs.mkShell {
       packages = [
@@ -16,17 +16,19 @@
         pkgs.docker
         pkgs.lazydocker
         pkgs.python313Packages.weasyprint
+
+        pkgs.arduino-ide
+        pkgs.mqtt-explorer
       ];
             shellHook = ''
               npm install
             
               python -m venv .venv
               source .venv/bin/activate
-              pip install -r documentation/requirements.txt
+              pip install -r isopruefi-docs/requirements.txt
 
               cd frontend
               npm install
-              cd ..
             '';
     };
   };

@@ -26,5 +26,5 @@ jobs:
           restore-keys: |
             mkdocs-material
 
-      - run: pip install -r ./documentation/requirements.txt
-      - run: cd ./documentation && mkdocs gh-deploy --force
+      - run: pip install -r ./isopruefi-docs/requirements.txt
+      - run: cd ./isopruefi-docs && mkdocs gh-deploy --force

@@ -15,6 +15,7 @@
 	pkgs.python313Packages.pip
         pkgs.docker
         pkgs.lazydocker
+        pkgs.python313Packages.weasyprint
       ];
             shellHook = ''
               npm install

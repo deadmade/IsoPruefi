@@ -1,4 +1,4 @@
-# Welcome to PGA-SE-KSTH
+# Welcome to IsoPrüfi
 
 Welcome 🥳🎉
 

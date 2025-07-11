@@ -37,7 +37,7 @@ plugins:
   - include_dir_to_nav
   - git-revision-date-localized
   - git-authors
-  - to-pdf
+ # - to-pdf
 markdown_extensions:
   - pymdownx.extra
   - pymdownx.highlight

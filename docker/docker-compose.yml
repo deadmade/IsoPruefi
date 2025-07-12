@@ -1,0 +1,58 @@
+name: isopruefi-docker
+
+networks:
+  backend:
+    external: true
+
+services:
+  traefik:
+    image: traefik:3.4.4
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=web"
+
+      - "traefik.http.routers.traefik-secure.tls=true"
+
+  influxdb3:
+    image: influxdb:3-core
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - 8181:8181
+    command:
+      - influxdb3
+      - serve
+      - --node-id=node0
+      - --object-store=file
+      - --data-dir=/var/lib/influxdb3/data
+      - --plugin-dir=/var/lib/influxdb3/plugins
+    volumes:
+      - type: bind
+        # Path to store data on your host system
+        source: ~/.influxdb3/data
+        # Path to store data in the container
+        target: /var/lib/influxdb3/data
+      - type: bind
+        # Path to store plugins on your host system
+        source: ~/.influxdb3/plugins
+        # Path to store plugins in the container
+        target: /var/lib/influxdb3/plugins
+
+  postgres:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=secret
+    ports:
+      - "5432:5432"
+    volumes:
+     - db:/var/lib/postgresql/data
+  volumes:
+    db: 

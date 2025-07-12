@@ -1,8 +1,10 @@
 name: isopruefi-docker
 
 networks:
-  backend:
-    external: true
+  isopruefi-network:
+    driver: bridge
+  database-network:
+  loki:
 
 services:
   traefik:
@@ -12,19 +14,38 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 8080:8080
+      - 8432:8080
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
 
-      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik.tls=true"
+
+      -  "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme = https"
+      -  "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/traefik.yml:/traefik.yml:ro"
+      - "./traefik/conf:/conf:ro"
+      - "./traefik/certs/:/var/traefik/certs/:rw"
+    networks:
+      - isopruefi-network
+      - database-network
 
   influxdb3:
-    image: influxdb:3-core
+    image: influxdb:3.2.1-core
     container_name: influxdb
     restart: unless-stopped
     ports:
       - 8181:8181
+    labels:
+      - "traefik.enable=true"
+     # - "traefik.http.routers.influx.rule=Host(`influx`)"
+      - "traefik.http.routers.influx.entrypoints=websecure"
+      - "traefik.http.routers.influx.tls=true"
+      - "traefik.http.services.influx.loadbalancer.server.port=8181"
+      - "traefik.http.middlewares.influx-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"    
     command:
       - influxdb3
       - serve
@@ -32,27 +53,137 @@ services:
       - --object-store=file
       - --data-dir=/var/lib/influxdb3/data
       - --plugin-dir=/var/lib/influxdb3/plugins
+     # - "--token \"supersecrettoken\""
+      #- "--org my-org"
+      #- "--bucket my-bucket"
     volumes:
       - type: bind
-        # Path to store data on your host system
-        source: ~/.influxdb3/data
+        source: ./influx/influxdb3/data
         # Path to store data in the container
         target: /var/lib/influxdb3/data
       - type: bind
         # Path to store plugins on your host system
-        source: ~/.influxdb3/plugins
+        source: ./influx/influxdb3/plugins
         # Path to store plugins in the container
         target: /var/lib/influxdb3/plugins
+     # - ./influx/bootstrap.sh:/docker-entrypoint-initdb.d/bootstrap.sh:ro
+    networks:
+      - database-network
+
+  influxdb-explorer:
+    image: influxdata/influxdb3-ui:1.0.3
+    container_name: influx-explorer
+    restart: unless-stopped
+    ports:
+      - 8888:80
+      - 8889:8888
+    command:
+      - "--mode=admin"
+    volumes:
+      - "./influx/explorer/db:/db:rw"
+      - "./influx/explorer/config:/app-root/config:ro"
+    networks:
+      - isopruefi-network
+    depends_on:
+      - influxdb3
+      - traefik
 
   postgres:
-    image: postgres:14-alpine
-    restart: always
-    environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=secret
+    image: postgres:alpine3.21
+    container_name: postgres
+    restart: unless-stopped
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
-     - db:/var/lib/postgresql/data
-  volumes:
-    db: 
+      - ./postgres:/var/lib/postgresql/data
+    networks:
+      - database-network
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USER=Isopruefi
+      - POSTGRES_DB=Isopruefi
+
+  loki:
+    image: grafana/loki:3.5.2
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+     - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
+    networks:
+      - loki
+
+  prometheus:
+    image: prom/prometheus:v3.4.2
+    container_name: prometheus
+    command:
+      - --web.enable-remote-write-receiver
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  alloy:
+    image: grafana/alloy:v1.9.2
+    container_name: alloy
+    ports:
+     - 12345:12345
+     - 4317:4317
+     - 4318:4318
+    volumes:
+      - ./loki/config.alloy:/etc/alloy/config.alloy
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+    networks:
+      - loki
+    depends_on:
+      - loki
+      - prometheus
+
+  grafana:
+    image: grafana/grafana:12.0.2
+    container_name: grafana
+    environment:
+     - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+     - GF_AUTH_ANONYMOUS_ENABLED=true
+     - GF_AUTH_BASIC_ENABLED=false
+     - GF_LOG_LEVEL=warn
+    ports:
+     - 3000:3000/tcp
+    networks:
+      - loki
+    depends_on:
+      - loki
+      - alloy
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /etc/grafana/provisioning/datasources
+        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+        apiVersion: 1
+        datasources:
+        - name: Loki
+          type: loki
+          access: proxy
+          orgId: 1
+          url: http://loki:3100
+          basicAuth: false
+          isDefault: false
+          version: 1
+          editable: false
+        - name: Prometheus
+          type: prometheus
+          orgId: 1
+          url: http://prometheus:9090
+          basicAuth: false
+          isDefault: true
+          version: 1
+          editable: false
+        EOF
+        /run.sh
+
+    
+volumes:
+  traefik:
+

@@ -1,0 +1,26 @@
+      global:
+        checkNewVersion: false
+        sendAnonymousUsage: false
+      api:
+          dashboard: true
+          insecure: true
+      entryPoints:
+          web:
+            address: ":80"
+            http:
+              redirections:
+                entrypoint:
+                  to: websecure
+                  scheme: https
+          websecure:
+            address: ":443"
+      providers:
+          docker:
+            watch: true
+            exposedByDefault: false
+            network: dmz
+          file:
+            watch: true
+            directory: /conf/
+      log:
+          level: "DEBUG"

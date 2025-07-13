@@ -24,6 +24,6 @@ Our project aims to test the effectiveness of building insulation based on outsi
 - Database clustering
 
 ### Won't Have:
-- The containers we create ourselfs will be designed to function independently of each other. In practice, however, the containers will only run on one server.
+- The containers we create ourselves will be designed to function independently of each other. In practice, however, the containers will only run on one server.
 
 - Since this is a software project, we won't implement any resilience on the hardware side, besides the hardware modules on our sensors.

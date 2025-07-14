@@ -74,7 +74,7 @@
 | Misassignment of data        | 3 (low)                  | 6-7 (disturbance)| 5-6 (only detected during targeted checks) | 90-126      |
 | Weather service outage       | 1 (almost impossible)    | 8-9 (severe)    | 2-3 (inevitable detection)         | 16-27               |
 | Network outage               | 2 (unlikely)             | 8-9 (severe)    | 2-3 (inevitable detection)         | 31-45               |
-| Duplicate transmission       | 2 (unlikely)             | 2 (irrelevent) | 5-6 (only detected during targeted checks) | 20-24        |
+| Duplicate transmission       | 2 (unlikely)             | 2 (irrelevant) | 5-6 (only detected during targeted checks) | 20-24        |
 | Incorrect/missing entries    | 2-3 (unlikely)           | 8-9 (severe)    | 3-4 (high probability of detection)| 48-108              |
 | Database corruption          | 2-3 (unlikely)           | 8-9 (severe)    | 3-4 (high probability of detection)| 48-108              |
 | Website/Grafana malfunction  | 1 (almost impossible)    | 8-9 (severe)    | 2-3 (inevitable detection)         | 16-27               |

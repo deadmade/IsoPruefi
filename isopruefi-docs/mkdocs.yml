@@ -5,6 +5,7 @@ nav:
   - Dev-Guidelines: guidelines.md
   - Code Documentation: 
     - Rest-API: code/Rest-API/index.md
+  - MVP: mvp.md
   - IsoPrüfi Documentation: 
     - 00 arc42 Template with Explanation: documentation/arc42-template.md
     - 01 Introduction and Goals: documentation/01_introduction_and_goals.md

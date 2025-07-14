@@ -16,7 +16,7 @@ The IsoPrüfi system operates in a distributed container-based architecture host
 | **Database**            | SQL/TCP                     | Stores processed and raw data for persistence                              |
 | **Website Cluster**             | HTTP                        | Offers web-based interfaces (overview page, admin panel)                   |
 | **Load Balancer**               | Reverse Proxy (HTTP)        | Distributes requests across Website and API clusters                       |
-| **Grafana**                     | HTTP                        | Provides visualiziation of log data                  |
+| **Grafana**                     | HTTP                        | Provides visualization of log data                  |
 | **Loki Log Collector**          | Log Pipeline (gRPC/HTTP)    | Collects and forwards logs from all clusters for analysis                  |
 | **Client**                      | Browser over HTTPS          | Interacts with the web interface                                           |
 

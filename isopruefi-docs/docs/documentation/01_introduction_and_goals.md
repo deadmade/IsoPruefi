@@ -1,18 +1,37 @@
 # Introduction and Goals {#section-introduction-and-goals}
 
-**IsoPrüfi**
-IsoPrüfi is a system for checking building insulation. It measures the internal temperature on the north and south sides and compares it with the external temperature.
+## Aim of our project IsoPrüfi:
 
-**Focus:** (tbd)
-- Reliability
-- Offline data storage and automated synchronisation
+Our project aims to test the effectiveness of building insulation based on outside temperature and present the data clearly using diagrams.
 
-**Goal:**
-To provide building managers with an overview of the building insulation in order to identify any necessary action in the event of malfunctions.
+## Features:
+### Must-Have:
+
+- A website for a user-friendly presentation of temperature comparison diagrams
+
+- Reliable sensors that measure interior temperature
+
+- The ability to retrieve outside temperature data
+
+- Clusterization of containers that we create ourselves
+
+### Should-Have:
+- Sensors should be capable of storing temperature data for a period of one day, even in the absence of an internet connection or synchronization with the server
+
+- A website should be used to offer configuration options
+
+### Could-Have:
+- Database clustering
+
+### Won't Have:
+- The containers will only run on one server, however they are designed to function independently of each other
+
+- Since this is a software project, we won't implement any resilience on the hardware side
+
 
 ## Requirements Overview {#_requirements_overview}
 
-**tbd by Manu**
+**tbd by Mara**
 
 ## Quality Goals {#_quality_goals}
 

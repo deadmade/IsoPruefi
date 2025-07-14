@@ -20,7 +20,7 @@ nav:
     - 10 Quality Requirements: documentation/10_quality_requirements.md
     - 11 Technical Risks: documentation/11_technical_risks.md
     - 12 Glossary: documentation/12_glossary.md
-  - Licsense: license.md
+  - License: license.md
 theme:
   name: material
   features:

@@ -1,4 +1,4 @@
-# Licsence
+# License
 
 **arc42**
 

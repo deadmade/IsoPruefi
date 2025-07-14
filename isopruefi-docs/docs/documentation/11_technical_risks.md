@@ -98,4 +98,4 @@
 
 ---
 
-## 5. Technical depths
+## 5. Technical debts

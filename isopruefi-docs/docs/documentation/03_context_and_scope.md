@@ -1,11 +1,5 @@
 # Context and Scope {#section-context-and-scope}
 
-## Business Context {#_business_context}
-
-
-
-## Technical Context {#_technical_context}
-
 ## Technical Context {#_technical_context}
 
 The IsoPrüfi system operates in a distributed container-based architecture hosted on the DHBW Server infrastructure. It integrates multiple services for data ingestion, processing, storage, and visualization.
@@ -14,15 +8,15 @@ The IsoPrüfi system operates in a distributed container-based architecture host
 
 | Component                       | Communication Channel       | Description                                                                 |
 |----------------------------------|------------------------------|-----------------------------------------------------------------------------|
-| **Arduino**                     | Serial/Wi-Fi to MQTT Broker | Publishes temperature readings to defined MQTT topics                      |
+| **Arduino**                     | Wi-Fi to MQTT Broker | Publishes temperature readings to defined MQTT topics                      |
 | **MQTT Server**                 | MQTT over TCP/IP            | Central broker for sensor communication                                    |
 | **MQTT Receiver Cluster**       | MQTT (Subscriber)           | Listens to relevant topics and processes incoming sensor data              |
 | **WeatherDataWorker Cluster**   | HTTP API                    | Pulls external weather data via scheduled API calls                        |
 | **REST API Cluster**            | HTTP (internal/external)    | Provides unified access to system data (e.g., for frontend)                |
-| **Database Cluster**            | SQL/TCP                     | Stores processed and raw data for persistence                              |
+| **Database**            | SQL/TCP                     | Stores processed and raw data for persistence                              |
 | **Website Cluster**             | HTTP                        | Offers web-based interfaces (overview page, admin panel)                   |
 | **Load Balancer**               | Reverse Proxy (HTTP)        | Distributes requests across Website and API clusters                       |
-| **Grafana**                     | HTTP                        | Reads from database to provide visualization dashboards                    |
+| **Grafana**                     | HTTP                        | Provides visualiziation of log data                  |
 | **Loki Log Collector**          | Log Pipeline (gRPC/HTTP)    | Collects and forwards logs from all clusters for analysis                  |
 | **Client**                      | Browser over HTTPS          | Interacts with the web interface                                           |
 

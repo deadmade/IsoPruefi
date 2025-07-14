@@ -1,6 +1,8 @@
 # Solution Strategy {#section-solution-strategy}
 
 > Dummy Text for Section 4:
+> Focus section 9 instead of 4
+> this text as a fundation for section 9
 
 This section summarizes the key architectural decisions and strategies that shape the IsoPrüfi system design. The aim is to create a robust, distributed and modular monitoring system for building insulation performance.
 
@@ -10,7 +12,7 @@ This section summarizes the key architectural decisions and strategies that shap
 
 - **Sensor Layer**: Temperature sensors connected to Arduino boards form the hardware data acquisition layer.
 - **Communication Protocol**: MQTT is used for lightweight, publish/subscribe communication between Arduinos and the backend.
-- **Backend Language**: All backend services are implemented in **C# (.NET 8)** for strong typing, maintainability, and modern async support.
+- **Backend Language**: All backend services are implemented in **C# (.NET 9)** for strong typing, maintainability, and modern async support.
 - **Data Storage**: A **central SQL-based database cluster** is used for structured persistence. Sensor data is also logged locally on SD cards as fallback.
 - **External Data**: A **WeatherDataWorker** fetches temperature and humidity data from a third-party weather API to provide reference data.
 - **Visualization**: Frontend users access data through a **Website Cluster**, consisting of an overview page and admin panel. Optionally, **Grafana** dashboards visualize time series.

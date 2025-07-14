@@ -7,31 +7,28 @@
 **Overview of the Entire Product:**
 
 - **Temperature Measurement and Transmission:**  
-    - Involves temperature sensors, RTC modules, Arduino, SD module/card, and access to online weather data.
+    - Involves temperature sensors, RTC modules, Arduino, SD module/card, and access to online weather data
 - **Data Storage:**  
-    - Utilizes a database for storing temperature data.
+    - Utilizes a database for storing temperature data
 - **Analysis/Evaluation:**  
-    - Data is analyzed and evaluated, with results visualized via website or analytics tools.
+    - Data is analyzed and evaluated, with results visualized via website or analytics tools
 
 **Components Involved:**
 
 - **Temperature Measurement:**  
-    - Temperature sensors, RTC modules, Arduino, SD module/card, online weather data availability.
+    - Temperature sensors, RTC modules, Arduino, SD module/card, online weather data availability
 - **Temperature Transmission:**  
-    - Network availability, server infrastructure.
+    - Network availability, server infrastructure
 - **Data Storage:**  
-    - Database systems.
+    - Database systems
 - **Visualization/Analysis:**  
-    - Data availability, website, analytics platforms.
+    - Data availability, website, analytics platforms
 
 **Process Aspects:**
 
-- Data flow throughout the system.
-- Handling of failure and recovery scenarios.
-- Considerations for new product development.
-- No mechanical testing of the hardware is performed.
+- Data flow throughout the system
+- Handling of failure and recovery scenarios
 
-> Refer to the architecture diagram for the process flow.
 
 ---
 
@@ -77,22 +74,28 @@
 | Misassignment of data        | 3 (low)                  | 6-7 (disturbance)| 5-6 (only detected during targeted checks) | 90-126      |
 | Weather service outage       | 1 (almost impossible)    | 8-9 (severe)    | 2-3 (inevitable detection)         | 16-27               |
 | Network outage               | 2 (unlikely)             | 8-9 (severe)    | 2-3 (inevitable detection)         | 31-45               |
-| Duplicate transmission       | 2 (unlikely)             | 5 (disturbance) | 5-6 (only detected during targeted checks) | 50-60        |
+| Duplicate transmission       | 2 (unlikely)             | 2 (irrelevent) | 5-6 (only detected during targeted checks) | 20-24        |
 | Incorrect/missing entries    | 2-3 (unlikely)           | 8-9 (severe)    | 3-4 (high probability of detection)| 48-108              |
 | Database corruption          | 2-3 (unlikely)           | 8-9 (severe)    | 3-4 (high probability of detection)| 48-108              |
 | Website/Grafana malfunction  | 1 (almost impossible)    | 8-9 (severe)    | 2-3 (inevitable detection)         | 16-27               |
+| Power outage               | 3 (low)             | 8-9 (severe)    | 2-3 (inevitable detection)         | 48-81               |
+
 
 ---
 
-### 4. Corrective actions
+## 4. Corrective actions
 
 | Error                        | Risk Priority Number | Mitigation Measure                                   |
 |------------------------------|:-------------------:|------------------------------------------------------|
-| Sensor error                 | 32-81               | Regular sensor calibration and redundancy             |
+| Sensor error                 | 32-81               | -             |
 | Misassignment of data        | 90-126              | Implement data validation and labeling checks         |
-| Weather service outage       | 16-27               | Use fallback data sources or cached data              |
+| Weather service outage       | 16-27               | Use fallback data sources               |
 | Network outage               | 31-45               | Local storage of data on the Arduino                  |
-| Duplicate transmission       | 50-60               | Add deduplication logic during data ingestion         |
-| Incorrect/missing entries    | 48-108              | Input validation and automated data consistency checks|
-| Database corruption          | 48-108              | Regular backups and integrity checks                  |
-| Website/Grafana malfunction  | 16-27               | Monitor uptime and provide alternative access methods |
+| Duplicate transmission       | 20-24               | -         |
+| Incorrect/missing entries    | 48-108              | Input validation |
+| Database corruption          | 48-108              | -                  |
+| Website/Grafana malfunction  | 16-27               | Monitor uptime |
+
+---
+
+## 5. Technical depths

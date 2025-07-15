@@ -204,12 +204,11 @@ services:
       container_name: isopruefi-backend-api
       ports:
         - "3060:8080"
-        - "3061:8081"
       volumes:
         - ./isopruefi-backend/Rest-API:/src/Rest-API
       environment: 
         - ASPNETCORE_ENVIRONMENT=Development
-        - APP_UID=1000  
+      command: ["dotnet", "watch", "run", "--urls=http://0.0.0.0:8080"]
     
 volumes:
   traefik:

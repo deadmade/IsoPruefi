@@ -11,6 +11,8 @@
         <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
         <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
         <OpenApiGenerateDocumentsOptions>--file-name API-Definition</OpenApiGenerateDocumentsOptions>
+        <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,7 +21,11 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
+        <PackageReference Include="NSwag.AspNetCore" Version="14.4.0" />
+        <PackageReference Include="NSwag.MSBuild" Version="14.4.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
@@ -28,6 +34,7 @@
       </Content>
     </ItemGroup>
 
-
-
+    <Target Name="NSwag" AfterTargets="GenerateOpenApiDocuments" Condition=" '$(Configuration)' == 'Debug' ">
+        <Exec WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net90) run nswag.json /variables:Configuration=$(Configuration)" />
+    </Target>
 </Project>

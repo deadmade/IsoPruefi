@@ -10,10 +10,9 @@ public class Program
         builder.Services.AddAuthorization();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        builder.Services.AddOpenApiDocument();
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
 
         var app = builder.Build();
@@ -21,9 +20,12 @@ public class Program
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi();
-            app.UseSwagger();
-            app.UseSwaggerUI(); // UI is available at /swagger
+            app.UseOpenApi();
+          //  app.UseSwaggerUi();
+          app.UseReDoc(options =>
+          {
+              options.Path = "/redoc";
+          });
         }
 
         app.UseHttpsRedirection();

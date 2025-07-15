@@ -6,7 +6,7 @@ WORKDIR /src
 
 # Copy project file and restore dependencies
 COPY . .
-RUN dotnet restore "Rest-API.csproj"
+RUN dotnet restore
 
 # Set working directory to project directory
 WORKDIR "/src/Rest-API"

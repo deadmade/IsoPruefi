@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prepare": "husky",
-    "init": "npm install && pip install -r ./isopruefi-docs/requirements.txt && cd ./isopruefi-backend && dotnet tool restore",
+    "init": "npm install && cd isopruefi-frontend && npm install && cd .. && pip install -r ./isopruefi-docs/requirements.txt && cd ./isopruefi-backend && dotnet tool restore",
     "commitlint": "commitlint --edit",
     "scan-secrets": "gitleaks-secret-scanner"
   },
@@ -17,8 +17,7 @@
     "@commitlint/config-conventional": "^19.2.2",
     "concurrently": "^9.2.0",
     "gitleaks-secret-scanner": "^1.2.2",
-    "husky": "^9.0.0",
-    "@openapitools/openapi-generator-cli" : "^2.21.0"
+    "husky": "^9.0.0"
   },
   "dependencies": {
     "debug": "^4.3.6",

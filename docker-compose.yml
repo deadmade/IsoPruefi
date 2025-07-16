@@ -4,6 +4,7 @@ networks:
   isopruefi-network:
     driver: bridge
   database-network:
+  isopruefi-custom:
   loki:
 
 services:
@@ -17,9 +18,14 @@ services:
       - 8432:8080
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
 
       - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.services.dashboard.loadbalancer.server.port=8432"
+
+      - "traefik.http.routers.dashboard.tls.domains[0].main=*.localhost"
+      - "traefik.http.routers.dashboard.tls.domains[0].sans=*.localhost"
 
       -  "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme = https"
       -  "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https"
@@ -31,6 +37,8 @@ services:
     networks:
       - isopruefi-network
       - database-network
+      - loki
+      - isopruefi-custom
 
   influxdb3:
     image: influxdb:3.2.1-core
@@ -38,14 +46,6 @@ services:
     restart: unless-stopped
     ports:
       - 8181:8181
-    labels:
-      - "traefik.enable=true"
-     # - "traefik.http.routers.influx.rule=Host(`influx`)"
-      - "traefik.http.routers.influx.entrypoints=websecure"
-      - "traefik.http.routers.influx.tls=true"
-      - "traefik.http.services.influx.loadbalancer.server.port=8181"
-      - "traefik.http.middlewares.influx-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"    
     command:
       - influxdb3
       - serve
@@ -77,13 +77,19 @@ services:
     ports:
       - 8888:80
       - 8889:8888
+    labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.explorer.rule=Host(`explorer.localhost`)"
+        - "traefik.http.routers.explorer.entrypoints=websecure"
+        - "traefik.http.routers.explorer.tls=true"
+        - traefik.http.services.explorer.loadbalancer.server.port=80
     command:
       - "--mode=admin"
     volumes:
       - "./isopruefi-docker/influx/explorer/db:/db:rw"
       - "./isopruefi-docker/influx/explorer/config:/app-root/config:ro"
     networks:
-      - isopruefi-network
+      - isopruefi-custom
     depends_on:
       - influxdb3
       - traefik
@@ -143,13 +149,19 @@ services:
   grafana:
     image: grafana/grafana:12.0.2
     container_name: grafana
+    labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.grafana.rule=Host(`grafana.localhost`)"
+        - "traefik.http.routers.grafana.entrypoints=websecure"
+        - "traefik.http.routers.grafana.tls=true"
+        - traefik.http.services.grafana.loadbalancer.server.port=3000
     environment:
      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
      - GF_AUTH_ANONYMOUS_ENABLED=true
      - GF_AUTH_BASIC_ENABLED=false
      - GF_LOG_LEVEL=warn
-    ports:
-     - 3000:3000/tcp
+    #ports:
+    # - 3000:3000/tcp
     networks:
       - loki
     depends_on:
@@ -186,11 +198,17 @@ services:
   isopruefi-frontend:
       build: ./isopruefi-frontend
       container_name: isopruefi-frontend
-      ports:
-        - "3050:3000"
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
+        - "traefik.http.routers.frontend.entrypoints=websecure"
+        - "traefik.http.routers.frontend.tls=true"
+        - traefik.http.services.frontend.loadbalancer.server.port=3000
       volumes:
-        - ../isopruefi-frontend:/app
-        - ../isopruefi-frontend/node_modules:/app/node_modules
+        - ./isopruefi-frontend:/app
+        - ./isopruefi-frontend/node_modules:/app/node_modules
+      networks:
+      - isopruefi-custom
       environment:
         - NODE_ENV=development
       stdin_open: true
@@ -202,14 +220,18 @@ services:
         context: ./isopruefi-backend/Rest-API
         dockerfile: Dockerfile-Dev
       container_name: isopruefi-backend-api
-      ports:
-        - "3060:8080"
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
+        - "traefik.http.routers.backend.entrypoints=websecure"
+        - "traefik.http.routers.backend.tls=true"
+        - traefik.http.services.backend.loadbalancer.server.port=8080
       volumes:
         - ./isopruefi-backend/Rest-API:/src/Rest-API
+      networks:
+      - isopruefi-custom
       environment: 
         - ASPNETCORE_ENVIRONMENT=Development
       command: ["dotnet", "watch", "run", "--urls=http://0.0.0.0:8080"]
     
-volumes:
-  traefik:
 

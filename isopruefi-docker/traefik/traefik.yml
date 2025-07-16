@@ -18,7 +18,7 @@
           docker:
             watch: true
             exposedByDefault: false
-            network: dmz
+            network: isopruefi-network
           file:
             watch: true
             directory: /conf/

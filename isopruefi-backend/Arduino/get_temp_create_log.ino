@@ -75,7 +75,7 @@ void loop() {
     Serial.println(" °C");
 
     // Folder name: 4-digit year (e.g., "2025")
-    char folderName[5];
+    char folderName[8];
     snprintf(folderName, sizeof(folderName), "%04d", now.year());
 
     // Create folder if it doesn't exist

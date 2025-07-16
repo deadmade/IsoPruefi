@@ -87,8 +87,8 @@ void loop() {
     }
 
     // Filename: MMDDHHMM.TXT (e.g., 07151630.TXT)
-    char filename[32];
-    snprintf(filename, sizeof(filename), "%s/%02d%02d%02d%02d.TXT",
+    char filename[FILENAME_BUFFER_SIZE];
+    snprintf(filename, FILENAME_BUFFER_SIZE, "%s/%02d%02d%02d%02d.TXT",
              folderName, now.month(), now.day(), now.hour(), now.minute());
 
     // Create and write new file

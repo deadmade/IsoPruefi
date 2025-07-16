@@ -482,3 +482,10 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Arduino build folder
+/Arduino/**/build-*/
+# Arduino libraries
+/Arduino/libraries/**/src/
+# Arduino IDE preferences
+/Arduino/preferences.txt

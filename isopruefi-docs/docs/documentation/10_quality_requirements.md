@@ -8,7 +8,7 @@ Temperature data must be reliably and permanently stored in the database, even i
 
 - **Data Loss Rate:** A maximum of **0.1%** of all recorded measurements may be lost.
 - **Successful Write Operations:** At least **99.9%** of all database write operations must be completed without error.
-- **Time to Final Persistence:** Temperature data must be permanently stored in the database within **5 seconds** after being recorded under the condition that there is a working connection. In case of a not working connection the temperature data is stored on the sd card for up to 24h.
+- **Time to Final Persistence:** Temperature data must be permanently stored in the database within **5 seconds** after being recorded under the condition that there is a working connection. In case of a not working connection the temperature data is stored on the SD card for up to 24h.
 
 **Testability:**
 

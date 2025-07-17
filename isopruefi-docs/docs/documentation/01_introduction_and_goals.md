@@ -31,7 +31,26 @@ Our project aims to test the effectiveness of building insulation based on outsi
 
 ## Requirements Overview {#_requirements_overview}
 
-**tbd by Mara**
+Functional Requirements:
+- The system should provide three data sources: two on the inside and one on the outside
+- The data should be updated every 60 seconds
+- Each datapoint includes the temperature and time
+- The users should be able to see diagramms and an evaluation of the data
+- The users can see historical data to observe long term changes
+- The system should use containers for deployment
+
+Non-functional:
+- The system has an availability of 99.5%
+- The system should be reliable even if there are partial failures
+- The data should be persistently saved in the database
+- There should be automated unit tests for the core functionalities
+
+Constraints:
+- The project will be hosted on one server which is hosted by Prof. Hänisch
+- The hardware that is used for measuring the indoor temperature is provided by the university
+- The project specifies that there are at least two data sources of which at least one is an Arduino
+- The date of submissions is the 05.09.2025
+- Weekly meetings with a coach for discussion of the project
 
 ## Quality Goals {#_quality_goals}
 
@@ -45,8 +64,9 @@ Our project aims to test the effectiveness of building insulation based on outsi
 
 | Role/Name | Expectations | Influence |
 |-----------|--------------|-------------------|
-| Developer | Solution that is easy to maintain and fulfills all requirements for the project. | Quality of Code, clean Architecture, final product |
-| Supervisor | Correct methodology, clear documentation and tracability of results. | Sets expectations and assists implementation |
-| User/Owner | Want to reduce their heating costs through stable temperature measurements and correct assessment of the building's isolation. | Requires easy usability and trustworthy temperature data |
-| Systemadministrator | Stable infrastructure, easy deployments and clear logs for easy maintenance. | Configuration of the system |
+| Developer | Solution that is easy to maintain and fulfills all requirements for the project | Quality of Code, clean Architecture, final product |
+| Supervisor | Correct methodology, clear documentation and tracability of results | Sets expectations and reviews the final product |
+| Coaches | Clear documentation, preparation of meetings and clear presentation of the results for each meeting | Review of the final product and Support for the implementation |
+| User/Owner | Want to reduce their heating costs through stable temperature measurements and correct assessment of the building's isolation | Requires easy usability and trustworthy temperature data |
+| Systemadministrator | Stable infrastructure, easy deployments and clear logs for easy maintenance | Configuration of the system |
 

@@ -43,10 +43,10 @@ Our project aims to test the effectiveness of building insulation based on outsi
 
 ## Stakeholders {#_stakeholders}
 
-- sollen wir da uns aufführen und die Coaches + Schütz?
-
-| Role/Name | Contact      | Expectations      |
+| Role/Name | Expectations | Influence |
 |-----------|--------------|-------------------|
-| *Role-1*  | *Contact-1*  | *Expectation-1*   |
-| *Role-2*  | *Contact-2*  | *Expectation-2*   |
+| Developer | Solution that is easy to maintain and fulfills all requirements for the project. | Quality of Code, clean Architecture, final product |
+| Supervisor | Correct methodology, clear documentation and tracability of results. | Sets expectations and assists implementation |
+| User/Owner | Want to reduce their heating costs through stable temperature measurements and correct assessment of the building's isolation. | Requires easy usability and trustworthy temperature data |
+| Systemadministrator | Stable infrastructure, easy deployments and clear logs for easy maintenance. | Configuration of the system |
 

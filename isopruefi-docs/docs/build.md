@@ -33,7 +33,7 @@ To get the development environment up and running, follow these steps:
 1. Open a terminal, navigate to the `IsoPrüfi` directory, and run:
 
    ```bash
-   develop compose up
+   docker compose up
    ```
 
 2. Once the containers are running, create an admin token for InfluxDB:

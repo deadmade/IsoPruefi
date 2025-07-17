@@ -36,7 +36,7 @@ The recorded data must be correct, complete, and plausible to enable a reliable 
 ## 3. Availability
 
 The system must remain functional even in the event of partial failures, so that users can always access the temperature data.
-The system is resilent against the following failure. Only one instances of each:
+The system is resilient against the following failure. Only one instance of each:
 
 - Website cluster is down
 - REST-API cluster is down

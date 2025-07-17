@@ -39,7 +39,7 @@ Our project aims to test the effectiveness of building insulation based on outsi
 - Users must be able to view diagrams and evaluations of the collected data
 - Users should have access to historical data to observe long-term trends
 - The system must use containers for deployment
-- In case of no database connection, the temperature data will be saved on a sd card for up to 24 h
+- In case of no database connection, the temperature data will be saved on an SD card for up to 24 h
 
 ### Non-Functional Requirements
 

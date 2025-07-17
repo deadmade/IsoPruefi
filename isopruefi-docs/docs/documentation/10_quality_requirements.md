@@ -41,7 +41,7 @@ The system is resilient against the following failure. Only one instance of each
 - Website cluster is down
 - REST-API cluster is down
 - Get WeatherDataWorkerCluster is down
-- MQTT Reveiver cluster is down 
+- MQTT Receiver cluster is down 
 
 **Measurable Criteria:**
 

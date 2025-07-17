@@ -28,4 +28,38 @@ and run:
 
 Now it should be configured 🚀
 
+To get the development environment up and running, follow these steps:
+
+1. Open a terminal, navigate to the `IsoPrüfi` directory, and run:
+
+   ```bash
+   docker compose up
+   ```
+
+2. Once the containers are running, create an admin token for InfluxDB:
+
+   ```bash
+   docker exec -it influxdb influxdb3 create token --admin
+   ```
+
+3. Copy the generated token string.
+
+4. Create a `config.json` file at the following location:
+
+   ```
+   IsoPruefi/isopruefi-docker/influx/explorer/config
+   ```
+
+5. Add the following content to `config.json`, replacing `"your-token-here"` with the copied token:
+
+   ```json
+   {
+     "DEFAULT_INFLUX_SERVER": "http://host.docker.internal:8181",
+     "DEFAULT_INFLUX_DATABASE": "IsoPrüfi",
+     "DEFAULT_API_TOKEN": "your-token-here",
+     "DEFAULT_SERVER_NAME": "IsoPrüfi"
+   }
+   ```
+6. Restrt the Containers
+
 Happy Coding 😊

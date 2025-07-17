@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prepare": "husky",
-    "init": "npm install && pip install -r ./isopruefi-docs/requirements.txt && cd ./isopruefi-backend && dotnet tool restore",
+    "init": "npm install && cd isopruefi-frontend && npm install && cd .. && pip install -r ./isopruefi-docs/requirements.txt && cd ./isopruefi-backend && dotnet tool restore",
     "commitlint": "commitlint --edit",
     "scan-secrets": "gitleaks-secret-scanner"
   },

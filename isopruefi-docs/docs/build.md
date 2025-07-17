@@ -28,4 +28,10 @@ and run:
 
 Now it should be configured 🚀
 
+To be able to start coding, run 
+
+```develop compose up```
+
+in the IsoPrüfi Directory
+
 Happy Coding 😊

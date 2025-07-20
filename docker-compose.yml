@@ -240,12 +240,12 @@ services:
           dockerfile: Dockerfile-Dev
         container_name: isopruefi-mqtt-receiver
         volumes:
-          - ./isopruefi-backend/MQTT-Receiver:/src/Rest-API
+          - ./isopruefi-backend/MQTT-Receiver:/src/MQTT-Receiver
         networks:
         - isopruefi-custom
         environment: 
           - ASPNETCORE_ENVIRONMENT=Development
-        command: ["dotnet", "MQTT-Receiver.dll"]
+        #command: ["dotnet", "watch", "run"]
 
     
 

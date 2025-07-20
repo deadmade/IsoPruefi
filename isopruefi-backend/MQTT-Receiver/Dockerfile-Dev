@@ -12,5 +12,5 @@ RUN dotnet restore
 WORKDIR "/src/MQTT-Receiver"
 
 # Run the app with hot reload
-ENTRYPOINT ["dotnet", "MQTT-Receiver.dll"]
+ENTRYPOINT ["dotnet", "watch", "run"]
 

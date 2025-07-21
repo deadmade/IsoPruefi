@@ -23,6 +23,12 @@ public class Program
         builder.Services.AddSingleton<Receiver>();
         builder.Services.AddSingleton<Connection>();
 
+        // Only in Development do we wire up the secret store:
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Configuration.AddUserSecrets<Program>();
+        }
+
         var host = builder.Build();
         host.Run();
     }

@@ -26,17 +26,13 @@ jobs:
         working-directory: ./isopruefi-backend
         run: dotnet tool restore --tool-manifest .config/dotnet-tools.json
 
-      - name: Install mkdocs2md
-        working-directory: ./isopruefi-backend
-        run: dotnet tool install -g Nefarius.Tools.XMLDoc2Markdown
-
       - name: Build
         working-directory: ./isopruefi-backend
         run: dotnet build --no-restore
 
       - name: Generate Rest Documentation
         working-directory: ./isopruefi-backend/Rest-API
-        run: dotnet tool run xmldoc2md ./bin/Debug/net9.0/Rest-API.dll ../../isopruefi-docs/docs/code/Rest-API
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/Rest-API.dll ../../isopruefi-docs/docs/code/Rest-API
 
       - name: Setup Python
         uses: actions/setup-python@v5

@@ -2,7 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rest-API", "Rest-API\Rest-API.csproj", "{B3312569-BC50-4E62-BA4C-9E80FADB2F80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTT-Receiver", "MQTT-Receiver\MQTT-Receiver.csproj", "{F5DFFBC9-93FF-4A6B-8EF8-918B833A2309}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{BFFBAF3F-D8F0-4563-9848-27E0A8650952}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTT-Receiver-Worker", "MQTT-Receiver-Worker\MQTT-Receiver-Worker.csproj", "{2EB5E46A-AEE9-46E3-98A0-78C6FA3C6864}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +16,13 @@ Global
 		{B3312569-BC50-4E62-BA4C-9E80FADB2F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3312569-BC50-4E62-BA4C-9E80FADB2F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3312569-BC50-4E62-BA4C-9E80FADB2F80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5DFFBC9-93FF-4A6B-8EF8-918B833A2309}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5DFFBC9-93FF-4A6B-8EF8-918B833A2309}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5DFFBC9-93FF-4A6B-8EF8-918B833A2309}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5DFFBC9-93FF-4A6B-8EF8-918B833A2309}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFFBAF3F-D8F0-4563-9848-27E0A8650952}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFFBAF3F-D8F0-4563-9848-27E0A8650952}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFFBAF3F-D8F0-4563-9848-27E0A8650952}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFFBAF3F-D8F0-4563-9848-27E0A8650952}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EB5E46A-AEE9-46E3-98A0-78C6FA3C6864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EB5E46A-AEE9-46E3-98A0-78C6FA3C6864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EB5E46A-AEE9-46E3-98A0-78C6FA3C6864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EB5E46A-AEE9-46E3-98A0-78C6FA3C6864}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

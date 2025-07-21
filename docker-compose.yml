@@ -236,11 +236,11 @@ services:
 
   isopruefi-mqtt-receiver:
         build: 
-          context: ./isopruefi-backend/MQTT-Receiver
+          context: ./isopruefi-backend/MQTT-Receiver-Worker
           dockerfile: Dockerfile-Dev
         container_name: isopruefi-mqtt-receiver
         volumes:
-          - ./isopruefi-backend/MQTT-Receiver:/src/MQTT-Receiver
+          - ./isopruefi-backend/MQTT-Receiver-Worker:/src/MQTT-Receiver-Worker
         networks:
         - isopruefi-custom
         environment: 

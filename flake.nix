@@ -21,9 +21,7 @@
         pkgs.arduino-ide
         pkgs.mqtt-explorer
 
-        pkgs.podman  # Docker compat
-        pkgs.podman-compose
-        pkgs.runc  # Container runtime
+        pkgs.act
       ];
 
       shellHook = ''
@@ -33,8 +31,9 @@
         source .venv/bin/activate
         pip install -r isopruefi-docs/requirements.txt
 
-        cd frontend
+        cd isopruefi-frontend
         npm install
+        cd ..
       '';
     };
   };

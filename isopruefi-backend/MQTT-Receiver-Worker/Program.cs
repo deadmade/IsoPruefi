@@ -1,4 +1,7 @@
+using Database.EntityFramework;
+using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepository;
+using MQTT_Receiver_Worker.MQTT;
 
 namespace MQTT_Receiver_Worker;
 
@@ -8,12 +11,17 @@ public class Program
     {
         var builder = Host.CreateApplicationBuilder(args);
         builder.Services.AddHostedService<Worker>();
-        
+
+        // Register Database
+        builder.Services.AddSingleton<SettingsContext>();
+        builder.Services.AddSingleton<IInfluxRepo, InfluxRepo>();
+
         // Register Repos
         builder.Services.AddSingleton<ISettingsRepo, SettingsRepo>();
         
         // Register BuisnessLogic
-        
+        builder.Services.AddSingleton<Receiver>();
+        builder.Services.AddSingleton<Connection>();
 
         var host = builder.Build();
         host.Run();

@@ -5,8 +5,9 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS dev
 WORKDIR /src
 
 # Copy project file and restore dependencies
-COPY . .
-RUN dotnet restore
+COPY ["MQTT-Receiver-Worker/MQTT-Receiver-Worker.csproj", "MQTT-Receiver-Worker/"]
+COPY ["Database/Database.csproj", "Database/"]
+#RUN dotnet restore
 
 # Set working directory to project directory
 WORKDIR "/src/MQTT-Receiver-Worker"

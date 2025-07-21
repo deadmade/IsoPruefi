@@ -1,21 +1,11 @@
-﻿using Database.Repository.InfluxRepo;
-using Database.Repository.SettingsRepository;
-using MQTT_Receiver_Worker.MQTT.Models;
-using MQTTnet;
+﻿using MQTTnet;
 using MQTTnet.Formatter;
 
-namespace MQTT_Receiver_Worker.MQTT;
+namespace MQTT_Sender;
 
-public class Connection
+public static class Connection
 {
-    IInfluxRepo _influxRepo;
-
-    public Connection(IInfluxRepo influxRepo)
-    {
-        _influxRepo = influxRepo;
-    }
-
-    public async Task<IMqttClient> GetConnection()
+    public static async Task<IMqttClient> GetConnection()
     {
         string broker ="aicon.dhbw-heidenheim.de";
         int port = 1883;
@@ -32,7 +22,7 @@ public class Connection
         // Create MQTT client options
         var options = new MqttClientOptionsBuilder()
             .WithTcpServer(broker, port) // MQTT broker address and port
-            //.WithCredentials(username, password) // Set username and password
+            .WithCredentials(username, password) // Set username and password
             .WithProtocolVersion(MqttProtocolVersion.V500)
             .Build();
         
@@ -50,25 +40,8 @@ public class Connection
             }
         };
         
-        mqttClient.ApplicationMessageReceivedAsync += e =>
-        {
-            var topic = e.ApplicationMessage.Topic;
-            var sensorName = topic.Split('/').Last();
-
-           var message = e.ApplicationMessage.ConvertPayloadToString();
-           Console.WriteLine($"{sensorName}-{message}");
-
-           var tempSensorReading = System.Text.Json.JsonSerializer.Deserialize<TempSensorReading>(message);
-
-           _influxRepo.WriteSensorData(
-               measurement: tempSensorReading.Value,
-               sensor: sensorName,
-               timestamp: tempSensorReading.Timestamp);
-
-            return Task.CompletedTask;
-        };
-
-        await mqttClient.ConnectAsync(options, CancellationToken.None);
+        var response = await mqttClient.ConnectAsync(options, CancellationToken.None);
         return mqttClient;
     }
+    
 }

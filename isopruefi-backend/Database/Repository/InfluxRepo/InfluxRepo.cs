@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using InfluxDB3.Client;
 using InfluxDB3.Client.Write;
+using Microsoft.Extensions.Configuration;
 
 namespace Database.Repository.InfluxRepo;
 
@@ -8,13 +9,14 @@ public class InfluxRepo :IInfluxRepo
 {
     private InfluxDBClient _client;
 
-    public InfluxRepo()
+    public InfluxRepo( IConfiguration configuration)
     {
         const string host = "http://localhost:8181";
-        const string token = "";
         const string database = "IsoPruefi";
 
-        _client = new InfluxDBClient(host, token, database: database);
+        var t = configuration["Influx:InfluxDBToken"];
+
+        _client = new InfluxDBClient(host, t, database: database);
     }
 
     public async Task WriteSensorData(double measurement, string sensor, long timestamp)

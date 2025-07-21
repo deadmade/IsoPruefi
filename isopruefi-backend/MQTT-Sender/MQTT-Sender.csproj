@@ -6,6 +6,7 @@
         <RootNamespace>MQTT_Sender</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <UserSecretsId>24f4aa8d-9def-4b5c-bf78-4795a35f3765</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>

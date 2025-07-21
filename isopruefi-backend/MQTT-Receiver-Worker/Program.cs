@@ -19,7 +19,7 @@ public class Program
         // Register Repos
         builder.Services.AddSingleton<ISettingsRepo, SettingsRepo>();
         
-        // Register BuisnessLogic
+        // Register BusinessLogic
         builder.Services.AddSingleton<Receiver>();
         builder.Services.AddSingleton<Connection>();
 

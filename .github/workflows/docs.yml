@@ -36,7 +36,7 @@ jobs:
 
       - name: Generate Rest Documentation
         working-directory: ./isopruefi-backend/Rest-API
-        run: dotnet tool run xmldoc2md ./bin/Debug/net9.0/Rest-API.dll ../../isopruefi-docs/docs/code/Rest-API
+        run: xmldoc2md ./bin/Debug/net9.0/Rest-API.dll ../../isopruefi-docs/docs/code/Rest-API
 
       - name: Setup Python
         uses: actions/setup-python@v5

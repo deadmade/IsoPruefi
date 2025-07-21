@@ -15,6 +15,13 @@
         "dotnet-ef"
       ],
       "rollForward": false
+    },
+    "nefarius.tools.xmldoc2markdown": {
+      "version": "1.6.1",
+      "commands": [
+        "xmldoc2md"
+      ],
+      "rollForward": false
     }
   }
 }

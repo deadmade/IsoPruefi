@@ -53,9 +53,6 @@ services:
       - --object-store=file
       - --data-dir=/var/lib/influxdb3/data
       - --plugin-dir=/var/lib/influxdb3/plugins
-     # - "--token \"supersecrettoken\""
-      #- "--org my-org"
-      #- "--bucket my-bucket"
     volumes:
       - type: bind
         source: ./isopruefi-docker/influx/influxdb3/data

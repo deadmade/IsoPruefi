@@ -7,6 +7,8 @@
         <UserSecretsId>dotnet-MQTT_Receiver_Worker-bab98023-2578-47e3-bc0e-aa9c4d8f4f94</UserSecretsId>
         <RootNamespace>MQTT_Receiver_Worker</RootNamespace>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <ContainerFamily>alpine</ContainerFamily>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>

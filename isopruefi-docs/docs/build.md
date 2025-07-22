@@ -60,6 +60,9 @@ To get the development environment up and running, follow these steps:
      "DEFAULT_SERVER_NAME": "IsoPrüfi"
    }
    ```
-6. Restrt the Containers
+   
+6. Run dotnet user-secrets set "Influx:InfluxDBToken" "<Token>" --project isopruefi-backend\MQTT-Receiver-Worker\MQTT-Receiver-Worker.csproj 
+
+7. Restart the Containers
 
 Happy Coding 😊

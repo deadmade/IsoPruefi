@@ -229,6 +229,20 @@ services:
       - isopruefi-custom
       environment: 
         - ASPNETCORE_ENVIRONMENT=Development
-      command: ["dotnet", "watch", "run", "--urls=http://0.0.0.0:8080"]
+      #command: ["dotnet", "watch", "run", "--urls=http://0.0.0.0:8080"]
+
+  isopruefi-mqtt-receiver:
+        build: 
+          context: ./isopruefi-backend
+          dockerfile: MQTT-Receiver-Worker/Dockerfile-Dev
+        container_name: isopruefi-mqtt-receiver
+        volumes:
+          - ./isopruefi-backend/MQTT-Receiver-Worker:/src/MQTT-Receiver-Worker
+        networks:
+        - isopruefi-custom
+        environment: 
+          - ASPNETCORE_ENVIRONMENT=Development
+        #command: ["dotnet", "watch", "run"]
+
     
 

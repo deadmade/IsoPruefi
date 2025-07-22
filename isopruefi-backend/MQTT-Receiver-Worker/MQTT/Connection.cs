@@ -6,15 +6,31 @@ using MQTTnet.Formatter;
 
 namespace MQTT_Receiver_Worker.MQTT;
 
+/// <summary>
+/// Handles MQTT broker connection and message processing.
+/// Establishes a connection to the MQTT broker, subscribes to topics,
+/// and processes incoming temperature sensor messages.
+/// </summary>
 public class Connection
 {
+    /// <summary>
+    /// Repository for writing sensor data to InfluxDB
+    /// </summary>
     IInfluxRepo _influxRepo;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Connection"/> class.
+    /// </summary>
+    /// <param name="influxRepo">Repository for writing sensor data to InfluxDB</param>
     public Connection(IInfluxRepo influxRepo)
     {
         _influxRepo = influxRepo;
     }
 
+    /// <summary>
+    /// Establishes a connection to the MQTT broker and configures message handlers.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the connected MQTT client.</returns>
     public async Task<IMqttClient> GetConnection()
     {
         string broker ="aicon.dhbw-heidenheim.de";

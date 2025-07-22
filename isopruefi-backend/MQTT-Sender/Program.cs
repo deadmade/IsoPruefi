@@ -9,7 +9,7 @@ class Program
     {
         var client = await Connection.GetConnection();
 
-         Random rnd = new Random();
+         Random rnd = Random.Shared;
          int sequenceOne = 1;
          int sequenceTwo = 1;
 

@@ -68,7 +68,7 @@ void dateTime(uint16_t* date, uint16_t* time) {
 
 // create ISO8601 time format
 String formatTimestamp(DateTime now) {
-  char buffer[25];
+  char buffer[26];
   snprintf(buffer, sizeof(buffer), "%04d-%02d-%02d T%02d:%02d:%02d",
            now.year(), now.month(), now.day(),
            now.hour(), now.minute(), now.second());
@@ -116,7 +116,8 @@ bool connectMQTT(unsigned long timeoutMs = 10000) {
 void buildJson(JsonDocument& doc, float celsius, DateTime now) {
   doc.clear();
   doc["timestamp"] = formatTimestamp(now);
-  doc["value"] = celsius;
+  JsonArray arr = doc.createNestedArray("value");
+  arr.add(celsius);
   doc["sequence"] = count;
   count++;
 }

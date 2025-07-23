@@ -34,6 +34,22 @@ jobs:
         working-directory: ./isopruefi-backend/Rest-API
         run: dotnet xmldoc2md ./bin/Debug/net9.0/Rest-API.dll ../../isopruefi-docs/docs/code/Rest-API
 
+      - name: Generate Database Documentation
+        working-directory: ./isopruefi-backend/Database
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/Database.dll ../../isopruefi-docs/docs/code/Database
+
+      - name: Generate MQTT-Receiver-Worker Documentation
+        working-directory: ./isopruefi-backend/MQTT-Receiver-Worker
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/MQTT-Receiver-Worker.dll ../../isopruefi-docs/docs/code/MQTT-Receiver-Worker
+      
+      - name: Generate MQTT-Sender Documentation
+        working-directory: ./isopruefi-backend/MQTT-Sender
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/MQTT-Sender.dll ../../isopruefi-docs/docs/code/MQTT-Sender
+
+      - name: Generate UnitTest Documentation
+        working-directory: ./isopruefi-backend/UnitTests
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/UnitTests.dll ../../isopruefi-docs/docs/code/UnitTests
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:

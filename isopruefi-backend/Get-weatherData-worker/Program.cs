@@ -1,9 +1,8 @@
 using Database.EntityFramework;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
-using MQTT_Receiver_Worker.MQTT;
 
-namespace MQTT_Receiver_Worker;
+namespace Get_weatherData_worker;
 
 public class Program
 {
@@ -19,9 +18,8 @@ public class Program
         // Register Repos
         builder.Services.AddSingleton<ISettingsRepo, SettingsRepo>();
 
-        // Register BusinessLogic
-        builder.Services.AddSingleton<Receiver>();
-        builder.Services.AddSingleton<Connection>();
+        // Register Business Logic
+        builder.Services.AddHttpClient();
 
         // Only in Development do we wire up the secret store:
         if (builder.Environment.IsDevelopment()) builder.Configuration.AddUserSecrets<Program>();

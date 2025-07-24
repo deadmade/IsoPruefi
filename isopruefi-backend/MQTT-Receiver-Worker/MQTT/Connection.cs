@@ -1,5 +1,4 @@
 ﻿using Database.Repository.InfluxRepo;
-using Database.Repository.SettingsRepository;
 using Microsoft.Extensions.Logging;
 using MQTT_Receiver_Worker.MQTT.Models;
 using MQTTnet;
@@ -14,7 +13,6 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// </summary>
 public class Connection
 {
-
     private IInfluxRepo _influxRepo;
     private MqttClientOptions _options;
     private IMqttClient _mqttClient;
@@ -25,7 +23,7 @@ public class Connection
     /// </summary>
     /// <param name="influxRepo">Repository for writing sensor data to InfluxDB</param>
     /// <param name="logger">Logger for recording connection events</param>
-    public Connection(ILogger<Connection> logger ,IInfluxRepo influxRepo)
+    public Connection(ILogger<Connection> logger, IInfluxRepo influxRepo)
     {
         _influxRepo = influxRepo;
         _logger = logger;
@@ -41,7 +39,8 @@ public class Connection
         const int port = 1883;
         var clientId = Guid.NewGuid().ToString();
 
-        _logger.LogDebug("Initializing MQTT client with broker: {Broker}:{Port}, ClientId: {ClientId}", broker, port, clientId);
+        _logger.LogDebug("Initializing MQTT client with broker: {Broker}:{Port}, ClientId: {ClientId}", broker, port,
+            clientId);
 
         // Create a MQTT client factory
         var factory = new MqttClientFactory();
@@ -71,7 +70,7 @@ public class Connection
         return _mqttClient;
     }
 
-    private async Task Disconnected (MqttClientDisconnectedEventArgs e)
+    private async Task Disconnected(MqttClientDisconnectedEventArgs e)
     {
         _logger.LogWarning("Disconnected from MQTT broker. Attempting to reconnect...");
         try
@@ -97,13 +96,16 @@ public class Connection
 
         if (tempSensorReading == null || tempSensorReading.Value.Length == 0)
         {
-            _logger.LogWarning("Received null or empty sensor reading from {SensorName}. Skipping processing", sensorName);
+            _logger.LogWarning("Received null or empty sensor reading from {SensorName}. Skipping processing",
+                sensorName);
             return Task.FromResult(Task.CompletedTask);
         }
 
         if (tempSensorReading.Value.Length > 1)
         {
-            _logger.LogInformation("Received multiple values in sensor reading from {SensorName}. Only the first value will be processed", sensorName);
+            _logger.LogInformation(
+                "Received multiple values in sensor reading from {SensorName}. Only the first value will be processed",
+                sensorName);
             return Task.FromResult(Task.CompletedTask);
         }
 
@@ -111,7 +113,7 @@ public class Connection
             tempSensorReading.Value[0],
             sensorName,
             tempSensorReading.Timestamp,
-            sequence: tempSensorReading.Sequence);
+            tempSensorReading.Sequence);
 
         return Task.FromResult(Task.CompletedTask);
     }

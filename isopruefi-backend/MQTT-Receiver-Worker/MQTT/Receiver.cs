@@ -1,5 +1,5 @@
 ﻿using Database.EntityFramework.Models;
-using Database.Repository.SettingsRepository;
+using Database.Repository.SettingsRepo;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
 using MQTTnet.Protocol;
@@ -13,7 +13,6 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// </summary>
 public class Receiver
 {
-
     private readonly ISettingsRepo _settingsRepo;
     private readonly Connection _connection;
     private readonly ILogger<Receiver> _logger;
@@ -41,7 +40,7 @@ public class Receiver
         _logger.LogInformation("Starting subscription to MQTT topics");
         var topics = _settingsRepo.GetTopicSettingsAsync();
 
-        var mqttClient = await  _connection.GetConnection();
+        var mqttClient = await _connection.GetConnection();
         _logger.LogDebug("MQTT connection established successfully");
 
         foreach (var topic in await topics)

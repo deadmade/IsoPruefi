@@ -35,6 +35,7 @@ public class SettingsContext : DbContext
     //TODO: Set connection from environment variable or configuration file
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(@"Host=host.docker.internal:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
+        optionsBuilder.UseNpgsql(
+            @"Host=host.docker.internal:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
     }
 }

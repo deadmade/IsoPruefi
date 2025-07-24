@@ -20,7 +20,7 @@ public class TempSensorReading
     /// An array is used as the sensor might provide multiple reading points.
     /// </summary>
     [JsonPropertyName("value")]
-    public double[] Value { get; set; }
+    public double[]? Value { get; set; }
 
     /// <summary>
     /// Gets or sets the sequence number of the reading.

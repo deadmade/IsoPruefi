@@ -37,6 +37,6 @@ public class Worker : BackgroundService
     /// <returns>A task representing the asynchronous operation.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await _receiver.SubscribeToTopic();
+        await _receiver.SubscribeToTopics();
     }
 }

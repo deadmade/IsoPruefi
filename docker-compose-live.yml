@@ -233,7 +233,7 @@ services:
   isopruefi-mqtt-receiver:
         build: 
           context: ./isopruefi-backend
-          dockerfile: MQTT-Receiver-Worker/Dockerfile-Dev
+          dockerfile: MQTT-Receiver-Worker/Dockerfile
         container_name: isopruefi-mqtt-receiver
         volumes:
           - ./isopruefi-backend/MQTT-Receiver-Worker:/src/MQTT-Receiver-Worker
@@ -241,8 +241,6 @@ services:
         - isopruefi-custom
         environment: 
           - ASPNETCORE_ENVIRONMENT=Development
-          - "Influx:InfluxDBToken=/run/secrets/influxdb_token"
-          - "Influx:InfluxHost=/run/secrets/influxdb_host"
         env_file:
           - ./secrets.env
 

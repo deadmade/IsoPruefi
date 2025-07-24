@@ -21,12 +21,12 @@ public class SettingsContext : DbContext
                 new TopicSetting
                 {
                     TopicSettingId = 1, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "SENSOR-ONE"
+                    SensorName = "Sensor_One"
                 },
                 new TopicSetting
                 {
                     TopicSettingId = 2, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "SENSOR-TWO"
+                    SensorName = "Sensor-Two"
                 }
             );
         });
@@ -35,6 +35,6 @@ public class SettingsContext : DbContext
     //TODO: Set connection from environment variable or configuration file
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(@"Host=localhost:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
+        optionsBuilder.UseNpgsql(@"Host=host.docker.internal:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
     }
 }

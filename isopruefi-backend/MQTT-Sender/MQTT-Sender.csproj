@@ -11,11 +11,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MQTTnet" Version="5.0.1.1416" />
+        <PackageReference Include="MQTTnet" Version="5.0.1.1416"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MQTT-Receiver-Worker\MQTT-Receiver-Worker.csproj" />
+        <ProjectReference Include="..\MQTT-Receiver-Worker\MQTT-Receiver-Worker.csproj"/>
     </ItemGroup>
 
 </Project>

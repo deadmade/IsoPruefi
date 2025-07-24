@@ -22,8 +22,8 @@
 #endif
 
 // WiFi credentials
-const char* ssid = SECRET_SSID;
-const char* password = SECRET_PASS;
+const char ssid[] = SECRET_SSID;
+const char password[] = SECRET_PASS;
 const char MQTT_USER[]  = SECRET_MQTT_USER; 
 const char MQTT_PASS[]  = SECRET_MQTT_PASS; 
 
@@ -75,6 +75,8 @@ String formatTimestamp(DateTime now) {
   return String(buffer);
 }
 
+
+
 // Connect to WiFi with 10-second timeout
 bool connectWiFi(unsigned long timeoutMs = 10000) {
   Serial.print("Connecting to WiFi...");
@@ -115,7 +117,7 @@ bool connectMQTT(unsigned long timeoutMs = 10000) {
 //Build JSON payload
 void buildJson(JsonDocument& doc, float celsius, DateTime now) {
   doc.clear();
-  doc["timestamp"] = formatTimestamp(now);
+  doc["timestamp"] = now.unixtime();
   JsonArray arr = doc.createNestedArray("value");
   arr.add(celsius);
   doc["sequence"] = count;

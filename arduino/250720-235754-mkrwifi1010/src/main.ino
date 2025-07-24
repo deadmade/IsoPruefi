@@ -184,8 +184,10 @@ void setup() {
   bool wifiOk = connectWiFi();
   char clientId[64];
   snprintf(clientId, sizeof(clientId), "IsoPruefi_%s", sensorIdInUse);
-  mqttClient.setId(clientId);  if (wifiOk) connectMQTT();
-
+  mqttClient.setId(clientId);
+  if (wifiOk) {
+    connectMQTT();
+  }
   if (!rtc.begin()) {
     Serial.println("RTC not found!");
     while (1);

@@ -36,24 +36,30 @@ public class Worker : BackgroundService
                 // Getting temperature data from the Meteo response.
                 using JsonDocument json = JsonDocument.Parse(await response.Content.ReadAsStreamAsync());
                 JsonElement root = json.RootElement;
-                JsonElement current;
-                root.TryGetProperty("current", out current);
-
-                // Getting time data from the JSON-file.
-                JsonElement time;
-                current.TryGetProperty("time", out time);
-                weatherData.Timestamp = time.GetDateTime();
-
-                // Getting temperature data from the JSON-file.
-                JsonElement temperature;
-                current.TryGetProperty("temperature_2m", out temperature);
-                weatherData.Temperature = temperature.GetDouble();
-
-                // Saving the temperature in the database.
-                await _influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
-                    weatherData.Timestamp);
-
-                _logger.LogInformation("Weather data from Meteo retrieved successfully.");
+                if (root.TryGetProperty("current", out JsonElement current))
+                {
+                    // Getting the time and temperature data from the JSON file.
+                    if (current.TryGetProperty("time", out JsonElement time) &&
+                        current.TryGetProperty("temperature_2m", out JsonElement temperature))
+                    {
+                        weatherData.Timestamp = time.GetDateTime();
+                        weatherData.Temperature = temperature.GetDouble();
+                        
+                        // Saving the temperature in the database.
+                        await _influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
+                            weatherData.Timestamp);
+                        
+                        _logger.LogInformation("Weather data from Meteo retrieved successfully.");
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Data from Meteo incomplete.");
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation("Data from Meteo incomplete.");
+                }
             }
             else
             {
@@ -63,27 +69,32 @@ public class Worker : BackgroundService
                 if (alternativeResponse.IsSuccessStatusCode)
                 {
                     // Getting temperature data from the Bright Sky response.
-                    JsonDocument alternativeJson =
-                        JsonDocument.Parse(await alternativeResponse.Content.ReadAsStreamAsync());
+                    using JsonDocument alternativeJson = JsonDocument.Parse(await alternativeResponse.Content.ReadAsStreamAsync());
                     JsonElement root = alternativeJson.RootElement;
-                    JsonElement weather;
-                    root.TryGetProperty("weather", out weather);
-
-                    // Getting time data from the JSON-file.
-                    JsonElement time;
-                    weather.TryGetProperty("timestamp", out time);
-                    weatherData.Timestamp = time.GetDateTime();
-
-                    // Getting temperature data from the JSON-file.
-                    JsonElement temperature;
-                    weather.TryGetProperty("temperature", out temperature);
-                    weatherData.Temperature = temperature.GetDouble();
-
-                    // Saving the temperature in the database.
-                    await _influxRepo.WriteOutsideWeatherData(_location, "Bright Sky", weatherData.Temperature,
-                        weatherData.Timestamp);
-
-                    _logger.LogInformation("Weather data from GoWeather retrieved successfully.");
+                    if (root.TryGetProperty("weather", out JsonElement weather))
+                    {
+                        // Getting the time and temperature data from the JSON file.
+                        if (weather.TryGetProperty("timestamp", out JsonElement time) &&
+                            weather.TryGetProperty("temperature", out JsonElement temperature))
+                        {
+                            weatherData.Timestamp = time.GetDateTime();
+                            weatherData.Temperature = temperature.GetDouble();
+                            
+                            // Saving the temperature in the database.
+                            await _influxRepo.WriteOutsideWeatherData(_location, "Bright Sky", weatherData.Temperature,
+                                weatherData.Timestamp);
+                            
+                            _logger.LogInformation("Weather data from Bright Sky retrieved successfully.");
+                        }
+                        else
+                        {
+                            _logger.LogInformation("Data from Bright Sky incomplete.");
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Data from Bright Sky incomplete.");
+                    }
                 }
                 else
                 {

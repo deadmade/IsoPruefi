@@ -31,18 +31,20 @@ namespace Database.Migrations
 
                     b.Property<string>("DefaultTopicPath")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
                     b.Property<string>("SensorName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("SensorType")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("TopicSettingId");
 
@@ -54,7 +56,7 @@ namespace Database.Migrations
                             TopicSettingId = 1,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
-                            SensorName = "SENSOR-ONE",
+                            SensorName = "Sensor_One",
                             SensorType = "temp"
                         },
                         new
@@ -62,7 +64,7 @@ namespace Database.Migrations
                             TopicSettingId = 2,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
-                            SensorName = "SENSOR-TWO",
+                            SensorName = "Sensor-Two",
                             SensorType = "temp"
                         });
                 });

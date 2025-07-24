@@ -32,5 +32,16 @@ public class InfluxRepo :IInfluxRepo
         await _client.WritePointAsync(point: point);
     }
 
+    public async Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp)
+    {
+        var point = PointData.Measurement("outside_temperaturer")
+            .SetTag("place", place)
+            .SetTag("website", website)
+            .SetField("value", temperature)
+            .SetTimestamp(timestamp);
+
+        await _client.WritePointAsync(point: point);
+    }
+
 
 }

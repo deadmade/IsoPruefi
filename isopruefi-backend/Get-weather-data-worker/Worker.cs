@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Database.Repository.InfluxRepo;
 
 namespace Get_weather_data_worker;
 
@@ -12,14 +13,16 @@ public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IInfluxRepo _influxRepo;
     
     private readonly string _weatherDataApi = "https://api.open-meteo.com/v1/forecast?latitude=48.678&longitude=10.1516&models=icon_seamless&current=temperature_2m";
     private readonly string _alternativeWeatherDataApi = "https://api.brightsky.dev/current_weather?lat=48.67&lon=10.1516";
 
-    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory)
+    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory, IInfluxRepo influxRepo)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
+        _influxRepo = influxRepo;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -47,6 +50,9 @@ public class Worker : BackgroundService
             JsonElement temperature;
             current.TryGetProperty("temperature_2m", out temperature);
             weatherData.Temperature = temperature.GetDouble();
+            
+            // Saving the temperature in the database.
+            await _influxRepo.WriteOutsideWeatherData(weatherData.Temperature, weatherData.Timestamp);
 
             _logger.LogInformation("Weather data from Meteo retrieved successfully.");
         }
@@ -72,6 +78,9 @@ public class Worker : BackgroundService
                 JsonElement temperature;
                 weather.TryGetProperty("temperature", out temperature);
                 weatherData.Temperature = temperature.GetDouble();
+                
+                // Saving the temperature in the database.
+                await _influxRepo.WriteOutsideWeatherData(weatherData.Temperature, weatherData.Timestamp);
 
                 _logger.LogInformation("Weather data from GoWeather retrieved successfully.");
             }

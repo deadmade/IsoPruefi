@@ -162,7 +162,7 @@ void saveToSD(float celsius, DateTime now) {
     }
   }
 
-  // Dateiname: MMDDHHMM.json
+  // Filename: MMDDHHMM.json
   char filename[FILENAME_BUFFER_SIZE];
   snprintf(filename, FILENAME_BUFFER_SIZE, "%s/%02d%02d%02d%02d.json",
            folderName, now.month(), now.day(), now.hour(), now.minute());

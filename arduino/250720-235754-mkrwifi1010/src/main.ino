@@ -152,7 +152,7 @@ void saveToSD(float celsius, DateTime now) {
   StaticJsonDocument<256> doc;
   buildJson(doc, celsius, now);
 
-  // create folder jjjj
+  // Create folder for the current year (YYYY)
   char folderName[8];
   snprintf(folderName, sizeof(folderName), "%04d", now.year());
   if (!sd.exists(folderName)) {

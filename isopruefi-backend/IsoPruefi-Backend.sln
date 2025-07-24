@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTT-Sender", "MQTT-Sender\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{CA7FD8F4-B302-40BC-B4E1-62DC5E216BC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Get-weatherData-worker", "Get-weatherData-worker\Get-weatherData-worker.csproj", "{EFBC7FC9-77FA-46A2-9567-737B03D6387E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{CA7FD8F4-B302-40BC-B4E1-62DC5E216BC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA7FD8F4-B302-40BC-B4E1-62DC5E216BC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA7FD8F4-B302-40BC-B4E1-62DC5E216BC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFBC7FC9-77FA-46A2-9567-737B03D6387E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFBC7FC9-77FA-46A2-9567-737B03D6387E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFBC7FC9-77FA-46A2-9567-737B03D6387E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFBC7FC9-77FA-46A2-9567-737B03D6387E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

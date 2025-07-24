@@ -65,6 +65,7 @@ export class WeatherForecast implements IWeatherForecast {
     temperatureC?: number;
     temperatureF?: number;
     summary?: string | undefined;
+    fun?: string | undefined;
 
     constructor(data?: IWeatherForecast) {
         if (data) {
@@ -81,6 +82,7 @@ export class WeatherForecast implements IWeatherForecast {
             this.temperatureC = _data["temperatureC"];
             this.temperatureF = _data["temperatureF"];
             this.summary = _data["summary"];
+            this.fun = _data["fun"];
         }
     }
 
@@ -97,6 +99,7 @@ export class WeatherForecast implements IWeatherForecast {
         data["temperatureC"] = this.temperatureC;
         data["temperatureF"] = this.temperatureF;
         data["summary"] = this.summary;
+        data["fun"] = this.fun;
         return data;
     }
 }
@@ -106,6 +109,7 @@ export interface IWeatherForecast {
     temperatureC?: number;
     temperatureF?: number;
     summary?: string | undefined;
+    fun?: string | undefined;
 }
 
 function formatDate(d: Date) {

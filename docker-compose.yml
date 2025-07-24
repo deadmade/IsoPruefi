@@ -193,7 +193,7 @@ services:
         /run.sh
     
   isopruefi-frontend:
-      build: ./isopruefi-frontend
+      build: isopruefi-frontend
       container_name: isopruefi-frontend
       labels:
         - "traefik.enable=true"

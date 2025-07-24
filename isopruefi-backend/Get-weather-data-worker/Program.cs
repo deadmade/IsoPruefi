@@ -1,3 +1,7 @@
+using Database.EntityFramework;
+using Database.Repository.InfluxRepo;
+using Database.Repository.SettingsRepository;
+
 namespace Get_weather_data_worker;
 
 public class Program

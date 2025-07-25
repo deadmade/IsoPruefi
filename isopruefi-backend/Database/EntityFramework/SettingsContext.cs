@@ -26,7 +26,7 @@ public class SettingsContext : DbContext
                 new TopicSetting
                 {
                     TopicSettingId = 2, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "Sensor-Two"
+                    SensorName = "Sensor_Two"
                 }
             );
         });

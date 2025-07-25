@@ -5,3 +5,5 @@ npm-debug.log
 .git
 .gitignore
 .env
+.node_modules/*
+.package-lock.json

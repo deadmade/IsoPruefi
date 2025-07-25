@@ -1,7 +1,9 @@
-node_modules
+../isopruefi-frontendj-js/node_modules
 npm-debug.log
-Dockerfile
+../isopruefi-frontend/Dockerfile
 .dockerignore
 .git
 .gitignore
 .env
+.node_modules/*
+.package-lock.json

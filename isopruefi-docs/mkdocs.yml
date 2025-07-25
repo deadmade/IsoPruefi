@@ -5,6 +5,23 @@ nav:
   - Dev-Guidelines: guidelines.md
   - Code Documentation: 
     - Rest-API: code/Rest-API/index.md
+    - MQTT-Receiver-Worker: code/MQTT-Receiver-Worker/index.md
+    - MQTT-Sender: code/MQTT-Sender/index.md
+    - Database: code/Database/index.md
+    - UnitTests: code/UnitTests/index.md
+    - Frontend:
+        - Overview: code/frontend/README.md
+        - App:
+            - App Overview: code/frontend/App/README.md
+            - App Component: code/frontend/App/functions/default.md
+        - Weather:
+            - Weather Overview: code/frontend/Weather/README.md
+            - Components:
+                - Chart Title: code/frontend/Weather/functions/WeatherChartTitle.md
+                - Temp Chart: code/frontend/Weather/functions/TempChart.md
+            - Data Types:
+                - WeatherEntry: code/frontend/Weather/type-aliases/WeatherEntry.md
+                - WeatherData: code/frontend/Weather/variables/WeatherData.md
   - Docker: 
     - Docker Dev Umgebung: docker-dev.md
   - IsoPrüfi Documentation: 

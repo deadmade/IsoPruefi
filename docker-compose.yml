@@ -194,9 +194,7 @@ services:
     
   isopruefi-frontend:
       build: isopruefi-frontend
-      container_name: isopruefi-frontend
-      ports:
-        - "3000:5173"
+      container_name: isopruefi-frontensd
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
@@ -231,6 +229,7 @@ services:
       environment: 
         - ASPNETCORE_ENVIRONMENT=Development
 
+
   isopruefi-mqtt-receiver:
         build: 
           context: ./isopruefi-backend
@@ -241,9 +240,12 @@ services:
         networks:
         - isopruefi-custom
         environment: 
-          - ASPNETCORE_ENVIRONMENT=Development
-          - "Influx:InfluxDBToken=/run/secrets/influxdb_token"
-          - "Influx:InfluxHost=/run/secrets/influxdb_host"
+          - ASPNETCORE_ENVIRONMENT=Docker
         env_file:
           - ./secrets.env
+        depends_on:
+          - influxdb3
+          - postgres
+
+    
 

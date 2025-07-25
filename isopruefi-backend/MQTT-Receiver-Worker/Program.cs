@@ -25,6 +25,7 @@ public class Program
 
         // Only in Development do we wire up the secret store:
         if (builder.Environment.IsDevelopment()) builder.Configuration.AddUserSecrets<Program>();
+        else if (builder.Environment.IsEnvironment("Docker")) builder.Configuration.AddEnvironmentVariables();
 
         var host = builder.Build();
         host.Run();

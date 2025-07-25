@@ -19,8 +19,8 @@ public class InfluxRepo : IInfluxRepo
     {
         const string database = "IsoPruefi";
 
-        var token = configuration["Influx:InfluxDBToken"];
-        var host = configuration["Influx:InfluxDBHost"];
+        var token = configuration["Influx:InfluxDBToken"] ?? configuration["Influx_InfluxDBToken"];
+        var host = configuration["Influx:InfluxDBHost"] ?? configuration["Influx_InfluxDBHost"];
 
         if (string.IsNullOrEmpty(token)) throw new ArgumentException("InfluxDB token is not configured.");
 

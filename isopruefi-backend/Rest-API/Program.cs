@@ -14,18 +14,14 @@ public class Program
 
         builder.Services.AddEndpointsApiExplorer();
 
-
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseOpenApi();
-          //  app.UseSwaggerUi();
-          app.UseReDoc(options =>
-          {
-              options.Path = "/redoc";
-          });
+            //  app.UseSwaggerUi();
+            app.UseReDoc(options => { options.Path = "/redoc"; });
         }
 
         app.UseHttpsRedirection();

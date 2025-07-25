@@ -3,23 +3,23 @@ using MQTTnet;
 
 namespace MQTT_Sender;
 
-class Program
+internal class Program
 {
-    static async Task Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var client = await Connection.GetConnection();
 
-         Random rnd = Random.Shared;
-         int sequenceOne = 1;
-         int sequenceTwo = 1;
+        var rnd = Random.Shared;
+        var sequenceOne = 1;
+        var sequenceTwo = 1;
 
         while (true)
         {
-            long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            double value = Math.Round(rnd.NextDouble() * 100, 1);
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            double[] value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             var tempGen = new TempSensorReading { Timestamp = timestamp, Value = value, Sequence = sequenceOne++ };
-            string json = System.Text.Json.JsonSerializer.Serialize(tempGen);
+            var json = System.Text.Json.JsonSerializer.Serialize(tempGen);
 
 
             var applicationMessage = new MqttApplicationMessageBuilder()
@@ -29,8 +29,8 @@ class Program
 
             await client.PublishAsync(applicationMessage, CancellationToken.None);
 
-             timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-             value = Math.Round(rnd.NextDouble() * 100, 1);
+            timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             tempGen = new TempSensorReading { Timestamp = timestamp, Value = value, Sequence = sequenceTwo++ };
             json = System.Text.Json.JsonSerializer.Serialize(tempGen);
@@ -43,7 +43,8 @@ class Program
             await client.PublishAsync(applicationMessage, CancellationToken.None);
 
             Console.WriteLine("Messages Sent!");
-        }
 
+            Thread.Sleep(1000); // Wait for 1 second before sending the next messages
+        }
     }
 }

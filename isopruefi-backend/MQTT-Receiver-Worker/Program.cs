@@ -1,6 +1,6 @@
 using Database.EntityFramework;
 using Database.Repository.InfluxRepo;
-using Database.Repository.SettingsRepository;
+using Database.Repository.SettingsRepo;
 using MQTT_Receiver_Worker.MQTT;
 
 namespace MQTT_Receiver_Worker;
@@ -18,16 +18,14 @@ public class Program
 
         // Register Repos
         builder.Services.AddSingleton<ISettingsRepo, SettingsRepo>();
-        
+
         // Register BusinessLogic
         builder.Services.AddSingleton<Receiver>();
         builder.Services.AddSingleton<Connection>();
 
         // Only in Development do we wire up the secret store:
-        if (builder.Environment.IsDevelopment())
-        {
-            builder.Configuration.AddUserSecrets<Program>();
-        }
+        if (builder.Environment.IsDevelopment()) builder.Configuration.AddUserSecrets<Program>();
+        else if (builder.Environment.IsEnvironment("Docker")) builder.Configuration.AddEnvironmentVariables();
 
         var host = builder.Build();
         host.Run();

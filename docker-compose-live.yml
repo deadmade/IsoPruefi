@@ -193,8 +193,8 @@ services:
         /run.sh
     
   isopruefi-frontend:
-      build: isopruefi-frontend
-      container_name: isopruefi-frontensd
+      build: ./isopruefi-frontend
+      container_name: isopruefi-frontend
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
@@ -203,13 +203,14 @@ services:
         - traefik.http.services.frontend.loadbalancer.server.port=3000
       volumes:
         - ./isopruefi-frontend:/app
-        - /app/node_modules
+        - ./isopruefi-frontend/node_modules:/app/node_modules
       networks:
       - isopruefi-custom
       environment:
         - NODE_ENV=development
       stdin_open: true
       tty: true
+      command: npm start
 
   isopruefi-backend-api:
       build: 
@@ -229,23 +230,17 @@ services:
       environment: 
         - ASPNETCORE_ENVIRONMENT=Development
 
-
   isopruefi-mqtt-receiver:
         build: 
           context: ./isopruefi-backend
-          dockerfile: MQTT-Receiver-Worker/Dockerfile-Dev
+          dockerfile: MQTT-Receiver-Worker/Dockerfile
         container_name: isopruefi-mqtt-receiver
         volumes:
           - ./isopruefi-backend/MQTT-Receiver-Worker:/src/MQTT-Receiver-Worker
         networks:
         - isopruefi-custom
         environment: 
-          - ASPNETCORE_ENVIRONMENT=Docker
+          - ASPNETCORE_ENVIRONMENT=Development
         env_file:
           - ./secrets.env
-        depends_on:
-          - influxdb3
-          - postgres
-
-    
 

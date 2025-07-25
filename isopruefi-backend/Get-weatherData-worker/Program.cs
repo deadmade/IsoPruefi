@@ -1,6 +1,6 @@
 using Database.EntityFramework;
 using Database.Repository.InfluxRepo;
-using Database.Repository.SettingsRepository;
+using Database.Repository.SettingsRepo;
 
 namespace Get_weatherData_worker;
 
@@ -22,10 +22,7 @@ public class Program
         builder.Services.AddHttpClient();
 
         // Only in Development do we wire up the secret store:
-        if (builder.Environment.IsDevelopment())
-        {
-            builder.Configuration.AddUserSecrets<Program>();
-        }
+        if (builder.Environment.IsDevelopment()) builder.Configuration.AddUserSecrets<Program>();
 
         var host = builder.Build();
         host.Run();

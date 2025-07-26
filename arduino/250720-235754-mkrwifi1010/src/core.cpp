@@ -1,24 +1,21 @@
+#include "platform.h"
 #include "core.h"
 #include "network.h"
 #include "mqtt.h"
 #include "sensor.h"
 #include "storage.h"
-#include "platform.h"
-#include <RTClib.h>
-#include <Adafruit_ADT7410.h>
-#include <SdFat.h>
-#include <ArduinoMqttClient.h>
 #include "secrets.h"
 
-static RTC_DS3231 rtc;
-static Adafruit_ADT7410 tempsensor = Adafruit_ADT7410();
-static SdFat sd;
+RTC_DS3231 rtc;
+Adafruit_ADT7410 tempsensor;   // <<< Das hier darf NICHT fehlen
+SdFat sd;
+
 static WiFiClient wifiClient;
 static MqttClient mqttClient(wifiClient);
 
 static const uint8_t chipSelect = 4;
 static const char* sensorIdOne = "Sensor_One";
-static const char* sensorIdTwo = "Sensor_Two";
+// static const char* sensorIdTwo = "Sensor_Two";
 static const char* sensorIdInUse = sensorIdOne; 
 //const char* sensorIdInUse = sensorIdTwo; // Uncomment to use the second
 static const char* sensorType = "temp";
@@ -58,13 +55,11 @@ void coreSetup() {
     while (1);
   }
 
-  if (!tempsensor.begin()) {
-    Serial.println("ADT7410 not found!");
+  if (!initSensor(tempsensor)) {
+    Serial.println("ADT7410 init failed!");
     while (1);
   }
 
-  delay(250);
-  tempsensor.setResolution(ADT7410_16BIT);
   Serial.println("Setup complete.");
 }
 
@@ -73,7 +68,7 @@ void coreLoop() {
 
   if (now.minute() != lastLoggedMinute) {
     lastLoggedMinute = now.minute();
-    float c = tempsensor.readTempC();
+    float c = readTemperatureCelsius();
 
     if (mqttClient.connected()) {
       Serial.println("Trying to publish via MQTT...");

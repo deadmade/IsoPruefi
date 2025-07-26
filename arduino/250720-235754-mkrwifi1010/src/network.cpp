@@ -1,12 +1,11 @@
 #include "network.h"
 #include "secrets.h"
-#include "platform.h"
-
+#include "mqtt.h"
 
 static const char ssid[]     = SECRET_SSID;
 static const char password[] = SECRET_PASS;
 static const char* broker    = "aicon.dhbw-heidenheim.de";
-static int port              = 1883;
+static const int port        = 1883;
 
 bool connectWiFi(unsigned long timeoutMs) {
   Serial.print("Connecting to WiFi...");
@@ -42,3 +41,4 @@ bool connectMQTT(MqttClient& mqttClient, unsigned long timeoutMs) {
   Serial.println(" connected.");
   return true;
 }
+

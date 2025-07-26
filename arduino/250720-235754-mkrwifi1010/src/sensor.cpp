@@ -1,5 +1,4 @@
 #include "sensor.h"
-#include <Arduino.h>
 
 bool initSensor(Adafruit_ADT7410& sensor) {
   if (!sensor.begin()) {
@@ -11,7 +10,6 @@ bool initSensor(Adafruit_ADT7410& sensor) {
   return true;
 }
 
-float readTemperature(Adafruit_ADT7410& sensor) {
-  return sensor.readTempC();
+float readTemperatureCelsius() {
+  return tempsensor.readTempC();  // korrekt und kompakt
 }
-

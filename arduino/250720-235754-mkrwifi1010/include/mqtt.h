@@ -1,8 +1,6 @@
 #pragma once
 
-#include <ArduinoMqttClient.h>
-#include <ArduinoJson.h>
-#include <RTClib.h>
+#include "platform.h"
 
 void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence);
 

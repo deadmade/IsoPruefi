@@ -1,9 +1,12 @@
 #pragma once
 
-#include <ArduinoMqttClient.h>
+#include "platform.h"
 
-// Initialisiert und verbindet mit WiFi (gibt true zurück bei Erfolg)
+// Stellt Verbindung zum WLAN her (true bei Erfolg)
 bool connectWiFi(unsigned long timeoutMs = 10000);
 
-// Initialisiert und verbindet mit dem MQTT-Broker (gibt true zurück bei Erfolg)
+// Verbindet mit MQTT-Broker (true bei Erfolg)
 bool connectMQTT(MqttClient& mqttClient, unsigned long timeoutMs = 10000);
+
+// Optional: Interface-Funktion für Hauptprogramm mit globalem mqttClient
+bool connectMqttClient();  // nutzt mqttClient aus platform.h

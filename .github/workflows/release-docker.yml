@@ -1,0 +1,54 @@
+# .github/workflows/release-containers.yml
+name: Release Docker Containers
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'sprint*'    # matches sprint0, sprint1, etc
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Build & push Rest-API
+        uses: docker/build-push-action@v4
+        with:
+          working-directory: ./isopruefi-backend/Rest-API
+          file: Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}:${{ github.ref_name }}
+            ghcr.io/${{ github.repository_owner }}:latest
+
+      - name: Build & push MQTT-Receiver-Worker
+        uses: docker/build-push-action@v4
+        with:
+          working-directory: ./isopruefi-backend/MQTT-Receiver-Worker
+          file: Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}:${{ github.ref_name }}
+            ghcr.io/${{ github.repository_owner }}:latest
+
+      - name: Build & push Frontend
+        uses: docker/build-push-action@v4
+        with:
+          working-directory: ./isopruefi-frontend
+          file: Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}:${{ github.ref_name }}
+            ghcr.io/${{ github.repository_owner }}:latest
+            

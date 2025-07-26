@@ -2,7 +2,6 @@
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using Microsoft.AspNetCore.Mvc;
-using Rest_API.Extensions;
 
 namespace Rest_API.Controllers;
 

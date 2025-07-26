@@ -3,20 +3,6 @@
 
 #define FILENAME_BUFFER_SIZE 32
 
-// --- Testbare Hilfsfunktionen ---
-
-const char* createFolderName(const DateTime& now) {
-  static char folderName[8];
-  snprintf(folderName, sizeof(folderName), "%04d", now.year());
-  return folderName;
-}
-
-void createFilename(char* buffer, size_t bufferSize, const DateTime& now) {
-  snprintf(buffer, bufferSize, "%s/%02d%02d%02d%02d.json",
-           createFolderName(now),
-           now.month(), now.day(), now.hour(), now.minute());
-}
-
 // --- Interface-Funktion für Projektlogik ---
 
 void saveDataToSD(float celsius, const DateTime& now, int sequence) {

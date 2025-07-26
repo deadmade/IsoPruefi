@@ -10,3 +10,5 @@ float readTemperatureCelsius();
 
 // Optional: Formatiert Zeit als ISO 8601-String
 String formatTimestamp(const DateTime& now);
+
+

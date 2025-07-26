@@ -1,13 +1,23 @@
 #pragma once
-
 #include "platform.h"
+#include <cstdio> // für snprintf
 
-// Hauptfunktion für Arduino (mit globalem SdFat-Objekt)
+// Nur auf dem Arduino verfügbar
+#ifndef UNIT_TEST
+void saveToSD(SdFat& sd, float celsius, const DateTime& now, int sequence);
+#endif
+
 void saveDataToSD(float celsius, const DateTime& now, int sequence);
 
-// Interface-Funktion für Speichern auf SD-Karte mit übergebenem Objekt
-void saveToSD(SdFat& sd, float celsius, const DateTime& now, int sequence);
+// --- Inline-Hilfsfunktionen (für Arduino & native Build) ---
+inline const char* createFolderName(const DateTime& now) {
+    static char folderName[8];
+    std::snprintf(folderName, sizeof(folderName), "%04d", now.year());
+    return folderName;
+}
 
-// Diese Funktionen können nativ getestet werden:
-const char* createFolderName(const DateTime& now);
-void createFilename(char* buffer, size_t bufferSize, const DateTime& now);
+inline void createFilename(char* buffer, size_t bufferSize, const DateTime& now) {
+    std::snprintf(buffer, bufferSize, "%s/%02d%02d%02d%02d.json",
+                  createFolderName(now),
+                  now.month(), now.day(), now.hour(), now.minute());
+}

@@ -21,12 +21,12 @@ public class SettingsContext : DbContext
                 new TopicSetting
                 {
                     TopicSettingId = 1, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "Sensor_One"
+                    SensorName = "Sensor_One", SensorLocation = "North"
                 },
                 new TopicSetting
                 {
                     TopicSettingId = 2, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "Sensor_Two"
+                    SensorName = "Sensor_Two", SensorLocation = "South"
                 }
             );
         });
@@ -36,6 +36,6 @@ public class SettingsContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(
-            @"Host=host.docker.internal:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
+            @"Host=localhost:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
     }
 }

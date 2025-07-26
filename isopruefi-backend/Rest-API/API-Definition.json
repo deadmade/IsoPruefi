@@ -6,18 +6,63 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/weatherforecast": {
+    "/api/v1/temperature": {
       "get": {
-        "operationId": "GetWeatherForecast",
+        "tags": [
+          "TemperatureData"
+        ],
+        "summary": "Gets temperature data for the specified time range and location, with optional Fahrenheit conversion.",
+        "operationId": "TemperatureData_GetTemperature",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date and time for the data range.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date and time for the data range.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "place",
+            "in": "query",
+            "description": "Location for outside temperature data.",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "isFahrenheit",
+            "in": "query",
+            "description": "If true, converts temperatures to Fahrenheit.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "x-position": 4
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Temperature data overview.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
+                    "$ref": "#/components/schemas/TemperatureData"
                   }
                 }
               }
@@ -29,29 +74,17 @@
   },
   "components": {
     "schemas": {
-      "WeatherForecast": {
+      "TemperatureData": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "date": {
+          "timestamp": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "summary": {
-            "type": "string",
-            "nullable": true
-          },
-          "fun": {
-            "type": "string",
-            "nullable": true
+          "temperature": {
+            "type": "number",
+            "format": "double"
           }
         }
       }

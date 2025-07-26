@@ -194,7 +194,7 @@ services:
     
   isopruefi-frontend:
       build: isopruefi-frontend
-      container_name: isopruefi-frontensd
+      container_name: isopruefi-frontend
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
@@ -222,8 +222,8 @@ services:
         - "traefik.http.routers.backend.entrypoints=websecure"
         - "traefik.http.routers.backend.tls=true"
         - traefik.http.services.backend.loadbalancer.server.port=8080
-      volumes:
-        - ./isopruefi-backend/Rest-API:/src/Rest-API
+    #  volumes:
+    #    - ./isopruefi-backend/Rest-API:/src/Rest-API
       networks:
       - isopruefi-custom
       environment: 
@@ -235,8 +235,25 @@ services:
           context: ./isopruefi-backend
           dockerfile: MQTT-Receiver-Worker/Dockerfile-Dev
         container_name: isopruefi-mqtt-receiver
-        volumes:
-          - ./isopruefi-backend/MQTT-Receiver-Worker:/src/MQTT-Receiver-Worker
+      #  volumes:
+      #    - ./isopruefi-backend/MQTT-Receiver-Worker:/src/MQTT-Receiver-Worker
+        networks:
+        - isopruefi-custom
+        environment: 
+          - ASPNETCORE_ENVIRONMENT=Docker
+        env_file:
+          - ./secrets.env
+        depends_on:
+          - influxdb3
+          - postgres
+
+  isopruefi-get-wheather-worker:
+        build: 
+          context: ./isopruefi-backend
+          dockerfile: Get-weatherData-worker/Dockerfile-Dev
+        container_name: isopruefi-get-weather-worker
+       # volumes:
+       #   - ./isopruefi-backend/Get-weatherData-worker:/src/Get-weatherData-worker
         networks:
         - isopruefi-custom
         environment: 

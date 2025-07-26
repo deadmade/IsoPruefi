@@ -1,4 +1,6 @@
-﻿namespace Database.Repository.InfluxRepo;
+﻿using InfluxDB3.Client.Write;
+
+namespace Database.Repository.InfluxRepo;
 
 /// <summary>
 /// Interface for the InfluxDB repository.
@@ -24,4 +26,8 @@ public interface IInfluxRepo
     /// <param name="timestamp"></param>
     /// <returns></returns>
     Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp);
+
+    IAsyncEnumerable<PointDataValues> GetOutsideWeatherData( DateTime start, DateTime end, string place);
+
+    IAsyncEnumerable<PointDataValues> GetSensorWeatherData(DateTime start, DateTime end);
 }

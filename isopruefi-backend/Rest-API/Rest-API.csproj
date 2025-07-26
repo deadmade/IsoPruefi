@@ -13,9 +13,13 @@
         <OpenApiGenerateDocumentsOptions>--file-name API-Definition</OpenApiGenerateDocumentsOptions>
         <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <UserSecretsId>7377ab69-2a91-4e12-899b-8b6b3cd463ae</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Http" Version="8.1.0"/>
+        <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0"/>
+        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0"/>
         <PackageReference Include="InfluxDB3.Client" Version="1.2.0"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7"/>
@@ -34,6 +38,10 @@
         <Content Include="..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Database\Database.csproj"/>
     </ItemGroup>
 
     <Target Name="NSwag" AfterTargets="GenerateOpenApiDocuments" Condition=" '$(Configuration)' == 'Debug' ">

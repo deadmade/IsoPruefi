@@ -1,0 +1,31 @@
+name: Docker Image CI
+
+on:
+  pull_request:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+    - name: Build Rest Docker
+      working-directory: ./isopruefi-backend/Rest-API
+      run: docker build . --file Dockerfile 
+
+    - name: Build Database Docker
+      working-directory: ./isopruefi-backend/Database
+      run: docker build . --file Dockerfile 
+
+    - name: Build MQTT-Receiver-Worker Docker
+      working-directory: ./isopruefi-backend/MQTT-Receiver-Worker
+      run: docker build . --file Dockerfile 
+      
+    - name: Build MQTT-Sender Docker
+      working-directory: ./isopruefi-backend/MQTT-Sender
+      run: docker build . --file Dockerfile 

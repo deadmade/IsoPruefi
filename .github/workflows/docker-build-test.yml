@@ -11,21 +11,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
     - name: Build Rest Docker
-      working-directory: ./isopruefi-backend/Rest-API
-      run: docker build . --file Dockerfile 
+      working-directory: ./isopruefi-backend
+      run: docker build . --file Rest-API/Dockerfile 
 
-    - name: Build Database Docker
-      working-directory: ./isopruefi-backend/Database
+    - name: Build Frontend Docker
+      working-directory: ./isopruefi-frontend
       run: docker build . --file Dockerfile 
 
     - name: Build MQTT-Receiver-Worker Docker
-      working-directory: ./isopruefi-backend/MQTT-Receiver-Worker
-      run: docker build . --file Dockerfile 
+      working-directory: ./isopruefi-backend
+      run: docker build . --file MQTT-Receiver-Worker/Dockerfile 
+
+    - name: Build Get Weather Worker Docker
+      working-directory: ./isopruefi-backend
+      run: docker build . --file Get-weatherData-worker/Dockerfile 
       
-    - name: Build MQTT-Sender Docker
-      working-directory: ./isopruefi-backend/MQTT-Sender
-      run: docker build . --file Dockerfile 
+

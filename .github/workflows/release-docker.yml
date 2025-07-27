@@ -43,7 +43,7 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/MQTT-Receiver-Worker:${{ github.ref_name }}
-            ghcr.io/${{ github.repository_owner }}:latest
+            ghcr.io/${{ github.repository_owner }}/MQTT-Receiver-Worker:latest
 
       - name: Build & push Get Weather Worker 
         uses: docker/build-push-action@v4

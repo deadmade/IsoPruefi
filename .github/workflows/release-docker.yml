@@ -25,21 +25,31 @@ jobs:
       - name: Build & push Rest-API
         uses: docker/build-push-action@v4
         with:
-          working-directory: ./isopruefi-backend/Rest-API
-          file: Dockerfile
+          working-directory: ./isopruefi-backend
+          file: Rest-API/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}:${{ github.ref_name }}
+            ghcr.io/${{ github.repository_owner }}/Rest-API:${{ github.ref_name }}
             ghcr.io/${{ github.repository_owner }}:latest
 
       - name: Build & push MQTT-Receiver-Worker
         uses: docker/build-push-action@v4
         with:
-          working-directory: ./isopruefi-backend/MQTT-Receiver-Worker
-          file: Dockerfile
+          working-directory: ./isopruefi-backend
+          file: MQTT-Receiver-Worker/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}:${{ github.ref_name }}
+            ghcr.io/${{ github.repository_owner }}/MQTT-Receiver-Worker:${{ github.ref_name }}
+            ghcr.io/${{ github.repository_owner }}:latest
+
+      - name: Build & push Get Weather Worker 
+        uses: docker/build-push-action@v4
+        with:
+          working-directory: ./isopruefi-backend
+          file: Get-weatherData-worker/Dockerfile 
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/Get-weatherData-worker:${{ github.ref_name }}
             ghcr.io/${{ github.repository_owner }}:latest
 
       - name: Build & push Frontend

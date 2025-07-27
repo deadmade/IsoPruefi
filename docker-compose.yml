@@ -247,7 +247,7 @@ services:
           - influxdb3
           - postgres
 
-  isopruefi-get-wheather-worker:
+  isopruefi-get-weather-worker:
         build: 
           context: ./isopruefi-backend
           dockerfile: Get-weatherData-worker/Dockerfile-Dev

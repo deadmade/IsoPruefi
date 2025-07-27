@@ -1,0 +1,80 @@
+name: docs
+on:
+  push:
+    branches:
+      - 'main'
+      - 'sprint*'    # matches sprint0, sprint1, etc
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        working-directory: ./isopruefi-backend
+        run: dotnet restore
+
+      - name: Restore tools
+        working-directory: ./isopruefi-backend
+        run: dotnet tool restore --tool-manifest .config/dotnet-tools.json
+
+      - name: Build
+        working-directory: ./isopruefi-backend
+        run: dotnet build --no-restore
+
+      - name: Generate Rest Documentation
+        working-directory: ./isopruefi-backend/Rest-API
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/Rest-API.dll ../../isopruefi-docs/docs/code/Rest-API
+
+      - name: Generate Database Documentation
+        working-directory: ./isopruefi-backend/Database
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/Database.dll ../../isopruefi-docs/docs/code/Database
+
+      - name: Generate MQTT-Receiver-Worker Documentation
+        working-directory: ./isopruefi-backend/MQTT-Receiver-Worker
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/MQTT-Receiver-Worker.dll ../../isopruefi-docs/docs/code/MQTT-Receiver-Worker
+      
+      - name: Generate MQTT-Sender Documentation
+        working-directory: ./isopruefi-backend/MQTT-Sender
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/MQTT-Sender.dll ../../isopruefi-docs/docs/code/MQTT-Sender
+
+      - name: Generate UnitTest Documentation
+        working-directory: ./isopruefi-backend/UnitTests
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/UnitTests.dll ../../isopruefi-docs/docs/code/UnitTests
+
+      - name: Install frontend dependencies
+        working-directory: ./isopruefi-frontend
+        run: npm ci
+
+      - name: Generate Frontend Documentation
+        working-directory: ./isopruefi-frontend
+        run: npx typedoc
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Cache MkDocs dependencies
+        uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material
+
+      - name: Install Python requirements
+        run: pip install -r ./isopruefi-docs/requirements.txt
+
+      - name: Deploy documentation to GitHub Pages
+        run: |
+          cd ./isopruefi-docs
+          mkdocs gh-deploy --force

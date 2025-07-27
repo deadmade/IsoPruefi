@@ -29,7 +29,7 @@ If not obvious, or the method is more than 5 lines, it should be commented.
 - Documentation Comments: Use /// for documentation comments.
 
 ### Documentation Comments
-We use the <a href="https://learn.microsoft.com/de-de/dotnet/csharp/language-reference/xmldoc/">xml documentation convention by microsoft</a>
+We use the <a href="https://learn.microsoft.com/de-de/dotnet/csharp/language-reference/xmldoc/">xml documentation convention by Microsoft</a>
 
 In short: You can use the following tags structures in your documentation comment to specify properties of the following code:
 

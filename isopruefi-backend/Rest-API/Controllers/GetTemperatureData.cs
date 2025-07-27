@@ -177,7 +177,7 @@ public class TemperatureDataController : ControllerBase
                 temperatureData.Add(new Tuple<double, DateTime, string>(temperature ?? 0, datetime, sensor));
 
                 _logger.LogInformation(
-                    "Fetched outside temperature Website: {Website}, Temperature: {Temperature}",
+                    "Fetched outside temperature Timestamp: {Timestamp}, Temperature: {Temperature}",
                     datetime, temperature);
             }
         }

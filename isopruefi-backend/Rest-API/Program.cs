@@ -94,9 +94,9 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseOpenApi();
-            app.UseSwaggerUi();
+            //app.UseSwaggerUi();
             app.UseDeveloperExceptionPage();
-            // app.UseReDoc(options => { options.Path = "/redoc"; });
+            app.UseReDoc(options => { options.Path = "/redoc"; });
 
             builder.Configuration.AddUserSecrets<Program>();
         }

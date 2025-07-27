@@ -22,12 +22,12 @@ public class TemperatureDataController : ControllerBase
 
 
     /// <summary>
-    ///
+    /// Initializes a new instance of the <see cref="TemperatureDataController"/> class.
     /// </summary>
-    /// <param name="logger"></param>
-    /// <param name="settingsRepo"></param>
-    /// <param name="influxRepo"></param>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <param name="logger">The logger instance used for logging operations.</param>
+    /// <param name="settingsRepo">The repository for accessing application settings.</param>
+    /// <param name="influxRepo">The repository for accessing temperature data from InfluxDB.</param>
+    /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
     public TemperatureDataController(ILogger<TemperatureDataController> logger, ISettingsRepo settingsRepo,
         IInfluxRepo influxRepo)
     {

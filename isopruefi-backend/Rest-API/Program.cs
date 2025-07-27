@@ -8,6 +8,10 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddAuthorization();
+        
+        // Add services for transforming the postal code
+        builder.Services.AddTransient<TransformPostalCode>();
+        builder.Services.AddHttpClient();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApiDocument();

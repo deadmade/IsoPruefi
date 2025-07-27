@@ -9,6 +9,7 @@ public class Roles
     /// The administrator role name.
     /// </summary>
     public const string Admin = "Admin";
+
     /// <summary>
     /// The standard user role name.
     /// </summary>

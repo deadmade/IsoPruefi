@@ -10,10 +10,12 @@ public class Register
     /// <summary>
     /// Gets or sets the username for the new user.
     /// </summary>
-    [Required] public string UserName { get; set; }
+    [Required]
+    public string UserName { get; set; }
 
     /// <summary>
     /// Gets or sets the password for the new user.
     /// </summary>
-    [Required] public string Password { get; set; }
+    [Required]
+    public string Password { get; set; }
 }

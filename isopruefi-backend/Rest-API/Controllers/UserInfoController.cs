@@ -7,7 +7,6 @@ using Rest_API.Services.User;
 
 namespace Rest_API.Controllers;
 
-
 /// <summary>
 /// Controller for managing user information and user-related actions.
 /// Provides endpoints for retrieving, updating, and deleting user data.
@@ -89,6 +88,7 @@ public class UserInfoController : ControllerBase
             _logger.LogWarning("Invalid model state for ChangePassword");
             return BadRequest(new ValidationProblemDetails(ModelState));
         }
+
         try
         {
             var user = await _userService.GetUserById(input.UserId);
@@ -117,6 +117,7 @@ public class UserInfoController : ControllerBase
             _logger.LogWarning("Invalid model state for ChangeUser");
             return BadRequest(new ValidationProblemDetails(ModelState));
         }
+
         try
         {
             await _userService.ChangeUser(user);
@@ -145,7 +146,8 @@ public class UserInfoController : ControllerBase
             var result = await _userService.DeleteUser(user);
             if (result)
                 return Ok();
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = "Failed to delete user." });
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                new ProblemDetails { Detail = "Failed to delete user." });
         }
         catch (Exception e)
         {

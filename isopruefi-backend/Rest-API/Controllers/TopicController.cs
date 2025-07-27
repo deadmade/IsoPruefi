@@ -60,15 +60,9 @@ public class TopicController : ControllerBase
     {
         try
         {
-            if (topicSetting == null)
-            {
-                return BadRequest(new { message = "Topic setting is required" });
-            }
+            if (topicSetting == null) return BadRequest(new { message = "Topic setting is required" });
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var topicId = await _settingsRepo.AddTopicSettingAsync(topicSetting);
 

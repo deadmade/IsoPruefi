@@ -33,7 +33,7 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/Rest-API:${{ github.ref_name }}
-            ghcr.io/${{ github.repository_owner }}:latest
+            ghcr.io/${{ github.repository_owner }}/Rest-API:latest
 
       - name: Build & push MQTT-Receiver-Worker
         uses: docker/build-push-action@v4

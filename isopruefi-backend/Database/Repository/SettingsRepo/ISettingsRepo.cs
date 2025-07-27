@@ -12,4 +12,11 @@ public interface ISettingsRepo
     /// </summary>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="TopicSetting"/> objects.</returns>
     Task<List<TopicSetting>> GetTopicSettingsAsync();
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="topicSetting"></param>
+    /// <returns></returns>
+    Task<int> AddTopicSettingAsync(TopicSetting topicSetting);
 }

@@ -1,15 +1,23 @@
 using Database.EntityFramework.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Database.EntityFramework;
 
-public class SettingsContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<ApiUser>
 {
     //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
     public DbSet<TopicSetting> TopicSettings { get; set; }
+    public DbSet<TokenInfo> TokenInfos { get; set; }
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<TopicSetting>(b =>
         {
             b.HasKey(t => t.TopicSettingId);

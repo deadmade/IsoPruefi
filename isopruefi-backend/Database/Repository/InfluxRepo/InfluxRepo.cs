@@ -74,7 +74,6 @@ public class InfluxRepo : IInfluxRepo
     {
         try
         {
-
             var query =
                 $"SELECT place, time, value FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
 
@@ -93,7 +92,8 @@ public class InfluxRepo : IInfluxRepo
     {
         try
         {
-            string query = $"SELECT sensor, time, value FROM temperature WHERE time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
+            var query =
+                $"SELECT sensor, time, value FROM temperature WHERE time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
 
             return _client.QueryPoints(query);
         }

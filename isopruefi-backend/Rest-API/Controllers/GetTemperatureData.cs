@@ -2,6 +2,7 @@
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using Microsoft.AspNetCore.Mvc;
+using Rest_API.Models;
 
 namespace Rest_API.Controllers;
 
@@ -10,7 +11,7 @@ namespace Rest_API.Controllers;
 /// </summary>
 [ApiVersion(1)]
 [ApiController]
-[Route("api/v{v:apiVersion}/temperature")]
+[Route("api/v{v:apiVersion}/[controller]/[action]")]
 [Produces("application/json")]
 [Consumes("application/json")]
 public class TemperatureDataController : ControllerBase

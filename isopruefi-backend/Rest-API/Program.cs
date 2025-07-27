@@ -1,18 +1,39 @@
+using System.Text;
 using Asp.Versioning;
 using Database.EntityFramework;
+using Database.EntityFramework.Models;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Rest_API.Seeder;
+using Rest_API.Services.Auth;
+using Rest_API.Services.Token;
 
 namespace Rest_API;
 
+//Migration dotnet ef migrations add Init --project ./Database/Database.csproj --startup-project ./Rest-API/Rest-API.csproj
+
+/// <summary>
+///  Main entry point for the application.
+/// </summary>
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        //builder.Services.AddAuthorization();
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), b => { });
+        });
+
+        builder.Services.AddIdentity<ApiUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApiDocument();
@@ -34,12 +55,36 @@ public class Program
                 options.SubstituteApiVersionInUrl = true;
             });
 
+        builder.Services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                }
+            )
+            .AddJwtBearer(options =>
+                {
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+                        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                        ClockSkew = TimeSpan.Zero,
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+                    };
+                }
+            );
+
         // Register Database
-        builder.Services.AddSingleton<SettingsContext>();
         builder.Services.AddSingleton<IInfluxRepo, InfluxRepo>();
+        builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
 
         // Register Repos
-        builder.Services.AddSingleton<ISettingsRepo, SettingsRepo>();
 
         builder.Services.AddControllers();
 
@@ -57,10 +102,15 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         app.MapControllers();
 
-        //  app.UseAuthorization();
+        // Seed the database with initial data
+        await SeedUser.SeedData(app);
 
-        app.Run();
+        await app.RunAsync();
     }
 }

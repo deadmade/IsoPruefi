@@ -27,7 +27,20 @@ public interface IInfluxRepo
     /// <returns></returns>
     Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp);
 
-    IAsyncEnumerable<PointDataValues> GetOutsideWeatherData( DateTime start, DateTime end, string place);
+    /// <summary>
+    /// Retrieves outside weather data for a given place and time range.
+    /// </summary>
+    /// <param name="start">The start of the time range.</param>
+    /// <param name="end">The end of the time range.</param>
+    /// <param name="place">The location for which to retrieve data.</param>
+    /// <returns>An async enumerable of weather data points.</returns>
+    IAsyncEnumerable<PointDataValues> GetOutsideWeatherData(DateTime start, DateTime end, string place);
 
+    /// <summary>
+    /// Retrieves sensor weather data for a given time range.
+    /// </summary>
+    /// <param name="start">The start of the time range.</param>
+    /// <param name="end">The end of the time range.</param>
+    /// <returns>An async enumerable of sensor weather data points.</returns>
     IAsyncEnumerable<PointDataValues> GetSensorWeatherData(DateTime start, DateTime end);
 }

@@ -1,6 +1,9 @@
 # .github/workflows/release-containers.yml
 name: Release Docker Containers
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:

@@ -8,12 +8,12 @@ public class JwtToken
     /// <summary>
     /// Gets or sets the JWT access token string.
     /// </summary>
-    public string Token { get; set; }
+    public required string Token { get; set; }
 
     /// <summary>
     /// Gets or sets the refresh token string.
     /// </summary>
-    public string RefreshToken { get; set; }
+    public required string RefreshToken { get; set; }
 
     /// <summary>
     /// Gets or sets the expiry date and time of the JWT token.

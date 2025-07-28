@@ -4,16 +4,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Database.EntityFramework;
 
+/// <inheritdoc />
 public class ApplicationDbContext : IdentityDbContext<ApiUser>
 {
     //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
+    
+    /// <summary>
+    /// Represents the collection of TopicSetting entities in the database.
+    /// </summary>
     public virtual DbSet<TopicSetting> TopicSettings { get; set; }
+    
+    /// <summary>
+    /// Represents the collection of TokenInfo entities in the database.
+    /// </summary>
     public virtual DbSet<TokenInfo> TokenInfos { get; set; }
 
+    /// <inheritdoc />
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 
+    /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

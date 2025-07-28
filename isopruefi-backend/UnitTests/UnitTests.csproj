@@ -35,9 +35,4 @@
         <ProjectReference Include="..\Rest-API\Rest-API.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Database\"/>
-        <Folder Include="MQTT-Receiver-Worker\"/>
-    </ItemGroup>
-
 </Project>

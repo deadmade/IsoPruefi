@@ -8,6 +8,9 @@ using Moq;
 
 namespace UnitTests.Repositories;
 
+/// <summary>
+/// Unit tests for the InfluxRepo class, verifying InfluxDB repository operations including data writing and querying functionality.
+/// </summary>
 [TestFixture]
 public class InfluxRepoTests
 {
@@ -17,6 +20,9 @@ public class InfluxRepoTests
     private const string TestToken = "test-token";
     private const string TestHost = "http://localhost:8086";
 
+    /// <summary>
+    /// Sets up test fixtures and initializes mocks before each test execution.
+    /// </summary>
     [SetUp]
     public void Setup()
     {
@@ -28,6 +34,9 @@ public class InfluxRepoTests
         _mockConfiguration.Setup(x => x["Influx:InfluxDBHost"]).Returns(TestHost);
     }
 
+    /// <summary>
+    /// Tests that the constructor creates a valid instance when provided with valid configuration.
+    /// </summary>
     [Test]
     public void Constructor_WithValidConfiguration_ShouldCreateInstance()
     {
@@ -38,6 +47,9 @@ public class InfluxRepoTests
         act.Should().NotThrow();
     }
 
+    /// <summary>
+    /// Tests that the constructor throws ArgumentNullException when logger parameter is null.
+    /// </summary>
     [Test]
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
     {
@@ -48,6 +60,9 @@ public class InfluxRepoTests
         act.Should().Throw<ArgumentNullException>().WithMessage("*logger*");
     }
 
+    /// <summary>
+    /// Tests that the constructor throws ArgumentException when InfluxDB token is missing from configuration.
+    /// </summary>
     [Test]
     public void Constructor_WithMissingToken_ShouldThrowArgumentException()
     {
@@ -62,6 +77,9 @@ public class InfluxRepoTests
         act.Should().Throw<ArgumentException>().WithMessage("InfluxDB token is not configured.");
     }
 
+    /// <summary>
+    /// Tests that the constructor throws ArgumentException when InfluxDB host is missing from configuration.
+    /// </summary>
     [Test]
     public void Constructor_WithMissingHost_ShouldThrowArgumentException()
     {
@@ -76,6 +94,9 @@ public class InfluxRepoTests
         act.Should().Throw<ArgumentException>().WithMessage("InfluxDB host is not configured.");
     }
 
+    /// <summary>
+    /// Tests that the constructor creates a valid instance when InfluxDB token is provided via environment variable.
+    /// </summary>
     [Test]
     public void Constructor_WithEnvironmentVariableToken_ShouldCreateInstance()
     {
@@ -90,6 +111,9 @@ public class InfluxRepoTests
         act.Should().NotThrow();
     }
 
+    /// <summary>
+    /// Tests that the constructor creates a valid instance when InfluxDB host is provided via environment variable.
+    /// </summary>
     [Test]
     public void Constructor_WithEnvironmentVariableHost_ShouldCreateInstance()
     {
@@ -104,6 +128,9 @@ public class InfluxRepoTests
         act.Should().NotThrow();
     }
 
+    /// <summary>
+    /// Tests that WriteSensorData with valid data writes the point correctly to InfluxDB.
+    /// </summary>
     [Test]
     public async Task WriteSensorData_WithValidData_ShouldWritePointCorrectly()
     {
@@ -123,6 +150,9 @@ public class InfluxRepoTests
         expectedDateTime.Should().Be(new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Utc));
     }
 
+    /// <summary>
+    /// Tests that GetOutsideWeatherData logs error and rethrows exception when an error occurs.
+    /// </summary>
     [Test]
     public async Task GetOutsideWeatherData_WithException_ShouldLogErrorAndRethrow()
     {
@@ -146,6 +176,9 @@ public class InfluxRepoTests
         // without a real InfluxDB connection
     }
 
+    /// <summary>
+    /// Tests that GetSensorWeatherData with valid parameters generates the correct InfluxDB query.
+    /// </summary>
     [Test]
     public async Task GetSensorWeatherData_WithValidParameters_ShouldGenerateCorrectQuery()
     {
@@ -173,6 +206,9 @@ public class InfluxRepoTests
         expectedEndFormat.Should().Be("2022-01-02 00:00:00");
     }
 
+    /// <summary>
+    /// Tests that GetSensorWeatherData logs error and rethrows exception when an error occurs.
+    /// </summary>
     [Test]
     public async Task GetSensorWeatherData_WithException_ShouldLogErrorAndRethrow()
     {
@@ -195,6 +231,9 @@ public class InfluxRepoTests
         // without a real InfluxDB connection
     }
 
+    /// <summary>
+    /// Tests that WriteSensorData correctly converts Unix timestamp to proper DateTime format.
+    /// </summary>
     [Test]
     public void WriteSensorData_TimestampConversion_ShouldConvertUnixTimestampCorrectly()
     {
@@ -216,6 +255,9 @@ public class InfluxRepoTests
         }
     }
 
+    /// <summary>
+    /// Tests that WriteOutsideWeatherData correctly converts temperature from Celsius to Fahrenheit.
+    /// </summary>
     [Test]
     public void WriteOutsideWeatherData_TemperatureConversion_ShouldConvertCelsiusToFahrenheitCorrectly()
     {

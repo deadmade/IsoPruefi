@@ -23,10 +23,7 @@ public class UserService : IUserService
         _userManager = userManager;
     }
 
-    /// <summary>
-    /// Retrieves all users from the system.
-    /// </summary>
-    /// <returns>A list of all users.</returns>
+    /// <inheritdoc />
     public async Task<List<ApiUser>> GetUserInformations()
     {
         try
@@ -44,11 +41,7 @@ public class UserService : IUserService
         }
     }
 
-    /// <summary>
-    /// Retrieves a user by their unique identifier.
-    /// </summary>
-    /// <param name="userId">The unique identifier of the user.</param>
-    /// <returns>The user information if found; otherwise, null.</returns>
+    /// <inheritdoc />
     public async Task<ApiUser?> GetUserById(string userId)
     {
         try
@@ -66,11 +59,7 @@ public class UserService : IUserService
     /// <summary>
     /// Changes the password of a user.
     /// </summary>
-    /// <param name="user">The Object of the user.</param>
-    /// <param name="currentPassword">The current password of the user.</param>
-    /// <param name="newPassword">The new password to set.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    /// <exception cref="Exception">Thrown when the password change fails.</exception>
+    /// <inheritdoc />
     public async Task ChangePassword(ApiUser user, string currentPassword, string newPassword)
     {
         try
@@ -94,12 +83,7 @@ public class UserService : IUserService
         }
     }
 
-    /// <summary>
-    /// Changes the username of a user.
-    /// </summary>
-    /// <param name="user">The User Object of the user.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    /// <exception cref="Exception">Thrown when the username change fails.</exception>
+    /// <inheritdoc />
     public async Task ChangeUser(ApiUser user)
     {
         try
@@ -124,11 +108,7 @@ public class UserService : IUserService
         }
     }
 
-    /// <summary>
-    /// Deletes a user from the system.
-    /// </summary>
-    /// <param name="user">The user to delete.</param>
-    /// <returns>True if the user was deleted successfully; otherwise, false.</returns>
+    /// <inheritdoc />
     public async Task<bool> DeleteUser(ApiUser user)
     {
         try

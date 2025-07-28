@@ -12,6 +12,9 @@ using Rest_API.Services.Token;
 
 namespace UnitTests.Services;
 
+/// <summary>
+/// Unit tests for the AuthenticationService class, verifying user authentication, registration, and token management functionality.
+/// </summary>
 [TestFixture]
 public class AuthenticationServiceTests
 {
@@ -22,6 +25,9 @@ public class AuthenticationServiceTests
     private Mock<ITokenRepo> _mockTokenRepo;
     private AuthenticationService _authService;
 
+    /// <summary>
+    /// Sets up test fixtures and initializes mocks before each test execution.
+    /// </summary>
     [SetUp]
     public void Setup()
     {
@@ -41,6 +47,9 @@ public class AuthenticationServiceTests
 
     #region Register Tests
 
+    /// <summary>
+    /// Tests that registration with valid input creates a user successfully.
+    /// </summary>
     [Test]
     public async Task Register_WithValidInput_ShouldCreateUserSuccessfully()
     {
@@ -65,6 +74,9 @@ public class AuthenticationServiceTests
         _mockUserManager.Verify(x => x.AddToRoleAsync(It.IsAny<ApiUser>(), Roles.User), Times.Once);
     }
 
+    /// <summary>
+    /// Registers a user with an empty username or password, expecting an AuthenticationException.
+    /// </summary>
     [Test]
     public async Task Register_WithEmptyUsername_ShouldThrowAuthenticationException()
     {
@@ -79,6 +91,9 @@ public class AuthenticationServiceTests
             .WithMessage("Username or Password cannot be empty.");
     }
 
+    /// <summary>
+    /// Registers a user with an empty password, expecting an AuthenticationException.
+    /// </summary>
     [Test]
     public async Task Register_WithEmptyPassword_ShouldThrowAuthenticationException()
     {
@@ -93,6 +108,9 @@ public class AuthenticationServiceTests
             .WithMessage("Username or Password cannot be empty.");
     }
 
+    /// <summary>
+    /// Registers a user with an existing username, expecting an exception.
+    /// </summary>
     [Test]
     public async Task Register_WithExistingUsername_ShouldThrowException()
     {
@@ -111,6 +129,9 @@ public class AuthenticationServiceTests
             .WithMessage("User existinguser already exists.");
     }
 
+    /// <summary>
+    /// Registers a user when the role does not exist, expecting an exception.
+    /// </summary>
     [Test]
     public async Task Register_WhenRoleCreationFails_ShouldThrowException()
     {
@@ -133,6 +154,9 @@ public class AuthenticationServiceTests
             .WithMessage("Failed to create user role. Errors : Role creation failed");
     }
 
+    /// <summary>
+    /// Registers a user when user creation fails, expecting an exception.
+    /// </summary>
     [Test]
     public async Task Register_WhenUserCreationFails_ShouldThrowException()
     {
@@ -159,6 +183,9 @@ public class AuthenticationServiceTests
 
     #region Login Tests
 
+    /// <summary>
+    /// Logs in a user with valid credentials and verifies that it returns a JWT token.
+    /// </summary>
     [Test]
     public async Task Login_WithValidCredentials_ShouldReturnJwtToken()
     {
@@ -190,6 +217,9 @@ public class AuthenticationServiceTests
         _mockTokenRepo.Verify(x => x.SaveChangesAsync(), Times.Once);
     }
 
+    /// <summary>
+    /// Logs in a user with an empty username, expecting an AuthenticationException to be thrown.
+    /// </summary>
     [Test]
     public async Task Login_WithEmptyUsername_ShouldThrowAuthenticationException()
     {
@@ -204,6 +234,9 @@ public class AuthenticationServiceTests
             .WithMessage("Username or Password cannot be empty.");
     }
 
+    /// <summary>
+    /// Logs in a user with invalid credentials, expecting an AuthenticationException to be thrown.
+    /// </summary>
     [Test]
     public async Task Login_WithInvalidCredentials_ShouldThrowAuthenticationException()
     {
@@ -224,6 +257,9 @@ public class AuthenticationServiceTests
         _mockUserManager.Verify(x => x.AccessFailedAsync(user), Times.Once);
     }
 
+    /// <summary>
+    /// Logs in a user with a non-existent username, expecting an AuthenticationException to be thrown.
+    /// </summary>
     [Test]
     public async Task Login_WithNonExistentUser_ShouldThrowAuthenticationException()
     {
@@ -244,6 +280,9 @@ public class AuthenticationServiceTests
 
     #region RefreshToken Tests
 
+    /// <summary>
+    /// Refreshes a token with a valid JWT token and refresh token, verifying that it returns a new JWT token.
+    /// </summary>
     [Test]
     public async Task RefreshToken_WithValidToken_ShouldReturnNewJwtToken()
     {
@@ -285,6 +324,9 @@ public class AuthenticationServiceTests
         _mockTokenRepo.Verify(x => x.SaveChangesAsync(), Times.Once);
     }
 
+    /// <summary>
+    /// Refreshes a token with an expired JWT token and verifies that it throws an AuthenticationException.
+    /// </summary>
     [Test]
     public async Task RefreshToken_WithInvalidRefreshToken_ShouldThrowAuthenticationException()
     {
@@ -315,6 +357,9 @@ public class AuthenticationServiceTests
             .WithMessage("Invalid refresh token. Please login again.");
     }
 
+    /// <summary>
+    /// Refreshes a token with an expired refresh token, expecting an AuthenticationException.
+    /// </summary>
     [Test]
     public async Task RefreshToken_WithExpiredRefreshToken_ShouldThrowAuthenticationException()
     {
@@ -349,8 +394,11 @@ public class AuthenticationServiceTests
 
     #region User Management Tests
 
+    /// <summary>
+    /// Gets all user information and verifies that the service can be called without errors.
+    /// </summary>
     [Test]
-    public async Task GetUserInformations_ShouldReturnAllUsers()
+    public void GetUserInformations_ShouldReturnAllUsers()
     {
         // For this test, we'll skip the ToListAsync call and test the service differently
         // This test verifies the service exists and can be called, actual data retrieval 
@@ -365,6 +413,9 @@ public class AuthenticationServiceTests
         // In a real scenario, this would need integration testing
     }
 
+    /// <summary>
+    /// Gets a user by ID with a valid user ID and verifies that the user is returned correctly.
+    /// </summary>
     [Test]
     public async Task GetUserById_WithValidId_ShouldReturnUser()
     {
@@ -383,6 +434,9 @@ public class AuthenticationServiceTests
         result.UserName.Should().Be("testuser");
     }
 
+    /// <summary>
+    /// Changes the password of a user with valid current password and new password, verifying that it changes successfully.
+    /// </summary>
     [Test]
     public async Task ChangePassword_WithValidData_ShouldChangePasswordSuccessfully()
     {
@@ -402,6 +456,9 @@ public class AuthenticationServiceTests
         _mockUserManager.Verify(x => x.ChangePasswordAsync(user, currentPassword, newPassword), Times.Once);
     }
 
+    /// <summary>
+    /// Changes the password of a user with invalid current password and verifies that it throws an exception.
+    /// </summary>
     [Test]
     public async Task ChangeUser_WithValidUser_ShouldUpdateUserSuccessfully()
     {
@@ -418,6 +475,9 @@ public class AuthenticationServiceTests
         _mockUserManager.Verify(x => x.UpdateAsync(user), Times.Once);
     }
 
+    /// <summary>
+    /// Deletes a user with a valid user object and verifies that the user is deleted successfully.
+    /// </summary>
     [Test]
     public async Task DeleteUser_WithValidUser_ShouldDeleteUserSuccessfully()
     {

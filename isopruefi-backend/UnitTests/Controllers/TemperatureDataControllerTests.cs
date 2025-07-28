@@ -10,6 +10,9 @@ using Rest_API.Models;
 
 namespace UnitTests.Controllers;
 
+/// <summary>
+/// Unit tests for the TemperatureDataController class, verifying temperature data retrieval and formatting functionality.
+/// </summary>
 [TestFixture]
 public class TemperatureDataControllerTests
 {
@@ -18,6 +21,9 @@ public class TemperatureDataControllerTests
     private Mock<IInfluxRepo> _mockInfluxRepo;
     private TemperatureDataController _controller;
 
+    /// <summary>
+    /// Sets up test fixtures and initializes mocks before each test execution.
+    /// </summary>
     [SetUp]
     public void Setup()
     {
@@ -33,6 +39,9 @@ public class TemperatureDataControllerTests
 
     #region Constructor Tests
 
+    /// <summary>
+    /// Tests that the constructor creates a valid instance when provided with valid parameters.
+    /// </summary>
     [Test]
     public void Constructor_WithValidParameters_ShouldCreateInstance()
     {
@@ -46,6 +55,9 @@ public class TemperatureDataControllerTests
         act.Should().NotThrow();
     }
 
+    /// <summary>
+    /// Tests that the constructor throws ArgumentNullException when logger parameter is null.
+    /// </summary>
     [Test]
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
     {
@@ -58,6 +70,9 @@ public class TemperatureDataControllerTests
         act.Should().Throw<ArgumentNullException>().WithMessage("*logger*");
     }
 
+    /// <summary>
+    /// Tests that the constructor throws ArgumentNullException when settings repository parameter is null.
+    /// </summary>
     [Test]
     public void Constructor_WithNullSettingsRepo_ShouldThrowArgumentNullException()
     {
@@ -70,6 +85,9 @@ public class TemperatureDataControllerTests
         act.Should().Throw<ArgumentNullException>().WithMessage("*settingsRepo*");
     }
 
+    /// <summary>
+    /// Tests that the constructor throws ArgumentNullException when InfluxDB repository parameter is null.
+    /// </summary>
     [Test]
     public void Constructor_WithNullInfluxRepo_ShouldThrowArgumentNullException()
     {
@@ -86,6 +104,9 @@ public class TemperatureDataControllerTests
 
     #region GetTemperature Tests
 
+    /// <summary>
+    /// Tests that GetTemperature with valid parameters returns an OK result with temperature data.
+    /// </summary>
     [Test]
     public async Task GetTemperature_WithValidParameters_ShouldReturnOkWithTemperatureData()
     {
@@ -122,6 +143,9 @@ public class TemperatureDataControllerTests
         temperatureData.TemperatureOutside.Should().NotBeNull();
     }
 
+    /// <summary>
+    /// Tests that GetTemperature with Fahrenheit conversion returns temperatures converted from Celsius to Fahrenheit.
+    /// </summary>
     [Test]
     public async Task GetTemperature_WithFahrenheitConversion_ShouldReturnConvertedTemperatures()
     {
@@ -156,6 +180,9 @@ public class TemperatureDataControllerTests
         expectedFahrenheit.Should().Be(77.0);
     }
 
+    /// <summary>
+    /// Tests that GetTemperature handles gracefully when no sensor settings are available.
+    /// </summary>
     [Test]
     public async Task GetTemperature_WithNoSensorSettings_ShouldHandleGracefully()
     {
@@ -186,6 +213,9 @@ public class TemperatureDataControllerTests
 
     #region Temperature Conversion Tests
 
+    /// <summary>
+    /// Tests that ConvertToFahrenheit method correctly converts Celsius values to Fahrenheit.
+    /// </summary>
     [Test]
     public void ConvertToFahrenheit_WithCelsiusValues_ShouldReturnCorrectFahrenheitValues()
     {
@@ -209,6 +239,9 @@ public class TemperatureDataControllerTests
         }
     }
 
+    /// <summary>
+    /// Tests that date formatting produces correctly formatted date strings.
+    /// </summary>
     [Test]
     public void DateFormatting_ShouldFormatCorrectly()
     {

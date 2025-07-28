@@ -9,6 +9,9 @@ using Rest_API.Services.Token;
 
 namespace UnitTests.Services;
 
+/// <summary>
+/// Unit tests for the TokenService class, verifying JWT token generation, validation, and refresh token functionality.
+/// </summary>
 [TestFixture]
 public class TokenServiceTests
 {
@@ -19,6 +22,9 @@ public class TokenServiceTests
     private const string TestIssuer = "TestIssuer";
     private const string TestAudience = "TestAudience";
 
+    /// <summary>
+    /// Sets up test fixtures and initializes mocks before each test execution.
+    /// </summary>
     [SetUp]
     public void Setup()
     {
@@ -32,6 +38,9 @@ public class TokenServiceTests
         _tokenService = new TokenService(_mockConfiguration.Object, _mockLogger.Object);
     }
 
+    /// <summary>
+    /// Tests that GenerateAccessToken with valid claims returns a valid JWT token.
+    /// </summary>
     [Test]
     public void GenerateAccessToken_WithValidClaims_ShouldReturnValidJwtToken()
     {
@@ -62,6 +71,9 @@ public class TokenServiceTests
         jwtToken.ValidTo.Should().BeBefore(DateTime.UtcNow.AddMinutes(16));
     }
 
+    /// <summary>
+    /// Generates an access token with empty claims and verifies that it returns a valid JWT token.
+    /// </summary>
     [Test]
     public void GenerateAccessToken_WithEmptyClaims_ShouldReturnValidJwtToken()
     {
@@ -82,6 +94,9 @@ public class TokenServiceTests
         jwtToken.Audiences.Should().Contain(TestAudience);
     }
 
+    /// <summary>
+    /// Generates a refresh token and verifies that it returns a valid base64 string.
+    /// </summary>
     [Test]
     public void GenerateRefreshToken_ShouldReturnBase64String()
     {
@@ -101,6 +116,9 @@ public class TokenServiceTests
         bytes2.Length.Should().Be(32);
     }
 
+    /// <summary>
+    /// Gets the principal from an expired token and verifies that it returns a ClaimsPrincipal with the expected claims.
+    /// </summary>
     [Test]
     public void GetPrincipalFromExpiredToken_WithValidToken_ShouldReturnClaimsPrincipal()
     {
@@ -123,6 +141,9 @@ public class TokenServiceTests
         principal.Claims.Should().Contain(c => c.Type == ClaimTypes.Role && c.Value == "User");
     }
 
+    /// <summary>
+    /// Gets the principal from an expired token with an invalid token string and verifies that it throws an ArgumentException.
+    /// </summary>
     [Test]
     public void GetPrincipalFromExpiredToken_WithInvalidToken_ShouldThrowArgumentException()
     {
@@ -134,6 +155,9 @@ public class TokenServiceTests
         act.Should().Throw<ArgumentException>();
     }
 
+    /// <summary>
+    /// Gets the principal from an expired token signed with a different key and verifies that it throws a SecurityTokenException.
+    /// </summary>
     [Test]
     public void GetPrincipalFromExpiredToken_WithTokenSignedWithDifferentKey_ShouldThrowSecurityTokenException()
     {
@@ -153,6 +177,9 @@ public class TokenServiceTests
         act.Should().Throw<SecurityTokenException>();
     }
 
+    /// <summary>
+    /// Gets the principal from an expired token with an empty token string and verifies that it throws an ArgumentException.
+    /// </summary>
     [Test]
     public void GetPrincipalFromExpiredToken_WithNullToken_ShouldThrowArgumentException()
     {
@@ -161,6 +188,9 @@ public class TokenServiceTests
         act.Should().Throw<ArgumentException>();
     }
 
+    /// <summary>
+    /// Gets the principal from an expired token with an empty string and verifies that it throws an ArgumentException.
+    /// </summary>
     [Test]
     public void GetPrincipalFromExpiredToken_WithEmptyToken_ShouldThrowArgumentException()
     {
@@ -169,6 +199,9 @@ public class TokenServiceTests
         act.Should().Throw<ArgumentException>();
     }
 
+    /// <summary>
+    /// Generates an access token and verifies that it logs the appropriate information.
+    /// </summary>
     [Test]
     public void GenerateAccessToken_ShouldLogInformation()
     {
@@ -198,6 +231,9 @@ public class TokenServiceTests
             Times.Once);
     }
 
+    /// <summary>
+    /// Generates a refresh token and verifies that it logs the appropriate information.
+    /// </summary>
     [Test]
     public void GenerateRefreshToken_ShouldLogInformation()
     {

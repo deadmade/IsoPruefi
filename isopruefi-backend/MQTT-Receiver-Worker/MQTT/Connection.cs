@@ -1,4 +1,5 @@
-﻿using Database.Repository.InfluxRepo;
+using Database.Repository.InfluxRepo;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MQTT_Receiver_Worker.MQTT.Models;
 using MQTTnet;
@@ -17,26 +18,29 @@ public class Connection
     private MqttClientOptions _options;
     private IMqttClient _mqttClient;
     private readonly ILogger<Connection> _logger;
+    private readonly IConfiguration _configuration;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Connection"/> class.
     /// </summary>
     /// <param name="influxRepo">Repository for writing sensor data to InfluxDB</param>
     /// <param name="logger">Logger for recording connection events</param>
-    public Connection(ILogger<Connection> logger, IInfluxRepo influxRepo)
+    /// <param name="configuration">Configuration for MQTT settings</param>
+    public Connection(ILogger<Connection> logger, IInfluxRepo influxRepo, IConfiguration configuration)
     {
         _influxRepo = influxRepo;
         _logger = logger;
+        _configuration = configuration;
         InitialMqttConfig();
     }
 
     /// <summary>
-    /// Initializes the MQTT client configuration with default settings.
+    /// Initializes the MQTT client configuration with settings from configuration.
     /// </summary>
     private void InitialMqttConfig()
     {
-        const string broker = "aicon.dhbw-heidenheim.de";
-        const int port = 1883;
+        var broker = _configuration["Mqtt:BrokerHost"] ?? "aicon.dhbw-heidenheim.de";
+        var port = _configuration.GetValue<int>("Mqtt:BrokerPort", 1883);
         var clientId = Guid.NewGuid().ToString();
 
         _logger.LogDebug("Initializing MQTT client with broker: {Broker}:{Port}, ClientId: {ClientId}", broker, port,

@@ -18,7 +18,7 @@ public class InfluxRepoTests
     private Mock<ILogger<InfluxRepo>> _mockLogger;
     private Mock<InfluxDBClient> _mockInfluxClient;
     private const string TestToken = "test-token";
-    private const string TestHost = "http://localhost:8086";
+    private readonly string _testHost = Environment.GetEnvironmentVariable("TEST_INFLUXDB_HOST") ?? "http://localhost:8086";
 
     /// <summary>
     /// Sets up test fixtures and initializes mocks before each test execution.
@@ -31,7 +31,7 @@ public class InfluxRepoTests
         _mockInfluxClient = new Mock<InfluxDBClient>();
 
         _mockConfiguration.Setup(x => x["Influx:InfluxDBToken"]).Returns(TestToken);
-        _mockConfiguration.Setup(x => x["Influx:InfluxDBHost"]).Returns(TestHost);
+        _mockConfiguration.Setup(x => x["Influx:InfluxDBHost"]).Returns(_testHost);
     }
 
     /// <summary>
@@ -119,7 +119,7 @@ public class InfluxRepoTests
     {
         // Arrange
         _mockConfiguration.Setup(x => x["Influx:InfluxDBHost"]).Returns((string?)null);
-        _mockConfiguration.Setup(x => x["Influx_InfluxDBHost"]).Returns(TestHost);
+        _mockConfiguration.Setup(x => x["Influx_InfluxDBHost"]).Returns(_testHost);
 
         // Act
         Action act = () => new InfluxRepo(_mockConfiguration.Object, _mockLogger.Object);

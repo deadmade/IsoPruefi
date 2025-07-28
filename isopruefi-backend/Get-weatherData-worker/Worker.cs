@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Database.Repository.InfluxRepo;
+using Microsoft.Extensions.Configuration;
 
 namespace Get_weatherData_worker;
 
@@ -8,20 +9,26 @@ public class Worker : BackgroundService
     private readonly ILogger<Worker> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IInfluxRepo _influxRepo;
+    private readonly IConfiguration _configuration;
 
-    private readonly string _weatherDataApi =
-        "https://api.open-meteo.com/v1/forecast?latitude=48.678&longitude=10.1516&models=icon_seamless&current=temperature_2m";
+    private readonly string _weatherDataApi;
+    private readonly string _alternativeWeatherDataApi;
+    private readonly string _location;
 
-    private readonly string _alternativeWeatherDataApi =
-        "https://api.brightsky.dev/current_weather?lat=48.67&lon=10.1516";
-
-    private readonly string _location = "Heidenheim";
-
-    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory, IInfluxRepo influxRepo)
+    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory, IInfluxRepo influxRepo, IConfiguration configuration)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
         _influxRepo = influxRepo;
+        _configuration = configuration;
+        
+        _weatherDataApi = _configuration["Weather:OpenMeteoApiUrl"] ?? 
+            "https://api.open-meteo.com/v1/forecast?latitude=48.678&longitude=10.1516&models=icon_seamless&current=temperature_2m";
+        
+        _alternativeWeatherDataApi = _configuration["Weather:BrightSkyApiUrl"] ?? 
+            "https://api.brightsky.dev/current_weather?lat=48.67&lon=10.1516";
+        
+        _location = _configuration["Weather:Location"] ?? "Heidenheim";
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

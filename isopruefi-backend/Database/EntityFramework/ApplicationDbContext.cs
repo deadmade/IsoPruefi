@@ -1,15 +1,23 @@
 using Database.EntityFramework.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Database.EntityFramework;
 
-public class SettingsContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<ApiUser>
 {
     //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
     public DbSet<TopicSetting> TopicSettings { get; set; }
+    public DbSet<TokenInfo> TokenInfos { get; set; }
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<TopicSetting>(b =>
         {
             b.HasKey(t => t.TopicSettingId);
@@ -21,12 +29,12 @@ public class SettingsContext : DbContext
                 new TopicSetting
                 {
                     TopicSettingId = 1, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "Sensor_One"
+                    SensorName = "Sensor_One", SensorLocation = "North"
                 },
                 new TopicSetting
                 {
                     TopicSettingId = 2, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "Sensor_Two"
+                    SensorName = "Sensor_Two", SensorLocation = "South"
                 }
             );
         });
@@ -36,6 +44,6 @@ public class SettingsContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(
-            @"Host=host.docker.internal:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
+            @"Host=localhost:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
     }
 }

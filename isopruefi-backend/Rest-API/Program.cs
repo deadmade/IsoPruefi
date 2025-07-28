@@ -4,6 +4,7 @@ using Database.EntityFramework;
 using Database.EntityFramework.Models;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
+using Database.Repository.TokenRepo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -85,6 +86,7 @@ public class Program
         builder.Services.AddScoped<ITokenService, TokenService>();
 
         // Register Repos
+        builder.Services.AddScoped<ITokenRepo, TokenRepo>();
 
         builder.Services.AddControllers();
 

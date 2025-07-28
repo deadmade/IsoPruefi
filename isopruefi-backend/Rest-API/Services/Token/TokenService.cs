@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -33,8 +33,8 @@ public class TokenService : ITokenService
         var tokenHandler = new JwtSecurityTokenHandler();
 
         // Create a symmetric security key using the secret key from the configuration.
-        var authSigningKey = new SymmetricSecurityKey
-            (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+        var secret = _configuration["JWT:Secret"] ?? throw new InvalidOperationException("JWT:Secret configuration is missing");
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -73,34 +73,44 @@ public class TokenService : ITokenService
     /// <inheritdoc />
     public ClaimsPrincipal GetPrincipalFromExpiredToken(string accessToken)
     {
-        // Define the token validation parameters used to validate the token.
-        var tokenValidationParameters = new TokenValidationParameters
+        if (string.IsNullOrEmpty(accessToken))
+            throw new ArgumentException("Access token cannot be null or empty", nameof(accessToken));
+
+        try
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidAudience = _configuration["JWT:ValidAudience"],
-            ValidIssuer = _configuration["JWT:ValidIssuer"],
-            ValidateLifetime = false,
-            ClockSkew = TimeSpan.Zero,
-            IssuerSigningKey = new SymmetricSecurityKey
-                (Encoding.UTF8.GetBytes(_configuration["JWT:secret"]))
-        };
+            // Define the token validation parameters used to validate the token.
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidAudience = _configuration["JWT:ValidAudience"],
+                ValidIssuer = _configuration["JWT:ValidIssuer"],
+                ValidateLifetime = false,
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = new SymmetricSecurityKey
+                    (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ?? throw new InvalidOperationException("JWT:Secret configuration is missing")))
+            };
 
-        var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenHandler = new JwtSecurityTokenHandler();
 
-        // Validate the token and extract the claims principal and the security token.
-        var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
+            // Validate the token and extract the claims principal and the security token.
+            var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
 
-        // Cast the security token to a JwtSecurityToken for further validation.
-        var jwtSecurityToken = securityToken as JwtSecurityToken;
+            // Cast the security token to a JwtSecurityToken for further validation.
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
 
-        // Ensure the token is a valid JWT and uses the HmacSha256 signing algorithm.
-        // If no throw new SecurityTokenException
-        if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals
-                (SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-            throw new SecurityTokenException("Invalid token");
+            // Ensure the token is a valid JWT and uses the HmacSha256 signing algorithm.
+            // If no throw new SecurityTokenException
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals
+                    (SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
 
-        // return the principal
-        return principal;
+            // return the principal
+            return principal;
+        }
+        catch (Exception ex) when (!(ex is ArgumentException))
+        {
+            throw new SecurityTokenException("Invalid token", ex);
+        }
     }
 }

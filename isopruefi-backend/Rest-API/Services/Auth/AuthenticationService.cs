@@ -1,8 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Authentication;
 using System.Security.Claims;
-using Database.EntityFramework;
 using Database.EntityFramework.Models;
+using Database.Repository.TokenRepo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,12 +17,12 @@ public class AuthenticationService : IAuthenticationService
     private readonly UserManager<ApiUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly ITokenService _tokenService;
-    private readonly ApplicationDbContext _context;
+    private readonly ITokenRepo _tokenRepo;
 
     public AuthenticationService(ILogger<AuthenticationService> logger, UserManager<ApiUser> userManager,
-        RoleManager<IdentityRole> roleManager, ITokenService tokenService, ApplicationDbContext context)
+        RoleManager<IdentityRole> roleManager, ITokenService tokenService, ITokenRepo tokenRepo)
     {
-        _context = context;
+        _tokenRepo = tokenRepo;
         _logger = logger;
         _userManager = userManager;
         _roleManager = roleManager;
@@ -143,7 +143,7 @@ public class AuthenticationService : IAuthenticationService
 
             var refreshToken = _tokenService.GenerateRefreshToken();
 
-            var tokenInfo = _context.TokenInfos.FirstOrDefault(a => a.Username == user.UserName);
+            var tokenInfo = _tokenRepo.GetTokenInfoByUsernameSync(user.UserName);
 
             // If tokenInfo is null for the user, create a new one
             if (tokenInfo == null)
@@ -154,16 +154,17 @@ public class AuthenticationService : IAuthenticationService
                     RefreshToken = refreshToken,
                     ExpiredAt = DateTime.UtcNow.AddDays(7)
                 };
-                _context.TokenInfos.Add(tokenInfo);
+                await _tokenRepo.AddTokenInfoAsync(tokenInfo);
             }
             // Else, update the refresh token and expiration
             else
             {
                 tokenInfo.RefreshToken = refreshToken;
                 tokenInfo.ExpiredAt = DateTime.UtcNow.AddDays(7);
+                await _tokenRepo.UpdateTokenInfoAsync(tokenInfo);
             }
 
-            await _context.SaveChangesAsync();
+            await _tokenRepo.SaveChangesAsync();
 
             _logger.LogInformation("Jwt Token for User {InputUserName} created", input.UserName);
 
@@ -195,7 +196,7 @@ public class AuthenticationService : IAuthenticationService
                 throw new AuthenticationException("Invalid token.");
             }
 
-            var tokenInfo = await _context.TokenInfos.SingleOrDefaultAsync(u => u.Username == username);
+            var tokenInfo = await _tokenRepo.GetTokenInfoByUsernameAsync(username);
             if (tokenInfo == null || tokenInfo.RefreshToken != tokenModel.RefreshToken ||
                 tokenInfo.ExpiredAt <= DateTime.UtcNow)
             {
@@ -209,7 +210,8 @@ public class AuthenticationService : IAuthenticationService
             // Update the existing TokenInfo with the new refresh token and expiration date
             tokenInfo.RefreshToken = newRefreshToken;
             tokenInfo.ExpiredAt = DateTime.UtcNow.AddDays(7);
-            await _context.SaveChangesAsync();
+            await _tokenRepo.UpdateTokenInfoAsync(tokenInfo);
+            await _tokenRepo.SaveChangesAsync();
 
             return new JwtToken
             {

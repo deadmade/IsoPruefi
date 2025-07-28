@@ -1,4 +1,4 @@
-﻿using Database.EntityFramework.Models;
+using Database.EntityFramework.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -82,12 +82,12 @@ public class UserService : IUserService
             }
             else
             {
-                _logger.LogError("Error changing password for user {UserUserName}: {Join}", user.UserName,
-                    string.Join(" ", result.Errors.Select(e => e.Description)));
-                throw new Exception($"Error: {string.Join(" ", result.Errors.Select(e => e.Description))}");
+                var errorMessage = string.Join(" ", result.Errors.Select(e => e.Description));
+                _logger.LogError("Error changing password for user {UserUserName}: {ErrorMessage}", user.UserName, errorMessage);
+                throw new Exception($"Error: {errorMessage}");
             }
         }
-        catch (Exception e)
+        catch (Exception e) when (!(e.Message.StartsWith("Error:")))
         {
             _logger.LogError("Error changing password for user {UserUserName}: {EMessage}", user.UserName, e.Message);
             throw;
@@ -112,12 +112,12 @@ public class UserService : IUserService
             }
             else
             {
-                _logger.LogError("Error changing username for user {UserId}: {Join}", user.Id,
-                    string.Join(" ", result.Errors.Select(e => e.Description)));
-                throw new Exception($"Error: {string.Join(" ", result.Errors.Select(e => e.Description))}");
+                var errorMessage = string.Join(" ", result.Errors.Select(e => e.Description));
+                _logger.LogError("Error changing username for user {UserId}: {ErrorMessage}", user.Id, errorMessage);
+                throw new Exception($"Error: {errorMessage}");
             }
         }
-        catch (Exception e)
+        catch (Exception e) when (!(e.Message.StartsWith("Error:")))
         {
             _logger.LogError("Error changing username for user {UserId}: {EMessage}", user.Id, e.Message);
             throw;

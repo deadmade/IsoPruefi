@@ -2,14 +2,14 @@
 
 #ifdef UNIT_TEST
 
-  // --- MOCK-INCLUDES FÜR UNIT TESTING ---
+  // --- MOCK-INCLUDES FOR UNIT TESTING ---
   #include "mock_datetime.h"
-  // Hier weitere Mock-Klassen bei Bedarf einfügen
+  // Add more mock classes here if needed
   #define DateTime MockDateTime
 
 #else
 
-  // --- ORIGINALE ARDUINO-INCLUDES ---
+  // --- ORIGINAL ARDUINO-INCLUDES ---
   #include <Arduino.h> 
   #include <Wire.h>
   #include <SdFat.h>
@@ -18,12 +18,12 @@
   #include <ArduinoJson.h>
   #include <ArduinoMqttClient.h>
 
-  // Globale Hardware-Objekte (Deklaration)
+  // Global hardware objects (declaration)
   extern RTC_DS3231 rtc;
   extern SdFat sd;
   extern Adafruit_ADT7410 tempsensor;
 
-  // Einheitlicher WiFi-Header je nach Board
+  // Unified WiFi header depending on board
   #if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_AVR_UNO_WIFI_REV2)
     #include <WiFiNINA.h>
   #elif defined(ARDUINO_SAMD_MKR1000)
@@ -37,7 +37,7 @@
   #elif defined(ARDUINO_UNOR4_WIFI)
     #include <WiFiS3.h>
   #else
-    #error "Kein unterstützter WiFi-Treiber für dieses Board gefunden"
+    #error "No supported WiFi driver found for this board"
   #endif
 
 #endif

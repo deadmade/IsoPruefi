@@ -42,3 +42,31 @@ bool connectMQTT(MqttClient& mqttClient, unsigned long timeoutMs) {
   return true;
 }
 
+static unsigned long lastReconnectAttempt = 0;
+static unsigned long reconnectInterval = 10000; // Initial 10 Secunden
+
+void tryReconnect(MqttClient& mqttClient) {
+  unsigned long now = millis();
+
+  if (now - lastReconnectAttempt >= reconnectInterval) {
+    lastReconnectAttempt = now;
+
+    if (WiFi.status() != WL_CONNECTED) {
+      Serial.println("WiFi not connected. Trying to reconnect...");
+      connectWiFi(3000);
+    }
+
+    if (!mqttClient.connected() && WiFi.status() == WL_CONNECTED) {
+      Serial.println("MQTT not connected. Trying to reconnect...");
+      if (connectMQTT(mqttClient, 3000)) {
+        reconnectInterval = 10000; 
+      } else {
+        reconnectInterval = min(reconnectInterval + 10000, 300000UL); // Max 5 Min
+      }
+    }
+  }
+}
+
+bool isConnectedToServer(MqttClient& mqttClient) {
+  return WiFi.status() == WL_CONNECTED && mqttClient.connected();
+}

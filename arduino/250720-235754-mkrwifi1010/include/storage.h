@@ -1,15 +1,17 @@
 #pragma once
 #include "platform.h"
-#include <cstdio> // für snprintf
+#include <cstdio> // for snprintf
 
-// Nur auf dem Arduino verfügbar
+// Only available on Arduino
 #ifndef UNIT_TEST
 void saveToSD(SdFat& sd, float celsius, const DateTime& now, int sequence);
 #endif
 
 void saveDataToSD(float celsius, const DateTime& now, int sequence);
+int listSavedFiles(String* fileList, int maxFiles);
 
-// --- Inline-Hilfsfunktionen (für Arduino & native Build) ---
+
+// --- Inline helper functions (for Arduino & native build) ---
 inline const char* createFolderName(const DateTime& now) {
     static char folderName[8];
     std::snprintf(folderName, sizeof(folderName), "%04d", now.year());

@@ -7,7 +7,7 @@
 #include "secrets.h"
 
 RTC_DS3231 rtc;
-Adafruit_ADT7410 tempsensor;   // <<< Das hier darf NICHT fehlen
+Adafruit_ADT7410 tempsensor;   // <<< This MUST NOT be missing
 SdFat sd;
 
 static WiFiClient wifiClient;
@@ -23,7 +23,7 @@ static const char* topic = "dhbw/ai/si2023/2/";
 static int lastLoggedMinute = -1;
 static int count = 0;
 
-// Zeitstempel für SD-Karte setzen
+// Set timestamp for SD card
 void dateTime(uint16_t* date, uint16_t* time) {
   DateTime now = rtc.now();
   *date = FAT_DATE(now.year(), now.month(), now.day());
@@ -64,19 +64,30 @@ void coreSetup() {
 }
 
 void coreLoop() {
+  tryReconnect(mqttClient);
   DateTime now = rtc.now();
 
+  static bool recoveredSent = false;
   if (now.minute() != lastLoggedMinute) {
     lastLoggedMinute = now.minute();
     float c = readTemperatureCelsius();
 
     if (mqttClient.connected()) {
       Serial.println("Trying to publish via MQTT...");
+
+      if (!recoveredSent) {
+        sendPendingData(mqttClient, topic, sensorType, sensorIdInUse);
+        recoveredSent = true;
+      }
+
       sendToMqtt(mqttClient, topic, sensorType, sensorIdInUse, c, now, count);
     } else {
       Serial.println("MQTT not connected – saving to SD card...");
       saveToSD(sd, c, now, count);
+
+      recoveredSent = false;
     }
+
     count++;
   }
 

@@ -11,5 +11,5 @@ bool initSensor(Adafruit_ADT7410& sensor) {
 }
 
 float readTemperatureCelsius() {
-  return tempsensor.readTempC();  // korrekt und kompakt
+  return tempsensor.readTempC();  
 }

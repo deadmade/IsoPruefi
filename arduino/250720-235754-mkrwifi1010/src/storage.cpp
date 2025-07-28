@@ -3,13 +3,12 @@
 
 #define FILENAME_BUFFER_SIZE 32
 
-// --- Interface-Funktion für Projektlogik ---
-
+// --- Interface for project logic ---
 void saveDataToSD(float celsius, const DateTime& now, int sequence) {
-  saveToSD(sd, celsius, now, sequence); // nutzt globalen SdFat aus platform.h
+  saveToSD(sd, celsius, now, sequence); 
 }
 
-// --- Hauptfunktion für natives Speichern (unit-testbar) ---
+// --- Main function for native saving (unit-testable) ---
 
 void saveToSD(SdFat& sdRef, float celsius, const DateTime& now, int sequence) {
   ArduinoJson::StaticJsonDocument<256> doc;
@@ -37,4 +36,23 @@ void saveToSD(SdFat& sdRef, float celsius, const DateTime& now, int sequence) {
   } else {
     Serial.println("Failed to write file.");
   }
+}
+int listSavedFiles(String* fileList, int maxFiles) {
+  int count = 0;
+
+  File root = sd.open("/");
+  if (!root) return 0;
+
+  File entry;
+  while ((entry = root.openNextFile())) {
+    if (!entry.isDirectory() && count < maxFiles) {
+      char name[64];  // max. path length – adjust if needed
+      entry.getName(name, sizeof(name));
+      fileList[count++] = String(name);
+    }
+    entry.close();
+  }
+
+  root.close();
+  return count;
 }

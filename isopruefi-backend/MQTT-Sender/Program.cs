@@ -23,7 +23,7 @@ internal class Program
 
 
             var applicationMessage = new MqttApplicationMessageBuilder()
-                .WithTopic("dhbw/ai/si2023/2/temp/SENSOR-ONE")
+                .WithTopic("dhbw/ai/si2023/2/temp/Sensor_One")
                 .WithPayload(json)
                 .Build();
 
@@ -36,7 +36,7 @@ internal class Program
             json = System.Text.Json.JsonSerializer.Serialize(tempGen);
 
             applicationMessage = new MqttApplicationMessageBuilder()
-                .WithTopic("dhbw/ai/si2023/2/temp/SENSOR-TWO")
+                .WithTopic("dhbw/ai/si2023/2/temp/Sensor_Two")
                 .WithPayload(json)
                 .Build();
 

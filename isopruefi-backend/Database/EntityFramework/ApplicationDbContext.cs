@@ -8,12 +8,12 @@ namespace Database.EntityFramework;
 public class ApplicationDbContext : IdentityDbContext<ApiUser>
 {
     //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
-    
+
     /// <summary>
     /// Represents the collection of TopicSetting entities in the database.
     /// </summary>
     public virtual DbSet<TopicSetting> TopicSettings { get; set; }
-    
+
     /// <summary>
     /// Represents the collection of TokenInfo entities in the database.
     /// </summary>

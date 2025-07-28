@@ -33,7 +33,8 @@ public class TokenService : ITokenService
         var tokenHandler = new JwtSecurityTokenHandler();
 
         // Create a symmetric security key using the secret key from the configuration.
-        var secret = _configuration["JWT:Secret"] ?? throw new InvalidOperationException("JWT:Secret configuration is missing");
+        var secret = _configuration["JWT:Secret"] ??
+                     throw new InvalidOperationException("JWT:Secret configuration is missing");
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -88,7 +89,8 @@ public class TokenService : ITokenService
                 ValidateLifetime = false,
                 ClockSkew = TimeSpan.Zero,
                 IssuerSigningKey = new SymmetricSecurityKey
-                    (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ?? throw new InvalidOperationException("JWT:Secret configuration is missing")))
+                (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ??
+                                        throw new InvalidOperationException("JWT:Secret configuration is missing")))
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -72,11 +72,12 @@ public class UserService : IUserService
             else
             {
                 var errorMessage = string.Join(" ", result.Errors.Select(e => e.Description));
-                _logger.LogError("Error changing password for user {UserUserName}: {ErrorMessage}", user.UserName, errorMessage);
+                _logger.LogError("Error changing password for user {UserUserName}: {ErrorMessage}", user.UserName,
+                    errorMessage);
                 throw new Exception($"Error: {errorMessage}");
             }
         }
-        catch (Exception e) when (!(e.Message.StartsWith("Error:")))
+        catch (Exception e) when (!e.Message.StartsWith("Error:"))
         {
             _logger.LogError("Error changing password for user {UserUserName}: {EMessage}", user.UserName, e.Message);
             throw;
@@ -101,7 +102,7 @@ public class UserService : IUserService
                 throw new Exception($"Error: {errorMessage}");
             }
         }
-        catch (Exception e) when (!(e.Message.StartsWith("Error:")))
+        catch (Exception e) when (!e.Message.StartsWith("Error:"))
         {
             _logger.LogError("Error changing username for user {UserId}: {EMessage}", user.Id, e.Message);
             throw;

@@ -40,7 +40,7 @@ public class UserServiceTests
         // For this test, we'll skip the ToListAsync call and test the service differently
         // This test verifies the service exists and can be called, actual data retrieval 
         // would require integration testing with a real database
-        
+
         // Act & Assert - Just verify the method exists and doesn't throw on setup
         var service = new UserService(_mockLogger.Object, _mockUserManager.Object);
         service.Should().NotBeNull();
@@ -58,7 +58,7 @@ public class UserServiceTests
         // For this test, we'll skip the ToListAsync call and test the service differently
         // This test verifies the service exists and can be called, actual data retrieval 
         // would require integration testing with a real database
-        
+
         // Act & Assert - Just verify the method exists and doesn't throw on setup
         var service = new UserService(_mockLogger.Object, _mockUserManager.Object);
         service.Should().NotBeNull();

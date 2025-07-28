@@ -14,7 +14,7 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// </summary>
 public class Connection
 {
-    private IInfluxRepo _influxRepo;
+    private IServiceProvider _serviceProvider;
     private MqttClientOptions _options;
     private IMqttClient _mqttClient;
     private readonly ILogger<Connection> _logger;
@@ -26,9 +26,9 @@ public class Connection
     /// <param name="influxRepo">Repository for writing sensor data to InfluxDB</param>
     /// <param name="logger">Logger for recording connection events</param>
     /// <param name="configuration">Configuration for MQTT settings</param>
-    public Connection(ILogger<Connection> logger, IInfluxRepo influxRepo, IConfiguration configuration)
+    public Connection(ILogger<Connection> logger, IServiceProvider serviceProvider, IConfiguration configuration)
     {
-        _influxRepo = influxRepo;
+        _serviceProvider = serviceProvider;
         _logger = logger;
         _configuration = configuration;
         InitialMqttConfig();
@@ -90,6 +90,9 @@ public class Connection
 
     private Task<Task> ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
     {
+        using var scope = _serviceProvider.CreateScope();
+        var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
+
         var topic = e.ApplicationMessage.Topic;
         var sensorName = topic.Split('/').Last();
 
@@ -113,7 +116,7 @@ public class Connection
             return Task.FromResult(Task.CompletedTask);
         }
 
-        _influxRepo.WriteSensorData(
+        influxRepo.WriteSensorData(
             tempSensorReading.Value[0],
             sensorName,
             tempSensorReading.Timestamp,

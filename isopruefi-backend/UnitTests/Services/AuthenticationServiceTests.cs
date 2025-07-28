@@ -403,9 +403,9 @@ public class AuthenticationServiceTests
         // For this test, we'll skip the ToListAsync call and test the service differently
         // This test verifies the service exists and can be called, actual data retrieval 
         // would require integration testing with a real database
-        
+
         // Act & Assert - Just verify the method exists and doesn't throw on setup
-        var service = new AuthenticationService(_mockLogger.Object, _mockUserManager.Object, 
+        var service = new AuthenticationService(_mockLogger.Object, _mockUserManager.Object,
             _mockRoleManager.Object, _mockTokenService.Object, _mockTokenRepo.Object);
         service.Should().NotBeNull();
 

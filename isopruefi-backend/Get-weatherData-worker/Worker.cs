@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Database.Repository.InfluxRepo;
+using Database.Repository.SettingsRepo;
 using Microsoft.Extensions.Configuration;
 
 namespace Get_weatherData_worker;
@@ -8,26 +9,28 @@ public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IInfluxRepo _influxRepo;
+    private readonly IServiceProvider _serviceProvider;
     private readonly IConfiguration _configuration;
 
     private readonly string _weatherDataApi;
     private readonly string _alternativeWeatherDataApi;
     private readonly string _location;
 
-    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory, IInfluxRepo influxRepo, IConfiguration configuration)
+    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory,
+        IConfiguration configuration, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
-        _influxRepo = influxRepo;
+        _serviceProvider = serviceProvider;
         _configuration = configuration;
-        
-        _weatherDataApi = _configuration["Weather:OpenMeteoApiUrl"] ?? 
-            "https://api.open-meteo.com/v1/forecast?latitude=48.678&longitude=10.1516&models=icon_seamless&current=temperature_2m";
-        
-        _alternativeWeatherDataApi = _configuration["Weather:BrightSkyApiUrl"] ?? 
-            "https://api.brightsky.dev/current_weather?lat=48.67&lon=10.1516";
-        
+
+
+        _weatherDataApi = _configuration["Weather:OpenMeteoApiUrl"] ??
+                          "https://api.open-meteo.com/v1/forecast?latitude=48.678&longitude=10.1516&models=icon_seamless&current=temperature_2m";
+
+        _alternativeWeatherDataApi = _configuration["Weather:BrightSkyApiUrl"] ??
+                                     "https://api.brightsky.dev/current_weather?lat=48.67&lon=10.1516";
+
         _location = _configuration["Weather:Location"] ?? "Heidenheim";
     }
 
@@ -37,6 +40,9 @@ public class Worker : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
+            using var scope = _serviceProvider.CreateScope();
+            var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
+
             var weatherData = new WeatherData();
 
             // Sending GET-Request to Meteo.
@@ -57,7 +63,7 @@ public class Worker : BackgroundService
                         weatherData.Temperature = temperature.GetDouble();
 
                         // Saving the temperature in the database.
-                        await _influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
+                        await influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
                             weatherData.Timestamp);
 
                         _logger.LogInformation("Weather data from Meteo retrieved successfully.");
@@ -93,7 +99,7 @@ public class Worker : BackgroundService
                             weatherData.Temperature = temperature.GetDouble();
 
                             // Saving the temperature in the database.
-                            await _influxRepo.WriteOutsideWeatherData(_location, "Bright Sky", weatherData.Temperature,
+                            await influxRepo.WriteOutsideWeatherData(_location, "Bright Sky", weatherData.Temperature,
                                 weatherData.Timestamp);
 
                             _logger.LogInformation("Weather data from Bright Sky retrieved successfully.");

@@ -84,13 +84,12 @@ public class Program
                 }
             );
 
-        // Register Database
-        builder.Services.AddSingleton<IInfluxRepo, InfluxRepo>();
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
 
         // Register Repos
         builder.Services.AddScoped<ITokenRepo, TokenRepo>();
+        builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
 
         builder.Services.AddControllers();
 

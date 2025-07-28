@@ -18,7 +18,9 @@ public class InfluxRepoTests
     private Mock<ILogger<InfluxRepo>> _mockLogger;
     private Mock<InfluxDBClient> _mockInfluxClient;
     private const string TestToken = "test-token";
-    private readonly string _testHost = Environment.GetEnvironmentVariable("TEST_INFLUXDB_HOST") ?? "http://localhost:8086";
+
+    private readonly string _testHost =
+        Environment.GetEnvironmentVariable("TEST_INFLUXDB_HOST") ?? "http://localhost:8086";
 
     /// <summary>
     /// Sets up test fixtures and initializes mocks before each test execution.

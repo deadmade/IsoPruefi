@@ -7,6 +7,7 @@ public class SettingsContext : DbContext
 {
     //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
     public DbSet<TopicSetting> TopicSettings { get; set; }
+    public DbSet<CoordinateMapping> CoordinateMappings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,6 +37,6 @@ public class SettingsContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(
-            @"Host=host.docker.internal:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
+            @"Host=localhost:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
     }
 }

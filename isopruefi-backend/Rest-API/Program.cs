@@ -1,3 +1,6 @@
+using Database.EntityFramework;
+using Database.Repository.SettingsRepo;
+
 namespace Rest_API;
 
 public class Program
@@ -12,6 +15,12 @@ public class Program
         // Add services for transforming the postal code
         builder.Services.AddTransient<TransformPostalCode>();
         builder.Services.AddHttpClient();
+        
+        // Register Database
+        builder.Services.AddSingleton<SettingsContext>();
+        
+        // Register Repos
+        builder.Services.AddSingleton<ISettingsRepo, SettingsRepo>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApiDocument();

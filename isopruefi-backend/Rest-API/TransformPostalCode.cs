@@ -1,5 +1,7 @@
 using System.Globalization;
 using System.Text.Json;
+using Database.EntityFramework.Models;
+using Database.Repository.SettingsRepo;
 
 namespace Rest_API;
 
@@ -7,50 +9,102 @@ public class TransformPostalCode
 {
     private readonly ILogger<TransformPostalCode> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ISettingsRepo _settingsRepo;
 
     private readonly string _geocodingApi = "https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=";
     
-    public TransformPostalCode(ILogger<TransformPostalCode> logger, IHttpClientFactory httpClientFactory)
+    public TransformPostalCode(ILogger<TransformPostalCode> logger, IHttpClientFactory httpClientFactory, ISettingsRepo settingsRepo)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
+        _settingsRepo = settingsRepo;
     }
     
-    public async Task<Tuple<double, double>?> getCoordinates(double postalCode)
+    public async Task GetCoordinates(int postalCode)
     {
-        var httpClient = _httpClientFactory.CreateClient();
-        
-        // Creating a user agent for accessing the API.
-        string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36";
-        httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
-        
-
-        // Getting the coordinates from nominatim.
-        var response = await httpClient.GetAsync(_geocodingApi + postalCode);
-        
-        using var json = JsonDocument.Parse(await response.Content.ReadAsStreamAsync());
-        
-        // Getting the coordinates from the JSON file.
-        var root = json.RootElement;
-        if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
+        // Checking if there is an entry for that location in the database.
+        var existingEntry = await _settingsRepo.ExistsPostalCode(postalCode);
+        if (existingEntry)
         {
-            var rootElement = root[0];
-            if (rootElement.TryGetProperty("lat", out var lat) &&
-                rootElement.TryGetProperty("lon", out var lon))
+            // If an entry exists the time for that entry is updated.
+            var newTime = DateTime.UtcNow;
+            try
             {
-                var latDouble = double.Parse(lat.GetString(), CultureInfo.InvariantCulture);
-                var lonDouble = double.Parse(lon.GetString(), CultureInfo.InvariantCulture);
-                
-                var coordinates = new Tuple<double, double>(latDouble, lonDouble);
-                _logger.LogInformation("Coordinates retrieved successfully");
-                return coordinates;
+                await _settingsRepo.UpdateTime(postalCode, newTime);
+                _logger.LogInformation("Time for location updated succesfully.");
             }
-            else
+            catch (Exception e)
             {
-                _logger.LogError("Coordinates could not be retrieved.");
+                _logger.LogError(e, "Exception while updating the time for the location.");
             }
         }
+        else
+        {
+            // If there is no entry an API will be used to get the coordinates.
+            var httpClient = _httpClientFactory.CreateClient();
 
-        return null;
+            // Creating a user agent for accessing the API.
+            string userAgent =
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36";
+            httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
+
+            
+            try
+            {
+                // Getting the coordinates from nominatim.
+                var response = await httpClient.GetAsync(_geocodingApi + postalCode);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    using var json = JsonDocument.Parse(await response.Content.ReadAsStreamAsync());
+
+                    // Getting the coordinates from the JSON file.
+                    var root = json.RootElement;
+                    if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
+                    {
+                        var rootElement = root[0];
+                        if (rootElement.TryGetProperty("lat", out var lat) &&
+                            rootElement.TryGetProperty("lon", out var lon))
+                        {
+                            var latDouble = double.Parse(lat.GetString(), CultureInfo.InvariantCulture);
+                            var lonDouble = double.Parse(lon.GetString(), CultureInfo.InvariantCulture);
+                            
+                            var postalCodeLocation = new CoordinateMapping
+                            {
+                                PostalCode = postalCode,
+                                Latitude = latDouble,
+                                Longitude = lonDouble,
+                                LastUsed = DateTime.UtcNow
+                            };
+
+                            // Saving the new location in the database.
+                            try
+                            {
+                                await _settingsRepo.InsertNewPostalCode(postalCodeLocation);
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogError(e, "Exception while saving new location.");
+                            }
+                            
+                            
+                            _logger.LogInformation("Coordinates retrieved successfully");
+                        }
+                        else
+                        {
+                            _logger.LogError("Coordinates could not be retrieved.");
+                        }
+                    }
+                }
+                else
+                {
+                    _logger.LogError("Getting coordinates failed with HTTP status code: " + response.StatusCode);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error while calling geocoding API.");
+            }
+        }
     }
 }

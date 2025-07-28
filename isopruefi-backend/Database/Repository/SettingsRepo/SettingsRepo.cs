@@ -26,4 +26,41 @@ public class SettingsRepo : ISettingsRepo
     {
         return _settingsContext.TopicSettings.ToListAsync();
     }
+
+    /// <inheritdoc />
+    public async Task InsertNewPostalCode(CoordinateMapping postalcodeLocation)
+    {
+        _settingsContext.CoordinateMappings.Add(postalcodeLocation);
+        await _settingsContext.SaveChangesAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> ExistsPostalCode(int postalcode)
+    {
+        var entry = await _settingsContext.CoordinateMappings.FirstOrDefaultAsync(c => c.PostalCode == postalcode);
+        if (entry != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateTime(int postalCode, DateTime newTime)
+    {
+        var entry = await _settingsContext.CoordinateMappings.FirstAsync(c => c.PostalCode == postalCode);
+        entry.LastUsed = newTime;
+
+        await _settingsContext.SaveChangesAsync();
+    }
+
+    /// <inheritdoc />
+    public Task<Tuple<double, double>> GetCoordinates(int postalcode)
+    {
+        var result = _settingsContext.CoordinateMappings
+            .OrderByDescending(c => c.LastUsed)
+            .FirstOrDefaultAsync(c => c.PostalCode == postalcode);
+        var coordinates = new Tuple<double, double>(result.Result.Latitude, result.Result.Longitude);
+        return Task.FromResult(coordinates);
+    }
 }

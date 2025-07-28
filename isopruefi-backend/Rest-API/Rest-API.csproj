@@ -36,6 +36,10 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Database\Database.csproj" />
+    </ItemGroup>
+
     <Target Name="NSwag" AfterTargets="GenerateOpenApiDocuments" Condition=" '$(Configuration)' == 'Debug' ">
         <Exec WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net90) run nswag.json /variables:Configuration=$(Configuration)"/>
     </Target>

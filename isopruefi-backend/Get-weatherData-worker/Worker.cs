@@ -9,8 +9,11 @@ public class Worker : BackgroundService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IInfluxRepo _influxRepo;
 
-    private readonly string _weatherDataApi =
-        "https://api.open-meteo.com/v1/forecast?latitude=48.678&longitude=10.1516&models=icon_seamless&current=temperature_2m";
+    private string lat = "48.678";
+    private string lon = "10.1516";
+
+    private string _weatherDataApi = 
+        "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&models=icon_seamless&current=temperature_2m";
 
     private readonly string _alternativeWeatherDataApi =
         "https://api.brightsky.dev/current_weather?lat=48.67&lon=10.1516";

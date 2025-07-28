@@ -25,13 +25,13 @@ public class Worker : BackgroundService
         _configuration = configuration;
 
 
-        _weatherDataApi = _configuration["Weather:OpenMeteoApiUrl"] ??
-                          "https://api.open-meteo.com/v1/forecast?latitude=48.678&longitude=10.1516&models=icon_seamless&current=temperature_2m";
+        _weatherDataApi = _configuration["Weather:OpenMeteoApiUrl"] ?? throw new InvalidOperationException(
+            "Weather:OpenMeteoApiUrl configuration is missing");
 
-        _alternativeWeatherDataApi = _configuration["Weather:BrightSkyApiUrl"] ??
-                                     "https://api.brightsky.dev/current_weather?lat=48.67&lon=10.1516";
+        _alternativeWeatherDataApi = _configuration["Weather:BrightSkyApiUrl"] ?? throw new InvalidOperationException(
+            "Weather:BrightSkyApiUrl configuration is missing");
 
-        _location = _configuration["Weather:Location"] ?? "Heidenheim";
+        _location = _configuration["Weather:Location"] ?? "Heidenheim"; // Will be changed in the future to a more dynamic solution
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

@@ -39,7 +39,7 @@ public class Connection
     /// </summary>
     private void InitialMqttConfig()
     {
-        var broker = _configuration["Mqtt:BrokerHost"] ?? "aicon.dhbw-heidenheim.de";
+        var broker = _configuration["Mqtt:BrokerHost"];
         var port = _configuration.GetValue<int>("Mqtt:BrokerPort", 1883);
         var clientId = Guid.NewGuid().ToString();
 

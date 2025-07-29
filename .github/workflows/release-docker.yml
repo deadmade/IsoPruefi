@@ -1,6 +1,6 @@
 name: Release Docker Containers
 
-# Triggers on git tags starting with 'v' for proper release versioning
+# Triggers on pushes to main or release branches
 on:
   push:
 
@@ -36,7 +36,7 @@ jobs:
           file: ./isopruefi-frontend/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-frontend:${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-frontend:${{ github.run_number }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-frontend:latest
 
       # Build and push Rest-API
@@ -48,7 +48,7 @@ jobs:
           file: ./isopruefi-backend/Rest-API/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-rest-api:${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-rest-api:${{ github.run_number }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-rest-api:latest
 
       # Build and push Weather Data Worker
@@ -60,7 +60,7 @@ jobs:
           file: ./isopruefi-backend/Get-weatherData-worker/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-weather-worker:${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-weather-worker:${{ github.run_number }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-weather-worker:latest
 
       # Build and push MQTT Receiver Worker
@@ -72,7 +72,7 @@ jobs:
           file: ./isopruefi-backend/MQTT-Receiver-Worker/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-mqtt-worker:${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-mqtt-worker:${{ github.run_number }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-mqtt-worker:latest
 
       # Generate artifact attestations for all images
@@ -102,4 +102,4 @@ jobs:
         with:
           subject-name: ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-mqtt-worker
           subject-digest: ${{ steps.push-mqtt.outputs.digest }}
-          push-to-registry: true
+ 

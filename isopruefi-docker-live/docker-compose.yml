@@ -87,7 +87,7 @@ services:
       - traefik
 
   postgres:
-    image: postgres:alpine3.2-1
+    image: postgres:17.5
     container_name: isopruefi-postgres
     restart: unless-stopped
     volumes:
@@ -175,54 +175,52 @@ services:
         EOF
         /run.sh
 
-  # isopruefi-frontend:
-  #     build: ./isopruefi-frontend
-  #     container_name: isopruefi-frontend
-  #     labels:
-  #       - "traefik.enable=true"
-  #       - "traefik.http.routers.frontend.rule=Host(`frontend.aicon.dhbw-heidenheim.de`)"
-  #       - "traefik.http.routers.frontend.entrypoints=websecure"
-  #       - "traefik.http.routers.frontend.tls=true"
-  #       - traefik.http.services.frontend.loadbalancer.server.port=3000
-  #     volumes:
-  #       - ./isopruefi-frontend:/app
-  #       - ./isopruefi-frontend/node_modules:/app/node_modules
-  #     networks:
-  #     - isopruefi-custom
-  #     environment:
-  #       - NODE_ENV=development
-  #     stdin_open: true
-  #     tty: true
-  #     command: npm start
+  isopruefi-frontend:
+       image: ghcr.io/deadmade/isopruefi-frontend:latest
+       container_name: isopruefi-frontend
+       labels:
+         - "traefik.enable=true"
+         - "traefik.http.routers.frontend.rule=Host(`frontend.aicon.dhbw-heidenheim.de`)"
+         - "traefik.http.routers.frontend.entrypoints=websecure"
+         - "traefik.http.routers.frontend.tls=true"
+         - traefik.http.services.frontend.loadbalancer.server.port=3000
+       networks:
+       - isopruefi-custom
+       stdin_open: true
+       tty: true
 
-  # isopruefi-backend-api:
-  #     build:
-  #       context: ./isopruefi-backend/Rest-API
-  #       dockerfile: Dockerfile-Dev
-  #     container_name: isopruefi-backend-api
-  #     labels:
-  #       - "traefik.enable=true"
-  #       - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
-  #       - "traefik.http.routers.backend.entrypoints=websecure"
-  #       - "traefik.http.routers.backend.tls=true"
-  #       - traefik.http.services.backend.loadbalancer.server.port=8080
-  #     volumes:
-  #       - ./isopruefi-backend/Rest-API:/src/Rest-API
-  #     networks:
-  #     - isopruefi-custom
-  #     environment:
-  #       - ASPNETCORE_ENVIRONMENT=Development
+  isopruefi-backend-api:
+        image: ghcr.io/deadmade/isopruefi-rest-api:latest
+        container_name: isopruefi-backend-api
+        labels:
+         - "traefik.enable=true"
+         - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
+         - "traefik.http.routers.backend.entrypoints=websecure"
+         - "traefik.http.routers.backend.tls=true"
+         - traefik.http.services.backend.loadbalancer.server.port=8080
+        networks:
+          - isopruefi-custom
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Docker
+        env_file:
+          - ./secrets.env
 
-  # isopruefi-mqtt-receiver:
-  #       build:
-  #         context: ./isopruefi-backend
-  #         dockerfile: MQTT-Receiver-Worker/Dockerfile
-  #       container_name: isopruefi-mqtt-receiver
-  #       volumes:
-  #         - ./isopruefi-backend/MQTT-Receiver-Worker:/src/MQTT-Receiver-Worker
-  #       networks:
-  #       - isopruefi-custom
-  #       environment:
-  #         - ASPNETCORE_ENVIRONMENT=Development
-  #       env_file:
-  #         - ./secrets.env
+  isopruefi-mqtt-receiver:
+        image: ghcr.io/deadmade/isopruefi-mqtt-worker:latest
+        container_name: isopruefi-mqtt-receiver
+        networks:
+         - isopruefi-custom
+        environment:
+         - ASPNETCORE_ENVIRONMENT=Docker
+        env_file:
+          - ./secrets.env
+
+  isopruefi-weather-worker:
+        image: ghcr.io/deadmade/isopruefi-weather-worker:latest
+        container_name: isopruefi-weather-worker
+        networks:
+         - isopruefi-custom
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Docker
+        env_file:
+           - ./secrets.env

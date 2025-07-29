@@ -1,59 +1,105 @@
-#
 name: Release Docker Containers
 
-# Configures this workflow to run every time a change is pushed to the branch called `release`.
+# Triggers on git tags starting with 'v' for proper release versioning
 on:
   push:
 
-# Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
+
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
-# There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
-  build-and-push-image:
+  build-and-push-images:
     runs-on: ubuntu-latest
-    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
       contents: read
       packages: write
       attestations: write
       id-token: write
-      #
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
+        
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      # This step uses [docker/metadata-action](https://github.com/docker/metadata-action#about) to extract tags and labels that will be applied to the specified image. The `id` "meta" allows the output of this step to be referenced in a subsequent step. The `images` value provides the base name for the tags and labels.
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
-      # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see [Usage](https://github.com/docker/build-push-action#usage) in the README of the `docker/build-push-action` repository.
-      # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
-      - name: Build and push Docker image
-        id: push
+
+      # Build and push Frontend
+      - name: Build & push Frontend
+        id: push-frontend
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./isopruefi-frontend
+          file: ./isopruefi-frontend/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-      
-      # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see [Using artifact attestations to establish provenance for builds](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
-      - name: Generate artifact attestation
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-frontend:${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-frontend:latest
+
+      # Build and push Rest-API
+      - name: Build & push Rest-API
+        id: push-api
+        uses: docker/build-push-action@v6
+        with:
+          context: ./isopruefi-backend
+          file: ./isopruefi-backend/Rest-API/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-rest-api:${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-rest-api:latest
+
+      # Build and push Weather Data Worker
+      - name: Build & push Weather Data Worker
+        id: push-weather
+        uses: docker/build-push-action@v6
+        with:
+          context: ./isopruefi-backend
+          file: ./isopruefi-backend/Get-weatherData-worker/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-weather-worker:${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-weather-worker:latest
+
+      # Build and push MQTT Receiver Worker
+      - name: Build & push MQTT Receiver Worker
+        id: push-mqtt
+        uses: docker/build-push-action@v6
+        with:
+          context: ./isopruefi-backend
+          file: ./isopruefi-backend/MQTT-Receiver-Worker/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-mqtt-worker:${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-mqtt-worker:latest
+
+      # Generate artifact attestations for all images
+      - name: Generate Frontend attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
-          subject-digest: ${{ steps.push.outputs.digest }}
+          subject-name: ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-frontend
+          subject-digest: ${{ steps.push-frontend.outputs.digest }}
           push-to-registry: true
-      
+
+      - name: Generate API attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-rest-api
+          subject-digest: ${{ steps.push-api.outputs.digest }}
+          push-to-registry: true
+
+      - name: Generate Weather Worker attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-weather-worker
+          subject-digest: ${{ steps.push-weather.outputs.digest }}
+          push-to-registry: true
+
+      - name: Generate MQTT Worker attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-mqtt-worker
+          subject-digest: ${{ steps.push-mqtt.outputs.digest }}
+          push-to-registry: true

@@ -64,7 +64,7 @@ void coreSetup() {
 }
 
 void coreLoop() {
-  tryReconnect(mqttClient);
+  // tryReconnect(mqttClient);
   DateTime now = rtc.now();
 
   static bool recoveredSent = false;
@@ -75,11 +75,12 @@ void coreLoop() {
     if (mqttClient.connected()) {
       Serial.println("Trying to publish via MQTT...");
 
-      if (!recoveredSent) {
-        sendPendingData(mqttClient, topic, sensorType, sensorIdInUse);
-        recoveredSent = true;
-      }
-
+      // if (!recoveredSent) {
+      //   Serial.println("Checking for pending data to send...");
+      //   sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
+      //   recoveredSent = true;
+      // }
+      Serial.print("Publishing data: ");
       sendToMqtt(mqttClient, topic, sensorType, sensorIdInUse, c, now, count);
     } else {
       Serial.println("MQTT not connected – saving to SD card...");

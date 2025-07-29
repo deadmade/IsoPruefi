@@ -37,10 +37,13 @@ void saveToSD(SdFat& sdRef, float celsius, const DateTime& now, int sequence) {
     Serial.println("Failed to write file.");
   }
 }
-int listSavedFiles(String* fileList, int maxFiles) {
+int listSavedFiles(String* fileList, int maxFiles, const DateTime& now) {
+  Serial.println("Listing saved files on SD card...");
   int count = 0;
 
-  File root = sd.open("/");
+  char folder[8];
+  strncpy(folder, createFolderName(now), sizeof(folder));
+  File root = sd.open(folder);
   if (!root) return 0;
 
   File entry;
@@ -52,7 +55,7 @@ int listSavedFiles(String* fileList, int maxFiles) {
     }
     entry.close();
   }
-
+  Serial.print("Found Files on SD");
   root.close();
   return count;
 }

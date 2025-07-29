@@ -36,7 +36,8 @@ void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
 }
 
 void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
-                const char* sensorId) {
+                const char* sensorId, const DateTime& now) {
+  Serial.println("Sending pending data...");
   String fileList[1500];
   int count = listSavedFiles(fileList, 1500);
 
@@ -44,6 +45,7 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
     Serial.println("No pending data to send.");
     return;
   }
+  Serial.print("Found ");
 
   int startIdx = count > 1440 ? count - 1440 : 0;
   int sendCount = count - startIdx;
@@ -56,6 +58,7 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
   uint32_t latestTimestamp = 0;
 
   for (int i = startIdx; i < count; ++i) {
+    Serial.print("Processing file: ");
     File file = sd.open(fileList[i].c_str(), FILE_READ);
     if (!file) continue;
 
@@ -70,6 +73,8 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
     if (ts > latestTimestamp) latestTimestamp = ts;
 
     successCount++;
+    Serial.print("File ");
+    Serial.print(fileList[i]);
   }
 
   meta["count"] = successCount;
@@ -78,6 +83,7 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
   char payload[4096];
   size_t len = serializeJson(root, payload, sizeof(payload));
 
+  Serial.print("Total entries to send: ");
   if (len >= sizeof(payload)) {
     Serial.println("Payload too large, skipping publish.");
     return;
@@ -85,7 +91,7 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
 
   char fullTopic[128];
   snprintf(fullTopic, sizeof(fullTopic), "%s%s/%s/recovered", topicPrefix, sensorType, sensorId);
-
+  Serial.print("Publishing recovered data to ");
   if (mqttClient.beginMessage(fullTopic)) {
     mqttClient.print(payload);
     mqttClient.endMessage();

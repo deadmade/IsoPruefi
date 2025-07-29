@@ -10,7 +10,7 @@ networks:
 services:
   traefik:
     image: traefik:3.4.4
-    container_name: traefik
+    container_name: isopruefi-traefik
     restart: unless-stopped
     ports:
       - 10000:80
@@ -42,7 +42,7 @@ services:
 
   influxdb3:
     image: influxdb:3.2.1-core
-    container_name: influxdb
+    container_name: isopruefi-influxdb
     restart: unless-stopped
     command:
       - influxdb3
@@ -67,7 +67,7 @@ services:
 
   influxdb-explorer:
     image: influxdata/influxdb3-ui:1.0.3
-    container_name: influx-explorer
+    container_name: isopruefi-influx-explorer
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -87,8 +87,8 @@ services:
       - traefik
 
   postgres:
-    image: postgres:alpine3.21
-    container_name: postgres
+    image: postgres:alpine3.2-1
+    container_name: isopruefi-postgres
     restart: unless-stopped
     volumes:
       - ./postgres:/var/lib/postgresql/data
@@ -100,7 +100,7 @@ services:
 
   loki:
     image: grafana/loki:3.5.2
-    container_name: loki
+    container_name: isopruefi-loki
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
@@ -109,13 +109,13 @@ services:
 
   prometheus:
     image: prom/prometheus:v3.4.2
-    container_name: prometheus
+    container_name: isopruefi-prometheus
     command:
       - --web.enable-remote-write-receiver
       - --config.file=/etc/prometheus/prometheus.yml
   alloy:
     image: grafana/alloy:v1.9.2
-    container_name: alloy
+    container_name: isopruefi-alloy
     volumes:
       - ./loki/config.alloy:/etc/alloy/config.alloy
       - /var/run/docker.sock:/var/run/docker.sock
@@ -128,7 +128,7 @@ services:
 
   grafana:
     image: grafana/grafana:12.0.2
-    container_name: grafana
+    container_name: isopruefi-grafana
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.rule=Host(`grafana.aicon.dhbw-heidenheim.de`)"

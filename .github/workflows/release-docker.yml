@@ -1,9 +1,11 @@
 name: Release Docker Containers
 
-# Triggers on pushes to main or release branches
 on:
   push:
-
+    branches:
+      - 'main'
+      - 'sprint*'    # matches sprint0, sprint1, etc
+      - 'Sprint*'
 
 env:
   REGISTRY: ghcr.io

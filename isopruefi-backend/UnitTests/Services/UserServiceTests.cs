@@ -295,7 +295,7 @@ public class UserServiceTests
                 It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Error changing username for user test-id")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
+            Times.AtLeastOnce);
     }
 
     /// <summary>

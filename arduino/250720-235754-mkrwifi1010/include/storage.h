@@ -8,7 +8,7 @@ void saveToSD(SdFat& sd, float celsius, const DateTime& now, int sequence);
 #endif
 
 void saveDataToSD(float celsius, const DateTime& now, int sequence);
-int listSavedFiles(String* fileList, int maxFiles);
+int listSavedFiles(String* fileList, int maxFiles, const DateTime& now);
 
 
 // --- Inline helper functions (for Arduino & native build) ---
@@ -23,3 +23,4 @@ inline void createFilename(char* buffer, size_t bufferSize, const DateTime& now)
                   createFolderName(now),
                   now.month(), now.day(), now.hour(), now.minute());
 }
+

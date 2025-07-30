@@ -8,6 +8,8 @@ void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequen
   JsonArray arr = doc["value"].to<JsonArray>();
   arr.add(celsius);
   doc["sequence"] = sequence;
+  JsonArray meta = doc.createNestedArray("meta");
+  meta.add(nullptr);
 }
 
 // Sends a JSON payload to the complete MQTT topic
@@ -35,55 +37,53 @@ void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
   }
 }
 
+// Baut ein Recovered-JSON mit aktuellem timestamp, null-Werten und meta-Array
+void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, const DateTime& now) {
+  doc.clear();
+  doc["timestamp"] = now.unixtime();
+  JsonArray val = doc.createNestedArray("value");
+  val.add(nullptr);
+  doc["sequence"] = nullptr;
+
+  JsonArray meta = doc.createNestedArray("meta");
+
+  for (int i = 0; i < count; ++i) {
+    File file = sd.open(fileList[i].c_str(), FILE_READ);
+    if (!file) continue;
+
+    StaticJsonDocument<256> entry;
+    DeserializationError err = deserializeJson(entry, file);
+    file.close();
+
+    if (!err) {
+      meta.add(entry);
+    }
+  }
+}
+
 void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
-                const char* sensorId, const DateTime& now) {
-  Serial.println("Sending pending data...");
-  String fileList[1500];
-  int count = listSavedFiles(fileList, 1500);
+                     const char* sensorId, const DateTime& now) {
+  Serial.println("Sending pending data");
+
+  String fileList[500];
+  int count = listSavedFiles(fileList, 500, now);
+  Serial.println("Pending files count: " + String(count));
 
   if (count == 0) {
     Serial.println("No pending data to send.");
     return;
   }
-  Serial.print("Found ");
 
-  int startIdx = count > 1440 ? count - 1440 : 0;
-  int sendCount = count - startIdx;
+  StaticJsonDocument<1024> mainDoc;
+  buildRecoveredJson(mainDoc, fileList, count, now);
 
-  ArduinoJson::DynamicJsonDocument root(4096);
-  JsonArray dataArray = root.createNestedArray("data");
-  JsonObject meta = root.createNestedObject("meta");
-
-  int successCount = 0;
-  uint32_t latestTimestamp = 0;
-
-  for (int i = startIdx; i < count; ++i) {
-    Serial.print("Processing file: ");
-    File file = sd.open(fileList[i].c_str(), FILE_READ);
-    if (!file) continue;
-
-    StaticJsonDocument<128> entry;
-    DeserializationError err = deserializeJson(entry, file);
-    file.close();
-
-    if (err) continue;
-
-    dataArray.add(entry);
-    uint32_t ts = entry["timestamp"] | 0;
-    if (ts > latestTimestamp) latestTimestamp = ts;
-
-    successCount++;
-    Serial.print("File ");
-    Serial.print(fileList[i]);
+  if (!mainDoc.containsKey("meta") || mainDoc["meta"].size() == 0) {
+    Serial.println("No valid recovered entries to send.");
+    return;
   }
 
-  meta["count"] = successCount;
-  meta["latest"] = latestTimestamp;
-
-  char payload[4096];
-  size_t len = serializeJson(root, payload, sizeof(payload));
-
-  Serial.print("Total entries to send: ");
+  char payload[1024];
+  size_t len = serializeJson(mainDoc, payload, sizeof(payload));
   if (len >= sizeof(payload)) {
     Serial.println("Payload too large, skipping publish.");
     return;
@@ -92,14 +92,22 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
   char fullTopic[128];
   snprintf(fullTopic, sizeof(fullTopic), "%s%s/%s/recovered", topicPrefix, sensorType, sensorId);
   Serial.print("Publishing recovered data to ");
+  Serial.println(fullTopic);
+
   if (mqttClient.beginMessage(fullTopic)) {
     mqttClient.print(payload);
     mqttClient.endMessage();
-    Serial.print("Published recovered data to ");
-    Serial.println(fullTopic);
-    Serial.print("Entries sent: ");
-    Serial.println(successCount);
+    Serial.println("Published recovered data.");
+
+    // Nach erfolgreichem Senden: Dateien löschen
+    char folder[8];
+    strncpy(folder, createFolderName(now), sizeof(folder));
+    for (int i = 0; i < count; ++i) {
+      String fullPath = String(folder) + "/" + fileList[i];
+      sd.remove(fullPath.c_str());
+    }
   } else {
     Serial.println("MQTT recovered publish failed.");
   }
 }
+

@@ -10,6 +10,9 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
     public DbSet<TopicSetting> TopicSettings { get; set; }
     public DbSet<TokenInfo> TokenInfos { get; set; }
     
+    /// <summary>
+    /// Represents the collection of CoordinateMappings entities in the database.
+    /// </summary>
     public DbSet<CoordinateMapping> CoordinateMappings { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

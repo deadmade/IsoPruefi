@@ -29,7 +29,7 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
   Serial.println("Sending pending data");
 
   String fileList[500];
-  int count = listSavedFiles(fileList, 500, now);
+  int count = listSavedFilesData(fileList, 500, now);
   Serial.println("Pending files count: " + String(count));
 
   if (count == 0) return;
@@ -44,7 +44,7 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
 
   Serial.println("Recovered entries to send: " + String(mainDoc["meta"].size()));
 
-  saveRecoveredJsonToSd(fileList, count, now);
+  saveRecoveredJsonDataToSd(fileList, count, now);
 
   // Prepare filename for deletion
   char baseFilename[64];
@@ -70,7 +70,7 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
     mqttClient.endMessage();
     Serial.println("Published recovered data.");
 
-  // deleteRecoveredAndPendingSourceFiles(fileList, count, now, recoveredFilename);
+  // deleteRecoveredAndPendingSourceFilesData(fileList, count, now, recoveredFilename);
 } else {
   Serial.println("MQTT recovered publish failed.");
 }

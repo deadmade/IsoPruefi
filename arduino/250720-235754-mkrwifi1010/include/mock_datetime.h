@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 struct MockDateTime {
   int _year, _month, _day, _hour, _minute, _second;
@@ -12,6 +13,10 @@ struct MockDateTime {
   int hour()   const { return _hour; }
   int minute() const { return _minute; }
   int second() const { return _second; }
+
+  uint32_t unixtime() const {
+    return 1753778400; // 26.07.2025 14:55:00 
+  }
 };
 
 #ifdef UNIT_TEST

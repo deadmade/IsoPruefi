@@ -83,7 +83,11 @@ void saveToSD(SdFat& sdRef, float celsius, const DateTime& now, int sequence) {
   }
 }
 
-void saveRecoveredJsonToSd(String* fileList, int count, const DateTime& now) {
+void saveRecoveredJsonDataToSd(String* fileList, int count, const DateTime& now) {
+  saveRecoveredJsonToSd(sd, fileList, count, now);
+}
+
+void saveRecoveredJsonToSd(SdFat& sdRef, String* fileList, int count, const DateTime& now) {
   Serial.println("Saving recovered JSON to SD...");
   StaticJsonDocument<1024> doc;
   buildRecoveredJson(doc, fileList, count, now);
@@ -95,9 +99,8 @@ void saveRecoveredJsonToSd(String* fileList, int count, const DateTime& now) {
   snprintf(recoveredName, sizeof(recoveredName), "%.*s_recovered.json",
            (int)(strlen(baseName) - 5), baseName);
 
-  File file = sd.open(recoveredName, FILE_WRITE);
+  File file = sdRef.open(recoveredName, FILE_WRITE);
   if (file) {
-    // Write JSON to a buffer, then write buffer to file
     char jsonBuffer[1024];
     size_t len = serializeJson(doc, jsonBuffer, sizeof(jsonBuffer));
     file.write((const uint8_t*)jsonBuffer, len);
@@ -108,13 +111,17 @@ void saveRecoveredJsonToSd(String* fileList, int count, const DateTime& now) {
   }
 }
 
-int listSavedFiles(String* fileList, int maxFiles, const DateTime& now) {
+int listSavedFilesData(String* fileList, int maxFiles, const DateTime& now) {
+  return listSavedFiles(sd, fileList, maxFiles, now);
+}
+
+int listSavedFiles(SdFat& sdRef, String* fileList, int maxFiles, const DateTime& now) {
   Serial.println("Listing saved files from last 24h...");
   int count = 0;
 
   char folder[8];
   strncpy(folder, createFolderName(now), sizeof(folder));
-  File root = sd.open(folder);
+  File root = sdRef.open(folder);
   if (!root) {
     Serial.println("Folder not found or failed to open.");
     return 0;
@@ -126,7 +133,6 @@ int listSavedFiles(String* fileList, int maxFiles, const DateTime& now) {
       char name[64];
       entry.getName(name, sizeof(name));
 
-      // Nur JSON-Dateien ohne "_recovered" zulassen
       String nameStr(name);
       if (!nameStr.endsWith(".json") || nameStr.indexOf("_recovered") != -1) {
         entry.close();
@@ -156,20 +162,24 @@ int listSavedFiles(String* fileList, int maxFiles, const DateTime& now) {
   return count;
 }
 
-void deleteRecoveredAndPendingSourceFiles(const String* fileList, int count, const DateTime& now, const String& recoveredFilename) {
+void deleteRecoveredAndPendingSourceFilesData(const String* fileList, int count, const DateTime& now, const String& recoveredFilename) {
+  deleteRecoveredAndPendingSourceFiles(sd, fileList, count, now, recoveredFilename);
+}
+
+void deleteRecoveredAndPendingSourceFiles(SdFat& sdRef, const String* fileList, int count, const DateTime& now, const String& recoveredFilename) {
   char folder[8];
   strncpy(folder, createFolderName(now), sizeof(folder));
   for (int i = 0; i < count; ++i) {
     String fullPath = String(folder) + "/" + fileList[i];
-    if (sd.remove(fullPath.c_str())) {
+    if (sdRef.remove(fullPath.c_str())) {
       Serial.println("Deleted file: " + fullPath);
     } else {
       Serial.println("Failed to delete file: " + fullPath);
     }
   }
 
-  if (sd.exists(recoveredFilename.c_str())) {
-    if (sd.remove(recoveredFilename.c_str())) {
+  if (sdRef.exists(recoveredFilename.c_str())) {
+    if (sdRef.remove(recoveredFilename.c_str())) {
       Serial.println("Deleted recovered file: " + recoveredFilename);
     } else {
       Serial.println("Failed to delete recovered file: " + recoveredFilename);

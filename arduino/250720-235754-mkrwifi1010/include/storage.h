@@ -2,24 +2,32 @@
 #include "platform.h"
 #include <cstdio> // for snprintf
 
-// Only available on Arduino
 #ifndef UNIT_TEST
+// Arduino-only functions with real types
 void saveToSD(SdFat& sd, float celsius, const DateTime& now, int sequence);
-#endif
+void saveRecoveredJsonToSd(SdFat& sd, String* fileList, int count, const DateTime& now);
+int listSavedFiles(SdFat& sd, String* fileList, int maxFiles, const DateTime& now);
+void deleteRecoveredAndPendingSourceFiles(SdFat& sd, const String* fileList, int count, const DateTime& now, const String& recoveredFilename);
 
+// ArduinoJson
 void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence);
 void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, const DateTime& now);
 
+#else
+// Dummy prototypes for native tests
+inline void buildJson(void*, float, const DateTime&, int) {}
+inline void buildRecoveredJson(void*, void*, int, const DateTime&) {}
+#endif
 
+// Wrapper functions (also Arduino-only)
+#ifndef UNIT_TEST
 void saveDataToSD(float celsius, const DateTime& now, int sequence);
-void saveRecoveredJsonToSd(String* fileList, int count, const DateTime& now);
-int listSavedFiles(String* fileList, int maxFiles, const DateTime& now);
+void saveRecoveredJsonDataToSd(String* fileList, int count, const DateTime& now);
+int listSavedFilesData(String* fileList, int maxFiles, const DateTime& now);
+void deleteRecoveredAndPendingSourceFilesData(const String* fileList, int count, const DateTime& now, const String& recoveredFilename);
+#endif
 
-
-void deleteRecoveredAndPendingSourceFiles(const String* fileList, int count, const DateTime& now, const String& recoveredFilename);
-
-
-// --- Inline helper functions (for Arduino & native build) ---
+// --- Inline helper functions (platform independent) ---
 inline const char* createFolderName(const DateTime& now) {
     static char folderName[8];
     std::snprintf(folderName, sizeof(folderName), "%04d", now.year());
@@ -31,4 +39,3 @@ inline void createFilename(char* buffer, size_t bufferSize, const DateTime& now)
                   createFolderName(now),
                   now.month(), now.day(), now.hour(), now.minute());
 }
-

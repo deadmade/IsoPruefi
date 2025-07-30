@@ -65,6 +65,11 @@ export class AuthenticationClient {
         return Promise.resolve<FileResponse>(null as any);
     }
 
+    /**
+     * Registers a new user in the system.
+     * @param input The registration data containing user credentials and information.
+     * @return User registered successfully.
+     */
     register(input: Register): Promise<FileResponse> {
         let url_ = this.baseUrl + "/v1/Authentication/Register";
         url_ = url_.replace(/[?&]$/, "");
@@ -920,11 +925,11 @@ export interface IProblemDetails {
 /** Represents a request to change a user's password. */
 export class ChangePassword implements IChangePassword {
     /** Gets or sets the unique identifier of the user whose password is to be changed. */
-    userId?: string;
+    userId?: string | undefined;
     /** Gets or sets the current password of the user. */
-    currentPassword?: string;
+    currentPassword?: string | undefined;
     /** Gets or sets the new password to be set for the user. */
-    newPassword?: string;
+    newPassword?: string | undefined;
 
     constructor(data?: IChangePassword) {
         if (data) {
@@ -962,11 +967,11 @@ export class ChangePassword implements IChangePassword {
 /** Represents a request to change a user's password. */
 export interface IChangePassword {
     /** Gets or sets the unique identifier of the user whose password is to be changed. */
-    userId?: string;
+    userId?: string | undefined;
     /** Gets or sets the current password of the user. */
-    currentPassword?: string;
+    currentPassword?: string | undefined;
     /** Gets or sets the new password to be set for the user. */
-    newPassword?: string;
+    newPassword?: string | undefined;
 }
 
 /** Represents a user in the identity system */

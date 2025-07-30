@@ -3,15 +3,19 @@ using MQTTnet.Formatter;
 
 namespace MQTT_Sender;
 
+/// <summary>
+/// This class provides a method to establish a connection to an MQTT broker.
+/// </summary>
 public static class Connection
 {
+    /// <summary>
+    /// Gets a connection to the MQTT broker.
+    /// </summary>
+    /// <returns></returns>
     public static async Task<IMqttClient> GetConnection()
     {
         var broker = "aicon.dhbw-heidenheim.de";
         var port = 1883;
-        var clientId = Guid.NewGuid().ToString();
-        var username = "schueleinm.tin23";
-        var password = "geheim";
 
         // Create a MQTT client factory
         var factory = new MqttClientFactory();
@@ -22,7 +26,6 @@ public static class Connection
         // Create MQTT client options
         var options = new MqttClientOptionsBuilder()
             .WithTcpServer(broker, port) // MQTT broker address and port
-            .WithCredentials(username, password) // Set username and password
             .WithProtocolVersion(MqttProtocolVersion.V500)
             .Build();
 

@@ -4,8 +4,15 @@ using Rest_API.Models;
 
 namespace Rest_API.Seeder;
 
+/// <summary>
+/// Seeds the initial user data into the application.
+/// </summary>
 public class SeedUser
 {
+    /// <summary>
+    /// Seeds the initial user data into the application.
+    /// </summary>
+    /// <param name="app"></param>
     public static async Task SeedData(IApplicationBuilder app)
     {
         // Create a scoped service provider to resolve dependencies

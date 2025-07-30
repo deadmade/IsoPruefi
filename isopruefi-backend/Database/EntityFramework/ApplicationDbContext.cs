@@ -4,16 +4,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Database.EntityFramework;
 
+/// <inheritdoc />
 public class ApplicationDbContext : IdentityDbContext<ApiUser>
 {
     //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
-    public DbSet<TopicSetting> TopicSettings { get; set; }
-    public DbSet<TokenInfo> TokenInfos { get; set; }
 
+    /// <summary>
+    /// Represents the collection of TopicSetting entities in the database.
+    /// </summary>
+    public virtual DbSet<TopicSetting> TopicSettings { get; set; }
+
+    /// <summary>
+    /// Represents the collection of TokenInfo entities in the database.
+    /// </summary>
+    public virtual DbSet<TokenInfo> TokenInfos { get; set; }
+
+    /// <inheritdoc />
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 
+    /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -38,12 +49,5 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
                 }
             );
         });
-    }
-
-    //TODO: Set connection from environment variable or configuration file
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseNpgsql(
-            @"Host=localhost:5432;Username=Isopruefi;Password=secret;Database=Isopruefi");
     }
 }

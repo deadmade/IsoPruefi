@@ -1,5 +1,7 @@
 using System.Text.Json;
 using Database.Repository.InfluxRepo;
+using Database.Repository.SettingsRepo;
+using Microsoft.Extensions.Configuration;
 
 namespace Get_weatherData_worker;
 
@@ -7,21 +9,29 @@ public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IInfluxRepo _influxRepo;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IConfiguration _configuration;
 
-    private readonly string _weatherDataApi =
-        "https://api.open-meteo.com/v1/forecast?latitude=48.678&longitude=10.1516&models=icon_seamless&current=temperature_2m";
+    private readonly string _weatherDataApi;
+    private readonly string _alternativeWeatherDataApi;
+    private readonly string _location;
 
-    private readonly string _alternativeWeatherDataApi =
-        "https://api.brightsky.dev/current_weather?lat=48.67&lon=10.1516";
-
-    private readonly string _location = "Heidenheim";
-
-    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory, IInfluxRepo influxRepo)
+    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory,
+        IConfiguration configuration, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
-        _influxRepo = influxRepo;
+        _serviceProvider = serviceProvider;
+        _configuration = configuration;
+
+
+        _weatherDataApi = _configuration["Weather:OpenMeteoApiUrl"] ?? throw new InvalidOperationException(
+            "Weather:OpenMeteoApiUrl configuration is missing");
+
+        _alternativeWeatherDataApi = _configuration["Weather:BrightSkyApiUrl"] ?? throw new InvalidOperationException(
+            "Weather:BrightSkyApiUrl configuration is missing");
+
+        _location = _configuration["Weather:Location"] ?? "Heidenheim"; // Will be changed in the future to a more dynamic solution
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -30,6 +40,9 @@ public class Worker : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
+            using var scope = _serviceProvider.CreateScope();
+            var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
+
             var weatherData = new WeatherData();
 
             // Sending GET-Request to Meteo.
@@ -50,7 +63,7 @@ public class Worker : BackgroundService
                         weatherData.Temperature = temperature.GetDouble();
 
                         // Saving the temperature in the database.
-                        await _influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
+                        await influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
                             weatherData.Timestamp);
 
                         _logger.LogInformation("Weather data from Meteo retrieved successfully.");
@@ -86,7 +99,7 @@ public class Worker : BackgroundService
                             weatherData.Temperature = temperature.GetDouble();
 
                             // Saving the temperature in the database.
-                            await _influxRepo.WriteOutsideWeatherData(_location, "Bright Sky", weatherData.Temperature,
+                            await influxRepo.WriteOutsideWeatherData(_location, "Bright Sky", weatherData.Temperature,
                                 weatherData.Timestamp);
 
                             _logger.LogInformation("Weather data from Bright Sky retrieved successfully.");

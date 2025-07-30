@@ -17,7 +17,7 @@ public class SettingsRepo : ISettingsRepo
     /// <param name="applicationDbContext">The database context for settings.</param>
     public SettingsRepo(ApplicationDbContext applicationDbContext)
     {
-        _applicationDbContext = applicationDbContext;
+        _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
     }
 
 
@@ -30,6 +30,9 @@ public class SettingsRepo : ISettingsRepo
     /// <inheritdoc />
     public async Task<int> AddTopicSettingAsync(TopicSetting topicSetting)
     {
+        if (topicSetting == null)
+            throw new ArgumentNullException(nameof(topicSetting));
+
         _applicationDbContext.TopicSettings.Add(topicSetting);
         return await _applicationDbContext.SaveChangesAsync();
     }

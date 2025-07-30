@@ -46,9 +46,11 @@
         "tags": [
           "Authentication"
         ],
+        "summary": "Registers a new user in the system.",
         "operationId": "Authentication_Register",
         "requestBody": {
           "x-name": "input",
+          "description": "The registration data containing user credentials and information.",
           "content": {
             "application/json": {
               "schema": {
@@ -61,7 +63,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "User registered successfully.",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -566,15 +568,18 @@
         "properties": {
           "userId": {
             "type": "string",
-            "description": "Gets or sets the unique identifier of the user whose password is to be changed."
+            "description": "Gets or sets the unique identifier of the user whose password is to be changed.",
+            "nullable": true
           },
           "currentPassword": {
             "type": "string",
-            "description": "Gets or sets the current password of the user."
+            "description": "Gets or sets the current password of the user.",
+            "nullable": true
           },
           "newPassword": {
             "type": "string",
-            "description": "Gets or sets the new password to be set for the user."
+            "description": "Gets or sets the new password to be set for the user.",
+            "nullable": true
           }
         }
       },

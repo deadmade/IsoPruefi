@@ -1,0 +1,1881 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>AuthenticationControllerTests - IsoPrüfi</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#authenticationcontrollertests" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="IsoPrüfi" class="md-header__button md-logo" aria-label="IsoPrüfi" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IsoPrüfi
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              AuthenticationControllerTests
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="IsoPrüfi" class="md-nav__button md-logo" aria-label="IsoPrüfi" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    IsoPrüfi
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Build
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dev-Guidelines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Code Documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Code Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rest-API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Rest-API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MQTT-Receiver-Worker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MQTT-Receiver-Worker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MQTT-Sender/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MQTT-Sender
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Database
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    UnitTests
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Frontend
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            Frontend
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6_2" id="__nav_4_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    App
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            App
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontend/App/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    App Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontend/App/functions/default/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    App Component
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6_3" id="__nav_4_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Weather
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            Weather
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontend/Weather/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Weather Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6_3_2" id="__nav_4_6_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Components
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_6_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Components
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontend/Weather/functions/WeatherChartTitle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Chart Title
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontend/Weather/functions/TempChart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Temp Chart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6_3_3" id="__nav_4_6_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Data Types
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_6_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Data Types
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontend/Weather/type-aliases/WeatherEntry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    WeatherEntry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontend/Weather/variables/WeatherData/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    WeatherData
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Docker
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Docker
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../docker-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker Dev Environment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    IsoPrüfi Documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            IsoPrüfi Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/arc42-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    00 arc42 Template with Explanation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/01_introduction_and_goals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    01 Introduction and Goals
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/02_architecture_constraints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    02 Architecture Constrains
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/03_context_and_scope/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    03 Context and Scope
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/04_solution_strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    04 Solution Strategy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/05_building_block_view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    05 Building Block View
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/06_runtime_view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    06 Runtime View
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/07_deployment_view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    07 Deployment View
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/08_concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    08 Concepts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/09_architecture_decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    09 Architecture Decisions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/10_quality_requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    10 Quality Requirements
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/11_technical_risks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    11 Technical Risks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentation/12_glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    12 Glossary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Constructors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authenticationcontrollertests_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      AuthenticationControllerTests()
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#login_shouldloginformationmessages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Login_ShouldLogInformationMessages()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Login_ShouldLogInformationMessages()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login_withauthenticationexception_shouldreturnunauthorizedwithproblemdetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Login_WithAuthenticationException_ShouldReturnUnauthorizedWithProblemDetails()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Login_WithAuthenticationException_ShouldReturnUnauthorizedWithProblemDetails()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login_withgenericexception_shouldreturninternalservererrorwithproblemdetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Login_WithGenericException_ShouldReturnInternalServerErrorWithProblemDetails()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Login_WithGenericException_ShouldReturnInternalServerErrorWithProblemDetails()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login_withinvalidmodelstate_shouldreturnbadrequestwithvalidationproblemdetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Login_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Login_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login_withinvalidoperationexception_shouldreturninternalservererrorwithproblemdetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Login_WithInvalidOperationException_ShouldReturnInternalServerErrorWithProblemDetails()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Login_WithInvalidOperationException_ShouldReturnInternalServerErrorWithProblemDetails()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login_withvalidcredentials_shouldreturnokwithjwttoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      Login_WithValidCredentials_ShouldReturnOkWithJwtToken()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Login_WithValidCredentials_ShouldReturnOkWithJwtToken()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refresh_withexception_shouldreturninternalservererrorwithproblemdetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Refresh_WithException_ShouldReturnInternalServerErrorWithProblemDetails()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Refresh_WithException_ShouldReturnInternalServerErrorWithProblemDetails()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refresh_withinvalidmodelstate_shouldreturnbadrequestwithvalidationproblemdetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Refresh_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Refresh_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refresh_withvalidtoken_shouldreturnokwithnewjwttoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      Refresh_WithValidToken_ShouldReturnOkWithNewJwtToken()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Refresh_WithValidToken_ShouldReturnOkWithNewJwtToken()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register_shouldloginformationmessages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Register_ShouldLogInformationMessages()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Register_ShouldLogInformationMessages()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register_withexception_shouldreturninternalservererrorwithproblemdetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Register_WithException_ShouldReturnInternalServerErrorWithProblemDetails()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Register_WithException_ShouldReturnInternalServerErrorWithProblemDetails()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register_withinvalidmodelstate_shouldreturnbadrequestwithvalidationproblemdetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Register_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Register_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register_withvalidinput_shouldreturnok" class="md-nav__link">
+    <span class="md-ellipsis">
+      Register_WithValidInput_ShouldReturnOk()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Register_WithValidInput_ShouldReturnOk()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup()
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="authenticationcontrollertests">AuthenticationControllerTests</h1>
+<p>Namespace: UnitTests.Controllers</p>
+<p>Unit tests for the AuthenticationController class, verifying authentication operations including login, registration, and token refresh functionality.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AuthenticationControllerTests</span>
+</code></pre></div>
+<p>Inheritance <a href="https://docs.microsoft.com/en-us/dotnet/api/system.object">Object</a> → <a href="./">AuthenticationControllerTests</a></p>
+<h2 id="constructors">Constructors</h2>
+<h3 id="authenticationcontrollertests_1"><a id="constructors-.ctor"/><strong>AuthenticationControllerTests()</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="nf">AuthenticationControllerTests</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="methods">Methods</h2>
+<h3 id="login_shouldloginformationmessages"><a id="methods-login_shouldloginformationmessages"/><strong>Login_ShouldLogInformationMessages()</strong></h3>
+<p>Tests that login operation logs appropriate information messages during execution.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Login_ShouldLogInformationMessages</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="login_withauthenticationexception_shouldreturnunauthorizedwithproblemdetails"><a id="methods-login_withauthenticationexception_shouldreturnunauthorizedwithproblemdetails"/><strong>Login_WithAuthenticationException_ShouldReturnUnauthorizedWithProblemDetails()</strong></h3>
+<p>Tests that login with authentication exception returns an Unauthorized result with problem details.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Login_WithAuthenticationException_ShouldReturnUnauthorizedWithProblemDetails</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_1">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="login_withgenericexception_shouldreturninternalservererrorwithproblemdetails"><a id="methods-login_withgenericexception_shouldreturninternalservererrorwithproblemdetails"/><strong>Login_WithGenericException_ShouldReturnInternalServerErrorWithProblemDetails()</strong></h3>
+<p>Tests that login with generic exception returns an InternalServerError result with problem details.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Login_WithGenericException_ShouldReturnInternalServerErrorWithProblemDetails</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_2">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="login_withinvalidmodelstate_shouldreturnbadrequestwithvalidationproblemdetails"><a id="methods-login_withinvalidmodelstate_shouldreturnbadrequestwithvalidationproblemdetails"/><strong>Login_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()</strong></h3>
+<p>Tests that login with invalid model state returns a BadRequest result with validation problem details.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Login_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_3">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="login_withinvalidoperationexception_shouldreturninternalservererrorwithproblemdetails"><a id="methods-login_withinvalidoperationexception_shouldreturninternalservererrorwithproblemdetails"/><strong>Login_WithInvalidOperationException_ShouldReturnInternalServerErrorWithProblemDetails()</strong></h3>
+<p>Tests that login with InvalidOperationException returns an InternalServerError result with problem details.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Login_WithInvalidOperationException_ShouldReturnInternalServerErrorWithProblemDetails</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_4">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="login_withvalidcredentials_shouldreturnokwithjwttoken"><a id="methods-login_withvalidcredentials_shouldreturnokwithjwttoken"/><strong>Login_WithValidCredentials_ShouldReturnOkWithJwtToken()</strong></h3>
+<p>Tests that login with valid credentials returns an OK result with a JWT token.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Login_WithValidCredentials_ShouldReturnOkWithJwtToken</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_5">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="refresh_withexception_shouldreturninternalservererrorwithproblemdetails"><a id="methods-refresh_withexception_shouldreturninternalservererrorwithproblemdetails"/><strong>Refresh_WithException_ShouldReturnInternalServerErrorWithProblemDetails()</strong></h3>
+<p>Tests that token refresh with exception returns an InternalServerError result with problem details.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Refresh_WithException_ShouldReturnInternalServerErrorWithProblemDetails</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_6">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="refresh_withinvalidmodelstate_shouldreturnbadrequestwithvalidationproblemdetails"><a id="methods-refresh_withinvalidmodelstate_shouldreturnbadrequestwithvalidationproblemdetails"/><strong>Refresh_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()</strong></h3>
+<p>Tests that token refresh with invalid model state returns a BadRequest result with validation problem details.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Refresh_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_7">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="refresh_withvalidtoken_shouldreturnokwithnewjwttoken"><a id="methods-refresh_withvalidtoken_shouldreturnokwithnewjwttoken"/><strong>Refresh_WithValidToken_ShouldReturnOkWithNewJwtToken()</strong></h3>
+<p>Tests that token refresh with valid token returns an OK result with new JWT token.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Refresh_WithValidToken_ShouldReturnOkWithNewJwtToken</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_8">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="register_shouldloginformationmessages"><a id="methods-register_shouldloginformationmessages"/><strong>Register_ShouldLogInformationMessages()</strong></h3>
+<p>Tests that registration operation logs appropriate information messages during execution.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Register_ShouldLogInformationMessages</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_9">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="register_withexception_shouldreturninternalservererrorwithproblemdetails"><a id="methods-register_withexception_shouldreturninternalservererrorwithproblemdetails"/><strong>Register_WithException_ShouldReturnInternalServerErrorWithProblemDetails()</strong></h3>
+<p>Tests that registration with exception returns an InternalServerError result with problem details.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Register_WithException_ShouldReturnInternalServerErrorWithProblemDetails</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_10">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="register_withinvalidmodelstate_shouldreturnbadrequestwithvalidationproblemdetails"><a id="methods-register_withinvalidmodelstate_shouldreturnbadrequestwithvalidationproblemdetails"/><strong>Register_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()</strong></h3>
+<p>Tests that registration with invalid model state returns a BadRequest result with validation problem details.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Register_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_11">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="register_withvalidinput_shouldreturnok"><a id="methods-register_withvalidinput_shouldreturnok"/><strong>Register_WithValidInput_ShouldReturnOk()</strong></h3>
+<p>Tests that registration with valid input returns an OK result.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Register_WithValidInput_ShouldReturnOk</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="returns_12">Returns</h4>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></p>
+<h3 id="setup"><a id="methods-setup"/><strong>Setup()</strong></h3>
+<p>Sets up test fixtures and initializes mocks before each test execution.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Setup</span><span class="p">()</span>
+</code></pre></div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 30, 2025 15:39:43 UTC">July 30, 2025</span>
+  </span>
+
+    
+    
+    
+      
+  
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Contributors">
+      
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.54 5.54 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13zM0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20zm24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9z"/></svg>
+      
+    </span>
+    <nav>
+      
+    </nav>
+  </span>
+
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["instant_navigation", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

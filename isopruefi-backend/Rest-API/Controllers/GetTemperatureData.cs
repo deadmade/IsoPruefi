@@ -96,6 +96,36 @@ public class TemperatureDataController : ControllerBase
                 .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) }).ToList()
         };
 
+        // Testing plausibility of the deviation between consecutive temperature data.
+        var orderedOutsideTemperature = temperatureData.TemperatureOutside.OrderBy(d => d.Timestamp).ToList();
+        var orderedNorthTemperature = temperatureData.TemperatureNord.OrderBy(d => d.Timestamp).ToList();
+        var orderedSouthTemperature = temperatureData.TemperatureSouth.OrderBy(d => d.Timestamp).ToList();
+
+        if (orderedNorthTemperature.Count == orderedSouthTemperature.Count &&
+            orderedNorthTemperature.Count == orderedOutsideTemperature.Count)
+        {
+            for (int i = 0; i < orderedNorthTemperature.Count - 1; i++)
+            {
+                var northDeviation = orderedNorthTemperature[i].Temperature - orderedNorthTemperature[i + 1].Temperature;
+                var southDeviation = orderedSouthTemperature[i].Temperature - orderedSouthTemperature[i + 1].Temperature;
+                var outsideDeviation = orderedOutsideTemperature[i].Temperature - orderedOutsideTemperature[i + 1].Temperature;
+
+                if (Math.Abs(northDeviation) > 10.0 || Math.Abs(southDeviation) > 10.0)
+                {
+                    _logger.LogWarning("Inside temperature may be corrupted, the temperature deviation has exceeded boundary values.");
+                }
+
+                if (Math.Abs(outsideDeviation) > 10.0)
+                {
+                    _logger.LogWarning("Outside temperature may be corrupted, the temperature deviation has exceeded boundary values.");
+                }
+            }
+        }
+        else
+        {
+            _logger.LogWarning("Temperature data is missing.");
+        }
+
         return temperatureData;
     }
 
@@ -126,7 +156,7 @@ public class TemperatureDataController : ControllerBase
                 }
                 
                 // Testing for plausibility of the temperature with boundary values.
-                if (temperature > 45 || temperature < -30)
+                if (temperature > 45.0 || temperature < -30.0)
                 {
                     _logger.LogWarning("Outside temperature may be corrupted, the temperature has exceeded boundary values.");
                 }
@@ -177,7 +207,7 @@ public class TemperatureDataController : ControllerBase
                 }
                 
                 // Testing for plausibility of the temperature with boundary values.
-                if (temperature > 35 || temperature < -10)
+                if (temperature > 35.0 || temperature < -10.0)
                 {
                     _logger.LogWarning("Inside temperature may be corrupted, the temperature has exceeded boundary values.");
                 }

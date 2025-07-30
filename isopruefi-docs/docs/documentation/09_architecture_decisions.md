@@ -223,4 +223,4 @@ Negative:
 
 ## Sources
 
-[Documenting Architecture Desicions by Michael Nygard](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
+[Documenting Architecture Decisions by Michael Nygard](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)

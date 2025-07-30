@@ -124,6 +124,12 @@ public class TemperatureDataController : ControllerBase
                         timestamp, temperature, place);
                     continue;
                 }
+                
+                // Testing for plausibility of the temperature with boundary values.
+                if (temperature > 45 || temperature < -30)
+                {
+                    _logger.LogWarning("Outside temperature may be corrupted, the temperature has exceeded boundary values.");
+                }
 
                 long.TryParse(timestamp.ToString(), out var timestampLong);
                 timestampLong /= 1000000000;
@@ -168,6 +174,12 @@ public class TemperatureDataController : ControllerBase
                         "Received incomplete data from InfluxDB: Timestamp: {Timestamp}, Value: {Value}",
                         timestamp, temperature);
                     continue;
+                }
+                
+                // Testing for plausibility of the temperature with boundary values.
+                if (temperature > 35 || temperature < -10)
+                {
+                    _logger.LogWarning("Inside temperature may be corrupted, the temperature has exceeded boundary values.");
                 }
 
                 long.TryParse(timestamp.ToString(), out var timestampLong);

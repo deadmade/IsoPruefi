@@ -67,8 +67,15 @@ public class Worker : BackgroundService
                         weatherData.Temperature = temperature.GetDouble();
 
                         // Saving the temperature in the database.
-                        await _influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
-                            weatherData.Timestamp);
+                        try
+                        {
+                            await _influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
+                                weatherData.Timestamp);
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e, "Outside Weather data could not be saved in the database.");
+                        }
 
                         _logger.LogInformation("Weather data from Meteo retrieved successfully.");
                     }
@@ -103,8 +110,16 @@ public class Worker : BackgroundService
                             weatherData.Temperature = temperature.GetDouble();
 
                             // Saving the temperature in the database.
-                            await _influxRepo.WriteOutsideWeatherData(_location, "Bright Sky", weatherData.Temperature,
-                                weatherData.Timestamp);
+                            try
+                            {
+                                await _influxRepo.WriteOutsideWeatherData(_location, "Bright Sky",
+                                    weatherData.Temperature,
+                                    weatherData.Timestamp);
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogError(e, "Outside Weather data could not be saved in the database.");
+                            }
 
                             _logger.LogInformation("Weather data from Bright Sky retrieved successfully.");
                         }

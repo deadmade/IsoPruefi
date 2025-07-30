@@ -7,7 +7,12 @@
 void saveToSD(SdFat& sd, float celsius, const DateTime& now, int sequence);
 #endif
 
+void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence);
+void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, const DateTime& now);
+
+
 void saveDataToSD(float celsius, const DateTime& now, int sequence);
+void saveRecoveredJsonToSd(String* fileList, int count, const DateTime& now);
 int listSavedFiles(String* fileList, int maxFiles, const DateTime& now);
 
 

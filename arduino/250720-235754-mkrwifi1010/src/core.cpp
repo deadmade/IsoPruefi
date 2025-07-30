@@ -62,7 +62,7 @@ void coreSetup() {
   }
 
   DateTime now = rtc.now();
-  sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
+  // sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
   Serial.println("Sensor initialized successfully.");
 
   Serial.println("Setup complete.");
@@ -80,7 +80,7 @@ void coreLoop() {
       Serial.print("Publishing data: ");
       sendToMqtt(mqttClient, topic, sensorType, sensorIdInUse, c, now, count);
     } else {
-      Serial.println("MQTT not connected – saving to SD card...");
+      Serial.println("MQTT not connected");
       saveToSD(sd, c, now, count);
     }
 
@@ -93,9 +93,9 @@ void coreLoop() {
 
     if (wifiOk && connectMQTT(mqttClient)) {
       Serial.println("WiFi ok: Reconnected to MQTT.");
-      // sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
+      sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
     } else {
-      Serial.println("Reconnect failed. Skipping loop...");
+      Serial.println("Reconnect failed. Skipping loop.");
       float c = readTemperatureCelsius();
       saveToSD(sd, c, now, count);
 
@@ -107,41 +107,15 @@ void coreLoop() {
   if (!mqttClient.connected()) {
     Serial.println("MQTT not connected. Trying to reconnect...");
       if (!connectMQTT(mqttClient)) {
-        Serial.println("MQTT not connected – saving to SD card...");
+        Serial.println("MQTT not connected");
         float c = readTemperatureCelsius();
         saveToSD(sd, c, now, count);
         delay(1000);
         return;
       }
+    sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
+    Serial.println("MQTT reconnected successfully.");
   }
-
-
-  // DateTime now = rtc.now();
-
-  // // static bool recoveredSent = false;
-  // if (now.minute() != lastLoggedMinute) {
-  //   lastLoggedMinute = now.minute();
-  //   float c = readTemperatureCelsius();
-
-  //   if (mqttClient.connected()) {
-  //     Serial.println("Trying to publish via MQTT...");
-
-  //     // if (!recoveredSent) {
-  //     //   Serial.println("Checking for pending data to send...");
-  //     //   sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
-  //     //   recoveredSent = true;
-  //     // }
-  //     Serial.print("Publishing data: ");
-  //     sendToMqtt(mqttClient, topic, sensorType, sensorIdInUse, c, now, count);
-  //   } else {
-  //     Serial.println("MQTT not connected – saving to SD card...");
-  //     saveToSD(sd, c, now, count);
-
-  //     // recoveredSent = false;
-  //   }
-
-  //   count++;
-  // }
 
   mqttClient.poll();
   delay(1000);

@@ -1,11 +1,6 @@
+#include "platform.h"
 #include <unity.h>
 #include "storage.h"
-
-// For native tests: use MockDateTime from mock_datetime.h
-#ifdef UNIT_TEST
-#include "mock_datetime.h"
-using DateTime = MockDateTime;
-#endif
 
 // Simulated timestamp: July 26, 2025, 14:55:00
 DateTime now(2025, 7, 26, 14, 55, 0);
@@ -37,6 +32,7 @@ void run_storage_tests() {
     RUN_TEST(test_createFolderName);
     RUN_TEST(test_createFilename);
     RUN_TEST(test_filename_end_of_year);
+    // RUN_TEST(test_buildJson_sets_expected_fields);
 }
 
 // When standalone executable

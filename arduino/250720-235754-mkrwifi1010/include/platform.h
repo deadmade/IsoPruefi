@@ -1,11 +1,14 @@
 #pragma once
 
 #ifdef UNIT_TEST
-
-  // --- MOCK-INCLUDES FOR UNIT TESTING ---
   #include "mock_datetime.h"
-  // Add more mock classes here if needed
+  #include "mock_json.h"
+  #include <string>
+  typedef std::string String;
   #define DateTime MockDateTime
+  #define JsonDocument MockJsonDocument
+  #define JsonArray MockJsonArray
+
 
 #else
 

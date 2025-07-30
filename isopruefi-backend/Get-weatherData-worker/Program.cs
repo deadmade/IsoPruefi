@@ -12,7 +12,7 @@ public class Program
         builder.Services.AddHostedService<Worker>();
 
         // Register Database
-        builder.Services.AddSingleton<SettingsContext>();
+        builder.Services.AddSingleton<ApplicationDbContext>();
         builder.Services.AddSingleton<IInfluxRepo, InfluxRepo>();
 
         // Register Repos

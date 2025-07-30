@@ -32,4 +32,9 @@ public interface ISettingsRepo
     /// Updates the timestamp of an entry in the Coordinates Database.
     /// </summary>
     Task UpdateTime(int postalcode, DateTime newTime);
+    ///
+    /// </summary>
+    /// <param name="topicSetting"></param>
+    /// <returns></returns>
+    Task<int> AddTopicSettingAsync(TopicSetting topicSetting);
 }

@@ -9,22 +9,29 @@ namespace Database.Repository.SettingsRepo;
 /// </summary>
 public class SettingsRepo : ISettingsRepo
 {
-    private SettingsContext _settingsContext;
+    private ApplicationDbContext _applicationDbContext;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsRepo"/> class with the specified settings context.
     /// </summary>
-    /// <param name="settingsContext">The database context for settings.</param>
-    public SettingsRepo(SettingsContext settingsContext)
+    /// <param name="applicationDbContext">The database context for settings.</param>
+    public SettingsRepo(ApplicationDbContext applicationDbContext)
     {
-        _settingsContext = settingsContext;
+        _applicationDbContext = applicationDbContext;
     }
 
 
     /// <inheritdoc />
     public Task<List<TopicSetting>> GetTopicSettingsAsync()
     {
-        return _settingsContext.TopicSettings.ToListAsync();
+        return _applicationDbContext.TopicSettings.ToListAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task<int> AddTopicSettingAsync(TopicSetting topicSetting)
+    {
+        _applicationDbContext.TopicSettings.Add(topicSetting);
+        return await _applicationDbContext.SaveChangesAsync();
     }
 
     /// <inheritdoc />

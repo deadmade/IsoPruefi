@@ -60,12 +60,12 @@ public class Worker : BackgroundService
                     }
                     else
                     {
-                        _logger.LogInformation("Data from Meteo incomplete.");
+                        _logger.LogError("Data from Meteo incomplete.");
                     }
                 }
                 else
                 {
-                    _logger.LogInformation("Data from Meteo incomplete.");
+                    _logger.LogError("Data from Meteo incomplete.");
                 }
             }
             else
@@ -96,17 +96,17 @@ public class Worker : BackgroundService
                         }
                         else
                         {
-                            _logger.LogInformation("Data from Bright Sky incomplete.");
+                            _logger.LogError("Data from Bright Sky incomplete.");
                         }
                     }
                     else
                     {
-                        _logger.LogInformation("Data from Bright Sky incomplete.");
+                        _logger.LogError("Data from Bright Sky incomplete.");
                     }
                 }
                 else
                 {
-                    _logger.LogInformation("Failed to retrieve data from both sources.");
+                    _logger.LogError("Failed to retrieve data from both sources.");
                 }
             }
 

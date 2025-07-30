@@ -38,4 +38,11 @@ public class TopicSetting
     /// </summary>
     [MaxLength(50)]
     public string? SensorName { get; set; }
+
+
+    /// <summary>
+    /// Gets or sets the location of the sensor.
+    /// </summary>
+    [MaxLength(50)]
+    public string? SensorLocation { get; set; }
 }

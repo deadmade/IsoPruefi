@@ -23,7 +23,7 @@ nav:
                 - WeatherEntry: code/frontend/Weather/type-aliases/WeatherEntry.md
                 - WeatherData: code/frontend/Weather/variables/WeatherData.md
   - Docker: 
-    - Docker Dev Umgebung: docker-dev.md
+    - Docker Dev Environment: docker-dev.md
   - IsoPrüfi Documentation: 
     - 00 arc42 Template with Explanation: documentation/arc42-template.md
     - 01 Introduction and Goals: documentation/01_introduction_and_goals.md

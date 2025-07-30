@@ -14,6 +14,15 @@ public interface ISettingsRepo
     Task<List<TopicSetting>> GetTopicSettingsAsync();
 
     /// <summary>
+    /// Asynchronously adds a new topic setting to the repository.
+    /// </summary>
+    /// <param name="topicSetting">The topic setting to add to the repository.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the number of entities affected by the operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when topicSetting is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the add operation fails.</exception>
+    Task<int> AddTopicSettingAsync(TopicSetting topicSetting);
+    
+    /// <summary>
     /// Inserts a new combination of postalcode and coordinates.
     /// </summary>
     /// <param name="postalCodeLocation">A CoordinateMapping instance that will be saved in the database.</param>

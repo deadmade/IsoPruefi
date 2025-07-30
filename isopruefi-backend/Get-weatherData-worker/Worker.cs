@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
+using Microsoft.Extensions.Configuration;
 
 namespace Get_weatherData_worker;
 
@@ -8,23 +9,35 @@ public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IInfluxRepo _influxRepo;
-    private readonly ISettingsRepo _settingsRepo;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IConfiguration _configuration;
 
-    private readonly string _location = "Heidenheim";
+    private readonly string _weatherDataApi;
+    private readonly string _alternativeWeatherDataApi;
+    private readonly string _location;
 
-    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory, IInfluxRepo influxRepo, ISettingsRepo settingsRepo)
+    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory,
+        IConfiguration configuration, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
-        _influxRepo = influxRepo;
-        _settingsRepo = settingsRepo;
+        _serviceProvider = serviceProvider;
+        _configuration = configuration;
+
+
+        _weatherDataApi = _configuration["Weather:OpenMeteoApiUrl"] ?? throw new InvalidOperationException(
+            "Weather:OpenMeteoApiUrl configuration is missing");
+
+        _alternativeWeatherDataApi = _configuration["Weather:BrightSkyApiUrl"] ?? throw new InvalidOperationException(
+            "Weather:BrightSkyApiUrl configuration is missing");
+
+        _location = _configuration["Weather:Location"] ?? "Heidenheim"; // Will be changed in the future to a more dynamic solution
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var httpClient = _httpClientFactory.CreateClient();
-        
+
         // Getting the coordinates from the database.
         double lat = 0.0;
         double lon = 0.0;
@@ -45,12 +58,16 @@ public class Worker : BackgroundService
         string alternativeWeatherDataApi =
             "https://api.brightsky.dev/current_weather?lat=" + lat + "&lon=" + lon;
 
+        
         while (!stoppingToken.IsCancellationRequested)
         {
+            using var scope = _serviceProvider.CreateScope();
+            var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
+
             var weatherData = new WeatherData();
 
             // Sending GET-Request to Meteo.
-            var response = await httpClient.GetAsync(weatherDataApi);
+            var response = await httpClient.GetAsync(_weatherDataApi);
 
             if (response.IsSuccessStatusCode)
             {
@@ -69,7 +86,7 @@ public class Worker : BackgroundService
                         // Saving the temperature in the database.
                         try
                         {
-                            await _influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
+                            await influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
                                 weatherData.Timestamp);
                         }
                         catch (Exception e)
@@ -92,7 +109,7 @@ public class Worker : BackgroundService
             else
             {
                 // Sending GET-Request to Bright Sky.
-                var alternativeResponse = await httpClient.GetAsync(alternativeWeatherDataApi);
+                var alternativeResponse = await httpClient.GetAsync(_alternativeWeatherDataApi);
 
                 if (alternativeResponse.IsSuccessStatusCode)
                 {
@@ -112,7 +129,7 @@ public class Worker : BackgroundService
                             // Saving the temperature in the database.
                             try
                             {
-                                await _influxRepo.WriteOutsideWeatherData(_location, "Bright Sky",
+                                await influxRepo.WriteOutsideWeatherData(_location, "Bright Sky",
                                     weatherData.Temperature,
                                     weatherData.Timestamp);
                             }

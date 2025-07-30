@@ -1,6 +1,7 @@
 using Database.EntityFramework;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
+using Microsoft.EntityFrameworkCore;
 
 namespace Get_weatherData_worker;
 
@@ -12,11 +13,14 @@ public class Program
         builder.Services.AddHostedService<Worker>();
 
         // Register Database
-        builder.Services.AddSingleton<ApplicationDbContext>();
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), b => { });
+        });
         builder.Services.AddSingleton<IInfluxRepo, InfluxRepo>();
 
         // Register Repos
-        builder.Services.AddSingleton<ISettingsRepo, SettingsRepo>();
+        //builder.Services.AddSingleton<ISettingsRepo, SettingsRepo>();
 
         // Register Business Logic
         builder.Services.AddHttpClient();

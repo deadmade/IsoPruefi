@@ -37,14 +37,14 @@ public class SettingsRepo : ISettingsRepo
     /// <inheritdoc />
     public async Task InsertNewPostalCode(CoordinateMapping postalcodeLocation)
     {
-        _settingsContext.CoordinateMappings.Add(postalcodeLocation);
-        await _settingsContext.SaveChangesAsync();
+        _applicationDbContext.CoordinateMappings.Add(postalcodeLocation);
+        await _applicationDbContext.SaveChangesAsync();
     }
 
     /// <inheritdoc />
     public async Task<bool> ExistsPostalCode(int postalcode)
     {
-        var entry = await _settingsContext.CoordinateMappings.FirstOrDefaultAsync(c => c.PostalCode == postalcode);
+        var entry = await _applicationDbContext.CoordinateMappings.FirstOrDefaultAsync(c => c.PostalCode == postalcode);
         if (entry != null)
         {
             return true;
@@ -55,19 +55,19 @@ public class SettingsRepo : ISettingsRepo
     /// <inheritdoc />
     public async Task UpdateTime(int postalCode, DateTime newTime)
     {
-        var entry = await _settingsContext.CoordinateMappings.FirstAsync(c => c.PostalCode == postalCode);
+        var entry = await _applicationDbContext.CoordinateMappings.FirstAsync(c => c.PostalCode == postalCode);
         entry.LastUsed = newTime;
 
-        await _settingsContext.SaveChangesAsync();
+        await _applicationDbContext.SaveChangesAsync();
     }
 
     /// <inheritdoc />
-    public Task<Tuple<double, double>> GetCoordinates(int postalcode)
+    public async Task<Tuple<double, double>> GetCoordinates()
     {
-        var result = _settingsContext.CoordinateMappings
+        var result = await _applicationDbContext.CoordinateMappings
             .OrderByDescending(c => c.LastUsed)
-            .FirstOrDefaultAsync(c => c.PostalCode == postalcode);
-        var coordinates = new Tuple<double, double>(result.Result.Latitude, result.Result.Longitude);
-        return Task.FromResult(coordinates);
+            .FirstOrDefaultAsync();
+        var coordinates = new Tuple<double, double>(result.Latitude, result.Longitude);
+        return coordinates;
     }
 }

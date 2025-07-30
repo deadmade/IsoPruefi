@@ -1,7 +1,7 @@
-using System.Globalization;
-using System.Text.Json;
 using Database.EntityFramework.Models;
 using Database.Repository.SettingsRepo;
+using System.Globalization;
+using System.Text.Json;
 
 namespace Rest_API;
 
@@ -86,7 +86,6 @@ public class TransformPostalCode
                             {
                                 _logger.LogError(e, "Exception while saving new location.");
                             }
-                            
                             
                             _logger.LogInformation("Coordinates retrieved successfully");
                         }

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Database.Repository.InfluxRepo;
+using Database.Repository.SettingsRepo;
 
 namespace Get_weatherData_worker;
 
@@ -8,35 +9,48 @@ public class Worker : BackgroundService
     private readonly ILogger<Worker> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IInfluxRepo _influxRepo;
-
-    private string lat = "48.678";
-    private string lon = "10.1516";
-
-    private string _weatherDataApi = 
-        "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&models=icon_seamless&current=temperature_2m";
-
-    private readonly string _alternativeWeatherDataApi =
-        "https://api.brightsky.dev/current_weather?lat=48.67&lon=10.1516";
+    private readonly ISettingsRepo _settingsRepo;
 
     private readonly string _location = "Heidenheim";
 
-    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory, IInfluxRepo influxRepo)
+    public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory, IInfluxRepo influxRepo, ISettingsRepo settingsRepo)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
         _influxRepo = influxRepo;
+        _settingsRepo = settingsRepo;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var httpClient = _httpClientFactory.CreateClient();
+        
+        // Getting the coordinates from the database.
+        double lat = 0.0;
+        double lon = 0.0;
+        try
+        {
+            var coordinates = await _settingsRepo.GetCoordinates();
+            lat = coordinates.Item1;
+            lon = coordinates.Item2;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to retrieve coordinates.");
+        }
+        
+        // Setting the coordinates in the API.
+        string weatherDataApi = 
+            "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&models=icon_seamless&current=temperature_2m";
+        string alternativeWeatherDataApi =
+            "https://api.brightsky.dev/current_weather?lat=" + lat + "&lon=" + lon;
 
         while (!stoppingToken.IsCancellationRequested)
         {
             var weatherData = new WeatherData();
 
             // Sending GET-Request to Meteo.
-            var response = await httpClient.GetAsync(_weatherDataApi);
+            var response = await httpClient.GetAsync(weatherDataApi);
 
             if (response.IsSuccessStatusCode)
             {
@@ -71,7 +85,7 @@ public class Worker : BackgroundService
             else
             {
                 // Sending GET-Request to Bright Sky.
-                var alternativeResponse = await httpClient.GetAsync(_alternativeWeatherDataApi);
+                var alternativeResponse = await httpClient.GetAsync(alternativeWeatherDataApi);
 
                 if (alternativeResponse.IsSuccessStatusCode)
                 {

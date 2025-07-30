@@ -9,6 +9,8 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
     //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
     public DbSet<TopicSetting> TopicSettings { get; set; }
     public DbSet<TokenInfo> TokenInfos { get; set; }
+    
+    public DbSet<CoordinateMapping> CoordinateMappings { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {

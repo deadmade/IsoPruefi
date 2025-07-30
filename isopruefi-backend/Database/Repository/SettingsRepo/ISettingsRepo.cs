@@ -16,25 +16,25 @@ public interface ISettingsRepo
     /// <summary>
     /// Inserts a new combination of postalcode and coordinates.
     /// </summary>
+    /// /// <param name="postalCodeLocation">A CoordinateMapping instance that will be saved in the database.</param>
     Task InsertNewPostalCode(CoordinateMapping postalCodeLocation);
 
     /// <summary>
     /// Retrieves the coordinates of the postalcode that was inserted last.
     /// </summary>
-    Task<Tuple<double, double>> GetCoordinates(int postalcode);
+    /// /// <param name="postalcode">Defines the search criteria for the entry.</param>
+    Task<Tuple<double, double>> GetCoordinates();
 
     /// <summary>
     /// Checks if there is an entry for that opstal code in the database.
     /// </summary>
+    /// /// <param name="postalcode">Defines which entry will be checked.</param>
     Task<bool> ExistsPostalCode(int postalcode);
 
     /// <summary>
     /// Updates the timestamp of an entry in the Coordinates Database.
     /// </summary>
+    /// /// <param name="postalcode">Defines which entry will be updated.</param>
+    /// <param name="newTime">Defines the new time for that entry.</param>
     Task UpdateTime(int postalcode, DateTime newTime);
-    ///
-    /// </summary>
-    /// <param name="topicSetting"></param>
-    /// <returns></returns>
-    Task<int> AddTopicSettingAsync(TopicSetting topicSetting);
 }

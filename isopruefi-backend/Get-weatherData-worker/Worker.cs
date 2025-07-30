@@ -37,37 +37,35 @@ public class Worker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var httpClient = _httpClientFactory.CreateClient();
-
-        // Getting the coordinates from the database.
+        
         double lat = 0.0;
         double lon = 0.0;
-        try
-        {
-            var coordinates = await _settingsRepo.GetCoordinates();
-            lat = coordinates.Item1;
-            lon = coordinates.Item2;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Failed to retrieve coordinates.");
-        }
-        
-        // Setting the coordinates in the API.
-        string weatherDataApi = 
-            "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&models=icon_seamless&current=temperature_2m";
-        string alternativeWeatherDataApi =
-            "https://api.brightsky.dev/current_weather?lat=" + lat + "&lon=" + lon;
-
         
         while (!stoppingToken.IsCancellationRequested)
         {
             using var scope = _serviceProvider.CreateScope();
+            var settingsRepo = scope.ServiceProvider.GetRequiredService<ISettingsRepo>();
             var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
-
             var weatherData = new WeatherData();
+            
+            // Getting the coordinates from the database.
+            try
+            {
+                var coordinates = await settingsRepo.GetCoordinates();
+                lat = coordinates.Item1;
+                lon = coordinates.Item2;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed to retrieve coordinates.");
+            }
+
+            var weatherDataApi = _weatherDataApi
+                .Replace("{lat}", lat.ToString())
+                .Replace("{lon}", lon.ToString());
 
             // Sending GET-Request to Meteo.
-            var response = await httpClient.GetAsync(_weatherDataApi);
+            var response = await httpClient.GetAsync(weatherDataApi);
 
             if (response.IsSuccessStatusCode)
             {
@@ -108,8 +106,12 @@ public class Worker : BackgroundService
             }
             else
             {
+                var alternativeWeatherDataApi = _alternativeWeatherDataApi
+                    .Replace("{lat}", lat.ToString())
+                    .Replace("{lon}", lon.ToString());
+                
                 // Sending GET-Request to Bright Sky.
-                var alternativeResponse = await httpClient.GetAsync(_alternativeWeatherDataApi);
+                var alternativeResponse = await httpClient.GetAsync(alternativeWeatherDataApi);
 
                 if (alternativeResponse.IsSuccessStatusCode)
                 {

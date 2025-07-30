@@ -10,14 +10,19 @@ public class TransformPostalCode
     private readonly ILogger<TransformPostalCode> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ISettingsRepo _settingsRepo;
+    private readonly IConfiguration _configuration;
 
-    private readonly string _geocodingApi = "https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=";
+    private readonly string _geocodingApi;
     
-    public TransformPostalCode(ILogger<TransformPostalCode> logger, IHttpClientFactory httpClientFactory, ISettingsRepo settingsRepo)
+    public TransformPostalCode(ILogger<TransformPostalCode> logger, IHttpClientFactory httpClientFactory, ISettingsRepo settingsRepo, IConfiguration configuration)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
         _settingsRepo = settingsRepo;
+        _configuration = configuration;
+
+        _geocodingApi = _configuration["Weather:NominatimApiUrl"] ?? throw new InvalidOperationException(
+            "Weather:NominatimApiUrl configuration is missing");
     }
     
     public async Task GetCoordinates(int postalCode)

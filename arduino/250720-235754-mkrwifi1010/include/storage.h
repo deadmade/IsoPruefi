@@ -16,6 +16,9 @@ void saveRecoveredJsonToSd(String* fileList, int count, const DateTime& now);
 int listSavedFiles(String* fileList, int maxFiles, const DateTime& now);
 
 
+void deleteRecoveredAndPendingSourceFiles(const String* fileList, int count, const DateTime& now, const String& recoveredFilename);
+
+
 // --- Inline helper functions (for Arduino & native build) ---
 inline const char* createFolderName(const DateTime& now) {
     static char folderName[8];

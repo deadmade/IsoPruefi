@@ -12,7 +12,7 @@ void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
   buildJson(jsonDoc, celsius, now, sequence);
 
   char payload[128];
-  serializeJson(jsonDoc, payload);
+  serializeJson(jsonDoc, payload, sizeof(payload));
 
   if (mqttClient.beginMessage(fullTopic)) {
     mqttClient.print(payload);
@@ -24,7 +24,6 @@ void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
     Serial.println("MQTT publish failed.");
   }
 }
-
 void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
                      const char* sensorId, const DateTime& now) {
   Serial.println("Sending pending data");
@@ -44,7 +43,15 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
   }
 
   Serial.println("Recovered entries to send: " + String(mainDoc["meta"].size()));
+
   saveRecoveredJsonToSd(fileList, count, now);
+
+  // Prepare filename for deletion
+  char baseFilename[64];
+  createFilename(baseFilename, sizeof(baseFilename), now);
+  String recoveredFilename = String(baseFilename);
+  recoveredFilename.remove(recoveredFilename.length() - 5);  
+  recoveredFilename += "_recovered.json";
 
   char payload[1024];
   size_t len = serializeJson(mainDoc, payload, sizeof(payload));
@@ -63,14 +70,9 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
     mqttClient.endMessage();
     Serial.println("Published recovered data.");
 
-    // After successful send: delete files
-    char folder[8];
-    strncpy(folder, createFolderName(now), sizeof(folder));
-    for (int i = 0; i < count; ++i) {
-      String fullPath = String(folder) + "/" + fileList[i];
-      sd.remove(fullPath.c_str());
-    }
-  } else {
-    Serial.println("MQTT recovered publish failed.");
-  }
+  // deleteRecoveredAndPendingSourceFiles(fileList, count, now, recoveredFilename);
+} else {
+  Serial.println("MQTT recovered publish failed.");
 }
+}
+

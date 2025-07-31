@@ -9,7 +9,7 @@ This is done as followed:
 
 Clone the project
 
-```git clone https://github.com/deadmade/PGA-SE-KSTH.git```
+```git clone https://github.com/deadmade/IsoPruefi.git```
 
 Make sure you have installed the following packages globally.
 
@@ -64,5 +64,53 @@ To get the development environment up and running, follow these steps:
 6. Run dotnet user-secrets set "Influx:InfluxDBToken" "<Token>" --project isopruefi-backend\MQTT-Receiver-Worker\MQTT-Receiver-Worker.csproj 
 
 7. Restart the Containers
+
+## Arduino Set Up
+
+### Hardware
+
+- <a href="https://docs.arduino.cc/hardware/mkr-wifi-1010/#features">MKR WiFi 1010</a>
+- <a href="https://learn.adafruit.com/adt7410-breakout?view=all">Analog Devices ADT7410 Breakout</a>
+- <a href="https://randomnerdtutorials.com/guide-for-real-time-clock-rtc-module-with-arduino-ds1307-and-ds3231/">DS3231 RTC</a>
+- <a href="https://randomnerdtutorials.com/guide-to-sd-card-module-with-arduino/">SD Card Module</a>
+
+### Software
+
+`⚠️ Important: Always open the Arduino firmware folder (e.g., code/arduino/) as a PlatformIO Project (via Open Project or Pick a folder in the PlatformIO sidebar).
+Otherwise, dependencies from platformio.ini might not be detected and you may see false errors in the editor.`
+
+To work on the Arduino/PlatformIO part of the project:
+
+1. Install the PlatformIO Extension in Visual Studio Code
+
+2. Open the folder code/arduino/ (or wherever the firmware is located)
+
+3. Build and upload the firmware using the PlatformIO toolbar (✓ and →) or command palette
+
+4. Make sure your board is connected and properly selected in platformio.ini
+
+```
+[env:mkrwifi1010]
+platform = atmelsam
+board = mkrwifi1010
+framework = arduino
+lib_deps = 
+	arduino-libraries/WiFiNINA
+	adafruit/Adafruit ADT7410 Library
+	adafruit/RTClib
+	arduino-libraries/ArduinoMqttClient
+	greiman/SdFat
+	gyverlibs/UnixTime
+	bblanchon/ArduinoJson@^7.4.2
+```
+Tips:
+
+- PlatformIO installs the required libraries automatically on first build. If something fails, run `pio run` manually in the PlatformIO terminal
+
+- The main firmware entry point is located at src/main.cpp
+
+- Use the Serial Monitor (🔌) to debug via USB
+
+---
 
 Happy Coding 😊

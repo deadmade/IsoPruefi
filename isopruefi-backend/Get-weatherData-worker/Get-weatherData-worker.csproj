@@ -7,6 +7,8 @@
         <UserSecretsId>dotnet-Get_weatherData_worker-B419E948-858D-44AD-932F-A85CC9DF2812</UserSecretsId>
         <RootNamespace>Get_weatherData_worker</RootNamespace>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <ContainerFamily>alpine</ContainerFamily>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>

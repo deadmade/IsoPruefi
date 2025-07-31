@@ -92,6 +92,22 @@ public class Program
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
         builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
 
+        // Add CORS support
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend", policy =>
+            {
+                policy.WithOrigins(
+                        "https://frontend.localhost",
+                        "http://localhost:3000",
+                        "http://localhost:5173"
+                    )
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
+        });
+
         builder.Services.AddControllers();
 
         var app = builder.Build();
@@ -102,7 +118,7 @@ public class Program
             app.UseOpenApi();
             app.UseSwaggerUi();
             app.UseDeveloperExceptionPage();
-            //app.UseReDoc(options => { options.Path = "/redoc"; });
+            app.UseReDoc(options => { options.Path = "/redoc"; });
 
             builder.Configuration.AddUserSecrets<Program>();
 
@@ -111,6 +127,9 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        // Enable CORS before authentication
+        app.UseCors("AllowFrontend");
 
         app.UseAuthentication();
         app.UseAuthorization();

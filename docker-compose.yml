@@ -222,6 +222,11 @@ services:
       - isopruefi-network
       environment: 
         - ASPNETCORE_ENVIRONMENT=Docker
+      env_file:
+        - ./secrets.env
+      depends_on:
+          - influxdb3
+          - postgres
 
 
   isopruefi-mqtt-receiver:

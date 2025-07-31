@@ -101,26 +101,31 @@ public class TemperatureDataController : ControllerBase
         var orderedNorthTemperature = temperatureData.TemperatureNord.OrderBy(d => d.Timestamp).ToList();
         var orderedSouthTemperature = temperatureData.TemperatureSouth.OrderBy(d => d.Timestamp).ToList();
 
-        var count = orderedNorthTemperature.Count;
-
-        if (count == orderedSouthTemperature.Count &&
-            count == orderedOutsideTemperature.Count)
+        for (int i = 0; i < orderedNorthTemperature.Count - 1; i++)
         {
-            for (int i = 0; i < count - 1; i++)
+            var northDeviation = orderedNorthTemperature[i].Temperature - orderedNorthTemperature[i + 1].Temperature;
+            if (northDeviation > 10.0)
             {
-                var northDeviation = orderedNorthTemperature[i].Temperature - orderedNorthTemperature[i + 1].Temperature;
-                var southDeviation = orderedSouthTemperature[i].Temperature - orderedSouthTemperature[i + 1].Temperature;
-                var outsideDeviation = orderedOutsideTemperature[i].Temperature - orderedOutsideTemperature[i + 1].Temperature;
-
-                if (Math.Abs(northDeviation) > 10.0 || Math.Abs(southDeviation) > 10.0 || Math.Abs(outsideDeviation) > 10.0)
-                {
-                    _logger.LogWarning("Temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
-                }
+                _logger.LogWarning("Inside(North) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
             }
         }
-        else
+        
+        for (int i = 0; i < orderedSouthTemperature.Count - 1; i++)
         {
-            _logger.LogWarning("Temperature data is missing.");
+            var southDeviation = orderedSouthTemperature[i].Temperature - orderedSouthTemperature[i + 1].Temperature;
+            if (southDeviation > 10.0)
+            {
+                _logger.LogWarning("Inside(south) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
+            }
+        }
+        
+        for (int i = 0; i < orderedOutsideTemperature.Count - 1; i++)
+        {
+            var outsideDeviation = orderedOutsideTemperature[i].Temperature - orderedOutsideTemperature[i + 1].Temperature;
+            if (outsideDeviation > 10.0)
+            {
+                _logger.LogWarning("Outside temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
+            }
         }
 
         return temperatureData;

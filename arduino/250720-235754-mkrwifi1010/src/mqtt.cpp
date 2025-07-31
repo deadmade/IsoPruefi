@@ -70,7 +70,7 @@ void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
     mqttClient.endMessage();
     Serial.println("Published recovered data.");
 
-  // deleteRecoveredAndPendingSourceFilesData(fileList, count, now, recoveredFilename);
+  deleteRecoveredAndPendingSourceFilesData(fileList, count, now, recoveredFilename);
 } else {
   Serial.println("MQTT recovered publish failed.");
 }

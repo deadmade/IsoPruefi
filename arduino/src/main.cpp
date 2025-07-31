@@ -3,7 +3,8 @@
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial);
+  unsigned long startTime = millis();
+  while (!Serial && (millis() - startTime < 1000));
   coreSetup();
 }
 

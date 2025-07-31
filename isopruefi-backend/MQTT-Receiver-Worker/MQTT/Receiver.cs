@@ -13,7 +13,7 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// </summary>
 public class Receiver
 {
-    private readonly ISettingsRepo _settingsRepo;
+    private readonly IServiceProvider _serviceProvider;
     private readonly Connection _connection;
     private readonly ILogger<Receiver> _logger;
 
@@ -23,9 +23,9 @@ public class Receiver
     /// <param name="settingsRepo">Repository for retrieving topic settings.</param>
     /// <param name="connection">Connection manager for the MQTT client.</param>
     /// <param name="logger">Logger for diagnostic information.</param>
-    public Receiver(ISettingsRepo settingsRepo, Connection connection, ILogger<Receiver> logger)
+    public Receiver(IServiceProvider serviceProvider, Connection connection, ILogger<Receiver> logger)
     {
-        _settingsRepo = settingsRepo;
+        _serviceProvider = serviceProvider;
         _connection = connection;
         _logger = logger;
     }
@@ -38,7 +38,11 @@ public class Receiver
     public async Task SubscribeToTopics()
     {
         _logger.LogInformation("Starting subscription to MQTT topics");
-        var topics = _settingsRepo.GetTopicSettingsAsync();
+
+        using var scope = _serviceProvider.CreateScope();
+        var settingsRepo = scope.ServiceProvider.GetRequiredService<ISettingsRepo>();
+
+        var topics = settingsRepo.GetTopicSettingsAsync();
 
         var mqttClient = await _connection.GetConnection();
         _logger.LogDebug("MQTT connection established successfully");

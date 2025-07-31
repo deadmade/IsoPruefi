@@ -1,4 +1,4 @@
-﻿using System.Security.Authentication;
+using System.Security.Authentication;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -88,6 +88,14 @@ public class AuthenticationController(
         }
     }
 
+    /// <summary>
+    /// Registers a new user in the system.
+    /// </summary>
+    /// <param name="input">The registration data containing user credentials and information.</param>
+    /// <returns>An IActionResult indicating the result of the registration operation.</returns>
+    /// <response code="200">User registered successfully.</response>
+    /// <response code="400">Invalid registration data or user already exists.</response>
+    /// <response code="500">Internal server error occurred during registration.</response>
     [HttpPost]
     public async Task<ActionResult> Register(Register input)
     {

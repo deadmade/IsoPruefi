@@ -4,6 +4,7 @@ using Database.EntityFramework;
 using Database.EntityFramework.Models;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
+using Database.Repository.TokenRepo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,10 @@ namespace Rest_API;
 /// </summary>
 public class Program
 {
+    /// <summary>
+    /// Entry point for the Rest API application.
+    /// </summary>
+    /// <param name="args"></param>
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -79,12 +84,12 @@ public class Program
                 }
             );
 
-        // Register Database
-        builder.Services.AddSingleton<IInfluxRepo, InfluxRepo>();
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
 
         // Register Repos
+        builder.Services.AddScoped<ITokenRepo, TokenRepo>();
+        builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
 
         builder.Services.AddControllers();
 

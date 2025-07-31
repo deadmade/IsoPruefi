@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
   <compounddef id="de/d03/platform_8h" kind="file" language="C++">
     <compoundname>platform.h</compoundname>
     <includes local="no">Arduino.h</includes>
@@ -16,6 +16,18 @@
     <includedby refid="da/de0/core_8cpp" local="yes">src/core.cpp</includedby>
     <includedby refid="df/d0a/main_8cpp" local="yes">src/main.cpp</includedby>
     <incdepgraph>
+      <node id="6">
+        <label>Adafruit_ADT7410.h</label>
+      </node>
+      <node id="2">
+        <label>Arduino.h</label>
+      </node>
+      <node id="7">
+        <label>ArduinoJson.h</label>
+      </node>
+      <node id="8">
+        <label>ArduinoMqttClient.h</label>
+      </node>
       <node id="1">
         <label>include/platform.h</label>
         <link refid="de/d03/platform_8h"/>
@@ -33,18 +45,6 @@
         </childnode>
         <childnode refid="8" relation="include">
         </childnode>
-      </node>
-      <node id="6">
-        <label>Adafruit_ADT7410.h</label>
-      </node>
-      <node id="2">
-        <label>Arduino.h</label>
-      </node>
-      <node id="7">
-        <label>ArduinoJson.h</label>
-      </node>
-      <node id="8">
-        <label>ArduinoMqttClient.h</label>
       </node>
       <node id="5">
         <label>RTClib.h</label>

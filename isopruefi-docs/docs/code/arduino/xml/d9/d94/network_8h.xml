@@ -1,11 +1,23 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
   <compounddef id="d9/d94/network_8h" kind="file" language="C++">
     <compoundname>network.h</compoundname>
     <includes refid="de/d03/platform_8h" local="yes">platform.h</includes>
     <includedby refid="da/de0/core_8cpp" local="yes">src/core.cpp</includedby>
     <includedby refid="dc/d8a/network_8cpp" local="yes">src/network.cpp</includedby>
     <incdepgraph>
+      <node id="7">
+        <label>Adafruit_ADT7410.h</label>
+      </node>
+      <node id="3">
+        <label>Arduino.h</label>
+      </node>
+      <node id="8">
+        <label>ArduinoJson.h</label>
+      </node>
+      <node id="9">
+        <label>ArduinoMqttClient.h</label>
+      </node>
       <node id="1">
         <label>include/network.h</label>
         <link refid="d9/d94/network_8h"/>
@@ -29,18 +41,6 @@
         </childnode>
         <childnode refid="9" relation="include">
         </childnode>
-      </node>
-      <node id="7">
-        <label>Adafruit_ADT7410.h</label>
-      </node>
-      <node id="3">
-        <label>Arduino.h</label>
-      </node>
-      <node id="8">
-        <label>ArduinoJson.h</label>
-      </node>
-      <node id="9">
-        <label>ArduinoMqttClient.h</label>
       </node>
       <node id="6">
         <label>RTClib.h</label>
@@ -82,12 +82,26 @@
           <defval>10000</defval>
         </param>
         <briefdescription>
+<para>Establishes a WiFi connection with the configured network. </para>
         </briefdescription>
         <detaileddescription>
+<para>Attempts to connect to the WiFi network using credentials from the secrets file. Provides visual feedback via serial output and enforces a connection timeout.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>timeoutMs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum time in milliseconds to wait for connection (default: 10000ms). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if WiFi connection is successful, false if timeout occurs. </para>
+</simplesect>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/network.h" line="5" column="6" bodyfile="src/network.cpp" bodystart="10" bodyend="26" declfile="include/network.h" declline="5" declcolumn="6"/>
+        <location file="include/network.h" line="5" column="6" bodyfile="src/network.cpp" bodystart="19" bodyend="35" declfile="include/network.h" declline="5" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d9/d94/network_8h_1acc5736b55a4581c4020d736180e28306" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -104,29 +118,34 @@
           <defval>10000</defval>
         </param>
         <briefdescription>
+<para>Establishes an authenticated MQTT connection to the broker. </para>
         </briefdescription>
         <detaileddescription>
+<para>Sets up MQTT client credentials using values from the secrets file and attempts to connect to the configured MQTT broker. Provides visual feedback and enforces a connection timeout.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mqttClient</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the MQTT client instance to connect. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>timeoutMs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum time in milliseconds to wait for connection (default: 10000ms). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if MQTT connection is successful, false if timeout occurs. </para>
+</simplesect>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/network.h" line="7" column="6" bodyfile="src/network.cpp" bodystart="28" bodyend="43" declfile="include/network.h" declline="7" declcolumn="6"/>
-      </memberdef>
-      <memberdef kind="function" id="d9/d94/network_8h_1aa43b08104914d84a1ac34003fe56ba6b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>void</type>
-        <definition>void tryReconnect</definition>
-        <argsstring>(MqttClient &amp;mqttClient)</argsstring>
-        <name>tryReconnect</name>
-        <param>
-          <type>MqttClient &amp;</type>
-          <declname>mqttClient</declname>
-        </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="include/network.h" line="10" column="6" bodyfile="src/network.cpp" bodystart="48" bodyend="68" declfile="include/network.h" declline="10" declcolumn="6"/>
+        <location file="include/network.h" line="7" column="6" bodyfile="src/network.cpp" bodystart="48" bodyend="66" declfile="include/network.h" declline="7" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d9/d94/network_8h_1aec8befb6e49b85d32ece0496dfca569b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -138,12 +157,26 @@
           <declname>mqttClient</declname>
         </param>
         <briefdescription>
+<para>Checks if both WiFi and MQTT connections are active. </para>
         </briefdescription>
         <detaileddescription>
+<para>Verifies the status of both WiFi and MQTT connections to ensure the device can communicate with the MQTT broker.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mqttClient</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the MQTT client instance to check. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if both WiFi and MQTT are connected, false otherwise. </para>
+</simplesect>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/network.h" line="12" column="6" bodyfile="src/network.cpp" bodystart="70" bodyend="72" declfile="include/network.h" declline="12" declcolumn="6"/>
+        <location file="include/network.h" line="9" column="6" bodyfile="src/network.cpp" bodystart="77" bodyend="79" declfile="include/network.h" declline="9" declcolumn="6"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -159,10 +192,7 @@
 <codeline lineno="6"><highlight class="normal"></highlight></codeline>
 <codeline lineno="7"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="d9/d94/network_8h_1acc5736b55a4581c4020d736180e28306" kindref="member">connectMQTT</ref>(MqttClient&amp;<sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>timeoutMs<sp/>=<sp/>10000);</highlight></codeline>
 <codeline lineno="8"><highlight class="normal"></highlight></codeline>
-<codeline lineno="9"><highlight class="normal"></highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="d9/d94/network_8h_1aa43b08104914d84a1ac34003fe56ba6b" kindref="member">tryReconnect</ref>(MqttClient&amp;<sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>);</highlight></codeline>
-<codeline lineno="11"><highlight class="normal"></highlight></codeline>
-<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="d9/d94/network_8h_1aec8befb6e49b85d32ece0496dfca569b" kindref="member">isConnectedToServer</ref>(MqttClient&amp;<sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>);</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="d9/d94/network_8h_1aec8befb6e49b85d32ece0496dfca569b" kindref="member">isConnectedToServer</ref>(MqttClient&amp;<sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>);</highlight></codeline>
     </programlisting>
     <location file="include/network.h"/>
   </compounddef>

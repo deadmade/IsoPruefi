@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
   <compounddef id="d7/d75/mqtt_8h" kind="file" language="C++">
     <compoundname>mqtt.h</compoundname>
     <includes refid="de/d03/platform_8h" local="yes">platform.h</includes>
@@ -7,6 +7,18 @@
     <includedby refid="d8/d5b/mqtt_8cpp" local="yes">src/mqtt.cpp</includedby>
     <includedby refid="dc/d8a/network_8cpp" local="yes">src/network.cpp</includedby>
     <incdepgraph>
+      <node id="7">
+        <label>Adafruit_ADT7410.h</label>
+      </node>
+      <node id="3">
+        <label>Arduino.h</label>
+      </node>
+      <node id="8">
+        <label>ArduinoJson.h</label>
+      </node>
+      <node id="9">
+        <label>ArduinoMqttClient.h</label>
+      </node>
       <node id="1">
         <label>include/mqtt.h</label>
         <link refid="d7/d75/mqtt_8h"/>
@@ -30,18 +42,6 @@
         </childnode>
         <childnode refid="9" relation="include">
         </childnode>
-      </node>
-      <node id="7">
-        <label>Adafruit_ADT7410.h</label>
-      </node>
-      <node id="3">
-        <label>Arduino.h</label>
-      </node>
-      <node id="8">
-        <label>ArduinoJson.h</label>
-      </node>
-      <node id="9">
-        <label>ArduinoMqttClient.h</label>
       </node>
       <node id="6">
         <label>RTClib.h</label>
@@ -112,12 +112,72 @@
           <declname>sequence</declname>
         </param>
         <briefdescription>
+<para>Publishes sensor data to an MQTT topic. </para>
         </briefdescription>
         <detaileddescription>
+<para>Constructs a JSON payload with sensor data and publishes it to an MQTT topic constructed from the given prefix, sensor type, and sensor ID.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mqttClient</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the MQTT client used for publishing. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>topicPrefix</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Prefix for the MQTT topic (e.g., &quot;sensors/&quot;). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the sensor (e.g., &quot;temperature&quot;). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorId</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unique identifier for the sensor. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>celsius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sensor reading in Celsius. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sequence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sequence number for the message. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/mqtt.h" line="5" column="6" bodyfile="src/mqtt.cpp" bodystart="4" bodyend="26" declfile="include/mqtt.h" declline="5" declcolumn="6"/>
+        <location file="include/mqtt.h" line="5" column="6" bodyfile="src/mqtt.cpp" bodystart="25" bodyend="47" declfile="include/mqtt.h" declline="5" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d7/d75/mqtt_8h_1ab2a92cb70a772c6c95d8b818c6b01f77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -145,12 +205,56 @@
           <declname>now</declname>
         </param>
         <briefdescription>
+<para>Sends pending sensor data that was saved offline to MQTT broker. </para>
         </briefdescription>
         <detaileddescription>
+<para>Retrieves saved sensor data files from the last 24 hours, consolidates them into a single JSON payload, and publishes to a recovery topic. After successful transmission, the original files and recovery file are deleted from storage.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mqttClient</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the MQTT client used for publishing. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>topicPrefix</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Prefix for the MQTT topic (e.g., &quot;sensors/&quot;). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the sensor (e.g., &quot;temperature&quot;). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorId</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unique identifier for the sensor. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for file filtering. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/mqtt.h" line="8" column="6" bodyfile="src/mqtt.cpp" bodystart="27" bodyend="77" declfile="include/mqtt.h" declline="8" declcolumn="6"/>
+        <location file="include/mqtt.h" line="8" column="6" bodyfile="src/mqtt.cpp" bodystart="62" bodyend="112" declfile="include/mqtt.h" declline="8" declcolumn="6"/>
       </memberdef>
     </sectiondef>
     <briefdescription>

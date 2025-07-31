@@ -64,8 +64,12 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y doxygen
 
       - name: Generate Arduino Documentation
-        working-directory: ./arduino/250720-235754-mkrwifi1010
+        working-directory: ./arduino
         run: doxygen Doxyfile
+       
+      - name: Generate Arduino Documentation
+        working-directory: ./isopruefi-docs\docs\code\arduino
+        run: npx moxygen -a xml
 
       - name: Setup Python
         uses: actions/setup-python@v5

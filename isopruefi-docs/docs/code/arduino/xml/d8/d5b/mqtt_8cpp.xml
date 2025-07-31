@@ -1,10 +1,22 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
   <compounddef id="d8/d5b/mqtt_8cpp" kind="file" language="C++">
     <compoundname>mqtt.cpp</compoundname>
     <includes refid="d7/d75/mqtt_8h" local="yes">mqtt.h</includes>
     <includes refid="d8/d6b/storage_8h" local="yes">storage.h</includes>
     <incdepgraph>
+      <node id="8">
+        <label>Adafruit_ADT7410.h</label>
+      </node>
+      <node id="4">
+        <label>Arduino.h</label>
+      </node>
+      <node id="9">
+        <label>ArduinoJson.h</label>
+      </node>
+      <node id="10">
+        <label>ArduinoMqttClient.h</label>
+      </node>
       <node id="2">
         <label>mqtt.h</label>
         <link refid="d7/d75/mqtt_8h"/>
@@ -45,18 +57,6 @@
         <childnode refid="11" relation="include">
         </childnode>
       </node>
-      <node id="8">
-        <label>Adafruit_ADT7410.h</label>
-      </node>
-      <node id="4">
-        <label>Arduino.h</label>
-      </node>
-      <node id="9">
-        <label>ArduinoJson.h</label>
-      </node>
-      <node id="10">
-        <label>ArduinoMqttClient.h</label>
-      </node>
       <node id="7">
         <label>RTClib.h</label>
       </node>
@@ -70,6 +70,78 @@
         <label>cstdio</label>
       </node>
     </incdepgraph>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="d8/d5b/mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t SMALL_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>SMALL_BUFFER_SIZE</name>
+        <initializer>= 128</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="5" column="21" bodyfile="src/mqtt.cpp" bodystart="5" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d5b/mqtt_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t LARGE_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>LARGE_BUFFER_SIZE</name>
+        <initializer>= 1024</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="6" column="21" bodyfile="src/mqtt.cpp" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d5b/mqtt_8cpp_1a391eb2dea9857ac975b04b1b37fd9e97" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t BASE_FILENAME_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>BASE_FILENAME_BUFFER_SIZE</name>
+        <initializer>= 64</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="7" column="21" bodyfile="src/mqtt.cpp" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d5b/mqtt_8cpp_1a711805414ac200c85253f9c3d8c73916" prot="public" static="yes" mutable="no">
+        <type>const int</type>
+        <definition>const int MAX_PENDING_FILES</definition>
+        <argsstring></argsstring>
+        <name>MAX_PENDING_FILES</name>
+        <initializer>= 500</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="8" column="18" bodyfile="src/mqtt.cpp" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d5b/mqtt_8cpp_1a10aaa940168502f25286e34dd53f08a0" prot="public" static="yes" mutable="no">
+        <type>const int</type>
+        <definition>const int FILE_EXTENSION_LENGTH</definition>
+        <argsstring></argsstring>
+        <name>FILE_EXTENSION_LENGTH</name>
+        <initializer>= 5</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="9" column="18" bodyfile="src/mqtt.cpp" bodystart="9" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
     <sectiondef kind="func">
       <memberdef kind="function" id="d8/d5b/mqtt_8cpp_1ab4dfd2aed88177be74263339392bdcc0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -105,12 +177,72 @@
           <declname>sequence</declname>
         </param>
         <briefdescription>
+<para>Publishes sensor data to an MQTT topic. </para>
         </briefdescription>
         <detaileddescription>
+<para>Constructs a JSON payload with sensor data and publishes it to an MQTT topic constructed from the given prefix, sensor type, and sensor ID.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mqttClient</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the MQTT client used for publishing. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>topicPrefix</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Prefix for the MQTT topic (e.g., &quot;sensors/&quot;). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the sensor (e.g., &quot;temperature&quot;). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorId</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unique identifier for the sensor. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>celsius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sensor reading in Celsius. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sequence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sequence number for the message. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/mqtt.cpp" line="4" column="6" bodyfile="src/mqtt.cpp" bodystart="4" bodyend="26"/>
+        <location file="src/mqtt.cpp" line="25" column="6" bodyfile="src/mqtt.cpp" bodystart="25" bodyend="47"/>
       </memberdef>
       <memberdef kind="function" id="d8/d5b/mqtt_8cpp_1ab2a92cb70a772c6c95d8b818c6b01f77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -138,12 +270,56 @@
           <declname>now</declname>
         </param>
         <briefdescription>
+<para>Sends pending sensor data that was saved offline to MQTT broker. </para>
         </briefdescription>
         <detaileddescription>
+<para>Retrieves saved sensor data files from the last 24 hours, consolidates them into a single JSON payload, and publishes to a recovery topic. After successful transmission, the original files and recovery file are deleted from storage.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mqttClient</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the MQTT client used for publishing. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>topicPrefix</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Prefix for the MQTT topic (e.g., &quot;sensors/&quot;). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the sensor (e.g., &quot;temperature&quot;). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorId</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unique identifier for the sensor. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for file filtering. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/mqtt.cpp" line="27" column="6" bodyfile="src/mqtt.cpp" bodystart="27" bodyend="77"/>
+        <location file="src/mqtt.cpp" line="62" column="6" bodyfile="src/mqtt.cpp" bodystart="62" bodyend="112"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -154,81 +330,89 @@
 <codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="d7/d75/mqtt_8h" kindref="compound">mqtt.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="d8/d6b/storage_8h" kindref="compound">storage.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="3"><highlight class="normal"></highlight></codeline>
-<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="d8/d5b/mqtt_8cpp_1ab4dfd2aed88177be74263339392bdcc0" kindref="member">sendToMqtt</ref>(MqttClient&amp;<sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="da/de0/core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,</highlight></codeline>
-<codeline lineno="5"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence)<sp/>{</highlight></codeline>
-<codeline lineno="6"><highlight class="normal"><sp/><sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.poll();</highlight></codeline>
-<codeline lineno="7"><highlight class="normal"></highlight></codeline>
-<codeline lineno="8"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>fullTopic[128];</highlight></codeline>
-<codeline lineno="9"><highlight class="normal"><sp/><sp/>snprintf(fullTopic,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(fullTopic),<sp/></highlight><highlight class="stringliteral">&quot;%s%s/%s&quot;</highlight><highlight class="normal">,<sp/>topicPrefix,<sp/><ref refid="da/de0/core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,<sp/>sensorId);</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/>MQTT<sp/>and<sp/>JSON<sp/>buffer<sp/>size<sp/>constants</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="d8/d5b/mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kindref="member">SMALL_BUFFER_SIZE</ref><sp/>=<sp/>128;<sp/><sp/></highlight><highlight class="comment">//<sp/>For<sp/>topics,<sp/>payloads,<sp/>and<sp/>small<sp/>JSON<sp/>docs</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="d8/d5b/mqtt_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" kindref="member">LARGE_BUFFER_SIZE</ref><sp/>=<sp/>1024;<sp/></highlight><highlight class="comment">//<sp/>For<sp/>large<sp/>payloads<sp/>and<sp/>JSON<sp/>docs</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="d8/d5b/mqtt_8cpp_1a391eb2dea9857ac975b04b1b37fd9e97" kindref="member">BASE_FILENAME_BUFFER_SIZE</ref><sp/>=<sp/>64;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="d8/d5b/mqtt_8cpp_1a711805414ac200c85253f9c3d8c73916" kindref="member">MAX_PENDING_FILES</ref><sp/>=<sp/>500;</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="d8/d5b/mqtt_8cpp_1a10aaa940168502f25286e34dd53f08a0" kindref="member">FILE_EXTENSION_LENGTH</ref><sp/>=<sp/>5;</highlight></codeline>
 <codeline lineno="10"><highlight class="normal"></highlight></codeline>
-<codeline lineno="11"><highlight class="normal"><sp/><sp/>StaticJsonDocument&lt;128&gt;<sp/>jsonDoc;</highlight></codeline>
-<codeline lineno="12"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1ab16364c7bad54765d7deca604d19f172" kindref="member">buildJson</ref>(jsonDoc,<sp/>celsius,<sp/>now,<sp/>sequence);</highlight></codeline>
-<codeline lineno="13"><highlight class="normal"></highlight></codeline>
-<codeline lineno="14"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>payload[128];</highlight></codeline>
-<codeline lineno="15"><highlight class="normal"><sp/><sp/>serializeJson(jsonDoc,<sp/>payload,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(payload));</highlight></codeline>
-<codeline lineno="16"><highlight class="normal"></highlight></codeline>
-<codeline lineno="17"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.beginMessage(fullTopic))<sp/>{</highlight></codeline>
-<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.print(payload);</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.endMessage();</highlight></codeline>
-<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Published<sp/>to<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(fullTopic);</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(payload);</highlight></codeline>
-<codeline lineno="23"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>publish<sp/>failed.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="25"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="26"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="d8/d5b/mqtt_8cpp_1ab2a92cb70a772c6c95d8b818c6b01f77" kindref="member">sendPendingData</ref>(MqttClient&amp;<sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="da/de0/core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,</highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Sending<sp/>pending<sp/>data&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="30"><highlight class="normal"></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/>String<sp/>fileList[500];</highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref><sp/>=<sp/><ref refid="d8/d6b/storage_8h_1a4ebfbb31311cdc384f46f28627733869" kindref="member">listSavedFilesData</ref>(fileList,<sp/>500,<sp/>now);</highlight></codeline>
-<codeline lineno="33"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Pending<sp/>files<sp/>count:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>String(<ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>));</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="d8/d5b/mqtt_8cpp_1ab4dfd2aed88177be74263339392bdcc0" kindref="member">sendToMqtt</ref>(MqttClient&amp;<sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="da/de0/core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence)<sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.poll();</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>fullTopic[<ref refid="d8/d5b/mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kindref="member">SMALL_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/>snprintf(fullTopic,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(fullTopic),<sp/></highlight><highlight class="stringliteral">&quot;%s%s/%s&quot;</highlight><highlight class="normal">,<sp/>topicPrefix,<sp/><ref refid="da/de0/core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,<sp/>sensorId);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/>StaticJsonDocument&lt;SMALL_BUFFER_SIZE&gt;<sp/>jsonDoc;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1ab16364c7bad54765d7deca604d19f172" kindref="member">buildJson</ref>(jsonDoc,<sp/>celsius,<sp/>now,<sp/>sequence);</highlight></codeline>
 <codeline lineno="34"><highlight class="normal"></highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref><sp/>==<sp/>0)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"></highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/>StaticJsonDocument&lt;1024&gt;<sp/>mainDoc;</highlight></codeline>
-<codeline lineno="38"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1a49ffb7f647d6701d9cea3decdac97cf1" kindref="member">buildRecoveredJson</ref>(mainDoc,<sp/>fileList,<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/>now);</highlight></codeline>
-<codeline lineno="39"><highlight class="normal"></highlight></codeline>
-<codeline lineno="40"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!mainDoc.containsKey(</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">)<sp/>||<sp/>mainDoc[</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">].size()<sp/>==<sp/>0)<sp/>{</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;No<sp/>valid<sp/>recovered<sp/>entries<sp/>to<sp/>send.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="43"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="44"><highlight class="normal"></highlight></codeline>
-<codeline lineno="45"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Recovered<sp/>entries<sp/>to<sp/>send:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>String(mainDoc[</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">].size()));</highlight></codeline>
-<codeline lineno="46"><highlight class="normal"></highlight></codeline>
-<codeline lineno="47"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1a9b1aef5a070bc35c2abe6ef4721e421b" kindref="member">saveRecoveredJsonDataToSd</ref>(fileList,<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/>now);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>payload[<ref refid="d8/d5b/mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kindref="member">SMALL_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/>serializeJson(jsonDoc,<sp/>payload,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(payload));</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.beginMessage(fullTopic))<sp/>{</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.print(payload);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.endMessage();</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Published<sp/>to<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(fullTopic);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(payload);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>publish<sp/>failed.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="48"><highlight class="normal"></highlight></codeline>
-<codeline lineno="49"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Prepare<sp/>filename<sp/>for<sp/>deletion</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>baseFilename[64];</highlight></codeline>
-<codeline lineno="51"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1a99398dc180671d28434aa4982bfd36ca" kindref="member">createFilename</ref>(baseFilename,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(baseFilename),<sp/>now);</highlight></codeline>
-<codeline lineno="52"><highlight class="normal"><sp/><sp/>String<sp/>recoveredFilename<sp/>=<sp/>String(baseFilename);</highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/>recoveredFilename.remove(recoveredFilename.length()<sp/>-<sp/>5);<sp/><sp/></highlight></codeline>
-<codeline lineno="54"><highlight class="normal"><sp/><sp/>recoveredFilename<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;_recovered.json&quot;</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="55"><highlight class="normal"></highlight></codeline>
-<codeline lineno="56"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>payload[1024];</highlight></codeline>
-<codeline lineno="57"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len<sp/>=<sp/>serializeJson(mainDoc,<sp/>payload,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(payload));</highlight></codeline>
-<codeline lineno="58"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(len<sp/>&gt;=<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(payload))<sp/>{</highlight></codeline>
-<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Payload<sp/>too<sp/>large,<sp/>skipping<sp/>publish.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="61"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="62"><highlight class="normal"></highlight></codeline>
-<codeline lineno="63"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>fullTopic[128];</highlight></codeline>
-<codeline lineno="64"><highlight class="normal"><sp/><sp/>snprintf(fullTopic,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(fullTopic),<sp/></highlight><highlight class="stringliteral">&quot;%s%s/%s/recovered&quot;</highlight><highlight class="normal">,<sp/>topicPrefix,<sp/><ref refid="da/de0/core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,<sp/>sensorId);</highlight></codeline>
-<codeline lineno="65"><highlight class="normal"><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Publishing<sp/>recovered<sp/>data<sp/>to<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="66"><highlight class="normal"><sp/><sp/>Serial.println(fullTopic);</highlight></codeline>
-<codeline lineno="67"><highlight class="normal"></highlight></codeline>
-<codeline lineno="68"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.beginMessage(fullTopic))<sp/>{</highlight></codeline>
-<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.print(payload);</highlight></codeline>
-<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.endMessage();</highlight></codeline>
-<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Published<sp/>recovered<sp/>data.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="72"><highlight class="normal"></highlight></codeline>
-<codeline lineno="73"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1a655fe9b7f9b52e408b888ce3aadd62a2" kindref="member">deleteRecoveredAndPendingSourceFilesData</ref>(fileList,<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/>now,<sp/>recoveredFilename);</highlight></codeline>
-<codeline lineno="74"><highlight class="normal">}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
-<codeline lineno="75"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>recovered<sp/>publish<sp/>failed.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="76"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="77"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="d8/d5b/mqtt_8cpp_1ab2a92cb70a772c6c95d8b818c6b01f77" kindref="member">sendPendingData</ref>(MqttClient&amp;<sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="da/de0/core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Sending<sp/>pending<sp/>data&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/>String<sp/>fileList[<ref refid="d8/d5b/mqtt_8cpp_1a711805414ac200c85253f9c3d8c73916" kindref="member">MAX_PENDING_FILES</ref>];</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref><sp/>=<sp/><ref refid="d8/d6b/storage_8h_1a4ebfbb31311cdc384f46f28627733869" kindref="member">listSavedFilesData</ref>(fileList,<sp/><ref refid="d8/d5b/mqtt_8cpp_1a711805414ac200c85253f9c3d8c73916" kindref="member">MAX_PENDING_FILES</ref>,<sp/>now);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Pending<sp/>files<sp/>count:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>String(<ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>));</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref><sp/>==<sp/>0)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/>StaticJsonDocument&lt;LARGE_BUFFER_SIZE&gt;<sp/>mainDoc;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1a49ffb7f647d6701d9cea3decdac97cf1" kindref="member">buildRecoveredJson</ref>(mainDoc,<sp/>fileList,<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/>now);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!mainDoc.containsKey(</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">)<sp/>||<sp/>mainDoc[</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">].size()<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;No<sp/>valid<sp/>recovered<sp/>entries<sp/>to<sp/>send.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Recovered<sp/>entries<sp/>to<sp/>send:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>String(mainDoc[</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">].size()));</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1a9b1aef5a070bc35c2abe6ef4721e421b" kindref="member">saveRecoveredJsonDataToSd</ref>(fileList,<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/>now);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Prepare<sp/>filename<sp/>for<sp/>deletion</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>baseFilename[<ref refid="d8/d5b/mqtt_8cpp_1a391eb2dea9857ac975b04b1b37fd9e97" kindref="member">BASE_FILENAME_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1a99398dc180671d28434aa4982bfd36ca" kindref="member">createFilename</ref>(baseFilename,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(baseFilename),<sp/>now);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/>String<sp/>recoveredFilename<sp/>=<sp/>String(baseFilename);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/>recoveredFilename.remove(recoveredFilename.length()<sp/>-<sp/><ref refid="d8/d5b/mqtt_8cpp_1a10aaa940168502f25286e34dd53f08a0" kindref="member">FILE_EXTENSION_LENGTH</ref>);<sp/><sp/></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/>recoveredFilename<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;_recovered.json&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>payload[<ref refid="d8/d5b/mqtt_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" kindref="member">LARGE_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len<sp/>=<sp/>serializeJson(mainDoc,<sp/>payload,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(payload));</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(len<sp/>&gt;=<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(payload))<sp/>{</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Payload<sp/>too<sp/>large,<sp/>skipping<sp/>publish.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>fullTopic[<ref refid="d8/d5b/mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kindref="member">SMALL_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/>snprintf(fullTopic,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(fullTopic),<sp/></highlight><highlight class="stringliteral">&quot;%s%s/%s/recovered&quot;</highlight><highlight class="normal">,<sp/>topicPrefix,<sp/><ref refid="da/de0/core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,<sp/>sensorId);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Publishing<sp/>recovered<sp/>data<sp/>to<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/>Serial.println(fullTopic);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.beginMessage(fullTopic))<sp/>{</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.print(payload);</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.endMessage();</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Published<sp/>recovered<sp/>data.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1a655fe9b7f9b52e408b888ce3aadd62a2" kindref="member">deleteRecoveredAndPendingSourceFilesData</ref>(fileList,<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/>now,<sp/>recoveredFilename);</highlight></codeline>
+<codeline lineno="109"><highlight class="normal">}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>recovered<sp/>publish<sp/>failed.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="111"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="112"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="src/mqtt.cpp"/>
   </compounddef>

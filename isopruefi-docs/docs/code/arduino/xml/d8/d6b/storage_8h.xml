@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
   <compounddef id="d8/d6b/storage_8h" kind="file" language="C++">
     <compoundname>storage.h</compoundname>
     <includes refid="de/d03/platform_8h" local="yes">platform.h</includes>
@@ -8,6 +8,18 @@
     <includedby refid="d8/d5b/mqtt_8cpp" local="yes">src/mqtt.cpp</includedby>
     <includedby refid="da/dc2/storage_8cpp" local="yes">src/storage.cpp</includedby>
     <incdepgraph>
+      <node id="7">
+        <label>Adafruit_ADT7410.h</label>
+      </node>
+      <node id="3">
+        <label>Arduino.h</label>
+      </node>
+      <node id="8">
+        <label>ArduinoJson.h</label>
+      </node>
+      <node id="9">
+        <label>ArduinoMqttClient.h</label>
+      </node>
       <node id="2">
         <label>platform.h</label>
         <link refid="de/d03/platform_8h"/>
@@ -33,18 +45,6 @@
         </childnode>
         <childnode refid="10" relation="include">
         </childnode>
-      </node>
-      <node id="7">
-        <label>Adafruit_ADT7410.h</label>
-      </node>
-      <node id="3">
-        <label>Arduino.h</label>
-      </node>
-      <node id="8">
-        <label>ArduinoJson.h</label>
-      </node>
-      <node id="9">
-        <label>ArduinoMqttClient.h</label>
       </node>
       <node id="6">
         <label>RTClib.h</label>
@@ -92,6 +92,7 @@
         <param>
           <type>SdFat &amp;</type>
           <declname>sd</declname>
+          <defname>sdRef</defname>
         </param>
         <param>
           <type>float</type>
@@ -106,12 +107,48 @@
           <declname>sequence</declname>
         </param>
         <briefdescription>
+<para>Saves sensor data to SD card as a JSON file. </para>
         </briefdescription>
         <detaileddescription>
+<para>Creates a JSON document with sensor data and saves it to the SD card in a date-organized folder structure. Creates directories as needed and handles file writing with proper timestamping.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sdRef</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the SD card file system instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>celsius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Temperature reading in Celsius. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for timestamp and file organization. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sequence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sequence number for the reading. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="7" column="6" bodyfile="src/storage.cpp" bodystart="54" bodyend="84" declfile="include/storage.h" declline="7" declcolumn="6"/>
+        <location file="include/storage.h" line="7" column="6" bodyfile="src/storage.cpp" bodystart="105" bodyend="135" declfile="include/storage.h" declline="7" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d8/d6b/storage_8h_1a677bacd38e6f20c32dbcc32e29714db8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -121,6 +158,7 @@
         <param>
           <type>SdFat &amp;</type>
           <declname>sd</declname>
+          <defname>sdRef</defname>
         </param>
         <param>
           <type>String *</type>
@@ -135,12 +173,48 @@
           <declname>now</declname>
         </param>
         <briefdescription>
+<para>Saves consolidated recovered sensor data to SD card as a single JSON file. </para>
         </briefdescription>
         <detaileddescription>
+<para>Takes multiple recovered sensor data entries and saves them as one consolidated JSON file with a &quot;_recovered&quot; suffix. This file serves as a backup of the data that was sent to the MQTT broker.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sdRef</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the SD card file system instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fileList</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Array of original file paths that were recovered. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of files in the array. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for filename generation. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="8" column="6" bodyfile="src/storage.cpp" bodystart="90" bodyend="112" declfile="include/storage.h" declline="8" declcolumn="6"/>
+        <location file="include/storage.h" line="8" column="6" bodyfile="src/storage.cpp" bodystart="160" bodyend="182" declfile="include/storage.h" declline="8" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d8/d6b/storage_8h_1ad52b53beacc87b5cc365800cd88f492e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int</type>
@@ -150,6 +224,7 @@
         <param>
           <type>SdFat &amp;</type>
           <declname>sd</declname>
+          <defname>sdRef</defname>
         </param>
         <param>
           <type>String *</type>
@@ -164,12 +239,50 @@
           <declname>now</declname>
         </param>
         <briefdescription>
+<para>Lists saved sensor data files from the last 24 hours. </para>
         </briefdescription>
         <detaileddescription>
+<para>Scans the SD card for JSON files in the current date folder, filters them based on their timestamp to include only files from the last 24 hours, and excludes recovery files.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sdRef</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the SD card file system instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fileList</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Array to store the found file paths. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>maxFiles</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of files to list. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for filtering files within 24 hours. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Number of files found and added to the list. </para>
+</simplesect>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="9" column="5" bodyfile="src/storage.cpp" bodystart="118" bodyend="163" declfile="include/storage.h" declline="9" declcolumn="5"/>
+        <location file="include/storage.h" line="9" column="5" bodyfile="src/storage.cpp" bodystart="209" bodyend="254" declfile="include/storage.h" declline="9" declcolumn="5"/>
       </memberdef>
       <memberdef kind="function" id="d8/d6b/storage_8h_1ae1177c93c12dbb9a461014a22be241eb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -179,6 +292,7 @@
         <param>
           <type>SdFat &amp;</type>
           <declname>sd</declname>
+          <defname>sdRef</defname>
         </param>
         <param>
           <type>const String *</type>
@@ -197,12 +311,56 @@
           <declname>recoveredFilename</declname>
         </param>
         <briefdescription>
+<para>Deletes original sensor data files and the recovery file after successful transmission. </para>
         </briefdescription>
         <detaileddescription>
+<para>Removes the original sensor data files that were consolidated and sent, as well as the recovery file that was created as backup. This cleanup prevents duplicate data transmission and manages storage space.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sdRef</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the SD card file system instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fileList</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Array of original file paths to delete. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of files in the array. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for folder path generation. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>recoveredFilename</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the recovery file to delete. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="10" column="6" bodyfile="src/storage.cpp" bodystart="169" bodyend="188" declfile="include/storage.h" declline="10" declcolumn="6"/>
+        <location file="include/storage.h" line="10" column="6" bodyfile="src/storage.cpp" bodystart="281" bodyend="300" declfile="include/storage.h" declline="10" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d8/d6b/storage_8h_1ab16364c7bad54765d7deca604d19f172" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -226,12 +384,48 @@
           <declname>sequence</declname>
         </param>
         <briefdescription>
+<para>Builds a JSON document for sensor data. </para>
         </briefdescription>
         <detaileddescription>
+<para>Creates a standardized JSON structure containing sensor reading, timestamp, sequence number, and metadata fields.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>doc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>JSON document to populate with sensor data. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>celsius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Temperature reading in Celsius. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for timestamp. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sequence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sequence number for the reading. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="12" column="6" bodyfile="src/storage.cpp" bodystart="5" bodyend="12" declfile="include/storage.h" declline="12" declcolumn="6"/>
+        <location file="include/storage.h" line="12" column="6" bodyfile="src/storage.cpp" bodystart="25" bodyend="32" declfile="include/storage.h" declline="12" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d8/d6b/storage_8h_1a49ffb7f647d6701d9cea3decdac97cf1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -255,12 +449,48 @@
           <declname>now</declname>
         </param>
         <briefdescription>
+<para>Builds a JSON document containing recovered sensor data from multiple files. </para>
         </briefdescription>
         <detaileddescription>
+<para>Reads multiple JSON files from storage, parses them, and consolidates their contents into a single JSON document with metadata array containing all recovered entries.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>doc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>JSON document to populate with recovered data. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fileList</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Array of file paths to read and consolidate. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of files in the fileList array. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for the recovery timestamp. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="13" column="6" bodyfile="src/storage.cpp" bodystart="14" bodyend="48" declfile="include/storage.h" declline="13" declcolumn="6"/>
+        <location file="include/storage.h" line="13" column="6" bodyfile="src/storage.cpp" bodystart="46" bodyend="80" declfile="include/storage.h" declline="13" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d8/d6b/storage_8h_1a03d6491b13757e01963c2ed90e52aa5f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -280,12 +510,39 @@
           <declname>sequence</declname>
         </param>
         <briefdescription>
+<para>Wrapper function to save sensor data to SD card using global SD instance. </para>
         </briefdescription>
         <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>celsius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Temperature reading in Celsius. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for timestamp and file organization. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sequence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sequence number for the reading. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="41" column="6" bodyfile="src/storage.cpp" bodystart="50" bodyend="52" declfile="include/storage.h" declline="41" declcolumn="6"/>
+        <location file="include/storage.h" line="41" column="6" bodyfile="src/storage.cpp" bodystart="89" bodyend="91" declfile="include/storage.h" declline="41" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d8/d6b/storage_8h_1a9b1aef5a070bc35c2abe6ef4721e421b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -305,12 +562,39 @@
           <declname>now</declname>
         </param>
         <briefdescription>
+<para>Wrapper function to save recovered JSON data using global SD instance. </para>
         </briefdescription>
         <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fileList</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Array of file paths that were recovered. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of files in the array. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for filename generation. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="42" column="6" bodyfile="src/storage.cpp" bodystart="86" bodyend="88" declfile="include/storage.h" declline="42" declcolumn="6"/>
+        <location file="include/storage.h" line="42" column="6" bodyfile="src/storage.cpp" bodystart="144" bodyend="146" declfile="include/storage.h" declline="42" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d8/d6b/storage_8h_1a4ebfbb31311cdc384f46f28627733869" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int</type>
@@ -330,12 +614,41 @@
           <declname>now</declname>
         </param>
         <briefdescription>
+<para>Wrapper function to list saved files using global SD instance. </para>
         </briefdescription>
         <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fileList</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Array to store the found file paths. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>maxFiles</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of files to list. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for filtering files within 24 hours. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Number of files found and added to the list. </para>
+</simplesect>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="43" column="5" bodyfile="src/storage.cpp" bodystart="114" bodyend="116" declfile="include/storage.h" declline="43" declcolumn="5"/>
+        <location file="include/storage.h" line="43" column="5" bodyfile="src/storage.cpp" bodystart="192" bodyend="194" declfile="include/storage.h" declline="43" declcolumn="5"/>
       </memberdef>
       <memberdef kind="function" id="d8/d6b/storage_8h_1a655fe9b7f9b52e408b888ce3aadd62a2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -359,12 +672,47 @@
           <declname>recoveredFilename</declname>
         </param>
         <briefdescription>
+<para>Wrapper function to delete recovered and pending files using global SD instance. </para>
         </briefdescription>
         <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fileList</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Array of original file paths to delete. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of files in the array. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current date and time for folder path generation. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>recoveredFilename</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the recovery file to delete. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="44" column="6" bodyfile="src/storage.cpp" bodystart="165" bodyend="167" declfile="include/storage.h" declline="44" declcolumn="6"/>
+        <location file="include/storage.h" line="44" column="6" bodyfile="src/storage.cpp" bodystart="264" bodyend="266" declfile="include/storage.h" declline="44" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="d8/d6b/storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>const char *</type>

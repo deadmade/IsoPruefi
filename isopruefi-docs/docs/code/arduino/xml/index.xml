@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.13.2" xml:lang="en-US">
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.14.0" xml:lang="en-US">
   <compound refid="da/ded/struct_mock_date_time" kind="struct"><name>MockDateTime</name>
     <member refid="da/ded/struct_mock_date_time_1a613267af7e08a161df76b1b98b9f713b" kind="variable"><name>_year</name></member>
     <member refid="da/ded/struct_mock_date_time_1a8773cc8f1299f1d84f8b11c0d43040e6" kind="variable"><name>_month</name></member>
@@ -51,13 +51,18 @@
   <compound refid="d9/d94/network_8h" kind="file"><name>network.h</name>
     <member refid="d9/d94/network_8h_1a0757debfda15f5757976bc2c53c955c7" kind="function"><name>connectWiFi</name></member>
     <member refid="d9/d94/network_8h_1acc5736b55a4581c4020d736180e28306" kind="function"><name>connectMQTT</name></member>
-    <member refid="d9/d94/network_8h_1aa43b08104914d84a1ac34003fe56ba6b" kind="function"><name>tryReconnect</name></member>
     <member refid="d9/d94/network_8h_1aec8befb6e49b85d32ece0496dfca569b" kind="function"><name>isConnectedToServer</name></member>
   </compound>
   <compound refid="de/d03/platform_8h" kind="file"><name>platform.h</name>
     <member refid="de/d03/platform_8h_1afa042f998806fcdedab1794cebbeaad3" kind="variable"><name>rtc</name></member>
     <member refid="de/d03/platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kind="variable"><name>sd</name></member>
     <member refid="de/d03/platform_8h_1af19292dee25d42580f9588b754ddbedc" kind="variable"><name>tempsensor</name></member>
+  </compound>
+  <compound refid="db/df8/secrets__example_8h" kind="file"><name>secrets_example.h</name>
+    <member refid="db/df8/secrets__example_8h_1af44aa8face3356c1566d19fcad3e5f8b" kind="define"><name>SECRET_SSID</name></member>
+    <member refid="db/df8/secrets__example_8h_1af9af3945a9a7c95d2d047a2183832d35" kind="define"><name>SECRET_PASS</name></member>
+    <member refid="db/df8/secrets__example_8h_1a6097c00d8fc3e3e37995bd7e410db99d" kind="define"><name>SECRET_MQTT_USER</name></member>
+    <member refid="db/df8/secrets__example_8h_1af4eaf35f12a6da3d6e6df6f1ca56b132" kind="define"><name>SECRET_MQTT_PASS</name></member>
   </compound>
   <compound refid="d5/d2e/sensor_8h" kind="file"><name>sensor.h</name>
     <member refid="d5/d2e/sensor_8h_1a07d1721651c2862c8c366b84a5424df3" kind="function"><name>initSensor</name></member>
@@ -88,6 +93,10 @@
     <member refid="da/de0/core_8cpp_1a6d11f0d69393ced0e86a5ec6ff1d520e" kind="variable"><name>sensorIdInUse</name></member>
     <member refid="da/de0/core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kind="variable"><name>sensorType</name></member>
     <member refid="da/de0/core_8cpp_1a4ed7b4c951621dbec76099594f64d249" kind="variable"><name>topic</name></member>
+    <member refid="da/de0/core_8cpp_1a9b7578cbf8a2ac9a8a2ccb3fc5431791" kind="variable"><name>WIFI_CONNECT_TIMEOUT_MS</name></member>
+    <member refid="da/de0/core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b" kind="variable"><name>LOOP_DELAY_MS</name></member>
+    <member refid="da/de0/core_8cpp_1a4ae62406649dce01eb479e7a476a4305" kind="variable"><name>CLIENT_ID_BUFFER_SIZE</name></member>
+    <member refid="da/de0/core_8cpp_1a4f1edbd0b6c65e5e7843bbda20bb24e2" kind="variable"><name>SD_SCK_FREQUENCY_MHZ</name></member>
     <member refid="da/de0/core_8cpp_1abb6f4167f4e2989c5f0af6f10b56d33e" kind="variable"><name>lastLoggedMinute</name></member>
     <member refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kind="variable"><name>count</name></member>
     <member refid="da/de0/core_8cpp_1af80c34747656b263fece5b92e5786fab" kind="variable"><name>wifiOk</name></member>
@@ -102,6 +111,11 @@
     <member refid="df/d0a/main_8cpp_1afe461d27b9c48d5921c00d521181f12f" kind="function"><name>loop</name></member>
   </compound>
   <compound refid="d8/d5b/mqtt_8cpp" kind="file"><name>mqtt.cpp</name>
+    <member refid="d8/d5b/mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kind="variable"><name>SMALL_BUFFER_SIZE</name></member>
+    <member refid="d8/d5b/mqtt_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" kind="variable"><name>LARGE_BUFFER_SIZE</name></member>
+    <member refid="d8/d5b/mqtt_8cpp_1a391eb2dea9857ac975b04b1b37fd9e97" kind="variable"><name>BASE_FILENAME_BUFFER_SIZE</name></member>
+    <member refid="d8/d5b/mqtt_8cpp_1a711805414ac200c85253f9c3d8c73916" kind="variable"><name>MAX_PENDING_FILES</name></member>
+    <member refid="d8/d5b/mqtt_8cpp_1a10aaa940168502f25286e34dd53f08a0" kind="variable"><name>FILE_EXTENSION_LENGTH</name></member>
     <member refid="d8/d5b/mqtt_8cpp_1ab4dfd2aed88177be74263339392bdcc0" kind="function"><name>sendToMqtt</name></member>
     <member refid="d8/d5b/mqtt_8cpp_1ab2a92cb70a772c6c95d8b818c6b01f77" kind="function"><name>sendPendingData</name></member>
   </compound>
@@ -110,11 +124,8 @@
     <member refid="dc/d8a/network_8cpp_1a6c857fc5b1917d65a997274053f7dfd6" kind="variable"><name>password</name></member>
     <member refid="dc/d8a/network_8cpp_1abb3ec794643663d2561757adeef8622c" kind="variable"><name>broker</name></member>
     <member refid="dc/d8a/network_8cpp_1a0eb069d5f53d3e9269b0f321cfbcf108" kind="variable"><name>port</name></member>
-    <member refid="dc/d8a/network_8cpp_1aca3b6475cc9f45c2f6c244acb67c64f7" kind="variable"><name>lastReconnectAttempt</name></member>
-    <member refid="dc/d8a/network_8cpp_1a0eb7481275958901bc98f4a422ca4a10" kind="variable"><name>reconnectInterval</name></member>
     <member refid="dc/d8a/network_8cpp_1a7ceb85fc6879638e22b72beeafa4de5c" kind="function"><name>connectWiFi</name></member>
     <member refid="dc/d8a/network_8cpp_1a2585db85dfee612787923f923e4d9b6d" kind="function"><name>connectMQTT</name></member>
-    <member refid="dc/d8a/network_8cpp_1aa43b08104914d84a1ac34003fe56ba6b" kind="function"><name>tryReconnect</name></member>
     <member refid="dc/d8a/network_8cpp_1aec8befb6e49b85d32ece0496dfca569b" kind="function"><name>isConnectedToServer</name></member>
   </compound>
   <compound refid="da/dfa/sensor_8cpp" kind="file"><name>sensor.cpp</name>
@@ -122,7 +133,15 @@
     <member refid="da/dfa/sensor_8cpp_1a417a800c5e7a16dba92107bea03bbb2f" kind="function"><name>readTemperatureCelsius</name></member>
   </compound>
   <compound refid="da/dc2/storage_8cpp" kind="file"><name>storage.cpp</name>
-    <member refid="da/dc2/storage_8cpp_1a8582aa6637e4bfd8770ca7385a2babb5" kind="define"><name>FILENAME_BUFFER_SIZE</name></member>
+    <member refid="da/dc2/storage_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kind="variable"><name>SMALL_BUFFER_SIZE</name></member>
+    <member refid="da/dc2/storage_8cpp_1a09f5fe9f2f18854f57bac91913060821" kind="variable"><name>MEDIUM_BUFFER_SIZE</name></member>
+    <member refid="da/dc2/storage_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" kind="variable"><name>LARGE_BUFFER_SIZE</name></member>
+    <member refid="da/dc2/storage_8cpp_1a376b9e2756cc0b9b2db6d6d35b5d554d" kind="variable"><name>XLARGE_BUFFER_SIZE</name></member>
+    <member refid="da/dc2/storage_8cpp_1a633b6d91d2a6b9fe94d49679bf76cf8d" kind="variable"><name>FOLDER_NAME_BUFFER_SIZE</name></member>
+    <member refid="da/dc2/storage_8cpp_1a58ee493fbe4f650e9becc0e32cf30bf4" kind="variable"><name>RECOVERED_NAME_BUFFER_SIZE</name></member>
+    <member refid="da/dc2/storage_8cpp_1aa4d6a09459b76d7be490a8804e8bffe4" kind="variable"><name>FILE_NAME_BUFFER_SIZE</name></member>
+    <member refid="da/dc2/storage_8cpp_1a10aaa940168502f25286e34dd53f08a0" kind="variable"><name>FILE_EXTENSION_LENGTH</name></member>
+    <member refid="da/dc2/storage_8cpp_1a700fb0855fc0d557992d5068df21e937" kind="variable"><name>SECONDS_IN_24_HOURS</name></member>
     <member refid="da/dc2/storage_8cpp_1ab16364c7bad54765d7deca604d19f172" kind="function"><name>buildJson</name></member>
     <member refid="da/dc2/storage_8cpp_1a49ffb7f647d6701d9cea3decdac97cf1" kind="function"><name>buildRecoveredJson</name></member>
     <member refid="da/dc2/storage_8cpp_1a03d6491b13757e01963c2ed90e52aa5f" kind="function"><name>saveDataToSD</name></member>

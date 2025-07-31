@@ -224,43 +224,30 @@ Negative:
 ## ADR 8: frontend
 
 ### Context:
-Iso Pruefi needs to have a good frontend, that will show the chart with measured temperature.
+The IsoPruefi requires a proper frontend to display charts based on the measured temperature data.
 
-### Decision 1:
-The frontend part was auto generated with docker for react. 
+Originally, the frontend was auto-generated using Docker and based on a JavaScript React setup. 
+Later, it was decided to migrate to a TypeScript-based React app, due to the advantages 
+TypeScript offers in terms of type safety and compiler support.
 
-### Status:
-Deprecated
+However, the chosen setup was built using Create React App (CRA), 
+which led to problems with documentation generation using TypeDoc, due to version incompatibility.
 
-### Consequences:
-The auto generated frontend part of the project had the JavaScript base.
+### Decision:
+It was decided to replace CRA support with the Vite-based TS React project.
 
-### Decision 2:
-Use the TypeScript based React project.
-
-### Context:
-Since TypeScript offers strong typing and compiler - it would better suit the project needs and will prevent all JavaScript weaknesses.
-
-### Status:
-Deprecated.
-
-### Consequences:
-However, the decision to migrate from JS to TS based React App, the architecture had to be changed, 
-since for its building it has used "Create React App" (CRA). For the auto documentation of Frontend code, the tool TypeDoc was chosen.
-The CRA + TypeDoc had versions incompatibility.
-
-### Decision 3: 
-Migrate from CRA React App to Vite React App.
-
-### Context: 
-Vite building tool offers compatibility with TypeDoc. Moreover, Vite offers faster startup time, built-in TS support, 
-and considered as simple and flexible. 
-
-### Status:
+### Conclusion:
 Accepted.
 
 ### Consequences:
-The TypeDoc tool documents the frontend part of code. React App starts faster than with CRA tool.
+Neutral: 
+
+- The frontend part of IsoPruefi runs completely on Vite
+
+Positive:
+
+- TypeDoc works correctly and the frontend documentation is generated.
+- The startup time improved comparing to CRA
 
 
 ## Sources

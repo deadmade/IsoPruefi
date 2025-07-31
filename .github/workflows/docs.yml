@@ -69,7 +69,7 @@ jobs:
        
       - name: Generate Arduino Documentation
         working-directory: ./isopruefi-docs\docs\code\arduino
-        run: npx moxygen -a xml
+        run: npx seaborg xml md
 
       - name: Setup Python
         uses: actions/setup-python@v5

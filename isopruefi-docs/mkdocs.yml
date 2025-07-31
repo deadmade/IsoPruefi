@@ -9,6 +9,7 @@ nav:
     - MQTT-Sender: code/MQTT-Sender/index.md
     - Database: code/Database/index.md
     - UnitTests: code/UnitTests/index.md
+    - Arduino: code/arduino/api.md
     - Frontend:
         - Overview: code/frontend/README.md
         - App:

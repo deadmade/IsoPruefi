@@ -60,6 +60,13 @@ jobs:
         working-directory: ./isopruefi-frontend
         run: npx typedoc
 
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen
+
+      - name: Generate Arduino Documentation
+        working-directory: ./arduino/250720-235754-mkrwifi1010
+        run: doxygen Doxyfile
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:

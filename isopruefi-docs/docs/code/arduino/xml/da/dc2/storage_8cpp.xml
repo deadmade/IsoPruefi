@@ -1,0 +1,557 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+  <compounddef id="da/dc2/storage_8cpp" kind="file" language="C++">
+    <compoundname>storage.cpp</compoundname>
+    <includes refid="d8/d6b/storage_8h" local="yes">storage.h</includes>
+    <incdepgraph>
+      <node id="3">
+        <label>platform.h</label>
+        <link refid="de/d03/platform_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>storage.h</label>
+        <link refid="d8/d6b/storage_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>src/storage.cpp</label>
+        <link refid="da/dc2/storage_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>Adafruit_ADT7410.h</label>
+      </node>
+      <node id="4">
+        <label>Arduino.h</label>
+      </node>
+      <node id="9">
+        <label>ArduinoJson.h</label>
+      </node>
+      <node id="10">
+        <label>ArduinoMqttClient.h</label>
+      </node>
+      <node id="7">
+        <label>RTClib.h</label>
+      </node>
+      <node id="6">
+        <label>SdFat.h</label>
+      </node>
+      <node id="5">
+        <label>Wire.h</label>
+      </node>
+      <node id="11">
+        <label>cstdio</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="da/dc2/storage_8cpp_1a8582aa6637e4bfd8770ca7385a2babb5" prot="public" static="no">
+        <name>FILENAME_BUFFER_SIZE</name>
+        <initializer>32</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="3" column="9" bodyfile="src/storage.cpp" bodystart="3" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="da/dc2/storage_8cpp_1ab16364c7bad54765d7deca604d19f172" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void buildJson</definition>
+        <argsstring>(JsonDocument &amp;doc, float celsius, const DateTime &amp;now, int sequence)</argsstring>
+        <name>buildJson</name>
+        <param>
+          <type><ref refid="db/d72/mock__json_8h_1a54db1bfd55a2f11a001e5854071c899c" kindref="member">JsonDocument</ref> &amp;</type>
+          <declname>doc</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>celsius</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>sequence</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="5" column="6" bodyfile="src/storage.cpp" bodystart="5" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="function" id="da/dc2/storage_8cpp_1a49ffb7f647d6701d9cea3decdac97cf1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void buildRecoveredJson</definition>
+        <argsstring>(JsonDocument &amp;doc, String *fileList, int count, const DateTime &amp;now)</argsstring>
+        <name>buildRecoveredJson</name>
+        <param>
+          <type><ref refid="db/d72/mock__json_8h_1a54db1bfd55a2f11a001e5854071c899c" kindref="member">JsonDocument</ref> &amp;</type>
+          <declname>doc</declname>
+        </param>
+        <param>
+          <type>String *</type>
+          <declname>fileList</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>count</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="14" column="6" bodyfile="src/storage.cpp" bodystart="14" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="da/dc2/storage_8cpp_1a03d6491b13757e01963c2ed90e52aa5f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void saveDataToSD</definition>
+        <argsstring>(float celsius, const DateTime &amp;now, int sequence)</argsstring>
+        <name>saveDataToSD</name>
+        <param>
+          <type>float</type>
+          <declname>celsius</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>sequence</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="50" column="6" bodyfile="src/storage.cpp" bodystart="50" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="function" id="da/dc2/storage_8cpp_1aec99e2896ee5b3c8e188437407b97357" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void saveToSD</definition>
+        <argsstring>(SdFat &amp;sdRef, float celsius, const DateTime &amp;now, int sequence)</argsstring>
+        <name>saveToSD</name>
+        <param>
+          <type>SdFat &amp;</type>
+          <declname>sdRef</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>celsius</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>sequence</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="54" column="6" bodyfile="src/storage.cpp" bodystart="54" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="da/dc2/storage_8cpp_1a9b1aef5a070bc35c2abe6ef4721e421b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void saveRecoveredJsonDataToSd</definition>
+        <argsstring>(String *fileList, int count, const DateTime &amp;now)</argsstring>
+        <name>saveRecoveredJsonDataToSd</name>
+        <param>
+          <type>String *</type>
+          <declname>fileList</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>count</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="86" column="6" bodyfile="src/storage.cpp" bodystart="86" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="da/dc2/storage_8cpp_1a104eb1fa19e5eb32fc2465c1d994b242" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void saveRecoveredJsonToSd</definition>
+        <argsstring>(SdFat &amp;sdRef, String *fileList, int count, const DateTime &amp;now)</argsstring>
+        <name>saveRecoveredJsonToSd</name>
+        <param>
+          <type>SdFat &amp;</type>
+          <declname>sdRef</declname>
+        </param>
+        <param>
+          <type>String *</type>
+          <declname>fileList</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>count</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="90" column="6" bodyfile="src/storage.cpp" bodystart="90" bodyend="112"/>
+      </memberdef>
+      <memberdef kind="function" id="da/dc2/storage_8cpp_1a4ebfbb31311cdc384f46f28627733869" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int listSavedFilesData</definition>
+        <argsstring>(String *fileList, int maxFiles, const DateTime &amp;now)</argsstring>
+        <name>listSavedFilesData</name>
+        <param>
+          <type>String *</type>
+          <declname>fileList</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>maxFiles</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="114" column="5" bodyfile="src/storage.cpp" bodystart="114" bodyend="116"/>
+      </memberdef>
+      <memberdef kind="function" id="da/dc2/storage_8cpp_1a1bad01efdba2c79507efa46876326e50" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int listSavedFiles</definition>
+        <argsstring>(SdFat &amp;sdRef, String *fileList, int maxFiles, const DateTime &amp;now)</argsstring>
+        <name>listSavedFiles</name>
+        <param>
+          <type>SdFat &amp;</type>
+          <declname>sdRef</declname>
+        </param>
+        <param>
+          <type>String *</type>
+          <declname>fileList</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>maxFiles</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="118" column="5" bodyfile="src/storage.cpp" bodystart="118" bodyend="163"/>
+      </memberdef>
+      <memberdef kind="function" id="da/dc2/storage_8cpp_1a655fe9b7f9b52e408b888ce3aadd62a2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void deleteRecoveredAndPendingSourceFilesData</definition>
+        <argsstring>(const String *fileList, int count, const DateTime &amp;now, const String &amp;recoveredFilename)</argsstring>
+        <name>deleteRecoveredAndPendingSourceFilesData</name>
+        <param>
+          <type>const String *</type>
+          <declname>fileList</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>count</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <param>
+          <type>const String &amp;</type>
+          <declname>recoveredFilename</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="165" column="6" bodyfile="src/storage.cpp" bodystart="165" bodyend="167"/>
+      </memberdef>
+      <memberdef kind="function" id="da/dc2/storage_8cpp_1a2a56012e4c76aa4f343b849a0d926c93" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void deleteRecoveredAndPendingSourceFiles</definition>
+        <argsstring>(SdFat &amp;sdRef, const String *fileList, int count, const DateTime &amp;now, const String &amp;recoveredFilename)</argsstring>
+        <name>deleteRecoveredAndPendingSourceFiles</name>
+        <param>
+          <type>SdFat &amp;</type>
+          <declname>sdRef</declname>
+        </param>
+        <param>
+          <type>const String *</type>
+          <declname>fileList</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>count</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <param>
+          <type>const String &amp;</type>
+          <declname>recoveredFilename</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="169" column="6" bodyfile="src/storage.cpp" bodystart="169" bodyend="188"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="d8/d6b/storage_8h" kindref="compound">storage.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>FILENAME_BUFFER_SIZE<sp/>32</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1ab16364c7bad54765d7deca604d19f172" kindref="member">buildJson</ref>(<ref refid="db/d72/mock__json_8h_1a54db1bfd55a2f11a001e5854071c899c" kindref="member">JsonDocument</ref>&amp;<sp/>doc,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence)<sp/>{</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/>doc.clear();</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/>doc[</highlight><highlight class="stringliteral">&quot;timestamp&quot;</highlight><highlight class="normal">]<sp/>=<sp/>now.unixtime();</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><ref refid="db/d72/mock__json_8h_1a23d227a500ab50420b35be152ef0a5e4" kindref="member">JsonArray</ref><sp/>arr<sp/>=<sp/>doc.createNestedArray(</highlight><highlight class="stringliteral">&quot;value&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/>arr.add(celsius);</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/>doc[</highlight><highlight class="stringliteral">&quot;sequence&quot;</highlight><highlight class="normal">]<sp/>=<sp/>sequence;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/>doc.createNestedArray(</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">).add(</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="12"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1a49ffb7f647d6701d9cea3decdac97cf1" kindref="member">buildRecoveredJson</ref>(<ref refid="db/d72/mock__json_8h_1a54db1bfd55a2f11a001e5854071c899c" kindref="member">JsonDocument</ref>&amp;<sp/>doc,<sp/>String*<sp/>fileList,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/>doc.clear();</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/>doc[</highlight><highlight class="stringliteral">&quot;timestamp&quot;</highlight><highlight class="normal">]<sp/>=<sp/>now.unixtime();</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/>doc[</highlight><highlight class="stringliteral">&quot;sequence&quot;</highlight><highlight class="normal">]<sp/>=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><ref refid="db/d72/mock__json_8h_1a23d227a500ab50420b35be152ef0a5e4" kindref="member">JsonArray</ref><sp/>val<sp/>=<sp/>doc.createNestedArray(</highlight><highlight class="stringliteral">&quot;value&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/>val.add(</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><ref refid="db/d72/mock__json_8h_1a23d227a500ab50420b35be152ef0a5e4" kindref="member">JsonArray</ref><sp/>meta<sp/>=<sp/>doc.createNestedArray(</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>;<sp/>++i)<sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Trying<sp/>to<sp/>open:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(fileList[i]);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>File<sp/>file<sp/>=<sp/><ref refid="de/d03/platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>.open(fileList[i].c_str(),<sp/>FILE_READ);</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!file)<sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;<sp/>-&gt;<sp/>Failed<sp/>to<sp/>open<sp/>file.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>StaticJsonDocument&lt;256&gt;<sp/>entry;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>DeserializationError<sp/>err<sp/>=<sp/>deserializeJson(entry,<sp/>file);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>file.close();</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(err)<sp/>{</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;<sp/>-&gt;<sp/>Failed<sp/>to<sp/>parse<sp/>JSON:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(err.c_str());</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;<sp/>-&gt;<sp/>Parsed<sp/>and<sp/>added<sp/>to<sp/>meta.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>meta.add(entry);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Total<sp/>valid<sp/>entries<sp/>added<sp/>to<sp/>meta:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/>Serial.println(meta.size());</highlight></codeline>
+<codeline lineno="48"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1a03d6491b13757e01963c2ed90e52aa5f" kindref="member">saveDataToSD</ref>(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence)<sp/>{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><ref refid="da/dc2/storage_8cpp_1aec99e2896ee5b3c8e188437407b97357" kindref="member">saveToSD</ref>(<ref refid="de/d03/platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>,<sp/>celsius,<sp/>now,<sp/>sequence);<sp/></highlight></codeline>
+<codeline lineno="52"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1aec99e2896ee5b3c8e188437407b97357" kindref="member">saveToSD</ref>(SdFat&amp;<sp/>sdRef,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence)<sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Saving<sp/>data<sp/>to<sp/>SD<sp/>card...&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/>StaticJsonDocument&lt;256&gt;<sp/>doc;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><ref refid="da/dc2/storage_8cpp_1ab16364c7bad54765d7deca604d19f172" kindref="member">buildJson</ref>(doc,<sp/>celsius,<sp/>now,<sp/>sequence);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>folder[8];</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/>strncpy(folder,<sp/><ref refid="d8/d6b/storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e" kindref="member">createFolderName</ref>(now),<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(folder));</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!sdRef.exists(folder))<sp/>{</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!sdRef.mkdir(folder))<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Failed<sp/>to<sp/>create<sp/>folder.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>filename[<ref refid="da/dc2/storage_8cpp_1a8582aa6637e4bfd8770ca7385a2babb5" kindref="member">FILENAME_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1a99398dc180671d28434aa4982bfd36ca" kindref="member">createFilename</ref>(filename,<sp/><ref refid="da/dc2/storage_8cpp_1a8582aa6637e4bfd8770ca7385a2babb5" kindref="member">FILENAME_BUFFER_SIZE</ref>,<sp/>now);</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/>File<sp/>file<sp/>=<sp/>sdRef.open(filename,<sp/>FILE_WRITE);</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(file)<sp/>{</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Write<sp/>JSON<sp/>to<sp/>a<sp/>buffer,<sp/>then<sp/>write<sp/>buffer<sp/>to<sp/>file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>jsonBuffer[256];</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len<sp/>=<sp/>serializeJson(doc,<sp/>jsonBuffer,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(jsonBuffer));</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>file.write((</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t*)jsonBuffer,<sp/>len);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>file.close();</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Saved<sp/>JSON<sp/>to<sp/>SD<sp/>card:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(filename);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Failed<sp/>to<sp/>write<sp/>file.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="84"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1a9b1aef5a070bc35c2abe6ef4721e421b" kindref="member">saveRecoveredJsonDataToSd</ref>(String*<sp/>fileList,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><ref refid="da/dc2/storage_8cpp_1a104eb1fa19e5eb32fc2465c1d994b242" kindref="member">saveRecoveredJsonToSd</ref>(<ref refid="de/d03/platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>,<sp/>fileList,<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/>now);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1a104eb1fa19e5eb32fc2465c1d994b242" kindref="member">saveRecoveredJsonToSd</ref>(SdFat&amp;<sp/>sdRef,<sp/>String*<sp/>fileList,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Saving<sp/>recovered<sp/>JSON<sp/>to<sp/>SD...&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/>StaticJsonDocument&lt;1024&gt;<sp/>doc;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><ref refid="da/dc2/storage_8cpp_1a49ffb7f647d6701d9cea3decdac97cf1" kindref="member">buildRecoveredJson</ref>(doc,<sp/>fileList,<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/>now);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>baseName[32];</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><ref refid="d8/d6b/storage_8h_1a99398dc180671d28434aa4982bfd36ca" kindref="member">createFilename</ref>(baseName,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(baseName),<sp/>now);<sp/></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>recoveredName[40];</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/>snprintf(recoveredName,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(recoveredName),<sp/></highlight><highlight class="stringliteral">&quot;%.*s_recovered.json&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)(strlen(baseName)<sp/>-<sp/>5),<sp/>baseName);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/>File<sp/>file<sp/>=<sp/>sdRef.open(recoveredName,<sp/>FILE_WRITE);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(file)<sp/>{</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>jsonBuffer[1024];</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len<sp/>=<sp/>serializeJson(doc,<sp/>jsonBuffer,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(jsonBuffer));</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>file.write((</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t*)jsonBuffer,<sp/>len);</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>file.close();</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Saved<sp/>recovered<sp/>JSON<sp/>to<sp/>SD:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>String(recoveredName));</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Failed<sp/>to<sp/>save<sp/>recovered<sp/>JSON.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="112"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1a4ebfbb31311cdc384f46f28627733869" kindref="member">listSavedFilesData</ref>(String*<sp/>fileList,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>maxFiles,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1a1bad01efdba2c79507efa46876326e50" kindref="member">listSavedFiles</ref>(<ref refid="de/d03/platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>,<sp/>fileList,<sp/>maxFiles,<sp/>now);</highlight></codeline>
+<codeline lineno="116"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1a1bad01efdba2c79507efa46876326e50" kindref="member">listSavedFiles</ref>(SdFat&amp;<sp/>sdRef,<sp/>String*<sp/>fileList,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>maxFiles,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Listing<sp/>saved<sp/>files<sp/>from<sp/>last<sp/>24h...&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>folder[8];</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/>strncpy(folder,<sp/><ref refid="d8/d6b/storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e" kindref="member">createFolderName</ref>(now),<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(folder));</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/>File<sp/>root<sp/>=<sp/>sdRef.open(folder);</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!root)<sp/>{</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Folder<sp/>not<sp/>found<sp/>or<sp/>failed<sp/>to<sp/>open.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/>File<sp/>entry;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>((entry<sp/>=<sp/>root.openNextFile()))<sp/>{</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!entry.isDirectory())<sp/>{</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>name[64];</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>entry.getName(name,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(name));</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>String<sp/>nameStr(name);</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!nameStr.endsWith(</highlight><highlight class="stringliteral">&quot;.json&quot;</highlight><highlight class="normal">)<sp/>||<sp/>nameStr.indexOf(</highlight><highlight class="stringliteral">&quot;_recovered&quot;</highlight><highlight class="normal">)<sp/>!=<sp/>-1)<sp/>{</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>entry.close();</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>StaticJsonDocument&lt;128&gt;<sp/>doc;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>DeserializationError<sp/>err<sp/>=<sp/>deserializeJson(doc,<sp/>entry);</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>entry.close();</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!err)<sp/>{</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint32_t<sp/>ts<sp/>=<sp/>doc[</highlight><highlight class="stringliteral">&quot;timestamp&quot;</highlight><highlight class="normal">]<sp/>|<sp/>0;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(ts<sp/>&gt;=<sp/>(now.unixtime()<sp/>-<sp/>86400))<sp/>{</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref><sp/>&lt;<sp/>maxFiles)<sp/>{</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>String<sp/>fullPath<sp/>=<sp/>String(folder)<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;/&quot;</highlight><highlight class="normal"><sp/>+<sp/>nameStr;</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fileList[<ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>++]<sp/>=<sp/>fullPath;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Adding<sp/>to<sp/>list:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>fullPath);</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/>root.close();</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Total<sp/>matching<sp/>files:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/>Serial.println(<ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>);</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1a655fe9b7f9b52e408b888ce3aadd62a2" kindref="member">deleteRecoveredAndPendingSourceFilesData</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>String*<sp/>fileList,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>String&amp;<sp/>recoveredFilename)<sp/>{</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><ref refid="da/dc2/storage_8cpp_1a2a56012e4c76aa4f343b849a0d926c93" kindref="member">deleteRecoveredAndPendingSourceFiles</ref>(<ref refid="de/d03/platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>,<sp/>fileList,<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/>now,<sp/>recoveredFilename);</highlight></codeline>
+<codeline lineno="167"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="da/dc2/storage_8cpp_1a2a56012e4c76aa4f343b849a0d926c93" kindref="member">deleteRecoveredAndPendingSourceFiles</ref>(SdFat&amp;<sp/>sdRef,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>String*<sp/>fileList,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>String&amp;<sp/>recoveredFilename)<sp/>{</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>folder[8];</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/>strncpy(folder,<sp/><ref refid="d8/d6b/storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e" kindref="member">createFolderName</ref>(now),<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(folder));</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>;<sp/>++i)<sp/>{</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/>String<sp/>fullPath<sp/>=<sp/>String(folder)<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;/&quot;</highlight><highlight class="normal"><sp/>+<sp/>fileList[i];</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sdRef.remove(fullPath.c_str()))<sp/>{</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Deleted<sp/>file:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>fullPath);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Failed<sp/>to<sp/>delete<sp/>file:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>fullPath);</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sdRef.exists(recoveredFilename.c_str()))<sp/>{</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sdRef.remove(recoveredFilename.c_str()))<sp/>{</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Deleted<sp/>recovered<sp/>file:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>recoveredFilename);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Failed<sp/>to<sp/>delete<sp/>recovered<sp/>file:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>recoveredFilename);</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="188"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/storage.cpp"/>
+  </compounddef>
+</doxygen>

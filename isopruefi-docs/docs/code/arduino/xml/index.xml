@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.13.2" xml:lang="en-US">
+  <compound refid="da/ded/struct_mock_date_time" kind="struct"><name>MockDateTime</name>
+    <member refid="da/ded/struct_mock_date_time_1a613267af7e08a161df76b1b98b9f713b" kind="variable"><name>_year</name></member>
+    <member refid="da/ded/struct_mock_date_time_1a8773cc8f1299f1d84f8b11c0d43040e6" kind="variable"><name>_month</name></member>
+    <member refid="da/ded/struct_mock_date_time_1aab06a567e5c2c5e20487bff434e14e2b" kind="variable"><name>_day</name></member>
+    <member refid="da/ded/struct_mock_date_time_1a836d3143c2c8a9b131f4ef50abde292b" kind="variable"><name>_hour</name></member>
+    <member refid="da/ded/struct_mock_date_time_1a0aba33a11939db15768e45340f44733e" kind="variable"><name>_minute</name></member>
+    <member refid="da/ded/struct_mock_date_time_1afc51a882f6f85ea9f524ab8bdd30adb3" kind="variable"><name>_second</name></member>
+    <member refid="da/ded/struct_mock_date_time_1afa6b81d08baa7af091324cd8fbf391cd" kind="function"><name>MockDateTime</name></member>
+    <member refid="da/ded/struct_mock_date_time_1ac9d9a86ec9c9bf7631d8163eead98e35" kind="function"><name>year</name></member>
+    <member refid="da/ded/struct_mock_date_time_1a9f82beb632246fda02518695d77c977e" kind="function"><name>month</name></member>
+    <member refid="da/ded/struct_mock_date_time_1aed0ad9e6ba0ed22560ef04fce0ba1576" kind="function"><name>day</name></member>
+    <member refid="da/ded/struct_mock_date_time_1a030e815bfd810e22124185fb15b85fc1" kind="function"><name>hour</name></member>
+    <member refid="da/ded/struct_mock_date_time_1aaf0fa9f97d3821f3142e30b48e882162" kind="function"><name>minute</name></member>
+    <member refid="da/ded/struct_mock_date_time_1ac5d382f73c5f5c3780ee6e5084ebf9fc" kind="function"><name>second</name></member>
+    <member refid="da/ded/struct_mock_date_time_1a61d7a971f8e11be7c022a98f711f0f83" kind="function"><name>unixtime</name></member>
+  </compound>
+  <compound refid="db/d45/struct_mock_json_array" kind="struct"><name>MockJsonArray</name>
+    <member refid="db/d45/struct_mock_json_array_1abf917a8e07e4ad39db9c8b4846751c58" kind="variable"><name>values</name></member>
+    <member refid="db/d45/struct_mock_json_array_1afbc04d4b35b6347ab7193ba9dcb65d4e" kind="function"><name>add</name></member>
+    <member refid="db/d45/struct_mock_json_array_1aa9d88084e6cb19071e51695690e6cffe" kind="function"><name>add</name></member>
+    <member refid="db/d45/struct_mock_json_array_1a78db22394b5aaae364e1512e83d5dfdc" kind="function"><name>operator[]</name></member>
+    <member refid="db/d45/struct_mock_json_array_1afcc4a101a807a2f78d94f94fc47b0a8b" kind="function"><name>size</name></member>
+    <member refid="db/d45/struct_mock_json_array_1aaf6c3a2f7c378baf7d8fab53ae7a46e4" kind="function"><name>clear</name></member>
+  </compound>
+  <compound refid="dc/dff/struct_mock_json_document" kind="struct"><name>MockJsonDocument</name>
+    <member refid="dc/dff/struct_mock_json_document_1a02d8a7c2d2b9ff56c08fbbbeb4bc4ad5" kind="variable"><name>primitives</name></member>
+    <member refid="dc/dff/struct_mock_json_document_1ac6132a268d826cd6fd7e3b84fd995bb3" kind="variable"><name>arrays</name></member>
+    <member refid="dc/dff/struct_mock_json_document_1a54ef1b4c26afbad9cf5c250eed062631" kind="function"><name>clear</name></member>
+    <member refid="dc/dff/struct_mock_json_document_1a0696fac92492fabb9af79ac44a2e5b21" kind="function"><name>operator[]</name></member>
+    <member refid="dc/dff/struct_mock_json_document_1a45b69917a5922afcd030de648201bc94" kind="function"><name>operator[]</name></member>
+    <member refid="dc/dff/struct_mock_json_document_1a89a2a652b12aea547d02b6440031912e" kind="function"><name>createNestedArray</name></member>
+    <member refid="dc/dff/struct_mock_json_document_1a2ea6d36047f732b3a3cd2da86c9f91b0" kind="function"><name>containsKey</name></member>
+    <member refid="dc/dff/struct_mock_json_document_1a176ae01e30f5fc396861b84f35733e7e" kind="function"><name>size</name></member>
+  </compound>
+  <compound refid="d5/dc4/core_8h" kind="file"><name>core.h</name>
+    <member refid="d5/dc4/core_8h_1a9fb1675443ce002d3928dd3edf3b2a72" kind="function"><name>coreSetup</name></member>
+    <member refid="d5/dc4/core_8h_1aa5603fdb8113111f87914938533d1ece" kind="function"><name>coreLoop</name></member>
+  </compound>
+  <compound refid="d1/dc2/mock__datetime_8h" kind="file"><name>mock_datetime.h</name>
+  </compound>
+  <compound refid="db/d72/mock__json_8h" kind="file"><name>mock_json.h</name>
+    <member refid="db/d72/mock__json_8h_1a54db1bfd55a2f11a001e5854071c899c" kind="define"><name>JsonDocument</name></member>
+    <member refid="db/d72/mock__json_8h_1a23d227a500ab50420b35be152ef0a5e4" kind="define"><name>JsonArray</name></member>
+  </compound>
+  <compound refid="d7/d75/mqtt_8h" kind="file"><name>mqtt.h</name>
+    <member refid="d7/d75/mqtt_8h_1ab4dfd2aed88177be74263339392bdcc0" kind="function"><name>sendToMqtt</name></member>
+    <member refid="d7/d75/mqtt_8h_1ab2a92cb70a772c6c95d8b818c6b01f77" kind="function"><name>sendPendingData</name></member>
+  </compound>
+  <compound refid="d9/d94/network_8h" kind="file"><name>network.h</name>
+    <member refid="d9/d94/network_8h_1a0757debfda15f5757976bc2c53c955c7" kind="function"><name>connectWiFi</name></member>
+    <member refid="d9/d94/network_8h_1acc5736b55a4581c4020d736180e28306" kind="function"><name>connectMQTT</name></member>
+    <member refid="d9/d94/network_8h_1aa43b08104914d84a1ac34003fe56ba6b" kind="function"><name>tryReconnect</name></member>
+    <member refid="d9/d94/network_8h_1aec8befb6e49b85d32ece0496dfca569b" kind="function"><name>isConnectedToServer</name></member>
+  </compound>
+  <compound refid="de/d03/platform_8h" kind="file"><name>platform.h</name>
+    <member refid="de/d03/platform_8h_1afa042f998806fcdedab1794cebbeaad3" kind="variable"><name>rtc</name></member>
+    <member refid="de/d03/platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kind="variable"><name>sd</name></member>
+    <member refid="de/d03/platform_8h_1af19292dee25d42580f9588b754ddbedc" kind="variable"><name>tempsensor</name></member>
+  </compound>
+  <compound refid="d5/d2e/sensor_8h" kind="file"><name>sensor.h</name>
+    <member refid="d5/d2e/sensor_8h_1a07d1721651c2862c8c366b84a5424df3" kind="function"><name>initSensor</name></member>
+    <member refid="d5/d2e/sensor_8h_1a417a800c5e7a16dba92107bea03bbb2f" kind="function"><name>readTemperatureCelsius</name></member>
+    <member refid="d5/d2e/sensor_8h_1a800eabe870c45c5a4b574e2223f39916" kind="function"><name>formatTimestamp</name></member>
+  </compound>
+  <compound refid="d8/d6b/storage_8h" kind="file"><name>storage.h</name>
+    <member refid="d8/d6b/storage_8h_1a09093bc97a03919f0854c4b6683837b7" kind="function"><name>saveToSD</name></member>
+    <member refid="d8/d6b/storage_8h_1a677bacd38e6f20c32dbcc32e29714db8" kind="function"><name>saveRecoveredJsonToSd</name></member>
+    <member refid="d8/d6b/storage_8h_1ad52b53beacc87b5cc365800cd88f492e" kind="function"><name>listSavedFiles</name></member>
+    <member refid="d8/d6b/storage_8h_1ae1177c93c12dbb9a461014a22be241eb" kind="function"><name>deleteRecoveredAndPendingSourceFiles</name></member>
+    <member refid="d8/d6b/storage_8h_1ab16364c7bad54765d7deca604d19f172" kind="function"><name>buildJson</name></member>
+    <member refid="d8/d6b/storage_8h_1a49ffb7f647d6701d9cea3decdac97cf1" kind="function"><name>buildRecoveredJson</name></member>
+    <member refid="d8/d6b/storage_8h_1a03d6491b13757e01963c2ed90e52aa5f" kind="function"><name>saveDataToSD</name></member>
+    <member refid="d8/d6b/storage_8h_1a9b1aef5a070bc35c2abe6ef4721e421b" kind="function"><name>saveRecoveredJsonDataToSd</name></member>
+    <member refid="d8/d6b/storage_8h_1a4ebfbb31311cdc384f46f28627733869" kind="function"><name>listSavedFilesData</name></member>
+    <member refid="d8/d6b/storage_8h_1a655fe9b7f9b52e408b888ce3aadd62a2" kind="function"><name>deleteRecoveredAndPendingSourceFilesData</name></member>
+    <member refid="d8/d6b/storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e" kind="function"><name>createFolderName</name></member>
+    <member refid="d8/d6b/storage_8h_1a99398dc180671d28434aa4982bfd36ca" kind="function"><name>createFilename</name></member>
+  </compound>
+  <compound refid="da/de0/core_8cpp" kind="file"><name>core.cpp</name>
+    <member refid="da/de0/core_8cpp_1afa042f998806fcdedab1794cebbeaad3" kind="variable"><name>rtc</name></member>
+    <member refid="da/de0/core_8cpp_1af19292dee25d42580f9588b754ddbedc" kind="variable"><name>tempsensor</name></member>
+    <member refid="da/de0/core_8cpp_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kind="variable"><name>sd</name></member>
+    <member refid="da/de0/core_8cpp_1a64f7c60366b0a82c42d7a1dbf4e9505a" kind="variable"><name>wifiClient</name></member>
+    <member refid="da/de0/core_8cpp_1a68cab60b6c724cde0fc0009e126a80d5" kind="variable"><name>chipSelect</name></member>
+    <member refid="da/de0/core_8cpp_1ad4bd75fd80e14bbf47bb21fa3524f6c8" kind="variable"><name>sensorIdOne</name></member>
+    <member refid="da/de0/core_8cpp_1a6d11f0d69393ced0e86a5ec6ff1d520e" kind="variable"><name>sensorIdInUse</name></member>
+    <member refid="da/de0/core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kind="variable"><name>sensorType</name></member>
+    <member refid="da/de0/core_8cpp_1a4ed7b4c951621dbec76099594f64d249" kind="variable"><name>topic</name></member>
+    <member refid="da/de0/core_8cpp_1abb6f4167f4e2989c5f0af6f10b56d33e" kind="variable"><name>lastLoggedMinute</name></member>
+    <member refid="da/de0/core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kind="variable"><name>count</name></member>
+    <member refid="da/de0/core_8cpp_1af80c34747656b263fece5b92e5786fab" kind="variable"><name>wifiOk</name></member>
+    <member refid="da/de0/core_8cpp_1a9e1fbed2e9bf75293274a8fde0a5085d" kind="variable"><name>recoveredSent</name></member>
+    <member refid="da/de0/core_8cpp_1aa36be85ab02519b9969bf118f8647728" kind="function"><name>mqttClient</name></member>
+    <member refid="da/de0/core_8cpp_1a84b7ee25d4d43e3b6dd6b3193a2547f0" kind="function"><name>dateTime</name></member>
+    <member refid="da/de0/core_8cpp_1a9fb1675443ce002d3928dd3edf3b2a72" kind="function"><name>coreSetup</name></member>
+    <member refid="da/de0/core_8cpp_1aa5603fdb8113111f87914938533d1ece" kind="function"><name>coreLoop</name></member>
+  </compound>
+  <compound refid="df/d0a/main_8cpp" kind="file"><name>main.cpp</name>
+    <member refid="df/d0a/main_8cpp_1a4fc01d736fe50cf5b977f755b675f11d" kind="function"><name>setup</name></member>
+    <member refid="df/d0a/main_8cpp_1afe461d27b9c48d5921c00d521181f12f" kind="function"><name>loop</name></member>
+  </compound>
+  <compound refid="d8/d5b/mqtt_8cpp" kind="file"><name>mqtt.cpp</name>
+    <member refid="d8/d5b/mqtt_8cpp_1ab4dfd2aed88177be74263339392bdcc0" kind="function"><name>sendToMqtt</name></member>
+    <member refid="d8/d5b/mqtt_8cpp_1ab2a92cb70a772c6c95d8b818c6b01f77" kind="function"><name>sendPendingData</name></member>
+  </compound>
+  <compound refid="dc/d8a/network_8cpp" kind="file"><name>network.cpp</name>
+    <member refid="dc/d8a/network_8cpp_1a2961a3ee6daab3612c6258629032802d" kind="variable"><name>ssid</name></member>
+    <member refid="dc/d8a/network_8cpp_1a6c857fc5b1917d65a997274053f7dfd6" kind="variable"><name>password</name></member>
+    <member refid="dc/d8a/network_8cpp_1abb3ec794643663d2561757adeef8622c" kind="variable"><name>broker</name></member>
+    <member refid="dc/d8a/network_8cpp_1a0eb069d5f53d3e9269b0f321cfbcf108" kind="variable"><name>port</name></member>
+    <member refid="dc/d8a/network_8cpp_1aca3b6475cc9f45c2f6c244acb67c64f7" kind="variable"><name>lastReconnectAttempt</name></member>
+    <member refid="dc/d8a/network_8cpp_1a0eb7481275958901bc98f4a422ca4a10" kind="variable"><name>reconnectInterval</name></member>
+    <member refid="dc/d8a/network_8cpp_1a7ceb85fc6879638e22b72beeafa4de5c" kind="function"><name>connectWiFi</name></member>
+    <member refid="dc/d8a/network_8cpp_1a2585db85dfee612787923f923e4d9b6d" kind="function"><name>connectMQTT</name></member>
+    <member refid="dc/d8a/network_8cpp_1aa43b08104914d84a1ac34003fe56ba6b" kind="function"><name>tryReconnect</name></member>
+    <member refid="dc/d8a/network_8cpp_1aec8befb6e49b85d32ece0496dfca569b" kind="function"><name>isConnectedToServer</name></member>
+  </compound>
+  <compound refid="da/dfa/sensor_8cpp" kind="file"><name>sensor.cpp</name>
+    <member refid="da/dfa/sensor_8cpp_1a07d1721651c2862c8c366b84a5424df3" kind="function"><name>initSensor</name></member>
+    <member refid="da/dfa/sensor_8cpp_1a417a800c5e7a16dba92107bea03bbb2f" kind="function"><name>readTemperatureCelsius</name></member>
+  </compound>
+  <compound refid="da/dc2/storage_8cpp" kind="file"><name>storage.cpp</name>
+    <member refid="da/dc2/storage_8cpp_1a8582aa6637e4bfd8770ca7385a2babb5" kind="define"><name>FILENAME_BUFFER_SIZE</name></member>
+    <member refid="da/dc2/storage_8cpp_1ab16364c7bad54765d7deca604d19f172" kind="function"><name>buildJson</name></member>
+    <member refid="da/dc2/storage_8cpp_1a49ffb7f647d6701d9cea3decdac97cf1" kind="function"><name>buildRecoveredJson</name></member>
+    <member refid="da/dc2/storage_8cpp_1a03d6491b13757e01963c2ed90e52aa5f" kind="function"><name>saveDataToSD</name></member>
+    <member refid="da/dc2/storage_8cpp_1aec99e2896ee5b3c8e188437407b97357" kind="function"><name>saveToSD</name></member>
+    <member refid="da/dc2/storage_8cpp_1a9b1aef5a070bc35c2abe6ef4721e421b" kind="function"><name>saveRecoveredJsonDataToSd</name></member>
+    <member refid="da/dc2/storage_8cpp_1a104eb1fa19e5eb32fc2465c1d994b242" kind="function"><name>saveRecoveredJsonToSd</name></member>
+    <member refid="da/dc2/storage_8cpp_1a4ebfbb31311cdc384f46f28627733869" kind="function"><name>listSavedFilesData</name></member>
+    <member refid="da/dc2/storage_8cpp_1a1bad01efdba2c79507efa46876326e50" kind="function"><name>listSavedFiles</name></member>
+    <member refid="da/dc2/storage_8cpp_1a655fe9b7f9b52e408b888ce3aadd62a2" kind="function"><name>deleteRecoveredAndPendingSourceFilesData</name></member>
+    <member refid="da/dc2/storage_8cpp_1a2a56012e4c76aa4f343b849a0d926c93" kind="function"><name>deleteRecoveredAndPendingSourceFiles</name></member>
+  </compound>
+  <compound refid="dir_d44c64559bbebec7f509842c48db8b23" kind="dir"><name>include</name>
+  </compound>
+  <compound refid="dir_68267d1309a1af8e8297ef4c3efbcdba" kind="dir"><name>src</name>
+  </compound>
+</doxygenindex>

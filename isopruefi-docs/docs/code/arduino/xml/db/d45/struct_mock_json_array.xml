@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.13.2" xml:lang="en-US">
+  <compounddef id="db/d45/struct_mock_json_array" kind="struct" language="C++" prot="public">
+    <compoundname>MockJsonArray</compoundname>
+    <includes refid="db/d72/mock__json_8h" local="no">mock_json.h</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="db/d45/struct_mock_json_array_1abf917a8e07e4ad39db9c8b4846751c58" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; std::string &gt;</type>
+        <definition>std::vector&lt;std::string&gt; MockJsonArray::values</definition>
+        <argsstring></argsstring>
+        <name>values</name>
+        <qualifiedname>MockJsonArray::values</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/mock_json.h" line="7" column="17" bodyfile="include/mock_json.h" bodystart="7" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="db/d45/struct_mock_json_array_1afbc04d4b35b6347ab7193ba9dcb65d4e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void MockJsonArray::add</definition>
+        <argsstring>(const std::string &amp;value)</argsstring>
+        <name>add</name>
+        <qualifiedname>MockJsonArray::add</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/mock_json.h" line="9" column="10" bodyfile="include/mock_json.h" bodystart="9" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="function" id="db/d45/struct_mock_json_array_1aa9d88084e6cb19071e51695690e6cffe" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void MockJsonArray::add</definition>
+        <argsstring>(float value)</argsstring>
+        <name>add</name>
+        <qualifiedname>MockJsonArray::add</qualifiedname>
+        <param>
+          <type>float</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/mock_json.h" line="13" column="10" bodyfile="include/mock_json.h" bodystart="13" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="db/d45/struct_mock_json_array_1a78db22394b5aaae364e1512e83d5dfdc" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string MockJsonArray::operator[]</definition>
+        <argsstring>(size_t i) const</argsstring>
+        <name>operator[]</name>
+        <qualifiedname>MockJsonArray::operator[]</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/mock_json.h" line="17" column="17" bodyfile="include/mock_json.h" bodystart="17" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="db/d45/struct_mock_json_array_1afcc4a101a807a2f78d94f94fc47b0a8b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>size_t</type>
+        <definition>size_t MockJsonArray::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <qualifiedname>MockJsonArray::size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/mock_json.h" line="21" column="12" bodyfile="include/mock_json.h" bodystart="21" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="db/d45/struct_mock_json_array_1aaf6c3a2f7c378baf7d8fab53ae7a46e4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void MockJsonArray::clear</definition>
+        <argsstring>()</argsstring>
+        <name>clear</name>
+        <qualifiedname>MockJsonArray::clear</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/mock_json.h" line="25" column="10" bodyfile="include/mock_json.h" bodystart="25" bodyend="27"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/mock_json.h" line="6" column="1" bodyfile="include/mock_json.h" bodystart="6" bodyend="28"/>
+    <listofallmembers>
+      <member refid="db/d45/struct_mock_json_array_1afbc04d4b35b6347ab7193ba9dcb65d4e" prot="public" virt="non-virtual"><scope>MockJsonArray</scope><name>add</name></member>
+      <member refid="db/d45/struct_mock_json_array_1aa9d88084e6cb19071e51695690e6cffe" prot="public" virt="non-virtual"><scope>MockJsonArray</scope><name>add</name></member>
+      <member refid="db/d45/struct_mock_json_array_1aaf6c3a2f7c378baf7d8fab53ae7a46e4" prot="public" virt="non-virtual"><scope>MockJsonArray</scope><name>clear</name></member>
+      <member refid="db/d45/struct_mock_json_array_1a78db22394b5aaae364e1512e83d5dfdc" prot="public" virt="non-virtual"><scope>MockJsonArray</scope><name>operator[]</name></member>
+      <member refid="db/d45/struct_mock_json_array_1afcc4a101a807a2f78d94f94fc47b0a8b" prot="public" virt="non-virtual"><scope>MockJsonArray</scope><name>size</name></member>
+      <member refid="db/d45/struct_mock_json_array_1abf917a8e07e4ad39db9c8b4846751c58" prot="public" virt="non-virtual"><scope>MockJsonArray</scope><name>values</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

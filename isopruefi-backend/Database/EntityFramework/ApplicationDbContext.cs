@@ -1,6 +1,7 @@
 using Database.EntityFramework.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Database.EntityFramework;
 
@@ -55,4 +56,21 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
             );
         });
     }
+
+    /// <summary>
+    /// Applies any pending migrations for the specified DbContext.
+    /// </summary>
+    /// <param name="scope"></param>
+    /// <typeparam name="TDbContext"></typeparam>
+    public static void ApplyMigration<TDbContext>(IServiceScope scope)
+        where TDbContext : DbContext
+    {
+        using var context = scope.ServiceProvider
+            .GetRequiredService<TDbContext>();
+
+        context.Database.Migrate();
+    }
+
+
+
 }

@@ -47,12 +47,8 @@ public class SettingsRepo : ISettingsRepo
     /// <inheritdoc />
     public async Task<bool> ExistsPostalCode(int postalcode)
     {
-        var entry = await _applicationDbContext.CoordinateMappings.FirstOrDefaultAsync(c => c.PostalCode == postalcode);
-        if (entry != null)
-        {
-            return true;
-        }
-        return false;
+        var entry = await _applicationDbContext.CoordinateMappings.AnyAsync(c => c.PostalCode == postalcode);
+        return entry;
     }
 
     /// <inheritdoc />
@@ -70,7 +66,12 @@ public class SettingsRepo : ISettingsRepo
         var result = await _applicationDbContext.CoordinateMappings
             .OrderByDescending(c => c.LastUsed)
             .FirstOrDefaultAsync();
-        var coordinates = new Tuple<double, double>(result.Latitude, result.Longitude);
-        return coordinates;
+        if (result != null)
+        {
+            var coordinates = new Tuple<double, double>(result.Latitude, result.Longitude);
+            return coordinates;
+        }
+
+        return null;
     }
 }

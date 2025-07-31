@@ -15,7 +15,7 @@ export function WeatherChartTitle() {
 
 const style = { width: '100%', height: 400 };
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://backend.localhost';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:7240';
 const temperatureClient = new TemperatureDataClient(API_BASE_URL);
 
 export function TempChart() {
@@ -28,7 +28,7 @@ export function TempChart() {
         const fetchData = async () => {
             setLoading(true);
             setError(null);
-            
+
             const start = new Date('2025-07-01T00:00:00Z');
             const end = new Date('2025-07-31T23:59:59Z');
             const place = 'Heidenheim';
@@ -36,7 +36,8 @@ export function TempChart() {
 
             try {
                 const data = await temperatureClient.getTemperature(start, end, place, isFahrenheit);
-                
+                console.log(data);
+
                 if (!data) {
                     setError('No data received from server');
                     return;
@@ -44,19 +45,18 @@ export function TempChart() {
 
                 // Type assertion due to API client being generated with wrong types
                 // The actual response is TemperatureDataOverview, not TemperatureData[]
-                const overview = data as any;
 
                 const minLength = Math.min(
-                    overview.temperatureSouth?.length || 0,
-                    overview.temperatureNord?.length || 0,
-                    overview.temperatureOutside?.length || 0
+                    data.temperatureSouth?.length || 0,
+                    data.temperatureNord?.length || 0,
+                    data.temperatureOutside?.length || 0
                 );
 
                 const formatted: WeatherEntry[] = [];
                 for (let i = 0; i < minLength; i++) {
-                    const southData = overview.temperatureSouth?.[i];
-                    const nordData = overview.temperatureNord?.[i];
-                    const outsideData = overview.temperatureOutside?.[i];
+                    const southData = data.temperatureSouth?.[i];
+                    const nordData = data.temperatureNord?.[i];
+                    const outsideData = data.temperatureOutside?.[i];
 
                     if (southData?.timestamp) {
                         formatted.push({
@@ -71,7 +71,7 @@ export function TempChart() {
                 setWeatherData(formatted);
             } catch (error) {
                 console.error("Failed to fetch temperature data", error);
-                
+
                 if (ApiException.isApiException(error)) {
                     setError(`API Error (${error.status}): ${error.message}`);
                 } else if (error instanceof Error) {

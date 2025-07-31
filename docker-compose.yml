@@ -189,14 +189,16 @@ services:
         /run.sh
     
   isopruefi-frontend:
-      build: isopruefi-frontend
+      build: 
+        context: ./isopruefi-frontend
+        dockerfile: Dockerfile-Dev
       container_name: isopruefi-frontend
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
         - "traefik.http.routers.frontend.entrypoints=websecure"
         - "traefik.http.routers.frontend.tls=true"
-        - traefik.http.services.frontend.loadbalancer.server.port=3000
+        - traefik.http.services.frontend.loadbalancer.server.port=5173
       volumes:
         - ./isopruefi-frontend:/app
         - /app/node_modules

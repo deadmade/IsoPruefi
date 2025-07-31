@@ -37,8 +37,8 @@ public class Program
         });
 
         builder.Services.AddIdentity<ApiUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+           .AddEntityFrameworkStores<ApplicationDbContext>()
+           .AddDefaultTokenProviders();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApiDocument();
@@ -95,21 +95,6 @@ public class Program
         // Add CORS support
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowFrontend", policy =>
-            {
-                policy.WithOrigins(
-                        "https://frontend.localhost",
-                        "http://localhost:3000",
-                        "http://localhost:5173"
-                    )
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials();
-            });
-        });
-
-        builder.Services.AddCors(options =>
-        {
             options.AddPolicy("AllowAll", policy =>
             {
                 policy.AllowAnyOrigin()
@@ -121,8 +106,6 @@ public class Program
         builder.Services.AddControllers();
 
         var app = builder.Build();
-
-
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -142,15 +125,13 @@ public class Program
         else
         {
             // Enable CORS before authentication
-            app.UseCors("AllowFrontend");
+            app.UseCors("AllowAll");
         }
 
         app.UseHttpsRedirection();
 
-
-
-        app.UseAuthentication();
-        app.UseAuthorization();
+       // app.UseAuthentication();
+       // app.UseAuthorization();
 
         app.MapControllers();
 

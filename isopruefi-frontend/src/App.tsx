@@ -1,11 +1,13 @@
 import './App.css';
-import {WeatherChart} from "./Weather"
+import {WeatherChartTitle} from "./Weather"
 import {TempChart} from "./Weather";
+
+// entry point of the website. shows WeatherChartTitle and TempChart
 
 function App() {
     return (
         <div>
-            <WeatherChart />
+            <WeatherChartTitle />
             <TempChart />
         </div>
     );

@@ -1,0 +1,67 @@
+# .github/workflows/release-containers.yml
+name: Release Docker Containers
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'sprint*'    # matches sprint0, sprint1, etc
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Build & push Rest-API
+        uses: docker/build-push-action@v4
+        with:
+          working-directory: ./isopruefi-backend
+          file: Rest-API/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/Rest-API:${{ github.ref_name }}
+            ghcr.io/${{ github.repository_owner }}/Rest-API:latest
+
+      - name: Build & push MQTT-Receiver-Worker
+        uses: docker/build-push-action@v4
+        with:
+          working-directory: ./isopruefi-backend
+          file: MQTT-Receiver-Worker/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/MQTT-Receiver-Worker:${{ github.ref_name }}
+            ghcr.io/${{ github.repository_owner }}/MQTT-Receiver-Worker:latest
+
+      - name: Build & push Get Weather Worker 
+        uses: docker/build-push-action@v4
+        with:
+          working-directory: ./isopruefi-backend
+          file: Get-weatherData-worker/Dockerfile 
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/Get-weatherData-worker:${{ github.ref_name }}
+            ghcr.io/${{ github.repository_owner }}/Get-weatherData-worker:latest
+
+      - name: Build & push Frontend
+        uses: docker/build-push-action@v4
+        with:
+          working-directory: ./isopruefi-frontend
+          file: Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/frontend:${{ github.ref_name }}
+            ghcr.io/${{ github.repository_owner }}/frontend:latest
+            

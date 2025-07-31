@@ -99,3 +99,7 @@
 ---
 
 ## 5. Technical debts
+
+## Sources
+
+[FMEA from the Orgahandbuch (Bundesministerium des Inneren)](https://www.orghandbuch.de/Webs/OHB/DE/Organisationshandbuch/6_MethodenTechniken/63_Analysetechniken/633_FehlermoeglichkeitUndEinflussanalyse/fehlermoeglichkeitundeinflussanalyse-node.html)

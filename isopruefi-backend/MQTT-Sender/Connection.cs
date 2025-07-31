@@ -3,15 +3,19 @@ using MQTTnet.Formatter;
 
 namespace MQTT_Sender;
 
+/// <summary>
+/// This class provides a method to establish a connection to an MQTT broker.
+/// </summary>
 public static class Connection
 {
+    /// <summary>
+    /// Gets a connection to the MQTT broker.
+    /// </summary>
+    /// <returns></returns>
     public static async Task<IMqttClient> GetConnection()
     {
-        string broker ="aicon.dhbw-heidenheim.de";
-        int port = 1883;
-        string clientId = Guid.NewGuid().ToString();
-        string username = "schueleinm.tin23";
-        string password = "geheim";
+        var broker = "aicon.dhbw-heidenheim.de";
+        var port = 1883;
 
         // Create a MQTT client factory
         var factory = new MqttClientFactory();
@@ -22,10 +26,9 @@ public static class Connection
         // Create MQTT client options
         var options = new MqttClientOptionsBuilder()
             .WithTcpServer(broker, port) // MQTT broker address and port
-            .WithCredentials(username, password) // Set username and password
             .WithProtocolVersion(MqttProtocolVersion.V500)
             .Build();
-        
+
         mqttClient.DisconnectedAsync += async e =>
         {
             Console.WriteLine("Disconnected from MQTT broker. Attempting to reconnect...");
@@ -39,9 +42,8 @@ public static class Connection
                 Console.WriteLine($"Reconnection failed: {ex.Message}");
             }
         };
-        
+
         var response = await mqttClient.ConnectAsync(options, CancellationToken.None);
         return mqttClient;
     }
-    
 }

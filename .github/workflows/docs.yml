@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -49,6 +51,14 @@ jobs:
       - name: Generate UnitTest Documentation
         working-directory: ./isopruefi-backend/UnitTests
         run: dotnet xmldoc2md ./bin/Debug/net9.0/UnitTests.dll ../../isopruefi-docs/docs/code/UnitTests
+
+      - name: Install frontend dependencies
+        working-directory: ./isopruefi-frontend
+        run: npm ci
+
+      - name: Generate Frontend Documentation
+        working-directory: ./isopruefi-frontend
+        run: npx typedoc
 
       - name: Setup Python
         uses: actions/setup-python@v5

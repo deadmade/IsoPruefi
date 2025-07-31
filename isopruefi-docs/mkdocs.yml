@@ -9,8 +9,21 @@ nav:
     - MQTT-Sender: code/MQTT-Sender/index.md
     - Database: code/Database/index.md
     - UnitTests: code/UnitTests/index.md
+    - Frontend:
+        - Overview: code/frontend/README.md
+        - App:
+            - App Overview: code/frontend/App/README.md
+            - App Component: code/frontend/App/functions/default.md
+        - Weather:
+            - Weather Overview: code/frontend/Weather/README.md
+            - Components:
+                - Chart Title: code/frontend/Weather/functions/WeatherChartTitle.md
+                - Temp Chart: code/frontend/Weather/functions/TempChart.md
+            - Data Types:
+                - WeatherEntry: code/frontend/Weather/type-aliases/WeatherEntry.md
+                - WeatherData: code/frontend/Weather/variables/WeatherData.md
   - Docker: 
-    - Docker Dev Umgebung: docker-dev.md
+    - Docker Dev Environment: docker-dev.md
   - IsoPrüfi Documentation: 
     - 00 arc42 Template with Explanation: documentation/arc42-template.md
     - 01 Introduction and Goals: documentation/01_introduction_and_goals.md

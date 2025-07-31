@@ -1,71 +1,78 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useEffect, useState } from 'react';
+import { LineChart, ResponsiveContainer } from 'recharts';
 
-/**
- * Represents one row of weather data.
- */
 export type WeatherEntry = {
-    id: number;
     timestamp: string;
     tempSouth: number;
     tempNorth: number;
     tempOutside: number;
 };
 
-/**
- * Dummy weather data used for charting temperature trends.
- */
-
-export const WeatherData : WeatherEntry [] = [
-    { id: 1, timestamp: "2025-07-17", tempSouth: 22, tempNorth: 21.5, tempOutside: 28 },
-    { id: 2, timestamp: "2025-07-18", tempSouth: 24, tempNorth: 22.32, tempOutside: 32 },
-    { id: 3, timestamp: "2025-07-19", tempSouth: 25, tempNorth: 20.141, tempOutside: 15 },
-    { id: 4, timestamp: "2025-07-20", tempSouth: 21, tempNorth: 21.18, tempOutside: 12 },
-    { id: 5, timestamp: "2025-07-21", tempSouth: 23, tempNorth: 21.97, tempOutside: 34 },
-    { id: 6, timestamp: "2025-07-22", tempSouth: 22.35, tempNorth: 23.01, tempOutside: 22.55 },
-];
-
-/**
- * Displays the title of the weather chart section.
- */
-
 export function WeatherChartTitle() {
-    return (
-        <h1>Weather Chart</h1>
-    )
+    return <h1>Weather Chart</h1>
 }
 
-const style = {width: '100%', height: 400};
-
-/**
- * Renders a multi-line chart showing South, North, and Outside temperatures.
- */
+const style = { width: '100%', height: 400 };
 
 export function TempChart() {
+    const [weatherData, setWeatherData] = useState<WeatherEntry[]>([]);
+    const [filter, setFilter] = useState<'all'|'hour'|'day'|'week'>('all');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const start = '2025-07-01T00:00:00Z';
+            const end = '2025-07-31T23:59:59Z';
+            const place = 'YourLocation'; // Replace with your actual location (e.g., "Heidenheim")
+            const isFahrenheit = false;
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/v1/TemperatureData/GetTemperature?start=${start}&end=${end}&place=${place}&isFahrenheit=${isFahrenheit}`);
+                const data = await response.json();
+
+                const formatted: WeatherEntry[] = data.temperatureSouth.map((_: any, index: number) => ({
+                    timestamp: data.temperatureSouth[index].timestamp,
+                    tempSouth: data.temperatureSouth[index].temperature,
+                    tempNorth: data.temperatureNorth[index]?.temperature ?? 0,
+                    tempOutside: data.temperatureOutside[index]?.temperature ?? 0
+                }));
+
+                setWeatherData(formatted);
+            } catch (error) {
+                console.error("Failed to fetch temperature data", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const now = Date.now();
+    let cutoff = 0;
+    switch (filter) {
+        case 'hour': cutoff = now - 1000 * 60 * 60; break;
+        case 'day':  cutoff = now - 1000 * 60 * 60 * 24; break;
+        case 'week': cutoff = now - 1000 * 60 * 60 * 24 * 7; break;
+    }
+    const filteredData = filter === 'all'
+        ? weatherData
+        : weatherData.filter(e => new Date(e.timestamp).getTime() >= cutoff);
+
     return (
         <div style={style}>
+            <label>
+                Show:{' '}
+                <select value={filter} onChange={e => setFilter(e.target.value as any)}>
+                    <option value="all">All</option>
+                    <option value="hour">Last Hour</option>
+                    <option value="day">Today</option>
+                    <option value="week">This Week</option>
+                </select>
+            </label>
+
             <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                    width={500}
-                    height={300}
-                    data={WeatherData}
-                    margin={{
-                        top: 5,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="timestamp" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="tempSouth" name="South" stroke="#8884d8" activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="tempNorth" name="North" stroke="#84d8d2" activeDot={{ r: 8}}/>
-                    <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#82ca9d" />
+                <LineChart data={filteredData}>
+                    {/* … */}
                 </LineChart>
             </ResponsiveContainer>
         </div>
     );
 }
-

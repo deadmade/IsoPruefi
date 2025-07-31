@@ -802,6 +802,8 @@ export class TopicSetting implements ITopicSetting {
     sensorName?: string | undefined;
     /** Gets or sets the location of the sensor. */
     sensorLocation?: string | undefined;
+    /** Gets or sets a value indicating whether this topic setting has recovery enabled. */
+    hasRecovery?: boolean;
 
     constructor(data?: ITopicSetting) {
         if (data) {
@@ -820,6 +822,7 @@ export class TopicSetting implements ITopicSetting {
             this.sensorType = _data["sensorType"];
             this.sensorName = _data["sensorName"];
             this.sensorLocation = _data["sensorLocation"];
+            this.hasRecovery = _data["hasRecovery"];
         }
     }
 
@@ -838,6 +841,7 @@ export class TopicSetting implements ITopicSetting {
         data["sensorType"] = this.sensorType;
         data["sensorName"] = this.sensorName;
         data["sensorLocation"] = this.sensorLocation;
+        data["hasRecovery"] = this.hasRecovery;
         return data;
     }
 }
@@ -856,6 +860,8 @@ export interface ITopicSetting {
     sensorName?: string | undefined;
     /** Gets or sets the location of the sensor. */
     sensorLocation?: string | undefined;
+    /** Gets or sets a value indicating whether this topic setting has recovery enabled. */
+    hasRecovery?: boolean;
 }
 
 export class ProblemDetails implements IProblemDetails {

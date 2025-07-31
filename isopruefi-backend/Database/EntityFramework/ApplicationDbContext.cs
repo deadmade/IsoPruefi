@@ -40,12 +40,12 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
                 new TopicSetting
                 {
                     TopicSettingId = 1, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "Sensor_One", SensorLocation = "North"
+                    SensorName = "Sensor_One", SensorLocation = "North", HasRecovery = true
                 },
                 new TopicSetting
                 {
                     TopicSettingId = 2, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "Sensor_Two", SensorLocation = "South"
+                    SensorName = "Sensor_Two", SensorLocation = "South", HasRecovery = true
                 }
             );
         });

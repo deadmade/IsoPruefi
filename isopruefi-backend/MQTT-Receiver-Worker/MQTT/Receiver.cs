@@ -53,11 +53,11 @@ public class Receiver
             var sharedTopic =
                 $"$share/{groupName}/{topic.DefaultTopicPath}/{topic.GroupId}/{topic.SensorType}/{topic.SensorName}";
 
-            SubscribeToTopic(sharedTopic, mqttClient);
+            await SubscribeToTopic(sharedTopic, mqttClient, topic.HasRecovery);
         }
     }
 
-    private void SubscribeToTopic(string topic, IMqttClient mqttClient)
+    private async Task SubscribeToTopic(string topic, IMqttClient mqttClient, bool hasRecovery)
     {
         _logger.LogInformation("Subscribing to topic: {Topic}", topic);
 
@@ -66,7 +66,15 @@ public class Receiver
             .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
             .Build();
 
-        mqttClient.SubscribeAsync(filter, CancellationToken.None).Wait();
+        await mqttClient.SubscribeAsync(filter, CancellationToken.None);
+        
+        filter = new MqttTopicFilterBuilder()
+            .WithTopic(topic + "/recovered")
+            .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+            .Build();
+
+        await mqttClient.SubscribeAsync(filter, CancellationToken.None);
+        
         _logger.LogInformation("Successfully subscribed to topic: {Topic}", topic);
     }
 }

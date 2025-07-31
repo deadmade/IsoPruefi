@@ -1,4 +1,6 @@
 using Database.Repository.InfluxRepo;
+using Database.Repository.SettingsRepo;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MQTT_Receiver_Worker.MQTT.Models;
@@ -99,28 +101,71 @@ public class Connection
         var message = e.ApplicationMessage.ConvertPayloadToString();
         _logger.LogInformation("Received message from sensor {SensorName}: {Message}", sensorName, message);
 
+        try
+        {
+
+
         var tempSensorReading = System.Text.Json.JsonSerializer.Deserialize<TempSensorReading>(message);
 
-        if (tempSensorReading == null || tempSensorReading.Value.Length == 0)
+        if (tempSensorReading == null || tempSensorReading.Value == null)
         {
-            _logger.LogWarning("Received null or empty sensor reading from {SensorName}. Skipping processing",
+            _logger.LogWarning("Received null sensor reading from {SensorName}. Skipping processing",
                 sensorName);
             return Task.FromResult(Task.CompletedTask);
         }
-
-        if (tempSensorReading.Value.Length > 1)
+        
+        if (tempSensorReading.Value.Length == 0)
+        {
+            _logger.LogWarning("Received empty sensor reading from {SensorName}. Skipping processing",
+                sensorName);
+            return Task.FromResult(Task.CompletedTask);
+        }
+        
+        if (tempSensorReading.Value.Length == 1 && tempSensorReading.Value[0] != null && tempSensorReading.Meta == null)
+        {
+            influxRepo.WriteSensorData(
+                tempSensorReading.Value[0] ?? 0,
+                sensorName,
+                tempSensorReading.Timestamp,
+                tempSensorReading.Sequence ?? 0);
+        }
+        else if (tempSensorReading.Value.Length > 1)
         {
             _logger.LogInformation(
                 "Received multiple values in sensor reading from {SensorName}. Only the first value will be processed",
                 sensorName);
             return Task.FromResult(Task.CompletedTask);
         }
-
-        influxRepo.WriteSensorData(
-            tempSensorReading.Value[0],
-            sensorName,
-            tempSensorReading.Timestamp,
-            tempSensorReading.Sequence);
+        else if (tempSensorReading is { Sequence: null, Meta: not null })
+        {
+            foreach (var reading in tempSensorReading.Meta)
+            {
+                if (reading.Value == null || reading.Value.Length == 0)
+                {
+                    _logger.LogWarning("Received empty value in sensor reading from {SensorName}. Skipping processing",
+                        sensorName);
+                    continue;
+                }
+                
+                influxRepo.WriteSensorData(
+                    reading.Value[0] ?? 0,
+                    sensorName,
+                    reading.Timestamp,
+                    reading.Sequence ?? 0);
+            }
+        }
+        else
+        {
+            _logger.LogWarning("Received sensor reading with unexpected format from {SensorName}. Skipping processing",
+                sensorName);
+            return Task.FromResult(Task.CompletedTask);
+        }
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error processing message from sensor {SensorName}: {Message}", sensorName, message);
+            return Task.FromResult(Task.CompletedTask);
+        }
 
         return Task.FromResult(Task.CompletedTask);
     }

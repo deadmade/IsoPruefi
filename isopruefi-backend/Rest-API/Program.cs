@@ -90,6 +90,7 @@ public class Program
         // Register Repos
         builder.Services.AddScoped<ITokenRepo, TokenRepo>();
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
+        builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
 
         builder.Services.AddControllers();
 
@@ -99,9 +100,9 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseOpenApi();
-            //app.UseSwaggerUi();
+            app.UseSwaggerUi();
             app.UseDeveloperExceptionPage();
-            app.UseReDoc(options => { options.Path = "/redoc"; });
+            //app.UseReDoc(options => { options.Path = "/redoc"; });
 
             builder.Configuration.AddUserSecrets<Program>();
 

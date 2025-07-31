@@ -104,6 +104,9 @@ public class Program
             app.UseReDoc(options => { options.Path = "/redoc"; });
 
             builder.Configuration.AddUserSecrets<Program>();
+
+            using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
+            ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
         }
 
         app.UseHttpsRedirection();

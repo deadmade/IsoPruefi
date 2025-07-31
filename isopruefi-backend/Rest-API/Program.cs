@@ -108,9 +108,21 @@ public class Program
             });
         });
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
+
         builder.Services.AddControllers();
 
         var app = builder.Build();
+
+
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -124,12 +136,18 @@ public class Program
 
             using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+
+            app.UseCors("AllowAll");
+        }
+        else
+        {
+            // Enable CORS before authentication
+            app.UseCors("AllowFrontend");
         }
 
         app.UseHttpsRedirection();
 
-        // Enable CORS before authentication
-        app.UseCors("AllowFrontend");
+
 
         app.UseAuthentication();
         app.UseAuthorization();

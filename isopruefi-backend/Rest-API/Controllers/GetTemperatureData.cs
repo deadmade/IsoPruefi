@@ -56,6 +56,7 @@ public class TemperatureDataController : ControllerBase
     /// <returns>Temperature data overview.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(List<TemperatureData>), 200)]
+    [ProducesResponseType(200, Type = typeof(TemperatureDataOverview))]
     public async Task<IActionResult> GetTemperature([FromQuery] DateTime start, [FromQuery] DateTime end,
         [FromQuery] string place, [FromQuery] bool isFahrenheit = false)
     {

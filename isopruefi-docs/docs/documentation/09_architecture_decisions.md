@@ -221,6 +221,35 @@ Negative:
 - Requires Docker knowledge from all developers
 - Resource intensive on development machines
 
+## ADR 8: frontend
+
+### Context:
+The IsoPruefi requires a proper frontend to display charts based on the measured temperature data.
+
+Originally, the frontend was auto-generated using Docker and based on a JavaScript React setup. 
+Later, it was decided to migrate to a TypeScript-based React app, due to the advantages 
+TypeScript offers in terms of type safety and compiler support.
+
+However, the chosen setup was built using Create React App (CRA), 
+which led to problems with documentation generation using TypeDoc, due to version incompatibility.
+
+### Decision:
+It was decided to replace CRA support with the Vite-based TS React project.
+
+### Conclusion:
+Accepted.
+
+### Consequences:
+Neutral: 
+
+- The frontend part of IsoPruefi runs completely on Vite
+
+Positive:
+
+- TypeDoc works correctly and the frontend documentation is generated.
+- The startup time improved comparing to CRA
+
+
 ## Sources
 
 [Documenting Architecture Decisions by Michael Nygard](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)

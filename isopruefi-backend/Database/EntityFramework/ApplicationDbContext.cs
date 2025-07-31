@@ -8,16 +8,21 @@ namespace Database.EntityFramework;
 public class ApplicationDbContext : IdentityDbContext<ApiUser>
 {
     //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
-
+    
     /// <summary>
     /// Represents the collection of TopicSetting entities in the database.
     /// </summary>
-    public virtual DbSet<TopicSetting> TopicSettings { get; set; }
-
+    public DbSet<TopicSetting> TopicSettings { get; set; }
+    
     /// <summary>
     /// Represents the collection of TokenInfo entities in the database.
     /// </summary>
-    public virtual DbSet<TokenInfo> TokenInfos { get; set; }
+    public DbSet<TokenInfo> TokenInfos { get; set; }
+    
+    /// <summary>
+    /// Represents the collection of CoordinateMappings entities in the database.
+    /// </summary>
+    public DbSet<CoordinateMapping> CoordinateMappings { get; set; }
 
     /// <inheritdoc />
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

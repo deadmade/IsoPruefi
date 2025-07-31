@@ -10,4 +10,4 @@ bool connectMqttClient();
 
 void tryReconnect(MqttClient& mqttClient);
 
-bool isConnectedToServer();
+bool isConnectedToServer(MqttClient& mqttClient);

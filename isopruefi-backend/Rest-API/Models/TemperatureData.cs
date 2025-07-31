@@ -8,17 +8,17 @@ public class TemperatureDataOverview
     /// <summary>
     /// Gets or sets the list of temperature data for the south location.
     /// </summary>
-    public List<TemperatureData> TemperatureSouth { get; set; }
+    public required List<TemperatureData> TemperatureSouth { get; set; }
 
     /// <summary>
     /// Gets or sets the list of temperature data for the north location.
     /// </summary>
-    public List<TemperatureData> TemperatureNord { get; set; }
+    public required List<TemperatureData> TemperatureNord { get; set; }
 
     /// <summary>
     /// Gets or sets the list of temperature data for the outside location.
     /// </summary>
-    public List<TemperatureData> TemperatureOutside { get; set; }
+    public required List<TemperatureData> TemperatureOutside { get; set; }
 }
 
 /// <summary>

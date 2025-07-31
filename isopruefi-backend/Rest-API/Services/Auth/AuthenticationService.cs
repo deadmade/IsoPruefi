@@ -1,8 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Authentication;
 using System.Security.Claims;
-using Database.EntityFramework;
 using Database.EntityFramework.Models;
+using Database.Repository.TokenRepo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -11,117 +11,101 @@ using Rest_API.Services.Token;
 
 namespace Rest_API.Services.Auth;
 
-public class AuthenticationService : IAuthenticationService
+/// <inheritdoc />
+public class AuthenticationService(
+    ILogger<AuthenticationService> logger,
+    UserManager<ApiUser> userManager,
+    RoleManager<IdentityRole> roleManager,
+    ITokenService tokenService,
+    ITokenRepo tokenRepo)
+    : IAuthenticationService
 {
-    private readonly ILogger<AuthenticationService> _logger;
-    private readonly UserManager<ApiUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly ITokenService _tokenService;
-    private readonly ApplicationDbContext _context;
-
-    public AuthenticationService(ILogger<AuthenticationService> logger, UserManager<ApiUser> userManager,
-        RoleManager<IdentityRole> roleManager, ITokenService tokenService, ApplicationDbContext context)
-    {
-        _context = context;
-        _logger = logger;
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _tokenService = tokenService;
-    }
-
-    /// <summary>
-    /// Registers a new user.
-    /// </summary>
-    /// <param name="input">The registration details.</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation. The task result contains a message
-    /// indicating the result of the registration.
-    /// </returns>
-    /// <exception cref="Exception">Thrown when the registration fails.</exception>
+    /// <inheritdoc />
     public async Task Register(Register input)
     {
         try
         {
             if (string.IsNullOrWhiteSpace(input.UserName) || string.IsNullOrWhiteSpace(input.Password))
             {
-                _logger.LogError("Username or Password is empty");
+                logger.LogError("Username or Password is empty");
                 throw new AuthenticationException("Username or Password cannot be empty.");
             }
 
 
-            var existingUser = await _userManager.FindByNameAsync(input.UserName);
+            var existingUser = await userManager.FindByNameAsync(input.UserName);
             if (existingUser != null)
             {
-                _logger.LogError("User {InputUserName} already exists", input.UserName);
+                logger.LogError("User {InputUserName} already exists", input.UserName);
                 throw new Exception($"User {input.UserName} already exists.");
             }
 
             // Create User role if it doesn't exist
-            if (await _roleManager.RoleExistsAsync(Roles.User) == false)
+            if (await roleManager.RoleExistsAsync(Roles.User) == false)
             {
-                var roleResult = await _roleManager
+                var roleResult = await roleManager
                     .CreateAsync(new IdentityRole(Roles.User));
 
                 if (roleResult.Succeeded == false)
                 {
                     var roleErros = roleResult.Errors.Select(e => e.Description);
-                    _logger.LogError($"Failed to create user role. Errors : {string.Join(",", roleErros)}");
+                    logger.LogError($"Failed to create user role. Errors : {string.Join(",", roleErros)}");
                     throw new Exception($"Failed to create user role. Errors : {string.Join(",", roleErros)}");
                 }
             }
 
             var newUser = new ApiUser { UserName = input.UserName };
-            var result = await _userManager.CreateAsync(newUser, input.Password);
+            var result = await userManager.CreateAsync(newUser, input.Password);
             if (result.Succeeded)
             {
-                _logger.LogInformation("User {NewUserUserName} has been created", newUser.UserName);
+                logger.LogInformation("User {NewUserUserName} has been created", newUser.UserName);
             }
             else
             {
-                _logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName,
+                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName,
                     string.Join(" ", result.Errors.Select(e => e.Description)));
                 throw new Exception($"ErrorDto: {string.Join(" ", result.Errors.Select(e => e.Description))}");
             }
 
-            var addUserToRoleResult = await _userManager.AddToRoleAsync(newUser, Roles.User);
+            var addUserToRoleResult = await userManager.AddToRoleAsync(newUser, Roles.User);
 
             if (addUserToRoleResult.Succeeded == false)
             {
                 var errors = addUserToRoleResult.Errors.Select(e => e.Description);
-                _logger.LogError("Failed to add role to the user. Errors : {Join}", string.Join(",", errors));
+                logger.LogError("Failed to add role to the user. Errors : {Join}", string.Join(",", errors));
                 throw new Exception($"Failed to add role to the user. Errors : {string.Join(",", errors)}");
             }
         }
         catch (Exception e)
         {
-            _logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName, e.Message);
+            logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName, e.Message);
             throw;
         }
     }
 
+    /// <inheritdoc />
     public async Task<JwtToken> Login(Login input)
     {
         if (string.IsNullOrWhiteSpace(input.UserName) || string.IsNullOrWhiteSpace(input.Password))
         {
-            _logger.LogError("Username or Password is empty");
+            logger.LogError("Username or Password is empty");
             throw new AuthenticationException("Username or Password cannot be empty.");
         }
 
         try
         {
-            var user = await _userManager.FindByNameAsync(input.UserName);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, input.Password) ||
+            var user = await userManager.FindByNameAsync(input.UserName);
+            if (user == null || !await userManager.CheckPasswordAsync(user, input.Password) ||
                 string.IsNullOrEmpty(user.UserName))
             {
-                _logger.LogError("Invalid Login Attempt for User {InputUserName}", input.UserName);
+                logger.LogError("Invalid Login Attempt for User {InputUserName}", input.UserName);
 
-                if (user != null) await _userManager.AccessFailedAsync(user);
+                if (user != null) await userManager.AccessFailedAsync(user);
 
                 throw new AuthenticationException("Invalid Login Attempt");
             }
             else
             {
-                _logger.LogInformation("Login for User {InputUserName} successful", input.UserName);
+                logger.LogInformation("Login for User {InputUserName} successful", input.UserName);
             }
 
             var signingCredentials = new SigningCredentials(
@@ -134,16 +118,16 @@ public class AuthenticationService : IAuthenticationService
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Unique identifier for the JWT
             };
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+            var userRoles = await userManager.GetRolesAsync(user);
 
             // adding roles to the claims. So that we can get the user role from the token.
             foreach (var userRole in userRoles) claims.Add(new Claim(ClaimTypes.Role, userRole));
 
-            var token = _tokenService.GenerateAccessToken(claims);
+            var token = tokenService.GenerateAccessToken(claims);
 
-            var refreshToken = _tokenService.GenerateRefreshToken();
+            var refreshToken = tokenService.GenerateRefreshToken();
 
-            var tokenInfo = _context.TokenInfos.FirstOrDefault(a => a.Username == user.UserName);
+            var tokenInfo = tokenRepo.GetTokenInfoByUsernameSync(user.UserName);
 
             // If tokenInfo is null for the user, create a new one
             if (tokenInfo == null)
@@ -154,18 +138,19 @@ public class AuthenticationService : IAuthenticationService
                     RefreshToken = refreshToken,
                     ExpiredAt = DateTime.UtcNow.AddDays(7)
                 };
-                _context.TokenInfos.Add(tokenInfo);
+                await tokenRepo.AddTokenInfoAsync(tokenInfo);
             }
             // Else, update the refresh token and expiration
             else
             {
                 tokenInfo.RefreshToken = refreshToken;
                 tokenInfo.ExpiredAt = DateTime.UtcNow.AddDays(7);
+                await tokenRepo.UpdateTokenInfoAsync(tokenInfo);
             }
 
-            await _context.SaveChangesAsync();
+            await tokenRepo.SaveChangesAsync();
 
-            _logger.LogInformation("Jwt Token for User {InputUserName} created", input.UserName);
+            logger.LogInformation("Jwt Token for User {InputUserName} created", input.UserName);
 
             return new JwtToken
             {
@@ -177,39 +162,41 @@ public class AuthenticationService : IAuthenticationService
         }
         catch (Exception e)
         {
-            _logger.LogError("Error logging in user {InputUserName}: {EMessage}", input.UserName, e.Message);
+            logger.LogError("Error logging in user {InputUserName}: {EMessage}", input.UserName, e.Message);
             throw;
         }
     }
 
+    /// <inheritdoc />
     public async Task<JwtToken> RefreshToken(JwtToken tokenModel)
     {
         try
         {
-            var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.Token);
+            var principal = tokenService.GetPrincipalFromExpiredToken(tokenModel.Token);
             var username = principal.Identity?.Name;
 
             if (username == null)
             {
-                _logger.LogError("Invalid token: Username is null");
+                logger.LogError("Invalid token: Username is null");
                 throw new AuthenticationException("Invalid token.");
             }
 
-            var tokenInfo = await _context.TokenInfos.SingleOrDefaultAsync(u => u.Username == username);
+            var tokenInfo = await tokenRepo.GetTokenInfoByUsernameAsync(username);
             if (tokenInfo == null || tokenInfo.RefreshToken != tokenModel.RefreshToken ||
                 tokenInfo.ExpiredAt <= DateTime.UtcNow)
             {
-                _logger.LogError("Invalid refresh token for user {Username}", username);
+                logger.LogError("Invalid refresh token for user {Username}", username);
                 throw new AuthenticationException("Invalid refresh token. Please login again.");
             }
 
-            var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
-            var newRefreshToken = _tokenService.GenerateRefreshToken();
+            var newAccessToken = tokenService.GenerateAccessToken(principal.Claims);
+            var newRefreshToken = tokenService.GenerateRefreshToken();
 
             // Update the existing TokenInfo with the new refresh token and expiration date
             tokenInfo.RefreshToken = newRefreshToken;
             tokenInfo.ExpiredAt = DateTime.UtcNow.AddDays(7);
-            await _context.SaveChangesAsync();
+            await tokenRepo.UpdateTokenInfoAsync(tokenInfo);
+            await tokenRepo.SaveChangesAsync();
 
             return new JwtToken
             {
@@ -221,16 +208,17 @@ public class AuthenticationService : IAuthenticationService
         }
         catch (Exception e)
         {
-            _logger.LogError("Error refreshing token: {EMessage}", e.Message);
+            logger.LogError("Error refreshing token: {EMessage}", e.Message);
             throw;
         }
     }
 
+    /// <inheritdoc />
     public async Task<List<ApiUser>> GetUserInformations()
     {
         try
         {
-            var users = _userManager.Users;
+            var users = userManager.Users;
 
             var userList = await users.ToListAsync();
 
@@ -238,21 +226,22 @@ public class AuthenticationService : IAuthenticationService
         }
         catch (Exception e)
         {
-            _logger.LogError("Error getting user informations: {EMessage}", e.Message);
+            logger.LogError("Error getting user informations: {EMessage}", e.Message);
             throw;
         }
     }
 
+    /// <inheritdoc />
     public async Task<ApiUser?> GetUserById(string userId)
     {
         try
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await userManager.FindByIdAsync(userId);
             return user;
         }
         catch (Exception e)
         {
-            _logger.LogError("Error getting user informations: {EMessage}", e.Message);
+            logger.LogError("Error getting user informations: {EMessage}", e.Message);
             throw;
         }
     }
@@ -272,21 +261,21 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
-            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            var result = await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
             if (result.Succeeded)
             {
-                _logger.LogInformation("Password for user {UserUserName} has been changed", user.UserName);
+                logger.LogInformation("Password for user {UserUserName} has been changed", user.UserName);
             }
             else
             {
-                _logger.LogError("Error changing password for user {UserUserName}: {Join}", user.UserName,
+                logger.LogError("Error changing password for user {UserUserName}: {Join}", user.UserName,
                     string.Join(" ", result.Errors.Select(e => e.Description)));
                 throw new Exception($"Error: {string.Join(" ", result.Errors.Select(e => e.Description))}");
             }
         }
         catch (Exception e)
         {
-            _logger.LogError("Error changing password for user {UserUserName}: {EMessage}", user.UserName, e.Message);
+            logger.LogError("Error changing password for user {UserUserName}: {EMessage}", user.UserName, e.Message);
             throw;
         }
     }
@@ -304,42 +293,43 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
-            var result = await _userManager.UpdateAsync(user);
+            var result = await userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
-                _logger.LogInformation("Username for user {UserId} has been changed to {UserUserName}", user.Id,
+                logger.LogInformation("Username for user {UserId} has been changed to {UserUserName}", user.Id,
                     user.UserName);
             }
             else
             {
-                _logger.LogError("Error changing username for user {UserId}: {Join}", user.Id,
+                logger.LogError("Error changing username for user {UserId}: {Join}", user.Id,
                     string.Join(" ", result.Errors.Select(e => e.Description)));
                 throw new Exception($"Error: {string.Join(" ", result.Errors.Select(e => e.Description))}");
             }
         }
         catch (Exception e)
         {
-            _logger.LogError("Error changing username for user {UserId}: {EMessage}", user.Id, e.Message);
+            logger.LogError("Error changing username for user {UserId}: {EMessage}", user.Id, e.Message);
             throw;
         }
     }
 
+    /// <inheritdoc />
     public async Task<bool> DeleteUser(ApiUser user)
     {
         try
         {
-            var result = await _userManager.DeleteAsync(user);
+            var result = await userManager.DeleteAsync(user);
             if (result.Succeeded)
-                _logger.LogInformation("User {UserId} has been deleted", user.Id);
+                logger.LogInformation("User {UserId} has been deleted", user.Id);
             else
-                _logger.LogError("Error deleting user {UserId}: {Join}", user.Id,
+                logger.LogError("Error deleting user {UserId}: {Join}", user.Id,
                     string.Join(" ", result.Errors.Select(e => e.Description)));
 
             return result.Succeeded;
         }
         catch (Exception e)
         {
-            _logger.LogError("Error deleting user {UserId}: {EMessage}", user.Id, e.Message);
+            logger.LogError("Error deleting user {UserId}: {EMessage}", user.Id, e.Message);
             throw;
         }
     }

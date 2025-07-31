@@ -86,42 +86,42 @@ public class TemperatureDataController : ControllerBase
         {
             TemperatureNord = sensorWeatherData.Where(x => x.Item3 == sensorNord?.SensorName)
                 .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) })
+                .OrderBy(d => d.Timestamp)
                 .ToList(),
 
             TemperatureSouth = sensorWeatherData.Where(x => x.Item3 == sensorSouth?.SensorName)
                 .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) })
+                .OrderBy(d => d.Timestamp)
                 .ToList(),
 
             TemperatureOutside = outsideWeatherData
-                .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) }).ToList()
+                .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) })
+                .OrderBy(d => d.Timestamp)
+                .ToList()
         };
 
         // Testing plausibility of the deviation between consecutive temperature data.
-        var orderedOutsideTemperature = temperatureData.TemperatureOutside.OrderBy(d => d.Timestamp).ToList();
-        var orderedNorthTemperature = temperatureData.TemperatureNord.OrderBy(d => d.Timestamp).ToList();
-        var orderedSouthTemperature = temperatureData.TemperatureSouth.OrderBy(d => d.Timestamp).ToList();
-
-        for (int i = 0; i < orderedNorthTemperature.Count - 1; i++)
+        for (int i = 0; i < temperatureData.TemperatureNord.Count - 1; i++)
         {
-            var northDeviation = orderedNorthTemperature[i].Temperature - orderedNorthTemperature[i + 1].Temperature;
+            var northDeviation = temperatureData.TemperatureNord[i].Temperature - temperatureData.TemperatureNord[i + 1].Temperature;
             if (northDeviation > 10.0)
             {
                 _logger.LogWarning("Inside(North) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
             }
         }
         
-        for (int i = 0; i < orderedSouthTemperature.Count - 1; i++)
+        for (int i = 0; i < temperatureData.TemperatureSouth.Count - 1; i++)
         {
-            var southDeviation = orderedSouthTemperature[i].Temperature - orderedSouthTemperature[i + 1].Temperature;
+            var southDeviation = temperatureData.TemperatureSouth[i].Temperature - temperatureData.TemperatureSouth[i + 1].Temperature;
             if (southDeviation > 10.0)
             {
                 _logger.LogWarning("Inside(south) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
             }
         }
         
-        for (int i = 0; i < orderedOutsideTemperature.Count - 1; i++)
+        for (int i = 0; i < temperatureData.TemperatureOutside.Count - 1; i++)
         {
-            var outsideDeviation = orderedOutsideTemperature[i].Temperature - orderedOutsideTemperature[i + 1].Temperature;
+            var outsideDeviation = temperatureData.TemperatureOutside[i].Temperature - temperatureData.TemperatureOutside[i + 1].Temperature;
             if (outsideDeviation > 10.0)
             {
                 _logger.LogWarning("Outside temperature data may be corrupted, the temperature deviation has exceeded boundary values.");

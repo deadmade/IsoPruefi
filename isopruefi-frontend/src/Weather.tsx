@@ -22,19 +22,32 @@ export function TempChart() {
         const fetchData = async () => {
             const start = '2025-07-01T00:00:00Z';
             const end = '2025-07-31T23:59:59Z';
-            const place = 'YourLocation'; // Replace with your actual location (e.g., "Heidenheim")
+            const place = 'Heidenheim';
             const isFahrenheit = false;
 
             try {
-                const response = await fetch(`http://localhost:5000/api/v1/TemperatureData/GetTemperature?start=${start}&end=${end}&place=${place}&isFahrenheit=${isFahrenheit}`);
+                const response = await fetch(
+                    `http://localhost:5000/api/v1/TemperatureData/GetTemperature?start=${start}&end=${end}&place=${place}&isFahrenheit=${isFahrenheit}`
+                );
                 const data = await response.json();
 
-                const formatted: WeatherEntry[] = data.temperatureSouth.map((_: any, index: number) => ({
-                    timestamp: data.temperatureSouth[index].timestamp,
-                    tempSouth: data.temperatureSouth[index].temperature,
-                    tempNorth: data.temperatureNorth[index]?.temperature ?? 0,
-                    tempOutside: data.temperatureOutside[index]?.temperature ?? 0
-                }));
+                // find the smallest array length
+                const minLength = Math.min(
+                    data.temperatureSouth.length,
+                    data.temperatureNorth.length,
+                    data.temperatureOutside.length
+                );
+
+                // build WeatherEntry[] safely up to that length
+                const formatted: WeatherEntry[] = Array.from(
+                    { length: minLength },
+                    (_, index) => ({
+                        timestamp: data.temperatureSouth[index].timestamp,
+                        tempSouth: data.temperatureSouth[index].temperature,
+                        tempNorth: data.temperatureNorth[index]?.temperature ?? 0,
+                        tempOutside: data.temperatureOutside[index]?.temperature ?? 0,
+                    })
+                );
 
                 setWeatherData(formatted);
             } catch (error) {

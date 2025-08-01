@@ -4,6 +4,7 @@ import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+      <title>IsoPruefi</title>
     <App />
   </StrictMode>,
 )

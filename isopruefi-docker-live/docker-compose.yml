@@ -10,7 +10,7 @@ networks:
 services:
   traefik:
     image: traefik:3.4.4
-    container_name: isopruefi-traefik
+    container_name: isopruefi-loadbalancer
     restart: unless-stopped
     ports:
       - 10000:80
@@ -21,11 +21,11 @@ services:
 
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.aicon.dhbw-heidenheim.de`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
       - "traefik.http.services.dashboard.loadbalancer.server.port=8432"
 
-      - "traefik.http.routers.dashboard.tls.domains[0].main=*.aicon.dhbw-heidenheim.de"
-      - "traefik.http.routers.dashboard.tls.domains[0].sans=*.aicon.dhbw-heidenheim.de"
+      - "traefik.http.routers.dashboard.tls.domains[0].main=*.localhost.de"
+      - "traefik.http.routers.dashboard.tls.domains[0].sans=*.localhost.de"
 
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme = https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https"
@@ -71,7 +71,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.explorer.rule=Host(`explorer.aicon.dhbw-heidenheim.de`)"
+      - "traefik.http.routers.explorer.rule=Host(`explorer.localhost`)"
       - "traefik.http.routers.explorer.entrypoints=websecure"
       - "traefik.http.routers.explorer.tls=true"
       - "traefik.http.services.explorer.loadbalancer.server.port=80"
@@ -92,6 +92,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./postgres:/var/lib/postgresql/data
+    labels:
+         - "traefik.enable=true"
+         - "traefik.http.routers.postgres.rule=Host(`postgres.localhost`)"
+         - "traefik.http.routers.postgres.entrypoints=websecure"
+         - "traefik.http.routers.postgres.tls=true"
+         - "traefik.http.services.postgres.loadbalancer.server.port=5432"
     networks:
       - database-network
     env_file:
@@ -131,12 +137,11 @@ services:
     container_name: isopruefi-grafana
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana.aicon.dhbw-heidenheim.de`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.localhost`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls=true"
       - traefik.http.services.grafana.loadbalancer.server.port=3000
     environment:
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_ANONYMOUS_ENABLED=false
       - GF_AUTH_BASIC_ENABLED=true
       - GF_LOG_LEVEL=warn
@@ -177,10 +182,10 @@ services:
 
   isopruefi-frontend:
        image: ghcr.io/deadmade/isopruefi-frontend:latest
-       container_name: isopruefi-frontend
+       container_name: isopruefi-frontend-live
        labels:
          - "traefik.enable=true"
-         - "traefik.http.routers.frontend.rule=Host(`frontend.aicon.dhbw-heidenheim.de`)"
+         - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
          - "traefik.http.routers.frontend.entrypoints=websecure"
          - "traefik.http.routers.frontend.tls=true"
          - traefik.http.services.frontend.loadbalancer.server.port=3000
@@ -191,7 +196,7 @@ services:
 
   isopruefi-backend-api:
         image: ghcr.io/deadmade/isopruefi-rest-api:latest
-        container_name: isopruefi-backend-api
+        container_name: isopruefi-rest-api
         labels:
          - "traefik.enable=true"
          - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
@@ -207,7 +212,7 @@ services:
 
   isopruefi-mqtt-receiver:
         image: ghcr.io/deadmade/isopruefi-mqtt-worker:latest
-        container_name: isopruefi-mqtt-receiver
+        container_name: isopruefi-mqtt-receiver-live
         networks:
          - isopruefi-custom
         environment:
@@ -217,7 +222,7 @@ services:
 
   isopruefi-weather-worker:
         image: ghcr.io/deadmade/isopruefi-weather-worker:latest
-        container_name: isopruefi-weather-worker
+        container_name: isopruefi-weather-worker-live
         networks:
          - isopruefi-custom
         environment:

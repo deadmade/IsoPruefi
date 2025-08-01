@@ -22,6 +22,7 @@
         pkgs.mqtt-explorer
 
         pkgs.act
+        pkgs.doxygen
       ];
 
       shellHook = ''

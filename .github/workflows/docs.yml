@@ -60,6 +60,17 @@ jobs:
         working-directory: ./isopruefi-frontend
         run: npx typedoc
 
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen
+
+      - name: Generate Arduino Documentation
+        working-directory: ./arduino
+        run: doxygen Doxyfile
+       
+      - name: Generate Arduino Documentation
+        working-directory: ./isopruefi-docs\docs\code\arduino
+        run: npx seaborg xml md
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:

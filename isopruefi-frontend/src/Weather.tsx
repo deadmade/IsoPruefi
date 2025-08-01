@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react';
-import { LineChart, ResponsiveContainer, Line } from 'recharts';
-import { TemperatureDataClient, ApiException } from './api/api-client';
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer
+} from 'recharts';import { TemperatureDataClient, ApiException } from './api/api-client';
 
 export type WeatherEntry = {
     timestamp: string;
@@ -32,7 +40,7 @@ export function TempChart() {
             setError(null);
 
             const start = new Date('2025-07-01T00:00:00Z');
-            const end = new Date('2025-07-31T23:59:59Z');
+            const end = new Date();
             const place = 'Heidenheim';
             const isFahrenheit = false;
 
@@ -137,9 +145,10 @@ export function TempChart() {
 
     return (
         <div style={style}>
-            <label>
+
+            <label style={{ marginBottom: 8, display: 'block' }}>
                 Show:{' '}
-                <select value={filter} onChange={e => setFilter(e.target.value as any)}>
+                <select value={filter} onChange={(e) => setFilter(e.target.value as any)}>
                     <option value="all">All</option>
                     <option value="hour">Last Hour</option>
                     <option value="day">Today</option>
@@ -149,9 +158,31 @@ export function TempChart() {
 
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={filteredData}>
-                    <Line type="monotone" dataKey="tempSouth"   name="South"   stroke="#8884d8" activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="tempNorth"   name="North"   stroke="#84d8d2" activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#82ca9d" />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="timestamp" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line
+                        type="monotone"
+                        dataKey="tempSouth"
+                        name="South"
+                        stroke="#8884d8"
+                        activeDot={{ r: 8 }}
+                    />
+                    <Line
+                        type="monotone"
+                        dataKey="tempNorth"
+                        name="North"
+                        stroke="#84d8d2"
+                        activeDot={{ r: 8 }}
+                    />
+                    <Line
+                        type="monotone"
+                        dataKey="tempOutside"
+                        name="Outside"
+                        stroke="#82ca9d"
+                    />
                 </LineChart>
             </ResponsiveContainer>
         </div>

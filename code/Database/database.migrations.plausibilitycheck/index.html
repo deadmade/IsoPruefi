@@ -16,7 +16,7 @@
     
     
       
-        <title>TokenInfo - IsoPrüfi</title>
+        <title>PlausibilityCheck - IsoPrüfi</title>
       
     
     
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tokeninfo" class="md-skip">
+        <a href="#plausibilitycheck" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              TokenInfo
+              PlausibilityCheck
             
           </span>
         </div>
@@ -1330,13 +1330,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#expiredat" class="md-nav__link">
+  <a href="#activeprovider" class="md-nav__link">
     <span class="md-ellipsis">
-      ExpiredAt
+      ActiveProvider
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ExpiredAt">
+    <nav class="md-nav" aria-label="ActiveProvider">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1354,13 +1354,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#id" class="md-nav__link">
+  <a href="#downoperations" class="md-nav__link">
     <span class="md-ellipsis">
-      Id
+      DownOperations
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Id">
+    <nav class="md-nav" aria-label="DownOperations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1378,13 +1378,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#refreshtoken" class="md-nav__link">
+  <a href="#targetmodel" class="md-nav__link">
     <span class="md-ellipsis">
-      RefreshToken
+      TargetModel
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="RefreshToken">
+    <nav class="md-nav" aria-label="TargetModel">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1402,13 +1402,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#username" class="md-nav__link">
+  <a href="#upoperations" class="md-nav__link">
     <span class="md-ellipsis">
-      Username
+      UpOperations
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Username">
+    <nav class="md-nav" aria-label="UpOperations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1441,11 +1441,98 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tokeninfo_1" class="md-nav__link">
+  <a href="#plausibilitycheck_1" class="md-nav__link">
     <span class="md-ellipsis">
-      TokenInfo()
+      PlausibilityCheck()
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buildtargetmodelmodelbuilder" class="md-nav__link">
+    <span class="md-ellipsis">
+      BuildTargetModel(ModelBuilder)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BuildTargetModel(ModelBuilder)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#downmigrationbuilder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Down(MigrationBuilder)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Down(MigrationBuilder)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upmigrationbuilder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Up(MigrationBuilder)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Up(MigrationBuilder)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1470,41 +1557,52 @@
 
 
 
-<h1 id="tokeninfo">TokenInfo</h1>
-<p>Namespace: Database.EntityFramework.Models</p>
-<p>Represents a refresh token entry for a user, including expiration and token details.</p>
-<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TokenInfo</span>
+<h1 id="plausibilitycheck">PlausibilityCheck</h1>
+<p>Namespace: Database.Migrations</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">PlausibilityCheck</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Microsoft</span><span class="p">.</span><span class="n">EntityFrameworkCore</span><span class="p">.</span><span class="n">Migrations</span><span class="p">.</span><span class="n">Migration</span>
 </code></pre></div>
-<p>Inheritance <a href="https://docs.microsoft.com/en-us/dotnet/api/system.object">Object</a> → <a href="./">TokenInfo</a></p>
+<p>Inheritance <a href="https://docs.microsoft.com/en-us/dotnet/api/system.object">Object</a> → Migration → <a href="./">PlausibilityCheck</a></p>
 <h2 id="properties">Properties</h2>
-<h3 id="expiredat"><a id="properties-expiredat"/><strong>ExpiredAt</strong></h3>
-<p>Gets or sets the expiration date and time of the refresh token.</p>
-<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="n">ExpiredAt</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<h3 id="activeprovider"><a id="properties-activeprovider"/><strong>ActiveProvider</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">ActiveProvider</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <h4 id="property-value">Property Value</h4>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.datetime">DateTime</a><br></p>
-<h3 id="id"><a id="properties-id"/><strong>Id</strong></h3>
-<p>Gets or sets the unique identifier for the token entry.</p>
-<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Id</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.string">String</a><br></p>
+<h3 id="downoperations"><a id="properties-downoperations"/><strong>DownOperations</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="n">MigrationOperation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">DownOperations</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <h4 id="property-value_1">Property Value</h4>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.int32">Int32</a><br></p>
-<h3 id="refreshtoken"><a id="properties-refreshtoken"/><strong>RefreshToken</strong></h3>
-<p>Gets or sets the refresh token string.</p>
-<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">RefreshToken</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList&lt;MigrationOperation&gt;</a><br></p>
+<h3 id="targetmodel"><a id="properties-targetmodel"/><strong>TargetModel</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">IModel</span><span class="w"> </span><span class="n">TargetModel</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <h4 id="property-value_2">Property Value</h4>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.string">String</a><br></p>
-<h3 id="username"><a id="properties-username"/><strong>Username</strong></h3>
-<p>Gets or sets the username associated with the refresh token.</p>
-<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Username</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<p>IModel<br></p>
+<h3 id="upoperations"><a id="properties-upoperations"/><strong>UpOperations</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="n">MigrationOperation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UpOperations</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <h4 id="property-value_3">Property Value</h4>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.string">String</a><br></p>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList&lt;MigrationOperation&gt;</a><br></p>
 <h2 id="constructors">Constructors</h2>
-<h3 id="tokeninfo_1"><a id="constructors-.ctor"/><strong>TokenInfo()</strong></h3>
-<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="nf">TokenInfo</span><span class="p">()</span>
+<h3 id="plausibilitycheck_1"><a id="constructors-.ctor"/><strong>PlausibilityCheck()</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="nf">PlausibilityCheck</span><span class="p">()</span>
 </code></pre></div>
+<h2 id="methods">Methods</h2>
+<h3 id="buildtargetmodelmodelbuilder"><a id="methods-buildtargetmodel"/><strong>BuildTargetModel(ModelBuilder)</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="k">protected</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">BuildTargetModel</span><span class="p">(</span><span class="n">ModelBuilder</span><span class="w"> </span><span class="n">modelBuilder</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="parameters">Parameters</h4>
+<p><code>modelBuilder</code> ModelBuilder<br></p>
+<h3 id="downmigrationbuilder"><a id="methods-down"/><strong>Down(MigrationBuilder)</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="k">protected</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Down</span><span class="p">(</span><span class="n">MigrationBuilder</span><span class="w"> </span><span class="n">migrationBuilder</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="parameters_1">Parameters</h4>
+<p><code>migrationBuilder</code> MigrationBuilder<br></p>
+<h3 id="upmigrationbuilder"><a id="methods-up"/><strong>Up(MigrationBuilder)</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="k">protected</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Up</span><span class="p">(</span><span class="n">MigrationBuilder</span><span class="w"> </span><span class="n">migrationBuilder</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="parameters_2">Parameters</h4>
+<p><code>migrationBuilder</code> MigrationBuilder<br></p>
 
 
 

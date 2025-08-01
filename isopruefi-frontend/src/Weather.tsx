@@ -24,15 +24,13 @@ export function WeatherChartTitle() {
 const style = { width: '100%', height: 400 };
 
 // const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:7240';
-// const temperatureClient = new TemperatureDataClient(API_BASE_URL);
+const temperatureClient = new TemperatureDataClient('http://localhost:5160');
 
 export function TempChart() {
     const [weatherData, setWeatherData] = useState<WeatherEntry[]>([]);
     const [filter, setFilter] = useState<'all'|'hour'|'day'|'week'>('all');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
-    const temperatureClient = new TemperatureDataClient('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -50,9 +48,9 @@ export function TempChart() {
                     end,
                     place,
                     isFahrenheit) as any;
-                console.log(data);
+                console.log('📦 Raw API response:', data);
 
-                const south = data.temperatureSouth || [];
+                // const south = data.temperatureSouth || [];
                 const north = data.temperatureNord || [];
                 const outside = data.temperatureOutside || [];
 
@@ -61,12 +59,8 @@ export function TempChart() {
                     return;
                 }
 
-                // Type assertion due to API client being generated with wrong types
-                // The actual response is TemperatureDataOverview, not TemperatureData[]
-
-                const minLength = Math.min(
-                    south.length, north.length, outside.length
-                );
+                const minLength =
+                    Math.min(north.length, outside.length);
 
                 // old implementation
 
@@ -79,14 +73,15 @@ export function TempChart() {
                 const formatted: WeatherEntry[] = Array.from(
                     { length: minLength },
                     (_, i) => ({
-                        timestamp:   south[i].timestamp
-                            ? new Date(south[i].timestamp).toISOString()
+                        timestamp: north[i].timestamp
+                            ? new Date(north[i].timestamp).toISOString()
                             : '',
-                        tempSouth:   south[i].temperature ?? 0,
-                        tempNorth:   north[i].temperature ?? 0,
-                        tempOutside: outside[i].temperature ?? 0,
+                        tempSouth: 0,
+                        tempNorth: north[i]?.temperature ?? 0,
+                        tempOutside: outside[i]?.temperature ?? 0,
                     })
                 );
+                console.log("Formatted weatherData", formatted);
 
                 //     if (southData?.timestamp) {
                 //         formatted.push({
@@ -119,16 +114,31 @@ export function TempChart() {
 
     // filtering
 
-    const now = Date.now();
+    const now = new Date().getTime();
     let cutoff = 0;
+
     switch (filter) {
-        case 'hour': cutoff = now - 1000 * 60 * 60; break;
-        case 'day':  cutoff = now - 1000 * 60 * 60 * 24; break;
-        case 'week': cutoff = now - 1000 * 60 * 60 * 24 * 7; break;
+        case 'hour':
+            cutoff = now - 60 * 60 * 1000;
+            break;
+        case 'day':
+            cutoff = now - 24 * 60 * 60 * 1000;
+            break;
+        case 'week':
+            cutoff = now - 7 * 24 * 60 * 60 * 1000;
+            break;
+        default:
+            cutoff = 0;
     }
+
     const filteredData = filter === 'all'
         ? weatherData
-        : weatherData.filter(e => new Date(e.timestamp).getTime() >= cutoff);
+        : weatherData.filter(e => {
+            const time = new Date(e.timestamp).getTime();
+            return !isNaN(time) && time >= cutoff;
+        });
+
+    console.log("Filtered", filteredData.length, "of", weatherData.length);
 
     if (loading) {
         return <div style={style}>Loading temperature data...</div>;
@@ -142,6 +152,9 @@ export function TempChart() {
             </div>
         );
     }
+
+    console.log("Filtered data", filteredData);
+    console.log("Sample timestamps", weatherData.map(e => e.timestamp));
 
     return (
         <div style={style}>
@@ -159,7 +172,10 @@ export function TempChart() {
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={filteredData}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="timestamp" />
+                    <XAxis dataKey="timestamp"
+                           tickFormatter={(value) => new Date(value).
+                           toLocaleTimeString([],
+                               { hour: '2-digit', minute: '2-digit' })}/>
                     <YAxis />
                     <Tooltip />
                     <Legend />

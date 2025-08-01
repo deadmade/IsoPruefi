@@ -5,11 +5,12 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS dev
 WORKDIR /src
 
 # Copy project file and restore dependencies
+COPY ["Rest-API/Rest-API.csproj", "Rest-API/"]
+COPY ["Database/Database.csproj", "Database/"]
+RUN dotnet restore Rest-API/Rest-API.csproj
+RUN dotnet restore Database/Database.csproj
 COPY . .
-RUN dotnet restore
-
-# Set working directory to project directory
 WORKDIR "/src/Rest-API"
 
 # Run the app with hot reload
-ENTRYPOINT ["dotnet", "watch", "run", "--urls=http://0.0.0.0:8080"]
+ENTRYPOINT ["dotnet", "run", "--urls=http://0.0.0.0:8080"]

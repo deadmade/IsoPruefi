@@ -18,7 +18,8 @@
     "concurrently": "^9.2.0",
     "gitleaks-secret-scanner": "^1.2.2",
     "husky": "^9.0.0",
-    "typedoc": "^0.28.7"
+    "@seaborg/cli": "0.6.2"
+    "typedoc": "^0.28.8"
   },
   "dependencies": {
     "debug": "^4.3.6",

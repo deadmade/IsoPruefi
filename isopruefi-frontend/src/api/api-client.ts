@@ -178,7 +178,7 @@ export class TemperatureDataClient {
      * @param isFahrenheit (optional) If true, converts temperatures to Fahrenheit.
      * @return Temperature data overview.
      */
-    getTemperature(start?: Date | undefined, end?: Date | undefined, place?: string | undefined, isFahrenheit?: boolean | undefined): Promise<TemperatureData[]> {
+    getTemperature(start?: Date | undefined, end?: Date | undefined, place?: string | undefined, isFahrenheit?: boolean | undefined): Promise<TemperatureDataOverview> {
         let url_ = this.baseUrl + "/api/v1/TemperatureData/GetTemperature?";
         if (start === null)
             throw new Error("The parameter 'start' cannot be null.");
@@ -210,21 +210,14 @@ export class TemperatureDataClient {
         });
     }
 
-    protected processGetTemperature(response: Response): Promise<TemperatureData[]> {
+    protected processGetTemperature(response: Response): Promise<TemperatureDataOverview> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(TemperatureData.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
+            result200 = TemperatureDataOverview.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -232,7 +225,7 @@ export class TemperatureDataClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<TemperatureData[]>(null as any);
+        return Promise.resolve<TemperatureDataOverview>(null as any);
     }
 }
 
@@ -740,6 +733,82 @@ export interface IJwtToken {
     expiryDate?: Date;
     /** Gets or sets the creation date and time of the JWT token. */
     createdDate?: Date;
+}
+
+/** Represents an overview of temperature data for different locations. */
+export class TemperatureDataOverview implements ITemperatureDataOverview {
+    /** Gets or sets the list of temperature data for the south location. */
+    temperatureSouth?: TemperatureData[];
+    /** Gets or sets the list of temperature data for the north location. */
+    temperatureNord?: TemperatureData[];
+    /** Gets or sets the list of temperature data for the outside location. */
+    temperatureOutside?: TemperatureData[];
+
+    constructor(data?: ITemperatureDataOverview) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["temperatureSouth"])) {
+                this.temperatureSouth = [] as any;
+                for (let item of _data["temperatureSouth"])
+                    this.temperatureSouth!.push(TemperatureData.fromJS(item));
+            }
+            if (Array.isArray(_data["temperatureNord"])) {
+                this.temperatureNord = [] as any;
+                for (let item of _data["temperatureNord"])
+                    this.temperatureNord!.push(TemperatureData.fromJS(item));
+            }
+            if (Array.isArray(_data["temperatureOutside"])) {
+                this.temperatureOutside = [] as any;
+                for (let item of _data["temperatureOutside"])
+                    this.temperatureOutside!.push(TemperatureData.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): TemperatureDataOverview {
+        data = typeof data === 'object' ? data : {};
+        let result = new TemperatureDataOverview();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.temperatureSouth)) {
+            data["temperatureSouth"] = [];
+            for (let item of this.temperatureSouth)
+                data["temperatureSouth"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.temperatureNord)) {
+            data["temperatureNord"] = [];
+            for (let item of this.temperatureNord)
+                data["temperatureNord"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.temperatureOutside)) {
+            data["temperatureOutside"] = [];
+            for (let item of this.temperatureOutside)
+                data["temperatureOutside"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+/** Represents an overview of temperature data for different locations. */
+export interface ITemperatureDataOverview {
+    /** Gets or sets the list of temperature data for the south location. */
+    temperatureSouth?: TemperatureData[];
+    /** Gets or sets the list of temperature data for the north location. */
+    temperatureNord?: TemperatureData[];
+    /** Gets or sets the list of temperature data for the outside location. */
+    temperatureOutside?: TemperatureData[];
 }
 
 /** Represents a single temperature data point with timestamp and value. */

@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -57,6 +59,17 @@ jobs:
       - name: Generate Frontend Documentation
         working-directory: ./isopruefi-frontend
         run: npx typedoc
+
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen
+
+      - name: Generate Arduino Documentation
+        working-directory: ./arduino
+        run: doxygen Doxyfile
+       
+      - name: Generate Arduino Documentation
+        working-directory: ./isopruefi-docs\docs\code\arduino
+        run: npx seaborg xml md
 
       - name: Setup Python
         uses: actions/setup-python@v5

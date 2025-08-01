@@ -37,8 +37,8 @@ public class Program
         });
 
         builder.Services.AddIdentity<ApiUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+           .AddEntityFrameworkStores<ApplicationDbContext>()
+           .AddDefaultTokenProviders();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApiDocument();
@@ -90,6 +90,18 @@ public class Program
         // Register Repos
         builder.Services.AddScoped<ITokenRepo, TokenRepo>();
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
+        builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
+
+        // Add CORS support
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
 
         builder.Services.AddControllers();
 
@@ -99,17 +111,27 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseOpenApi();
-            //app.UseSwaggerUi();
+            app.UseSwaggerUi();
             app.UseDeveloperExceptionPage();
             app.UseReDoc(options => { options.Path = "/redoc"; });
 
             builder.Configuration.AddUserSecrets<Program>();
+
+            using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
+            ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+
+            app.UseCors("AllowAll");
+        }
+        else
+        {
+            // Enable CORS before authentication
+            app.UseCors("AllowAll");
         }
 
         app.UseHttpsRedirection();
 
-        app.UseAuthentication();
-        app.UseAuthorization();
+       // app.UseAuthentication();
+       // app.UseAuthorization();
 
         app.MapControllers();
 

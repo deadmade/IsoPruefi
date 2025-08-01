@@ -1,0 +1,20 @@
+﻿# Use .NET 9 SDK for building and running with hot reload
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS dev
+
+# Set working directory
+WORKDIR /src
+
+# Copy project file and restore dependencies
+#COPY ["IsoPruefi-Backend.sln", "./"]
+COPY ["Get-weatherData-worker/Get-weatherData-worker.csproj", "Get-wheatherData-worker/"]
+COPY ["Database/Database.csproj", "Database/"]
+COPY . .
+RUN dotnet restore "Get-weatherData-worker/Get-weatherData-worker.csproj"
+RUN dotnet restore "Database/Database.csproj"
+
+# Set working directory to project directory
+#WORKDIR "/src/MQTT-Receiver-Worker"
+
+# Run the app with hot reload
+ENTRYPOINT ["dotnet", "run", "--project", "Get-weatherData-worker/Get-weatherData-worker.csproj"]
+

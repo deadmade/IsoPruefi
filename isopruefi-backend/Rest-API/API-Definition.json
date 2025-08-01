@@ -6,19 +6,396 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/weatherforecast": {
-      "get": {
-        "operationId": "GetWeatherForecast",
+    "/v1/Authentication/Login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Die Login-Methode.",
+        "operationId": "Authentication_Login",
+        "requestBody": {
+          "x-name": "input",
+          "description": "Login-Datenübertragungsobjekt.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
-            "description": "",
+            "description": "JWT-Token bei erfolgreichem Login.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/Authentication/Register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Registers a new user in the system.",
+        "operationId": "Authentication_Register",
+        "requestBody": {
+          "x-name": "input",
+          "description": "The registration data containing user credentials and information.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "User registered successfully.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/Authentication/Refresh": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Handles the refresh token request. Validates the incoming JWT token and issues a new access token if valid.",
+        "operationId": "Authentication_Refresh",
+        "requestBody": {
+          "x-name": "token",
+          "description": "The JWT token containing the refresh token and access token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JwtToken"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a new access token if the refresh is successful; otherwise, returns an error response.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TemperatureData/GetTemperature": {
+      "get": {
+        "tags": [
+          "TemperatureData"
+        ],
+        "summary": "Gets temperature data for the specified time range and location, with optional Fahrenheit conversion.",
+        "operationId": "TemperatureData_GetTemperature",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date and time for the data range.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date and time for the data range.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "place",
+            "in": "query",
+            "description": "Location for outside temperature data.",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "isFahrenheit",
+            "in": "query",
+            "description": "If true, converts temperatures to Fahrenheit.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Temperature data overview.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemperatureDataOverview"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Topic/GetAllTopics": {
+      "get": {
+        "tags": [
+          "Topic"
+        ],
+        "summary": "Gets all available topic settings",
+        "operationId": "Topic_GetAllTopics",
+        "responses": {
+          "200": {
+            "description": "A list of all topic settings",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
+                    "$ref": "#/components/schemas/TopicSetting"
                   }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/Topic/CreateTopic": {
+      "post": {
+        "tags": [
+          "Topic"
+        ],
+        "summary": "Creates a new topic setting",
+        "operationId": "Topic_CreateTopic",
+        "requestBody": {
+          "x-name": "topicSetting",
+          "description": "The topic setting to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopicSetting"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": "The ID of the created topic setting",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/UserInfo/GetAllUsers": {
+      "get": {
+        "tags": [
+          "UserInfo"
+        ],
+        "summary": "Retrieves all users from the system.",
+        "operationId": "UserInfo_GetAllUsers",
+        "responses": {
+          "200": {
+            "description": "A list of all users.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/UserInfo/GetUserById": {
+      "get": {
+        "tags": [
+          "UserInfo"
+        ],
+        "summary": "Retrieves a user by their unique identifier.",
+        "operationId": "UserInfo_GetUserById",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user.",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user information if found; otherwise, NotFound.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/UserInfo/ChangePassword": {
+      "post": {
+        "tags": [
+          "UserInfo"
+        ],
+        "summary": "Changes the password for a user.",
+        "operationId": "UserInfo_ChangePassword",
+        "requestBody": {
+          "x-name": "input",
+          "description": "The change password request containing user ID, current password, and new password.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePassword"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Ok if successful; otherwise, an error response.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/UserInfo/ChangeUser": {
+      "put": {
+        "tags": [
+          "UserInfo"
+        ],
+        "summary": "Updates user information.",
+        "operationId": "UserInfo_ChangeUser",
+        "requestBody": {
+          "x-name": "user",
+          "description": "The user object with updated information.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiUser"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Ok if successful; otherwise, an error response.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/UserInfo/DeleteUser": {
+      "delete": {
+        "tags": [
+          "UserInfo"
+        ],
+        "summary": "Deletes a user by their unique identifier.",
+        "operationId": "UserInfo_DeleteUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user to delete.",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok if successful; otherwise, an error response.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -29,29 +406,308 @@
   },
   "components": {
     "schemas": {
-      "WeatherForecast": {
+      "Login": {
         "type": "object",
+        "description": "Represents the login credentials for a user.",
+        "additionalProperties": false,
+        "required": [
+          "userName",
+          "password"
+        ],
+        "properties": {
+          "userName": {
+            "type": "string",
+            "description": "Gets or sets the username of the user.",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "description": "Gets or sets the password of the user.",
+            "minLength": 1
+          }
+        }
+      },
+      "Register": {
+        "type": "object",
+        "description": "Represents the registration credentials for a new user.",
+        "additionalProperties": false,
+        "required": [
+          "userName",
+          "password"
+        ],
+        "properties": {
+          "userName": {
+            "type": "string",
+            "description": "Gets or sets the username for the new user.",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "description": "Gets or sets the password for the new user.",
+            "minLength": 1
+          }
+        }
+      },
+      "JwtToken": {
+        "type": "object",
+        "description": "Represents a JWT token and its associated refresh token and metadata.",
         "additionalProperties": false,
         "properties": {
-          "date": {
+          "token": {
             "type": "string",
-            "format": "date"
+            "description": "Gets or sets the JWT access token string."
           },
-          "temperatureC": {
+          "refreshToken": {
+            "type": "string",
+            "description": "Gets or sets the refresh token string."
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "Gets or sets the expiry date and time of the JWT token.",
+            "format": "date-time"
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Gets or sets the creation date and time of the JWT token.",
+            "format": "date-time"
+          }
+        }
+      },
+      "TemperatureDataOverview": {
+        "type": "object",
+        "description": "Represents an overview of temperature data for different locations.",
+        "additionalProperties": false,
+        "properties": {
+          "temperatureSouth": {
+            "type": "array",
+            "description": "Gets or sets the list of temperature data for the south location.",
+            "items": {
+              "$ref": "#/components/schemas/TemperatureData"
+            }
+          },
+          "temperatureNord": {
+            "type": "array",
+            "description": "Gets or sets the list of temperature data for the north location.",
+            "items": {
+              "$ref": "#/components/schemas/TemperatureData"
+            }
+          },
+          "temperatureOutside": {
+            "type": "array",
+            "description": "Gets or sets the list of temperature data for the outside location.",
+            "items": {
+              "$ref": "#/components/schemas/TemperatureData"
+            }
+          }
+        }
+      },
+      "TemperatureData": {
+        "type": "object",
+        "description": "Represents a single temperature data point with timestamp and value.",
+        "additionalProperties": false,
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "Gets or sets the timestamp of the temperature measurement.",
+            "format": "date-time"
+          },
+          "temperature": {
+            "type": "number",
+            "description": "Gets or sets the temperature value.",
+            "format": "double"
+          }
+        }
+      },
+      "TopicSetting": {
+        "type": "object",
+        "description": "Represents the settings for a specific MQTT topic, including default path, group, and sensor information.",
+        "additionalProperties": false,
+        "properties": {
+          "topicSettingId": {
             "type": "integer",
+            "description": "Gets or sets the unique identifier for the TopicSetting entity.",
             "format": "int32"
           },
-          "temperatureF": {
+          "defaultTopicPath": {
+            "type": "string",
+            "description": "Gets or sets the default MQTT topic path for this setting.",
+            "maxLength": 100
+          },
+          "groupId": {
             "type": "integer",
+            "description": "Gets or sets the group identifier associated with this topic setting.",
             "format": "int32"
           },
-          "summary": {
+          "sensorType": {
+            "type": "string",
+            "description": "Gets or sets the type of sensor (e.g., temperature, humidity).",
+            "maxLength": 50
+          },
+          "sensorName": {
+            "type": "string",
+            "description": "Gets or sets the name of the sensor.",
+            "maxLength": 50,
+            "nullable": true
+          },
+          "sensorLocation": {
+            "type": "string",
+            "description": "Gets or sets the location of the sensor.",
+            "maxLength": 50,
+            "nullable": true
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "type": {
             "type": "string",
             "nullable": true
           },
-          "fun": {
+          "title": {
             "type": "string",
             "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ChangePassword": {
+        "type": "object",
+        "description": "Represents a request to change a user's password.",
+        "additionalProperties": false,
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Gets or sets the unique identifier of the user whose password is to be changed.",
+            "nullable": true
+          },
+          "currentPassword": {
+            "type": "string",
+            "description": "Gets or sets the current password of the user.",
+            "nullable": true
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "Gets or sets the new password to be set for the user.",
+            "nullable": true
+          }
+        }
+      },
+      "ApiUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IdentityUser"
+          },
+          {
+            "type": "object",
+            "description": "Represents an application user in the system",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "IdentityUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IdentityUserOfString"
+          },
+          {
+            "type": "object",
+            "description": "The default implementation of IdentityUser`1 which uses a string as a primary key.",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "IdentityUserOfString": {
+        "type": "object",
+        "description": "Represents a user in the identity system",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the primary key for this user.",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "description": "Gets or sets the user name for this user.",
+            "nullable": true
+          },
+          "normalizedUserName": {
+            "type": "string",
+            "description": "Gets or sets the normalized user name for this user.",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "Gets or sets the email address for this user.",
+            "nullable": true
+          },
+          "normalizedEmail": {
+            "type": "string",
+            "description": "Gets or sets the normalized email address for this user.",
+            "nullable": true
+          },
+          "emailConfirmed": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if a user has confirmed their email address."
+          },
+          "passwordHash": {
+            "type": "string",
+            "description": "Gets or sets a salted and hashed representation of the password for this user.",
+            "nullable": true
+          },
+          "securityStamp": {
+            "type": "string",
+            "description": "A random value that must change whenever a users credentials change (password changed, login removed)",
+            "nullable": true
+          },
+          "concurrencyStamp": {
+            "type": "string",
+            "description": "A random value that must change whenever a user is persisted to the store",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Gets or sets a telephone number for the user.",
+            "nullable": true
+          },
+          "phoneNumberConfirmed": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if a user has confirmed their telephone address."
+          },
+          "twoFactorEnabled": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if two factor authentication is enabled for this user."
+          },
+          "lockoutEnd": {
+            "type": "string",
+            "description": "Gets or sets the date and time, in UTC, when any user lockout ends.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lockoutEnabled": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if the user could be locked out."
+          },
+          "accessFailedCount": {
+            "type": "integer",
+            "description": "Gets or sets the number of failed login attempts for the current user.",
+            "format": "int32"
           }
         }
       }

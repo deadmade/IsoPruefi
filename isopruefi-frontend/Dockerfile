@@ -1,18 +1,13 @@
-# Use the latest LTS version of Node.js
-FROM node:24-alpine
- 
-# Set the working directory inside the container
+# Build Stage
+FROM node:24-alpine AS build
 WORKDIR /app
- 
-# Copy package.json
-COPY package.json .
- 
-# Install dependencies
+COPY package*.json ./
 RUN npm install
- 
-# Copy the rest of your application files
 COPY . .
-
-# Define the command to run your app
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
-
+RUN npm run build
+ 
+# Production Stage
+FROM nginx:stable-alpine AS production
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

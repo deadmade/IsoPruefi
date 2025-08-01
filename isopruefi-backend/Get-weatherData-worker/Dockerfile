@@ -6,7 +6,9 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Get-weatherData-worker/Get-weatherData-worker.csproj", "Get-weatherData-worker/"]
+COPY ["Database/Database.csproj", "Database/"]
 RUN dotnet restore "Get-weatherData-worker/Get-weatherData-worker.csproj"
+RUN dotnet restore Database/Database.csproj
 COPY . .
 WORKDIR "/src/Get-weatherData-worker"
 RUN dotnet build "Get-weatherData-worker.csproj" -c $BUILD_CONFIGURATION -o /app/build

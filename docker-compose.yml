@@ -3,9 +3,7 @@ name: isopruefi-docker
 networks:
   isopruefi-network:
     driver: bridge
-  database-network:
-  isopruefi-custom:
-  loki:
+  isopruefi-monitoring:
 
 services:
   traefik:
@@ -36,9 +34,7 @@ services:
       - "./isopruefi-docker/traefik/certs/:/var/traefik/certs/:rw"
     networks:
       - isopruefi-network
-      - database-network
-      - loki
-      - isopruefi-custom
+      - isopruefi-monitoring
 
   influxdb3:
     image: influxdb:3.2.1-core
@@ -65,7 +61,7 @@ services:
         target: /var/lib/influxdb3/plugins
      # - ./influx/bootstrap.sh:/docker-entrypoint-initdb.d/bootstrap.sh:ro
     networks:
-      - database-network
+      - isopruefi-network
 
   influxdb-explorer:
     image: influxdata/influxdb3-ui:1.0.3
@@ -86,7 +82,7 @@ services:
       - "./isopruefi-docker/influx/explorer/db:/db:rw"
       - "./isopruefi-docker/influx/explorer/config:/app-root/config:ro"
     networks:
-      - isopruefi-custom
+      - isopruefi-network
     depends_on:
       - influxdb3
       - traefik
@@ -100,7 +96,7 @@ services:
     volumes:
       - ./isopruefi-docker/postgres:/var/lib/postgresql/data
     networks:
-      - database-network
+      - isopruefi-network
     environment:
       - POSTGRES_PASSWORD=secret
       - POSTGRES_USER=Isopruefi
@@ -115,7 +111,7 @@ services:
     volumes:
      - ./isopruefi-docker/loki/loki-config.yaml:/etc/loki/local-config.yaml
     networks:
-      - loki
+      - isopruefi-monitoring
 
   prometheus:
     image: prom/prometheus:v3.4.2
@@ -138,7 +134,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
     networks:
-      - loki
+      - isopruefi-monitoring
     depends_on:
       - loki
       - prometheus
@@ -160,7 +156,7 @@ services:
     #ports:
     # - 3000:3000/tcp
     networks:
-      - loki
+      - isopruefi-monitoring
     depends_on:
       - loki
       - alloy
@@ -193,19 +189,21 @@ services:
         /run.sh
     
   isopruefi-frontend:
-      build: isopruefi-frontend
-      container_name: isopruefi-frontensd
+      build: 
+        context: ./isopruefi-frontend
+        dockerfile: Dockerfile-Dev
+      container_name: isopruefi-frontend
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
         - "traefik.http.routers.frontend.entrypoints=websecure"
         - "traefik.http.routers.frontend.tls=true"
-        - traefik.http.services.frontend.loadbalancer.server.port=3000
+        - traefik.http.services.frontend.loadbalancer.server.port=5173
       volumes:
         - ./isopruefi-frontend:/app
         - /app/node_modules
       networks:
-      - isopruefi-custom
+      - isopruefi-network
       environment:
         - NODE_ENV=development
       stdin_open: true
@@ -213,8 +211,8 @@ services:
 
   isopruefi-backend-api:
       build: 
-        context: ./isopruefi-backend/Rest-API
-        dockerfile: Dockerfile-Dev
+        context: ./isopruefi-backend
+        dockerfile: Rest-API/Dockerfile-Dev
       container_name: isopruefi-backend-api
       labels:
         - "traefik.enable=true"
@@ -222,12 +220,15 @@ services:
         - "traefik.http.routers.backend.entrypoints=websecure"
         - "traefik.http.routers.backend.tls=true"
         - traefik.http.services.backend.loadbalancer.server.port=8080
-      volumes:
-        - ./isopruefi-backend/Rest-API:/src/Rest-API
       networks:
-      - isopruefi-custom
+      - isopruefi-network
       environment: 
-        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_ENVIRONMENT=Docker
+      env_file:
+        - ./secrets.env
+      depends_on:
+          - influxdb3
+          - postgres
 
 
   isopruefi-mqtt-receiver:
@@ -235,10 +236,23 @@ services:
           context: ./isopruefi-backend
           dockerfile: MQTT-Receiver-Worker/Dockerfile-Dev
         container_name: isopruefi-mqtt-receiver
-        volumes:
-          - ./isopruefi-backend/MQTT-Receiver-Worker:/src/MQTT-Receiver-Worker
         networks:
-        - isopruefi-custom
+        - isopruefi-network
+        environment: 
+          - ASPNETCORE_ENVIRONMENT=Docker
+        env_file:
+          - ./secrets.env
+        depends_on:
+          - influxdb3
+          - postgres
+
+  isopruefi-get-weather-worker:
+        build: 
+          context: ./isopruefi-backend
+          dockerfile: Get-weatherData-worker/Dockerfile-Dev
+        container_name: isopruefi-get-weather-worker
+        networks:
+        - isopruefi-network
         environment: 
           - ASPNETCORE_ENVIRONMENT=Docker
         env_file:

@@ -9,21 +9,69 @@ namespace Database.Repository.SettingsRepo;
 /// </summary>
 public class SettingsRepo : ISettingsRepo
 {
-    private SettingsContext _settingsContext;
+    private ApplicationDbContext _applicationDbContext;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsRepo"/> class with the specified settings context.
     /// </summary>
-    /// <param name="settingsContext">The database context for settings.</param>
-    public SettingsRepo(SettingsContext settingsContext)
+    /// <param name="applicationDbContext">The database context for settings.</param>
+    public SettingsRepo(ApplicationDbContext applicationDbContext)
     {
-        _settingsContext = settingsContext;
+        _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
     }
 
 
     /// <inheritdoc />
     public Task<List<TopicSetting>> GetTopicSettingsAsync()
     {
-        return _settingsContext.TopicSettings.ToListAsync();
+        return _applicationDbContext.TopicSettings.ToListAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task<int> AddTopicSettingAsync(TopicSetting topicSetting)
+    {
+        if (topicSetting == null)
+            throw new ArgumentNullException(nameof(topicSetting));
+
+        _applicationDbContext.TopicSettings.Add(topicSetting);
+        return await _applicationDbContext.SaveChangesAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task InsertNewPostalCode(CoordinateMapping postalcodeLocation)
+    {
+        _applicationDbContext.CoordinateMappings.Add(postalcodeLocation);
+        await _applicationDbContext.SaveChangesAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> ExistsPostalCode(int postalcode)
+    {
+        var entry = await _applicationDbContext.CoordinateMappings.AnyAsync(c => c.PostalCode == postalcode);
+        return entry;
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateTime(int postalCode, DateTime newTime)
+    {
+        var entry = await _applicationDbContext.CoordinateMappings.FirstAsync(c => c.PostalCode == postalCode);
+        entry.LastUsed = newTime;
+
+        await _applicationDbContext.SaveChangesAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task<Tuple<double, double>> GetCoordinates()
+    {
+        var result = await _applicationDbContext.CoordinateMappings
+            .OrderByDescending(c => c.LastUsed)
+            .FirstOrDefaultAsync();
+        if (result != null)
+        {
+            var coordinates = new Tuple<double, double>(result.Latitude, result.Longitude);
+            return coordinates;
+        }
+
+        return null;
     }
 }

@@ -6,6 +6,7 @@ using Database.Repository.TokenRepo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Rest_API.Helper;
 using Rest_API.Models;
 using Rest_API.Services.Token;
 
@@ -35,7 +36,7 @@ public class AuthenticationService(
             var existingUser = await userManager.FindByNameAsync(input.UserName);
             if (existingUser != null)
             {
-                logger.LogError("User {InputUserName} already exists", input.UserName);
+                logger.LogError("User {InputUserName} already exists", input.UserName.SanitizeString());
                 throw new Exception($"User {input.UserName} already exists.");
             }
 
@@ -61,7 +62,7 @@ public class AuthenticationService(
             }
             else
             {
-                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName,
+                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName.SanitizeString(),
                     string.Join(" ", result.Errors.Select(e => e.Description)));
                 throw new Exception($"ErrorDto: {string.Join(" ", result.Errors.Select(e => e.Description))}");
             }
@@ -77,7 +78,7 @@ public class AuthenticationService(
         }
         catch (Exception e)
         {
-            logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName, e.Message);
+            logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName.SanitizeString(), e.Message);
             throw;
         }
     }
@@ -97,7 +98,7 @@ public class AuthenticationService(
             if (user == null || !await userManager.CheckPasswordAsync(user, input.Password) ||
                 string.IsNullOrEmpty(user.UserName))
             {
-                logger.LogError("Invalid Login Attempt for User {InputUserName}", input.UserName);
+                logger.LogError("Invalid Login Attempt for User {InputUserName}", input.UserName.SanitizeString());
 
                 if (user != null) await userManager.AccessFailedAsync(user);
 
@@ -105,7 +106,7 @@ public class AuthenticationService(
             }
             else
             {
-                logger.LogInformation("Login for User {InputUserName} successful", input.UserName);
+                logger.LogInformation("Login for User {InputUserName} successful", input.UserName.SanitizeString());
             }
 
             var signingCredentials = new SigningCredentials(
@@ -150,7 +151,7 @@ public class AuthenticationService(
 
             await tokenRepo.SaveChangesAsync();
 
-            logger.LogInformation("Jwt Token for User {InputUserName} created", input.UserName);
+            logger.LogInformation("Jwt Token for User {InputUserName} created", input.UserName.SanitizeString());
 
             return new JwtToken
             {
@@ -162,7 +163,7 @@ public class AuthenticationService(
         }
         catch (Exception e)
         {
-            logger.LogError("Error logging in user {InputUserName}: {EMessage}", input.UserName, e.Message);
+            logger.LogError("Error logging in user {InputUserName}: {EMessage}", input.UserName.SanitizeString(), e.Message);
             throw;
         }
     }

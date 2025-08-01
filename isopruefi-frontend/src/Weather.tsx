@@ -15,14 +15,16 @@ export function WeatherChartTitle() {
 
 const style = { width: '100%', height: 400 };
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:7240';
-const temperatureClient = new TemperatureDataClient(API_BASE_URL);
+// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:7240';
+// const temperatureClient = new TemperatureDataClient(API_BASE_URL);
 
 export function TempChart() {
     const [weatherData, setWeatherData] = useState<WeatherEntry[]>([]);
     const [filter, setFilter] = useState<'all'|'hour'|'day'|'week'>('all');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const temperatureClient = new TemperatureDataClient('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,8 +37,16 @@ export function TempChart() {
             const isFahrenheit = false;
 
             try {
-                const data = await temperatureClient.getTemperature(start, end, place, isFahrenheit);
+                const data = await temperatureClient.getTemperature(
+                    start,
+                    end,
+                    place,
+                    isFahrenheit) as any;
                 console.log(data);
+
+                const south = data.temperatureSouth || [];
+                const north = data.temperatureNord || [];
+                const outside = data.temperatureOutside || [];
 
                 if (!data) {
                     setError('No data received from server');
@@ -47,26 +57,38 @@ export function TempChart() {
                 // The actual response is TemperatureDataOverview, not TemperatureData[]
 
                 const minLength = Math.min(
-                    data.temperatureSouth?.length || 0,
-                    data.temperatureNord?.length || 0,
-                    data.temperatureOutside?.length || 0
+                    south.length, north.length, outside.length
                 );
 
-                const formatted: WeatherEntry[] = [];
-                for (let i = 0; i < minLength; i++) {
-                    const southData = data.temperatureSouth?.[i];
-                    const nordData = data.temperatureNord?.[i];
-                    const outsideData = data.temperatureOutside?.[i];
+                // old implementation
 
-                    if (southData?.timestamp) {
-                        formatted.push({
-                            timestamp: new Date(southData.timestamp).toISOString(),
-                            tempSouth: southData.temperature || 0,
-                            tempNorth: nordData?.temperature || 0,
-                            tempOutside: outsideData?.temperature || 0,
-                        });
-                    }
-                }
+                // const formatted: WeatherEntry[] = [];
+                // for (let i = 0; i < minLength; i++) {
+                //     const southData = data.temperatureSouth?.[i];
+                //     const nordData = data.temperatureNord?.[i];
+                //     const outsideData = data.temperatureOutside?.[i];
+
+                const formatted: WeatherEntry[] = Array.from(
+                    { length: minLength },
+                    (_, i) => ({
+                        timestamp:   south[i].timestamp
+                            ? new Date(south[i].timestamp).toISOString()
+                            : '',
+                        tempSouth:   south[i].temperature ?? 0,
+                        tempNorth:   north[i].temperature ?? 0,
+                        tempOutside: outside[i].temperature ?? 0,
+                    })
+                );
+
+                //     if (southData?.timestamp) {
+                //         formatted.push({
+                //             timestamp: new Date(southData.timestamp).toISOString(),
+                //             tempSouth: southData.temperature || 0,
+                //             tempNorth: nordData?.temperature || 0,
+                //             tempOutside: outsideData?.temperature || 0,
+                //         });
+                //     }
+                // }
 
                 setWeatherData(formatted);
             } catch (error) {
@@ -86,6 +108,9 @@ export function TempChart() {
 
         fetchData();
     }, []);
+
+    // filtering
+
     const now = Date.now();
     let cutoff = 0;
     switch (filter) {

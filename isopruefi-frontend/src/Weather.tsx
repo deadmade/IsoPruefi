@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LineChart, ResponsiveContainer } from 'recharts';
+import { LineChart, ResponsiveContainer, Line } from 'recharts';
 import { TemperatureDataClient, ApiException } from './api/api-client';
 
 export type WeatherEntry = {
@@ -124,7 +124,9 @@ export function TempChart() {
 
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={filteredData}>
-                    {/* … */}
+                    <Line type="monotone" dataKey="tempSouth"   name="South"   stroke="#8884d8" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="tempNorth"   name="North"   stroke="#84d8d2" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#82ca9d" />
                 </LineChart>
             </ResponsiveContainer>
         </div>

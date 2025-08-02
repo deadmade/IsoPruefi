@@ -37,8 +37,8 @@ public class Program
         });
 
         builder.Services.AddIdentity<ApiUser, IdentityRole>()
-           .AddEntityFrameworkStores<ApplicationDbContext>()
-           .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApiDocument();
@@ -130,8 +130,8 @@ public class Program
 
         app.UseHttpsRedirection();
 
-       // app.UseAuthentication();
-       // app.UseAuthorization();
+        // app.UseAuthentication();
+        // app.UseAuthorization();
 
         app.MapControllers();
 

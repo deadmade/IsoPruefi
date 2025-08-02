@@ -28,4 +28,10 @@ public class CoordinateMapping
     /// </summary>
     [DataType((DataType.DateTime))]
     public DateTime LastUsed { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the time until which the entry is locked.
+    /// </summary>
+    [DataType((DataType.DateTime))]
+    public DateTime LockedUntil { get; set; }
 }

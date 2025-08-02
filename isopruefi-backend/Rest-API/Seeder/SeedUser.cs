@@ -52,8 +52,7 @@ public class SeedUser
                 throw new InvalidOperationException("Admin:Password configuration is required");
             }
 
-            logger.LogInformation("Using admin configuration - UserName: {AdminUserName}, Email: {AdminEmail}",
-                adminUserName, adminEmail);
+            logger.LogInformation("Using admin configuration - UserName: {AdminUserName}", adminUserName);
 
             // Check if any users exist to prevent duplicate seeding
             if (userManager.Users.Any() == false)

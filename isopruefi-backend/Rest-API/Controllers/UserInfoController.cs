@@ -9,8 +9,8 @@ using Rest_API.Services.User;
 namespace Rest_API.Controllers;
 
 /// <summary>
-/// Controller for managing user information and user-related actions.
-/// Provides endpoints for retrieving, updating, and deleting user data.
+/// Provides comprehensive user management functionality for the IsoPruefi system.
+/// Handles user data retrieval, profile updates, password changes, and account management operations.
 /// </summary>
 [ApiVersion(1)]
 [ApiController]
@@ -35,10 +35,53 @@ public class UserInfoController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves all users from the system.
+    /// Retrieves a comprehensive list of all registered users in the system.
     /// </summary>
-    /// <returns>A list of all users.</returns>
-    [HttpGet]
+    /// <remarks>
+    /// This endpoint provides administrators with complete user information for system management.
+    /// 
+    /// **Authorization Required**: Bearer token with Admin role
+    /// 
+    /// **Returned Information**:
+    /// - User IDs and usernames
+    /// - Account creation dates
+    /// - User roles and permissions
+    /// - Account status (active/inactive)
+    /// - Last login information (if available)
+    /// 
+    /// **Use Cases**:
+    /// - User administration and management
+    /// - Audit and compliance reporting
+    /// - System monitoring and analytics
+    /// - Troubleshooting user access issues
+    /// 
+    /// **Example Response**:
+    /// ```json
+    /// [
+    ///   {
+    ///     "id": "123e4567-e89b-12d3-a456-426614174000",
+    ///     "userName": "admin",
+    ///     "email": "admin@example.com",
+    ///     "roles": ["Admin", "User"],
+    ///     "emailConfirmed": true,
+    ///     "lockoutEnabled": false
+    ///   },
+    ///   {
+    ///     "id": "123e4567-e89b-12d3-a456-426614174001", 
+    ///     "userName": "sensor_user",
+    ///     "email": "user@example.com",
+    ///     "roles": ["User"],
+    ///     "emailConfirmed": true,
+    ///     "lockoutEnabled": false
+    ///   }
+    /// ]
+    /// ```
+    /// </remarks>
+    /// <returns>A complete list of all users with their detailed information.</returns>
+    /// <response code="200">Successfully retrieved all users. Returns comprehensive user list.</response>
+    /// <response code="401">Authentication required. No valid JWT token provided.</response>
+    /// <response code="403">Access denied. Admin role required to view all users.</response>
+    /// <response code="500">Internal server error. Database connection issues or user service unavailable.</response>    [HttpGet]
     [Produces("application/json")]
     [Consumes("application/json")]
     [Authorize(Policy = "AdminOnly")]

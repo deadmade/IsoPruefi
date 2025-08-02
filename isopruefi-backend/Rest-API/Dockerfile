@@ -11,7 +11,8 @@ COPY ["Rest-API/Rest-API.csproj", "Rest-API/"]
 COPY ["Database/Database.csproj", "Database/"]
 RUN dotnet restore Rest-API/Rest-API.csproj
 RUN dotnet restore Database/Database.csproj
-COPY . .
+COPY ["Get-weatherData-worker/", "Get-weatherData-worker/"]
+COPY ["Database/", "Database/"]
 WORKDIR "/src/Rest-API"
 RUN dotnet build "./Rest-API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

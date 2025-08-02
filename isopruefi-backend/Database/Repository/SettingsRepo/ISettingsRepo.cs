@@ -32,7 +32,7 @@ public interface ISettingsRepo
     /// Retrieves the coordinates of the postalcode that was inserted last.
     /// </summary>
     /// <returns>Returns coordinates of the location that was last chosen by the User.</returns>
-    Task<Tuple<int, double, double>> GetLocation();
+    Task<Tuple<string, double, double>> GetLocation();
 
     /// <summary>
     /// Checks if there is an entry for that opstal code in the database.

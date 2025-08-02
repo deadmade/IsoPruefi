@@ -25,7 +25,7 @@ public interface IInfluxRepo
     /// <param name="temperature"></param>
     /// <param name="timestamp"></param>
     /// <returns></returns>
-    Task WriteOutsideWeatherData(int place, string website, double temperature, DateTime timestamp);
+    Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp);
 
     /// <summary>
     /// Retrieves outside weather data for a given place and time range.

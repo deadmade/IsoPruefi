@@ -47,8 +47,9 @@ public class AuthenticationService(
             }
             else
             {
-                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName);
-                throw new Exception($"ErrorDto: {string.Join(" ", result.Errors.Select(e => e.Description))}");
+                var errorDescriptions = string.Join(" ", result.Errors.Select(e => e.Description));
+                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName, errorDescriptions);
+                throw new Exception($"ErrorDto: {errorDescriptions}");
             }
 
             var addUserToRoleResult = await userManager.AddToRoleAsync(newUser, Roles.User);

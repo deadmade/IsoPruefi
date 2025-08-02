@@ -36,7 +36,7 @@ public class AuthenticationService(
             var existingUser = await userManager.FindByNameAsync(input.UserName);
             if (existingUser != null)
             {
-                logger.LogError("User {InputUserName} already exists", input.UserName);
+                logger.LogError("User {InputUserName} already exists", input.UserName.SanitizeString());
                 throw new AuthenticationException($"User {input.UserName} already exists.");
             }
 
@@ -49,7 +49,7 @@ public class AuthenticationService(
             else
             {
                 var errorDescriptions = string.Join(" ", result.Errors.Select(e => e.Description));
-                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName, errorDescriptions);
+                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName.SanitizeString(), errorDescriptions);
                 throw new Exception($"ErrorDto: {errorDescriptions}");
             }
 
@@ -84,7 +84,7 @@ public class AuthenticationService(
             if (user == null || !await userManager.CheckPasswordAsync(user, input.Password) ||
                 string.IsNullOrEmpty(user.UserName))
             {
-                logger.LogError("Invalid Login Attempt for User {InputUserName}", input.UserName);
+                logger.LogError("Invalid Login Attempt for User {InputUserName}", input.UserName.SanitizeString());
 
                 if (user != null) await userManager.AccessFailedAsync(user);
 
@@ -92,7 +92,7 @@ public class AuthenticationService(
             }
             else
             {
-                logger.LogInformation("Login for User {InputUserName} successful", input.UserName);
+                logger.LogInformation("Login for User {InputUserName} successful", input.UserName.SanitizeString());
             }
 
             var claims = new List<Claim>
@@ -133,7 +133,7 @@ public class AuthenticationService(
 
             await tokenRepo.SaveChangesAsync();
 
-            logger.LogInformation("Jwt Token for User {InputUserName} created", input.UserName);
+            logger.LogInformation("Jwt Token for User {InputUserName} created", input.UserName.SanitizeString());
 
             return new JwtToken
             {
@@ -145,7 +145,7 @@ public class AuthenticationService(
         }
         catch (Exception e)
         {
-            logger.LogError("Error logging in user {InputUserName}: {EMessage}", input.UserName, e.Message);
+            logger.LogError("Error logging in user {InputUserName}: {EMessage}", input.UserName.SanitizeString(), e.Message);
             throw;
         }
     }

@@ -100,6 +100,10 @@ namespace Database.Migrations
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<double>("Longitude")
                         .HasColumnType("double precision");
 

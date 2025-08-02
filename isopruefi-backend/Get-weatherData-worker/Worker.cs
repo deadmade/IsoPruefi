@@ -1,7 +1,6 @@
 using System.Text.Json;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
-using Microsoft.Extensions.Configuration;
 
 namespace Get_weatherData_worker;
 
@@ -14,7 +13,6 @@ public class Worker : BackgroundService
 
     private readonly string _weatherDataApi;
     private readonly string _alternativeWeatherDataApi;
-    private readonly string _location;
 
     public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory,
         IConfiguration configuration, IServiceProvider serviceProvider)
@@ -24,20 +22,19 @@ public class Worker : BackgroundService
         _serviceProvider = serviceProvider;
         _configuration = configuration;
 
-
         _weatherDataApi = _configuration["Weather:OpenMeteoApiUrl"] ?? throw new InvalidOperationException(
             "Weather:OpenMeteoApiUrl configuration is missing");
 
         _alternativeWeatherDataApi = _configuration["Weather:BrightSkyApiUrl"] ?? throw new InvalidOperationException(
             "Weather:BrightSkyApiUrl configuration is missing");
-
-        _location = _configuration["Weather:Location"] ?? "Heidenheim"; // Will be changed in the future to a more dynamic solution
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         double lat = 0.0;
         double lon = 0.0;
+        string locationName = "";
+        int postalCode = 0;
         
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -49,9 +46,11 @@ public class Worker : BackgroundService
             // Getting the coordinates from the database.
             try
             {
-                var coordinates = await settingsRepo.GetCoordinates();
-                lat = coordinates.Item1;
-                lon = coordinates.Item2;
+                var location = await settingsRepo.GetLocation();
+                lat = location.Latitude;
+                lon = location.Longitude;
+                locationName = location.Location;
+                postalCode = location.PostalCode;
             }
             catch (Exception e)
             {
@@ -78,8 +77,8 @@ public class Worker : BackgroundService
                         // Saving the temperature in the database.
                         try
                         {
-                            await influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
-                                weatherData.Timestamp);
+                            await influxRepo.WriteOutsideWeatherData(locationName, "Meteo", weatherData.Temperature,
+                                weatherData.Timestamp, postalCode);
                         }
                         catch (Exception e)
                         {
@@ -121,9 +120,8 @@ public class Worker : BackgroundService
                             // Saving the temperature in the database.
                             try
                             {
-                                await influxRepo.WriteOutsideWeatherData(_location, "Bright Sky",
-                                    weatherData.Temperature,
-                                    weatherData.Timestamp);
+                                await influxRepo.WriteOutsideWeatherData(locationName, "Bright Sky",
+                                    weatherData.Temperature, weatherData.Timestamp, postalCode);
                             }
                             catch (Exception e)
                             {

@@ -50,7 +50,7 @@ public class InfluxRepo : IInfluxRepo
     }
 
     /// <inheritdoc />
-    public async Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp)
+    public async Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp, int postalcode)
     {
         try
         {
@@ -59,6 +59,7 @@ public class InfluxRepo : IInfluxRepo
                 .SetTag("website", website)
                 .SetDoubleField("value", temperature)
                 .SetDoubleField("value_fahrenheit", temperature * 9 / 5 + 32)
+                .SetIntegerField("postalcode", postalcode)
                 .SetTimestamp(timestamp);
 
             await _client.WritePointAsync(point);

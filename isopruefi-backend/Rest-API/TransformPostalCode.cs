@@ -21,8 +21,10 @@ public class TransformPostalCode
         _settingsRepo = settingsRepo;
         _configuration = configuration;
 
-        _geocodingApi = _configuration["Weather:NominatimApiUrl"] ?? throw new InvalidOperationException(
-            "Weather:NominatimApiUrl configuration is missing");
+        //_geocodingApi = _configuration["Weather:NominatimApiUrl"] ?? throw new InvalidOperationException(
+            //"Weather:NominatimApiUrl configuration is missing");
+
+            _geocodingApi = "https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=";
     }
     
     public async Task GetCoordinates(int postalCode)
@@ -69,14 +71,19 @@ public class TransformPostalCode
                     {
                         var rootElement = root[0];
                         if (rootElement.TryGetProperty("lat", out var lat) &&
-                            rootElement.TryGetProperty("lon", out var lon))
+                            rootElement.TryGetProperty("lon", out var lon) &&
+                            rootElement.TryGetProperty("display_name", out var location))
                         {
                             var latDouble = double.Parse(lat.GetString(), CultureInfo.InvariantCulture);
                             var lonDouble = double.Parse(lon.GetString(), CultureInfo.InvariantCulture);
+                            var locationString = location.GetString();
+                            var splitLocation = locationString.Split(",");
+                            string locationName = splitLocation[1];
                             
                             var postalCodeLocation = new CoordinateMapping
                             {
                                 PostalCode = postalCode,
+                                Location = locationName,
                                 Latitude = latDouble,
                                 Longitude = lonDouble,
                                 LastUsed = DateTime.UtcNow
@@ -96,7 +103,7 @@ public class TransformPostalCode
                         }
                         else
                         {
-                            _logger.LogError("Coordinates could not be retrieved.");
+                            _logger.LogError("Coordinates and city name could not be retrieved.");
                         }
                     }
                 }

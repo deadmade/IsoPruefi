@@ -1,6 +1,7 @@
 using System.Security.Authentication;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rest_API.Models;
 using IAuthenticationService = Rest_API.Services.Auth.IAuthenticationService;
@@ -97,6 +98,10 @@ public class AuthenticationController(
     /// <response code="400">Invalid registration data or user already exists.</response>
     /// <response code="500">Internal server error occurred during registration.</response>
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize]
     public async Task<ActionResult> Register(Register input)
     {
         try

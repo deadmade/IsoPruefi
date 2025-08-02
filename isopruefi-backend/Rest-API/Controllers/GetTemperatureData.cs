@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rest_API.Models;
 
@@ -57,6 +58,9 @@ public class TemperatureDataController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(List<TemperatureData>), 200)]
     [ProducesResponseType(200, Type = typeof(TemperatureDataOverview))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
+    [Authorize]
     public async Task<IActionResult> GetTemperature([FromQuery] DateTime start, [FromQuery] DateTime end,
         [FromQuery] string place, [FromQuery] bool isFahrenheit = false)
     {

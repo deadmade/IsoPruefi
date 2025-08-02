@@ -63,15 +63,20 @@
         },
         "responses": {
           "200": {
-            "description": "User registered successfully.",
+            "description": "User registered successfully."
+          },
+          "400": {
+            "description": "Invalid registration data or user already exists.",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error occurred during registration."
           }
         }
       }
@@ -169,6 +174,19 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": ""
           }
         }
       }
@@ -427,6 +445,35 @@
           }
         }
       },
+      "ProblemDetails": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "Register": {
         "type": "object",
         "description": "Represents the registration credentials for a new user.",
@@ -553,35 +600,6 @@
             "type": "string",
             "description": "Gets or sets the location of the sensor.",
             "maxLength": 50,
-            "nullable": true
-          }
-        }
-      },
-      "ProblemDetails": {
-        "type": "object",
-        "additionalProperties": {
-          "nullable": true
-        },
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
             "nullable": true
           }
         }

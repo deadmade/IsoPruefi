@@ -34,6 +34,7 @@ public class Worker : BackgroundService
         double lat = 0.0;
         double lon = 0.0;
         string locationName = "";
+        int postalCode = 0;
         
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -46,9 +47,10 @@ public class Worker : BackgroundService
             try
             {
                 var location = await settingsRepo.GetLocation();
-                lat = location.Item2;
-                lon = location.Item3;
-                locationName = location.Item1;
+                lat = location.Latitude;
+                lon = location.Longitude;
+                locationName = location.Location;
+                postalCode = location.PostalCode;
             }
             catch (Exception e)
             {
@@ -76,7 +78,7 @@ public class Worker : BackgroundService
                         try
                         {
                             await influxRepo.WriteOutsideWeatherData(locationName, "Meteo", weatherData.Temperature,
-                                weatherData.Timestamp);
+                                weatherData.Timestamp, postalCode);
                         }
                         catch (Exception e)
                         {
@@ -119,8 +121,7 @@ public class Worker : BackgroundService
                             try
                             {
                                 await influxRepo.WriteOutsideWeatherData(locationName, "Bright Sky",
-                                    weatherData.Temperature,
-                                    weatherData.Timestamp);
+                                    weatherData.Temperature, weatherData.Timestamp, postalCode);
                             }
                             catch (Exception e)
                             {

@@ -61,15 +61,14 @@ public class SettingsRepo : ISettingsRepo
     }
 
     /// <inheritdoc />
-    public async Task<Tuple<string, double, double>> GetLocation()
+    public async Task<CoordinateMapping> GetLocation()
     {
         var result = await _applicationDbContext.CoordinateMappings
             .OrderByDescending(c => c.LastUsed)
             .FirstOrDefaultAsync();
         if (result != null)
         {
-            var coordinates = new Tuple<string, double, double>(result.Location, result.Latitude, result.Longitude);
-            return coordinates;
+            return result;
         }
 
         return null;

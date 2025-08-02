@@ -33,25 +33,7 @@ public class AuthenticationService(
 
 
             var existingUser = await userManager.FindByNameAsync(input.UserName);
-            if (existingUser != null)
-            {
-                logger.LogError("User {InputUserName} already exists", input.UserName);
-                throw new Exception($"User {input.UserName} already exists.");
-            }
-
-            // Create User role if it doesn't exist
-            if (await roleManager.RoleExistsAsync(Roles.User) == false)
-            {
-                var roleResult = await roleManager
-                    .CreateAsync(new IdentityRole(Roles.User));
-
-                if (roleResult.Succeeded == false)
-                {
-                    var roleErros = roleResult.Errors.Select(e => e.Description);
-                    logger.LogError($"Failed to create user role. Errors : {string.Join(",", roleErros)}");
-                    throw new Exception($"Failed to create user role. Errors : {string.Join(",", roleErros)}");
-                }
-            }
+            if (existingUser != null) logger.LogError("User {InputUserName} already exists", input.UserName);
 
             var newUser = new ApiUser { UserName = input.UserName };
             var result = await userManager.CreateAsync(newUser, input.Password);
@@ -61,8 +43,7 @@ public class AuthenticationService(
             }
             else
             {
-                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName,
-                    string.Join(" ", result.Errors.Select(e => e.Description)));
+                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName);
                 throw new Exception($"ErrorDto: {string.Join(" ", result.Errors.Select(e => e.Description))}");
             }
 
@@ -78,7 +59,6 @@ public class AuthenticationService(
         catch (Exception e)
         {
             logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName, e.Message);
-            throw;
         }
     }
 
@@ -107,10 +87,6 @@ public class AuthenticationService(
             {
                 logger.LogInformation("Login for User {InputUserName} successful", input.UserName);
             }
-
-            var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("YourSigningKeyHere")),
-                SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
             {

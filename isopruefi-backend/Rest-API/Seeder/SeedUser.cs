@@ -1,4 +1,4 @@
-﻿using Database.EntityFramework.Models;
+using Database.EntityFramework.Models;
 using Microsoft.AspNetCore.Identity;
 using Rest_API.Models;
 
@@ -26,18 +26,45 @@ public class SeedUser
             // resolve other dependencies
             var userManager = scope.ServiceProvider.GetService<UserManager<ApiUser>>();
             var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            // Get admin credentials from configuration
+            var adminUserName = configuration["Admin:UserName"];
+            var adminEmail = configuration["Admin:Email"];
+            var adminPassword = configuration["Admin:Password"];
+
+            // Validate required admin configuration
+            if (string.IsNullOrWhiteSpace(adminUserName))
+            {
+                logger.LogError("Admin:UserName is not configured. Please set the Admin:UserName environment variable");
+                throw new InvalidOperationException("Admin:UserName configuration is required");
+            }
+
+            if (string.IsNullOrWhiteSpace(adminEmail))
+            {
+                logger.LogError("Admin:Email is not configured. Please set the Admin:Email environment variable");
+                throw new InvalidOperationException("Admin:Email configuration is required");
+            }
+
+            if (string.IsNullOrWhiteSpace(adminPassword))
+            {
+                logger.LogError("Admin:Password is not configured. Please set the Admin:Password environment variable");
+                throw new InvalidOperationException("Admin:Password configuration is required");
+            }
+
+            logger.LogInformation("Using admin configuration - UserName: {AdminUserName}, Email: {AdminEmail}",
+                adminUserName, adminEmail);
 
             // Check if any users exist to prevent duplicate seeding
             if (userManager.Users.Any() == false)
             {
                 var user = new ApiUser
                 {
-                    UserName = "admin@gmail.com",
-                    Email = "admin@gmail.com",
+                    UserName = adminUserName,
+                    Email = adminEmail,
                     EmailConfirmed = true,
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
-
                 // Create Admin role if it doesn't exist
                 if (await roleManager.RoleExistsAsync(Roles.Admin) == false)
                 {
@@ -56,10 +83,28 @@ public class SeedUser
                     logger.LogInformation("Admin role is created");
                 }
 
+                // Create User role if it doesn't exist
+                if (await roleManager.RoleExistsAsync(Roles.User) == false)
+                {
+                    logger.LogInformation("User role is creating");
+                    var userRoleResult = await roleManager
+                        .CreateAsync(new IdentityRole(Roles.User));
+
+                    if (userRoleResult.Succeeded == false)
+                    {
+                        var userRoleErrors = userRoleResult.Errors.Select(e => e.Description);
+                        logger.LogError("Failed to create user role. Errors : {Join}",
+                            string.Join(",", userRoleErrors));
+
+                        return;
+                    }
+
+                    logger.LogInformation("User role is created");
+                }
+
                 // Attempt to create admin user
                 var createUserResult = await userManager
-                    .CreateAsync(user, "Admin@123");
-
+                    .CreateAsync(user, adminPassword);
                 // Validate user creation
                 if (createUserResult.Succeeded == false)
                 {
@@ -71,6 +116,15 @@ public class SeedUser
                 // adding role to user
                 var addUserToRoleResult = await userManager
                     .AddToRoleAsync(user, Roles.Admin);
+
+                if (addUserToRoleResult.Succeeded == false)
+                {
+                    var errors = addUserToRoleResult.Errors.Select(e => e.Description);
+                    logger.LogError("Failed to add admin role to user. Errors : {Join}", string.Join(",", errors));
+                }
+
+                addUserToRoleResult = await userManager
+                    .AddToRoleAsync(user, Roles.User);
 
                 if (addUserToRoleResult.Succeeded == false)
                 {

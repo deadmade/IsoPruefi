@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Rest_API.Services.Auth;
 using Database.EntityFramework.Models;
@@ -17,6 +17,7 @@ namespace Rest_API.Controllers;
 [Route("api/v{v:apiVersion}/[controller]/[action]")]
 [Produces("application/json")]
 [Consumes("application/json")]
+[Authorize]
 public class UserInfoController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -38,7 +39,8 @@ public class UserInfoController : ControllerBase
     /// </summary>
     /// <returns>A list of all users.</returns>
     [HttpGet]
-   [Authorize] 
+    [Produces("application/json")]
+    [Consumes("application/json")]
     public async Task<ActionResult> GetAllUsers()
     {
         try
@@ -60,7 +62,8 @@ public class UserInfoController : ControllerBase
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>The user information if found; otherwise, NotFound.</returns>
     [HttpGet]
-    [Authorize]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     public async Task<ActionResult> GetUserById(string userId)
     {
         try
@@ -84,7 +87,8 @@ public class UserInfoController : ControllerBase
     /// <param name="input">The change password request containing user ID, current password, and new password.</param>
     /// <returns>Ok if successful; otherwise, an error response.</returns>
     [HttpPost]
-    [Authorize]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     public async Task<ActionResult> ChangePassword([FromBody] ChangePassword input)
     {
         if (!ModelState.IsValid)
@@ -114,7 +118,8 @@ public class UserInfoController : ControllerBase
     /// <param name="user">The user object with updated information.</param>
     /// <returns>Ok if successful; otherwise, an error response.</returns>
     [HttpPut]
-    [Authorize]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     public async Task<ActionResult> ChangeUser([FromBody] ApiUser user)
     {
         if (!ModelState.IsValid)
@@ -141,7 +146,8 @@ public class UserInfoController : ControllerBase
     /// <param name="userId">The unique identifier of the user to delete.</param>
     /// <returns>Ok if successful; otherwise, an error response.</returns>
     [HttpDelete]
-    [Authorize]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     public async Task<ActionResult> DeleteUser(string userId)
     {
         try

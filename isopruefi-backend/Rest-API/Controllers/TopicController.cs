@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Database.Repository.SettingsRepo;
 using Database.EntityFramework.Models;
@@ -34,7 +34,7 @@ public class TopicController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(List<TopicSetting>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult<List<TopicSetting>>> GetAllTopics()
     {
         try
@@ -58,7 +58,7 @@ public class TopicController : ControllerBase
     [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize] 
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> CreateTopic([FromBody] TopicSetting topicSetting)
     {
         try

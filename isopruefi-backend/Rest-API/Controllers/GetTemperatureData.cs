@@ -59,8 +59,9 @@ public class TemperatureDataController : ControllerBase
     [ProducesResponseType(typeof(List<TemperatureData>), 200)]
     [ProducesResponseType(200, Type = typeof(TemperatureDataOverview))]
     [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
     [ProducesResponseType(500)]
-    [Authorize]
+    [Authorize(Policy = "UserOrAdmin")]
     public async Task<IActionResult> GetTemperature([FromQuery] DateTime start, [FromQuery] DateTime end,
         [FromQuery] string place, [FromQuery] bool isFahrenheit = false)
     {
@@ -106,31 +107,31 @@ public class TemperatureDataController : ControllerBase
         };
 
         // Testing plausibility of the deviation between consecutive temperature data.
-        for (int i = 0; i < temperatureData.TemperatureNord.Count - 1; i++)
+        for (var i = 0; i < temperatureData.TemperatureNord.Count - 1; i++)
         {
-            var northDeviation = temperatureData.TemperatureNord[i].Temperature - temperatureData.TemperatureNord[i + 1].Temperature;
+            var northDeviation = temperatureData.TemperatureNord[i].Temperature -
+                                 temperatureData.TemperatureNord[i + 1].Temperature;
             if (northDeviation > 10.0)
-            {
-                _logger.LogWarning("Inside(North) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
-            }
+                _logger.LogWarning(
+                    "Inside(North) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
         }
-        
-        for (int i = 0; i < temperatureData.TemperatureSouth.Count - 1; i++)
+
+        for (var i = 0; i < temperatureData.TemperatureSouth.Count - 1; i++)
         {
-            var southDeviation = temperatureData.TemperatureSouth[i].Temperature - temperatureData.TemperatureSouth[i + 1].Temperature;
+            var southDeviation = temperatureData.TemperatureSouth[i].Temperature -
+                                 temperatureData.TemperatureSouth[i + 1].Temperature;
             if (southDeviation > 10.0)
-            {
-                _logger.LogWarning("Inside(south) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
-            }
+                _logger.LogWarning(
+                    "Inside(south) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
         }
-        
-        for (int i = 0; i < temperatureData.TemperatureOutside.Count - 1; i++)
+
+        for (var i = 0; i < temperatureData.TemperatureOutside.Count - 1; i++)
         {
-            var outsideDeviation = temperatureData.TemperatureOutside[i].Temperature - temperatureData.TemperatureOutside[i + 1].Temperature;
+            var outsideDeviation = temperatureData.TemperatureOutside[i].Temperature -
+                                   temperatureData.TemperatureOutside[i + 1].Temperature;
             if (outsideDeviation > 10.0)
-            {
-                _logger.LogWarning("Outside temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
-            }
+                _logger.LogWarning(
+                    "Outside temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
         }
 
         return temperatureData;
@@ -161,12 +162,11 @@ public class TemperatureDataController : ControllerBase
                         timestamp, temperature, place);
                     continue;
                 }
-                
+
                 // Testing for plausibility of the temperature with boundary values.
                 if (temperature > 45.0 || temperature < -30.0)
-                {
-                    _logger.LogWarning("Outside temperature may be corrupted, the temperature has exceeded boundary values.");
-                }
+                    _logger.LogWarning(
+                        "Outside temperature may be corrupted, the temperature has exceeded boundary values.");
 
                 long.TryParse(timestamp.ToString(), out var timestampLong);
                 timestampLong /= 1000000000;
@@ -212,12 +212,11 @@ public class TemperatureDataController : ControllerBase
                         timestamp, temperature);
                     continue;
                 }
-                
+
                 // Testing for plausibility of the temperature with boundary values.
                 if (temperature > 35.0 || temperature < -10.0)
-                {
-                    _logger.LogWarning("Inside temperature may be corrupted, the temperature has exceeded boundary values.");
-                }
+                    _logger.LogWarning(
+                        "Inside temperature may be corrupted, the temperature has exceeded boundary values.");
 
                 long.TryParse(timestamp.ToString(), out var timestampLong);
                 timestampLong /= 1000000000;

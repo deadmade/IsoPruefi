@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Rest_API.Seeder;
 using Rest_API.Services.Auth;
 using Rest_API.Services.Token;
+using Rest_API.Services.User;
 
 namespace Rest_API;
 
@@ -37,8 +38,8 @@ public class Program
         });
 
         builder.Services.AddIdentity<ApiUser, IdentityRole>()
-           .AddEntityFrameworkStores<ApplicationDbContext>()
-           .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApiDocument();
@@ -60,6 +61,7 @@ public class Program
                 options.SubstituteApiVersionInUrl = true;
             });
 
+        builder.Services.AddAuthentication();
         builder.Services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -75,33 +77,23 @@ public class Program
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-                        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                        ValidAudience = builder.Configuration["Jwt:ValidAudience"],
+                        ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
                         ClockSkew = TimeSpan.Zero,
                         IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
                     };
                 }
             );
 
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IUserService, UserService>();
 
         // Register Repos
         builder.Services.AddScoped<ITokenRepo, TokenRepo>();
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
         builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
-
-        // Add CORS support
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAll", policy =>
-            {
-                policy.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            });
-        });
 
         builder.Services.AddControllers();
 
@@ -113,25 +105,14 @@ public class Program
             app.UseOpenApi();
             app.UseSwaggerUi();
             app.UseDeveloperExceptionPage();
-            app.UseReDoc(options => { options.Path = "/redoc"; });
 
             builder.Configuration.AddUserSecrets<Program>();
 
             using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
-
-            app.UseCors("AllowAll");
-        }
-        else
-        {
-            // Enable CORS before authentication
-            app.UseCors("AllowAll");
         }
 
         app.UseHttpsRedirection();
-
-       // app.UseAuthentication();
-       // app.UseAuthorization();
 
         app.MapControllers();
 

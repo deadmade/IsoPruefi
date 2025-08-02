@@ -33,7 +33,11 @@ public class AuthenticationService(
 
 
             var existingUser = await userManager.FindByNameAsync(input.UserName);
-            if (existingUser != null) logger.LogError("User {InputUserName} already exists", input.UserName);
+            if (existingUser != null)
+            {
+                logger.LogError("User {InputUserName} already exists", input.UserName);
+                throw new AuthenticationException($"User {input.UserName} already exists.");
+            }
 
             var newUser = new ApiUser { UserName = input.UserName };
             var result = await userManager.CreateAsync(newUser, input.Password);

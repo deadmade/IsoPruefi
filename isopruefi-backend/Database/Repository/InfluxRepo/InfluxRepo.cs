@@ -50,7 +50,8 @@ public class InfluxRepo : IInfluxRepo
     }
 
     /// <inheritdoc />
-    public async Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp, int postalcode)
+    public async Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp,
+        int postalcode)
     {
         try
         {

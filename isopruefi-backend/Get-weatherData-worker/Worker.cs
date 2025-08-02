@@ -31,18 +31,18 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        double lat = 0.0;
-        double lon = 0.0;
-        string locationName = "";
-        int postalCode = 0;
-        
+        var lat = 0.0;
+        var lon = 0.0;
+        var locationName = "";
+        var postalCode = 0;
+
         while (!stoppingToken.IsCancellationRequested)
         {
             using var scope = _serviceProvider.CreateScope();
             var settingsRepo = scope.ServiceProvider.GetRequiredService<ISettingsRepo>();
             var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
             var weatherData = new WeatherData();
-            
+
             // Getting the coordinates from the database.
             try
             {
@@ -153,24 +153,24 @@ public class Worker : BackgroundService
     private async Task<HttpResponseMessage> callMeteoApi(double lat, double lon)
     {
         var httpClient = _httpClientFactory.CreateClient();
-        
+
         var weatherDataApi = _weatherDataApi
             .Replace("{lat}", lat.ToString())
             .Replace("{lon}", lon.ToString());
-        
+
         var response = await httpClient.GetAsync(weatherDataApi);
 
         return response;
     }
-    
+
     private async Task<HttpResponseMessage> callBrightSkyApi(double lat, double lon)
     {
         var httpClient = _httpClientFactory.CreateClient();
-        
+
         var weatherDataApi = _alternativeWeatherDataApi
             .Replace("{lat}", lat.ToString())
             .Replace("{lon}", lon.ToString());
-        
+
         var response = await httpClient.GetAsync(weatherDataApi);
 
         return response;

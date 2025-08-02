@@ -6,6 +6,7 @@ using Database.Repository.TokenRepo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Rest_API.Helper;
 using Rest_API.Models;
 using Rest_API.Services.Token;
 
@@ -63,7 +64,7 @@ public class AuthenticationService(
         }
         catch (Exception e)
         {
-            logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName, e.Message);
+            logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName.SanitizeString(), e.Message);
             throw;
         }
     }

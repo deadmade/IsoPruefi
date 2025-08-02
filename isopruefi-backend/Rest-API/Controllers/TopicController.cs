@@ -1,4 +1,4 @@
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Database.Repository.SettingsRepo;
 using Database.EntityFramework.Models;
@@ -139,7 +139,8 @@ public class TopicController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]    [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> CreateTopic([FromBody] TopicSetting topicSetting)
     {
         try

@@ -13,7 +13,7 @@
           "Authentication"
         ],
         "summary": "Authenticates a user and returns a JWT token for API access.",
-        "description": "This endpoint validates user credentials and returns a JWT access token and refresh token.\nThe returned tokens should be used for authenticating subsequent API requests.\n\nExample request:\n```json\n{\n  \"userName\": \"admin\",\n  \"password\": \"your-password\"\n}\n```\n\nExample response:\n```json\n{\n  \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"refreshToken\": \"refresh-token-here\",\n  \"expiresIn\": 3600\n}\n```",
+        "description": "This endpoint validates user credentials and returns a JWT access token and refresh token.\nThe returned tokens should be used for authenticating subsequent API requests.\n\nExample request:\n```json\n{\n  \"userName\": \"admin\",\n  \"password\": \"your-password\"\n}\n```\n\nExample response:\n```json\n{\n  \"accessToken\": \"CakeIsNotALie.\",\n  \"refreshToken\": \"refresh-token-here\",\n  \"expiresIn\": 3600\n}\n```",
         "operationId": "Authentication_Login",
         "requestBody": {
           "x-name": "input",

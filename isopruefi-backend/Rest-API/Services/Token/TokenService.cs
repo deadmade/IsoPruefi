@@ -84,13 +84,13 @@ public class TokenService : ITokenService
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidAudience = _configuration["JWT:ValidAudience"],
-                ValidIssuer = _configuration["JWT:ValidIssuer"],
+                ValidAudience = _configuration["Jwt:ValidAudience"],
+                ValidIssuer = _configuration["Jwt:ValidIssuer"],
                 ValidateLifetime = false,
                 ClockSkew = TimeSpan.Zero,
                 IssuerSigningKey = new SymmetricSecurityKey
-                (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ??
-                                        throw new InvalidOperationException("JWT:Secret configuration is missing")))
+                (Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"] ??
+                                        throw new InvalidOperationException("Jwt:Secret configuration is missing")))
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -64,6 +64,7 @@ public class AuthenticationService(
         catch (Exception e)
         {
             logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName, e.Message);
+            throw;
         }
     }
 

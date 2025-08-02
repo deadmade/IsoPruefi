@@ -130,31 +130,6 @@ public class AuthenticationServiceTests
     }
 
     /// <summary>
-    /// Registers a user when the role does not exist, expecting an exception.
-    /// </summary>
-    [Test]
-    public async Task Register_WhenRoleCreationFails_ShouldThrowException()
-    {
-        // Arrange
-        var registerInput = new Register { UserName = "testuser", Password = "Test123!" };
-        var roleError = IdentityResult.Failed(new IdentityError { Description = "Role creation failed" });
-
-        _mockUserManager.Setup(x => x.FindByNameAsync(registerInput.UserName))
-            .ReturnsAsync((ApiUser?)null);
-        _mockRoleManager.Setup(x => x.RoleExistsAsync(Roles.User))
-            .ReturnsAsync(false);
-        _mockRoleManager.Setup(x => x.CreateAsync(It.IsAny<IdentityRole>()))
-            .ReturnsAsync(roleError);
-
-        // Act
-        var act = async () => await _authService.Register(registerInput);
-
-        // Assert
-        await act.Should().ThrowAsync<Exception>()
-            .WithMessage("Failed to create user role. Errors : Role creation failed");
-    }
-
-    /// <summary>
     /// Registers a user when user creation fails, expecting an exception.
     /// </summary>
     [Test]

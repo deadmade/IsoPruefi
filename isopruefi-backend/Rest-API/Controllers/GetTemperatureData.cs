@@ -92,7 +92,8 @@ public class TemperatureDataController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]    [Authorize(Policy = "UserOrAdmin")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Policy = "UserOrAdmin")]
     public async Task<IActionResult> GetTemperature([FromQuery] DateTime start, [FromQuery] DateTime end,
         [FromQuery] string place, [FromQuery] bool isFahrenheit = false)
     {

@@ -41,6 +41,7 @@ public class UserInfoController : ControllerBase
     [HttpGet]
     [Produces("application/json")]
     [Consumes("application/json")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> GetAllUsers()
     {
         try
@@ -64,6 +65,7 @@ public class UserInfoController : ControllerBase
     [HttpGet]
     [Produces("application/json")]
     [Consumes("application/json")]
+    [Authorize(Policy = "UserOrAdmin")]
     public async Task<ActionResult> GetUserById(string userId)
     {
         try
@@ -89,6 +91,7 @@ public class UserInfoController : ControllerBase
     [HttpPost]
     [Produces("application/json")]
     [Consumes("application/json")]
+    [Authorize(Policy = "UserOrAdmin")]
     public async Task<ActionResult> ChangePassword([FromBody] ChangePassword input)
     {
         if (!ModelState.IsValid)
@@ -120,6 +123,7 @@ public class UserInfoController : ControllerBase
     [HttpPut]
     [Produces("application/json")]
     [Consumes("application/json")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> ChangeUser([FromBody] ApiUser user)
     {
         if (!ModelState.IsValid)
@@ -148,6 +152,7 @@ public class UserInfoController : ControllerBase
     [HttpDelete]
     [Produces("application/json")]
     [Consumes("application/json")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> DeleteUser(string userId)
     {
         try

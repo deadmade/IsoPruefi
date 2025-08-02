@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NSwag;
+using NSwag.AspNetCore;
+using Rest_API.Models;
 using Rest_API.Seeder;
 using Rest_API.Services.Auth;
 using Rest_API.Services.Token;
@@ -42,8 +45,23 @@ public class Program
             .AddDefaultTokenProviders();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApiDocument();
+        builder.Services.AddOpenApiDocument(configure =>
+        {
+            configure.Title = "IsoPruefi API";
+            configure.Version = "v1";
+            configure.Description = "Temperature monitoring API with JWT authentication";
 
+            configure.AddSecurity("Bearer", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+            {
+                Type = OpenApiSecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "Enter your JWT token in the text input below."
+            });
+
+            configure.OperationProcessors.Add(
+                new NSwag.Generation.Processors.Security.AspNetCoreOperationSecurityScopeProcessor("Bearer"));
+        });
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddApiVersioning(options =>
@@ -61,7 +79,6 @@ public class Program
                 options.SubstituteApiVersionInUrl = true;
             });
 
-        builder.Services.AddAuthentication();
         builder.Services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -86,6 +103,9 @@ public class Program
                 }
             );
 
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("AdminOnly", policy => policy.RequireRole(Roles.Admin))
+            .AddPolicy("UserOrAdmin", policy => policy.RequireRole(Roles.User, Roles.Admin));
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserService, UserService>();
@@ -103,7 +123,15 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseOpenApi();
-            app.UseSwaggerUi();
+            app.UseSwaggerUi(settings =>
+            {
+                settings.DocumentTitle = "IsoPruefi API Documentation";
+                settings.OAuth2Client = new OAuth2ClientSettings
+                {
+                    ClientId = "swagger",
+                    AppName = "IsoPruefi API"
+                };
+            });
             app.UseDeveloperExceptionPage();
 
             builder.Configuration.AddUserSecrets<Program>();
@@ -114,8 +142,10 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        app.MapControllers();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
+        app.MapControllers();
         // Seed the database with initial data
         await SeedUser.SeedData(app);
 

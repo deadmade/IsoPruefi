@@ -2,8 +2,9 @@
   "x-generator": "NSwag v14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
-    "title": "My Title",
-    "version": "1.0.0"
+    "title": "IsoPruefi API",
+    "description": "Temperature monitoring API with JWT authentication",
+    "version": "v1"
   },
   "paths": {
     "/v1/Authentication/Login": {
@@ -78,7 +79,12 @@
           "500": {
             "description": "Internal server error occurred during registration."
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/v1/Authentication/Refresh": {
@@ -198,7 +204,12 @@
           "500": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/api/v1/Topic/GetAllTopics": {
@@ -225,7 +236,12 @@
           "500": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/api/v1/Topic/CreateTopic": {
@@ -270,7 +286,12 @@
           "500": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/api/v1/UserInfo/GetAllUsers": {
@@ -292,7 +313,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/api/v1/UserInfo/GetUserById": {
@@ -325,7 +351,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/api/v1/UserInfo/ChangePassword": {
@@ -360,7 +391,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/api/v1/UserInfo/ChangeUser": {
@@ -395,7 +431,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/api/v1/UserInfo/DeleteUser": {
@@ -428,7 +469,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     }
   },
@@ -739,6 +785,19 @@
           }
         }
       }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Enter your JWT token in the text input below.",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ]
 }

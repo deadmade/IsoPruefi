@@ -101,7 +101,7 @@ public class AuthenticationController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> Register(Register input)
     {
         try

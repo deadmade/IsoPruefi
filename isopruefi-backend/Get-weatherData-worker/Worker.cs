@@ -49,7 +49,6 @@ public class Worker : BackgroundService
                 lat = location.Item2;
                 lon = location.Item3;
                 postalcode = location.Item1;
-                Console.WriteLine("pc: " + postalcode + ", lat: " + lat + ", lon: " + lon);
             }
             catch (Exception e)
             {
@@ -157,8 +156,6 @@ public class Worker : BackgroundService
         var weatherDataApi = _weatherDataApi
             .Replace("{lat}", lat.ToString())
             .Replace("{lon}", lon.ToString());
-        
-        Console.WriteLine(weatherDataApi);
         
         var response = await httpClient.GetAsync(weatherDataApi);
 

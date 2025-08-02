@@ -47,4 +47,10 @@ public interface ISettingsRepo
     /// <param name="postalcode">Defines which entry will be updated.</param>
     /// <param name="newTime">Defines the new time for that entry.</param>
     Task UpdateTime(int postalcode, DateTime newTime);
+
+    /// <summary>
+    /// Gets the next unlocked entry in CoordinateMappings and locks it for the next minute.
+    /// </summary>
+    /// <returns></returns>
+    Task<CoordinateMapping?> GetUnlockedLocation();
 }

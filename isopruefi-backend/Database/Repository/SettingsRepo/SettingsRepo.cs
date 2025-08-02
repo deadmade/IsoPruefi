@@ -75,7 +75,7 @@ public class SettingsRepo : ISettingsRepo
         return null;
     }
 
-    public async Task<CoordinateMapping> GetUnlockedLocation()
+    public async Task<CoordinateMapping?> GetUnlockedLocation()
     {
         await using var transaction = _applicationDbContext.Database.BeginTransaction();
         

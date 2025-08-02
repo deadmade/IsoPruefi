@@ -46,6 +46,26 @@ public class Worker : BackgroundService
             var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
             var weatherData = new WeatherData();
             
+            // Getting the location information for the next unlocked entry.
+            try
+            {
+                var result = await settingsRepo.GetUnlockedLocation();
+                if (result != null)
+                {
+                    lat = result.Latitude;
+                    lon = result.Longitude;
+                    // Implement the logic.
+                }
+                else
+                {
+                    _logger.LogInformation("All locations have up to date weather data.");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Unlocked entries could not be retrieved from the database.");
+            }
+            
             // Getting the coordinates from the database.
             try
             {

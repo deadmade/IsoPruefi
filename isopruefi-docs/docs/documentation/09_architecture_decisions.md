@@ -34,7 +34,7 @@ The team discussed several options to improve code quality and maintainability:
 We decided to gradually adopt TypeScript, starting with new files and later migrating existing modules. The benefits (better error prevention, maintainability, developer productivity) clearly outweigh the migration cost.
 
 ### Status:
-Accepted (25.07.2025)
+Accepted (July 2025)
 
 ### Consequences: 
 Positive:
@@ -69,7 +69,7 @@ Need robust backend technology for REST API and worker services. Team has existi
 Use .NET 9 with C# for all backend services (REST API, MQTT Receiver, Weather Worker).
 
 ### Status:
-Accepted
+Accepted (July 2025)
 
 ### Consequences:
 
@@ -94,7 +94,7 @@ System has distinct responsibilities: API serving, MQTT message processing, and 
 Split backend into separate services: REST API, MQTT Receiver Worker, Weather Data Worker.
 
 ### Status:
-Accepted
+Accepted (July 2025)
 
 ### Consequences:
 Positive:
@@ -117,7 +117,7 @@ System needs both structured application data (users, authentication) and time-s
 Use PostgreSQL for application data and InfluxDB for time-series sensor data.
 
 ### Status:
-Accepted
+Accepted (July 2025)
 
 ### Consequences:
 Positive:
@@ -139,7 +139,7 @@ Distributed microservices architecture requires comprehensive monitoring, loggin
 Implement Grafana for dashboards, Loki for log aggregation, and Prometheus for metrics collection.
 
 ### Status:
-Accepted
+Accepted (July 2025)
 
 ### Consequences:
 Positive:
@@ -161,7 +161,7 @@ Multiple services need unified entry point, SSL termination, and service discove
 Use Traefik as reverse proxy with automatic service discovery and HTTPS termination.
 
 ### Status:
-Accepted
+Accepted (July 2025)
 
 ### Consequences:
 Positive:
@@ -184,7 +184,7 @@ REST API requires secure authentication mechanism. Need stateless authentication
 Implement JWT token-based authentication with Entity Framework for user management.
 
 ### Status:
-Accepted
+Accepted (July 2025)
 
 ### Consequences:
 Positive:
@@ -207,7 +207,7 @@ Complex multi-service architecture needs consistent development environment setu
 Use Docker Compose to orchestrate all services for local development.
 
 ### Status:
-Accepted
+Accepted (July 2025)
 
 ### Consequences:
 Positive:
@@ -221,7 +221,7 @@ Negative:
 - Requires Docker knowledge from all developers
 - Resource intensive on development machines
 
-## ADR 8: frontend
+## ADR 8: Frontend
 
 ### Context:
 The IsoPruefi requires a proper frontend to display charts based on the measured temperature data.
@@ -236,8 +236,8 @@ which led to problems with documentation generation using TypeDoc, due to versio
 ### Decision:
 It was decided to replace CRA support with the Vite-based TS React project.
 
-### Conclusion:
-Accepted.
+### Status:
+Accepted (July 2025)
 
 ### Consequences:
 Neutral: 
@@ -271,7 +271,7 @@ We deliberately added:
 - Two identical devices, to allow side-by-side comparison
 
 ### Status:
-Accepted 
+Accepted (July 2025)
 
 ### Consequences: 
 Positive:
@@ -290,7 +290,7 @@ Neutral:
 - The Arduino MKR1010 was predefined, not evaluated
 - Final visualization and backend will depend on further platform choices (e.g., MQTT, REST, database)
 
-## ADR 10: Development Environment Decision – PlatformIO for Arduino scripting and unit testing with Unity
+## ADR 10: Arduino Development Environment Decision
 
 ### Context:
 We developed firmware for the Arduino MKR1010 to collect and buffer temperature data. To support structured development, modularization, and automated testing, we needed a build and test environment that:
@@ -314,7 +314,7 @@ We chose PlatformIO as our development environment and used Unity (with Platform
 - Run platform-independent unit tests on PC (outside the Arduino board)
 
 ### Status:
-Accepted 
+Accepted (July 2025)
 
 ### Consequences:
 Positive:
@@ -333,9 +333,6 @@ Neutral:
 
 - The PlatformIO toolchain abstracts away the underlying GCC setup
 - Unit tests cannot cover board-specific behavior (e.g., Wire, SD, RTC) directly without mocks
-
-
-
 
 ## Sources
 

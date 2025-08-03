@@ -8,11 +8,8 @@ static const size_t BASE_FILENAME_BUFFER_SIZE = 64;
 static const int MAX_PENDING_FILES = 500;
 static const int FILE_EXTENSION_LENGTH = 5;
 
-void createFullTopic(char* buffer, size_t bufferSize,
-                     const char* topicPrefix,
-                     const char* sensorType,
-                     const char* sensorId,
-                     const char* suffix) {
+void createFullTopic(char* buffer, size_t bufferSize, const char* topicPrefix, const char* sensorType,
+                     const char* sensorId, const char* suffix) {
   if (suffix && strlen(suffix) > 0) {
     snprintf(buffer, bufferSize, "%s%s/%s/%s", topicPrefix, sensorType, sensorId, suffix);
   } else {

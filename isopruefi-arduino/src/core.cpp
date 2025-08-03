@@ -92,8 +92,8 @@ void coreSetup() {
     while (1);
   }
 
-  DateTime now = rtc.now();
-  sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
+  // DateTime now = rtc.now();
+  // sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
 
   Serial.println("Setup complete.");
 }

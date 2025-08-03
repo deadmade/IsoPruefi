@@ -55,3 +55,10 @@ inline void createFilename(char* buffer, size_t bufferSize, const DateTime& now)
                   createFolderName(now),
                   now.month(), now.day(), now.hour(), now.minute());
 }
+
+inline void createRecoveredFilename(char* recoveredFilename, size_t bufferSize,
+                                    const DateTime& now, int baseLength, const char* suffix = "_recovered.json") {
+    char baseFilename[64];
+    createFilename(baseFilename, sizeof(baseFilename), now);
+    std::snprintf(recoveredFilename, bufferSize, "%.*s%s", baseLength, baseFilename, suffix);
+} 

@@ -166,8 +166,7 @@ void saveRecoveredJsonToSd(SdFat& sdRef, String* fileList, int count, const Date
   createFilename(baseName, sizeof(baseName), now); 
 
   char recoveredName[RECOVERED_NAME_BUFFER_SIZE];
-  snprintf(recoveredName, sizeof(recoveredName), "%.*s_recovered.json",
-           (int)(strlen(baseName) - FILE_EXTENSION_LENGTH), baseName);
+ createRecoveredFilename(recoveredName, sizeof(recoveredName), now, SMALL_BUFFER_SIZE - FILE_EXTENSION_LENGTH);
 
   File file = sdRef.open(recoveredName, FILE_WRITE);
   if (file) {

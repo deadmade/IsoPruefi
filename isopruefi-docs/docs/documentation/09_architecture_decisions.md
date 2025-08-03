@@ -249,6 +249,93 @@ Positive:
 - TypeDoc works correctly and the frontend documentation is generated.
 - The startup time improved comparing to CRA
 
+## ADR 9: Hardware Platform Decision (board, sensors)
+
+### Context:
+The aim of our project IsoPrüfi is to evaluate the thermal insulation performance of buildings by comparing indoor and outdoor temperature data and visualizing the results through a web interface.
+
+The microcontroller hardware was predefined: we were provided with the Arduino MKR1010 and a temperature sensor (Analog Devices ADT7410 Breakout). Based on the functional requirements of the system, we extended the setup with:
+
+- A Real-Time Clock (RTC) with battery backup (DS3231)
+- An SD card module
+- Two identical hardware units for parallel measurements on the north and south sides of the building 
+
+These components were selected to fulfill the need for offline data buffering, accurate timestamping, and reliable long-term measurements.
+
+### Decision:
+We used the Arduino MKR1010, as it was provided and meets the basic requirements (WiFi, sufficient RAM, low-power mode).
+We deliberately added:
+
+- An RTC module, to ensure precise timestamping regardless of power loss
+- An SD card module for local data buffering in case of network or MQTT broker disconnection
+- Two identical devices, to allow side-by-side comparison
+
+### Status:
+Accepted 
+
+### Consequences: 
+Positive:
+
+- Local data persistence via SD card enables offline data storage for ≤24h
+- Timestamp reliability through RTC with battery
+- Compact hardware, low power, WiFi-ready (MKR1010)
+
+Negative:
+
+- RTC and SD modules require additional wiring and SPI/I2C handling
+- Time must be synchronized manually once (e.g., via compile-time setting or initial sync)
+
+Neutral:
+
+- The Arduino MKR1010 was predefined, not evaluated
+- Final visualization and backend will depend on further platform choices (e.g., MQTT, REST, database)
+
+## ADR 10: Development Environment Decision – PlatformIO for Arduino scripting and unit testing with Unity
+
+### Context:
+We developed firmware for the Arduino MKR1010 to collect and buffer temperature data. To support structured development, modularization, and automated testing, we needed a build and test environment that:
+
+- Supports the Arduino MKR1010 and SAMD21-based boards
+- Enables integration of external libraries and custom source structure
+- Allows automated builds and unit testing (preferably on PC)
+
+We considered the following options:
+
+| Option        | Pros      | Cons      |
+|---------------|:----------|:----------|
+| Arduino IDE | Easy to use, official support | No native testing, inflexible project structure |
+| PlatformIO + Unity | IDE integration, native/unit testing, modular build	 | Slight learning curve, more setup |
+
+### Decision:
+We chose PlatformIO as our development environment and used Unity (with PlatformIO’s native target) for writing and executing unit tests. This setup allows us to:
+
+- Use modern C++ structure and dependency management
+- Build and flash firmware consistently
+- Run platform-independent unit tests on PC (outside the Arduino board)
+
+### Status:
+Accepted 
+
+### Consequences:
+Positive:
+
+- Reproducible builds and consistent project structure
+- Platform-independent unit tests for business logic using Unity and native target
+- Seamless integration into VS Code
+- Easier onboarding and maintenance with centralized configuration (platformio.ini)
+
+Negative:
+
+- Additional setup effort for non-Arduino users (e.g., Unity, test runners)
+- Developers must learn PlatformIO’s structure (src/lib/test)
+
+Neutral:
+
+- The PlatformIO toolchain abstracts away the underlying GCC setup
+- Unit tests cannot cover board-specific behavior (e.g., Wire, SD, RTC) directly without mocks
+
+
+
 
 ## Sources
 

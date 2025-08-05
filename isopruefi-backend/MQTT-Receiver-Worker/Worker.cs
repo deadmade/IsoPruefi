@@ -1,4 +1,5 @@
 using MQTT_Receiver_Worker.MQTT;
+using MQTT_Receiver_Worker.MQTT.Interfaces;
 
 namespace MQTT_Receiver_Worker;
 
@@ -16,17 +17,15 @@ public class Worker : BackgroundService
     /// <summary>
     /// MQTT receiver component that handles topic subscriptions.
     /// </summary>
-    private readonly Receiver _receiver;
-
+    private readonly IReceiver _receiver;
     /// <summary>
     /// Initializes a new instance of the <see cref="Worker"/> class.
     /// </summary>
     /// <param name="logger">Logger for recording service events.</param>
     /// <param name="receiver">MQTT receiver for subscribing to topics.</param>
-    public Worker(ILogger<Worker> logger, Receiver receiver)
-    {
-        _logger = logger;
-        _receiver = receiver;
+    public Worker(ILogger<Worker> logger, IReceiver receiver)    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _receiver = receiver ?? throw new ArgumentNullException(nameof(receiver));
     }
 
     /// <summary>

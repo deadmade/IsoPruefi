@@ -790,7 +790,7 @@ export class JwtToken implements IJwtToken {
     /** Gets or sets the creation date and time of the JWT token. */
     createdDate?: Date;
     /** Gets or sets the user roles associated with the JWT token. */
-    role?: string[] | undefined;
+    roles?: string[] | undefined;
 
     constructor(data?: IJwtToken) {
         if (data) {
@@ -807,10 +807,10 @@ export class JwtToken implements IJwtToken {
             this.refreshToken = _data["refreshToken"];
             this.expiryDate = _data["expiryDate"] ? new Date(_data["expiryDate"].toString()) : <any>undefined;
             this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
-            if (Array.isArray(_data["role"])) {
-                this.role = [] as any;
-                for (let item of _data["role"])
-                    this.role!.push(item);
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(item);
             }
         }
     }
@@ -828,10 +828,10 @@ export class JwtToken implements IJwtToken {
         data["refreshToken"] = this.refreshToken;
         data["expiryDate"] = this.expiryDate ? this.expiryDate.toISOString() : <any>undefined;
         data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
-        if (Array.isArray(this.role)) {
-            data["role"] = [];
-            for (let item of this.role)
-                data["role"].push(item);
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
         }
         return data;
     }
@@ -848,7 +848,7 @@ export interface IJwtToken {
     /** Gets or sets the creation date and time of the JWT token. */
     createdDate?: Date;
     /** Gets or sets the user roles associated with the JWT token. */
-    role?: string[] | undefined;
+    roles?: string[] | undefined;
 }
 
 /** Represents an overview of temperature data for different locations. */
@@ -987,6 +987,8 @@ export class TopicSetting implements ITopicSetting {
     sensorName?: string | undefined;
     /** Gets or sets the location of the sensor. */
     sensorLocation?: string | undefined;
+    /** Gets or sets a value indicating whether this topic setting has recovery enabled. */
+    hasRecovery?: boolean;
 
     constructor(data?: ITopicSetting) {
         if (data) {
@@ -1005,6 +1007,7 @@ export class TopicSetting implements ITopicSetting {
             this.sensorType = _data["sensorType"];
             this.sensorName = _data["sensorName"];
             this.sensorLocation = _data["sensorLocation"];
+            this.hasRecovery = _data["hasRecovery"];
         }
     }
 
@@ -1023,6 +1026,7 @@ export class TopicSetting implements ITopicSetting {
         data["sensorType"] = this.sensorType;
         data["sensorName"] = this.sensorName;
         data["sensorLocation"] = this.sensorLocation;
+        data["hasRecovery"] = this.hasRecovery;
         return data;
     }
 }
@@ -1041,6 +1045,8 @@ export interface ITopicSetting {
     sensorName?: string | undefined;
     /** Gets or sets the location of the sensor. */
     sensorLocation?: string | undefined;
+    /** Gets or sets a value indicating whether this topic setting has recovery enabled. */
+    hasRecovery?: boolean;
 }
 
 /** Represents a request to change a user's password. */

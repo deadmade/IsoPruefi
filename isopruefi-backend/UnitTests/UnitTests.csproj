@@ -36,6 +36,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="MqttReceiver\" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Reference Include="Microsoft.Extensions.Identity.Stores">
             <HintPath>..\..\..\..\..\..\..\program files\dotnet\shared\Microsoft.AspNetCore.App\9.0.7\Microsoft.Extensions.Identity.Stores.dll</HintPath>
         </Reference>

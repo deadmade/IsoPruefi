@@ -68,7 +68,7 @@ jobs:
         run: doxygen Doxyfile
        
       - name: Generate Arduino Documentation
-        working-directory: ./isopruefi-docs\docs\code\arduino
+        working-directory: ./isopruefi-docs/docs/code/arduino
         run: npx seaborg xml md
 
       - name: Setup Python

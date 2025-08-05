@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Database.Repository.InfluxRepo;
+using MQTT_Receiver_Worker.MQTT.Interfaces;
 using MQTT_Receiver_Worker.MQTT.Models;
 using MQTTnet;
 using MQTTnet.Formatter;
@@ -12,8 +13,7 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// Establishes a connection to the MQTT broker, subscribes to topics,
 /// and processes incoming temperature sensor messages.
 /// </summary>
-public class Connection
-{
+public class Connection : IConnection{
     private IServiceProvider _serviceProvider;
     private MqttClientOptions _options;
     private IMqttClient _mqttClient;
@@ -29,9 +29,9 @@ public class Connection
     /// <param name="configuration">Configuration for MQTT settings</param>
     public Connection(ILogger<Connection> logger, IServiceProvider serviceProvider, IConfiguration configuration)
     {
-        _serviceProvider = serviceProvider;
-        _logger = logger;
-        _configuration = configuration;
+        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         InitialMqttConfig();
 
         _jsonSerializerOptions = new JsonSerializerOptions

@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using MQTT_Receiver_Worker.MQTT.Models;
 
@@ -25,7 +25,17 @@ public class NullMetaListConverter : JsonConverter<List<TempSensorReading>?>
     public override List<TempSensorReading>? Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
-        var list = JsonSerializer.Deserialize<List<TempSensorReading>?>(ref reader, options);
+        // Create new options without this converter to avoid infinite recursion
+        var newOptions = new JsonSerializerOptions(options);
+        for (int i = newOptions.Converters.Count - 1; i >= 0; i--)
+        {
+            if (newOptions.Converters[i] is NullMetaListConverter)
+            {
+                newOptions.Converters.RemoveAt(i);
+            }
+        }
+        
+        var list = JsonSerializer.Deserialize<List<TempSensorReading>?>(ref reader, newOptions);
 
         if (list == null || list.Count == 0)
             return null;
@@ -36,7 +46,6 @@ public class NullMetaListConverter : JsonConverter<List<TempSensorReading>?>
 
         return list;
     }
-
     /// <summary>
     /// Writes the List&lt;TempSensorReading&gt; to JSON.
     /// Uses the default serialization behavior without any custom logic.
@@ -46,6 +55,15 @@ public class NullMetaListConverter : JsonConverter<List<TempSensorReading>?>
     /// <param name="options">The JsonSerializerOptions to use during serialization</param>
     public override void Write(Utf8JsonWriter writer, List<TempSensorReading>? value, JsonSerializerOptions options)
     {
-        JsonSerializer.Serialize(writer, value, options);
-    }
-}
+        // Create new options without this converter to avoid infinite recursion
+        var newOptions = new JsonSerializerOptions(options);
+        for (int i = newOptions.Converters.Count - 1; i >= 0; i--)
+        {
+            if (newOptions.Converters[i] is NullMetaListConverter)
+            {
+                newOptions.Converters.RemoveAt(i);
+            }
+        }
+        
+        JsonSerializer.Serialize(writer, value, newOptions);
+    }}

@@ -13,13 +13,21 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// Establishes a connection to the MQTT broker, subscribes to topics,
 /// and processes incoming temperature sensor messages.
 /// </summary>
-public class Connection : IConnection{
-    private IServiceProvider _serviceProvider;
-    private MqttClientOptions _options;
-    private IMqttClient _mqttClient;
+public class Connection : IConnection
+{
+    private readonly IServiceProvider _serviceProvider;
+    private readonly MqttClientOptions _options;
+    private IMqttClient? _mqttClient;
     private readonly ILogger<Connection> _logger;
     private readonly IConfiguration _configuration;
-    private JsonSerializerOptions _jsonSerializerOptions;
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
+    private readonly SemaphoreSlim _connectionSemaphore = new(1, 1);
+    private bool _isConnected = false;
+
+    /// <summary>
+    /// Gets a value indicating whether the MQTT client is currently connected.
+    /// </summary>
+    public bool IsConnected => _isConnected && _mqttClient?.IsConnected == true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Connection"/> class.
@@ -32,7 +40,8 @@ public class Connection : IConnection{
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        InitialMqttConfig();
+
+        _options = CreateMqttOptions();
 
         _jsonSerializerOptions = new JsonSerializerOptions
         {
@@ -42,57 +51,109 @@ public class Connection : IConnection{
     }
 
     /// <summary>
-    /// Initializes the MQTT client configuration with settings from configuration.
+    /// Creates the MQTT client configuration with settings from configuration.
     /// </summary>
-    private void InitialMqttConfig()
+    private MqttClientOptions CreateMqttOptions()
     {
         var broker = _configuration["Mqtt:BrokerHost"];
         var port = _configuration.GetValue("Mqtt:BrokerPort", 1883);
         var clientId = Guid.NewGuid().ToString();
 
-        _logger.LogDebug("Initializing MQTT client with broker: {Broker}:{Port}, ClientId: {ClientId}", broker, port,
-            clientId);
+        _logger.LogDebug("Creating MQTT client options with broker: {Broker}:{Port}, ClientId: {ClientId}", broker,
+            port, clientId);
 
-        // Create a MQTT client factory
-        var factory = new MqttClientFactory();
-
-        // Create a MQTT client instance
-        _mqttClient = factory.CreateMqttClient();
-
-        _options = new MqttClientOptionsBuilder()
-            .WithTcpServer(broker, port) // MQTT broker address and port
+        return new MqttClientOptionsBuilder()
+            .WithTcpServer(broker, port)
             .WithProtocolVersion(MqttProtocolVersion.V500)
             .WithClientId(clientId)
             .Build();
     }
 
     /// <summary>
+    /// Attempts to connect to the MQTT broker.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result indicates whether the connection was successful.</returns>
+    public async Task<bool> TryConnectAsync()
+    {
+        await _connectionSemaphore.WaitAsync();
+        try
+        {
+            if (IsConnected) return true;
+
+            _logger.LogInformation("Attempting to connect to MQTT broker");
+
+            if (_mqttClient == null)
+            {
+                var factory = new MqttClientFactory();
+                _mqttClient = factory.CreateMqttClient();
+            }
+
+            _mqttClient.ApplicationMessageReceivedAsync += ApplicationMessageReceivedAsync;
+            _mqttClient.DisconnectedAsync += Disconnected;
+
+            await _mqttClient.ConnectAsync(_options, CancellationToken.None);
+            _isConnected = true;
+            _logger.LogInformation("Successfully connected to MQTT broker");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _isConnected = false;
+            _logger.LogError(ex, "Failed to connect to MQTT broker");
+            return false;
+        }
+        finally
+        {
+            _connectionSemaphore.Release();
+        }
+    }
+
+    /// <summary>
     /// Establishes a connection to the MQTT broker and configures message handlers.
     /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the connected MQTT client.</returns>
-    public async Task<IMqttClient> GetConnection()
+    /// <returns>A task that represents the asynchronous operation. The task result contains the connected MQTT client, or null if connection failed.</returns>
+    public async Task<IMqttClient?> GetConnectionAsync()
     {
-        _logger.LogInformation("Establishing connection to MQTT broker");
-        _mqttClient.ApplicationMessageReceivedAsync += ApplicationMessageReceivedAsync;
-        _mqttClient.DisconnectedAsync += Disconnected;
+        if (IsConnected) return _mqttClient;
 
-        await _mqttClient.ConnectAsync(_options, CancellationToken.None);
-        _logger.LogInformation("Successfully connected to MQTT broker");
-        return _mqttClient;
+        var connected = await TryConnectAsync();
+        return connected ? _mqttClient : null;
+    }
+
+    /// <summary>
+    /// Disconnects from the MQTT broker.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public async Task DisconnectAsync()
+    {
+        await _connectionSemaphore.WaitAsync();
+        try
+        {
+            if (_mqttClient?.IsConnected == true)
+            {
+                _logger.LogInformation("Disconnecting from MQTT broker");
+                await _mqttClient.DisconnectAsync();
+            }
+
+            _isConnected = false;
+            _logger.LogInformation("Disconnected from MQTT broker");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during MQTT disconnect");
+        }
+        finally
+        {
+            _connectionSemaphore.Release();
+        }
     }
 
     private async Task Disconnected(MqttClientDisconnectedEventArgs e)
     {
-        _logger.LogWarning("Disconnected from MQTT broker. Attempting to reconnect...");
-        try
-        {
-            await _mqttClient.ConnectAsync(_options, CancellationToken.None);
-            _logger.LogInformation("Reconnected successfully to MQTT broker");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Reconnection to MQTT broker failed");
-        }
+        _isConnected = false;
+        _logger.LogWarning("Disconnected from MQTT broker: {Reason}", e.Reason);
+
+        // Don't immediately reconnect here - let the worker handle it with proper timing
     }
 
     private async Task<Task> ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)

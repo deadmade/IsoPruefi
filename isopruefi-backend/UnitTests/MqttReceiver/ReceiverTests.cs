@@ -53,7 +53,7 @@ public class ReceiverTests
 
         // Create mock connection that returns our mock MQTT client
         _mockConnection = new Mock<IConnection>();
-        _mockConnection.Setup(c => c.GetConnection()).ReturnsAsync(_mockMqttClient.Object);
+        _mockConnection.Setup(c => c.GetConnectionAsync()).ReturnsAsync(_mockMqttClient.Object);
 
         // Setup test topic settings
         _testTopicSettings = new List<TopicSetting>
@@ -159,7 +159,7 @@ public class ReceiverTests
         _mockSettingsRepo.Verify(r => r.GetTopicSettingsAsync(), Times.Once);
 
         // Verify that connection was established
-        _mockConnection.Verify(c => c.GetConnection(), Times.Once);
+        _mockConnection.Verify(c => c.GetConnectionAsync(), Times.Once);
     }
 
     /// <summary>
@@ -174,7 +174,7 @@ public class ReceiverTests
         await _receiver.SubscribeToTopics();
 
         _mockSettingsRepo.Verify(r => r.GetTopicSettingsAsync(), Times.Once);
-        _mockConnection.Verify(c => c.GetConnection(), Times.Once);
+        _mockConnection.Verify(c => c.GetConnectionAsync(), Times.Once);
     }
 
     /// <summary>
@@ -214,7 +214,7 @@ public class ReceiverTests
     public async Task SubscribeToTopics_WhenConnectionFails_PropagatesException()
     {
         var expectedException = new InvalidOperationException("Connection failed");
-        _mockConnection.Setup(c => c.GetConnection())
+        _mockConnection.Setup(c => c.GetConnectionAsync())
                       .ThrowsAsync(expectedException);
 
         var action = async () => await _receiver.SubscribeToTopics();
@@ -269,7 +269,7 @@ public class ReceiverTests
         // Verify the complete workflow
         _mockServiceScopeFactory.Verify(f => f.CreateScope(), Times.Once);
         _mockSettingsRepo.Verify(r => r.GetTopicSettingsAsync(), Times.Once);
-        _mockConnection.Verify(c => c.GetConnection(), Times.Once);
+        _mockConnection.Verify(c => c.GetConnectionAsync(), Times.Once);
         _mockServiceScope.Verify(s => s.Dispose(), Times.Once);
     }
 

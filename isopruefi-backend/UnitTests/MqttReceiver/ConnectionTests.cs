@@ -368,7 +368,7 @@ public class ConnectionTests
         Exception? exception = null;
         try
         {
-            await _connection.GetConnection();
+            await _connection.GetConnectionAsync();
         }
         catch (Exception ex)
         {

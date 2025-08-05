@@ -12,18 +12,12 @@ public class MqttHealthCheck : IHealthCheck
         _connection = connection ?? throw new ArgumentNullException(nameof(connection));
     }
 
-    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            var isConnected = await _connection.GetConnection();
-
-            if (isConnected.IsConnected)
-            {
-                return HealthCheckResult.Healthy("MQTT connection is active");
-            }
-
-            return HealthCheckResult.Unhealthy("MQTT connection is not active");
+            return _connection.IsConnected ? HealthCheckResult.Healthy("MQTT connection is active") : HealthCheckResult.Unhealthy("MQTT connection is not active");
         }
         catch (Exception ex)
         {

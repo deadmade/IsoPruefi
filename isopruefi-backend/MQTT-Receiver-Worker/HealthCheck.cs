@@ -9,8 +9,8 @@ public static class HealthCheck
     public static void ConfigureHealthChecks(this WebApplicationBuilder builder)
     {
         builder.Services.AddHealthChecks()
-            .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty, healthQuery: "select 1", name: "Postgress", failureStatus: HealthStatus.Unhealthy, tags: new[] {  "Database" })
-            .AddCheck<MqttHealthCheck>("MQTT Connection", failureStatus: HealthStatus.Unhealthy, tags: new[] { "MQTT" });
-
+            .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty, "select 1",
+                name: "Postgress", failureStatus: HealthStatus.Unhealthy, tags: new[] { "Database" })
+            .AddCheck<MqttHealthCheck>("MQTT Connection", HealthStatus.Unhealthy, new[] { "MQTT" });
     }
 }

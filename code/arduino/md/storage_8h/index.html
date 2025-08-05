@@ -1371,36 +1371,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#function-savetosd" class="md-nav__link">
+  <a href="#function-savetocsvbatch" class="md-nav__link">
     <span class="md-ellipsis">
-      Function saveToSD
+      Function saveToCsvBatch
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#function-saverecoveredjsontosd" class="md-nav__link">
+  <a href="#function-deletecsvfile" class="md-nav__link">
     <span class="md-ellipsis">
-      Function saveRecoveredJsonToSd
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#function-listsavedfiles" class="md-nav__link">
-    <span class="md-ellipsis">
-      Function listSavedFiles
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#function-deleterecoveredandpendingsourcefiles" class="md-nav__link">
-    <span class="md-ellipsis">
-      Function deleteRecoveredAndPendingSourceFiles
+      Function deleteCsvFile
     </span>
   </a>
   
@@ -1416,45 +1398,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#function-buildrecoveredjson" class="md-nav__link">
+  <a href="#function-buildrecoveredjsonfromcsv" class="md-nav__link">
     <span class="md-ellipsis">
-      Function buildRecoveredJson
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#function-savedatatosd" class="md-nav__link">
-    <span class="md-ellipsis">
-      Function saveDataToSD
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#function-saverecoveredjsondatatosd" class="md-nav__link">
-    <span class="md-ellipsis">
-      Function saveRecoveredJsonDataToSd
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#function-listsavedfilesdata" class="md-nav__link">
-    <span class="md-ellipsis">
-      Function listSavedFilesData
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#function-deleterecoveredandpendingsourcefilesdata" class="md-nav__link">
-    <span class="md-ellipsis">
-      Function deleteRecoveredAndPendingSourceFilesData
+      Function buildRecoveredJsonFromCsv
     </span>
   </a>
   
@@ -1473,6 +1419,15 @@
   <a href="#function-createfilename" class="md-nav__link">
     <span class="md-ellipsis">
       Function createFilename
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-createrecoveredfilename" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function createRecoveredFilename
     </span>
   </a>
   
@@ -1572,96 +1527,106 @@ click 3 "mqtt_8cpp.md#mqtt_8cpp"
 click 4 "storage_8cpp.md#storage_8cpp"
 </code></pre>
 <h2 id="functions">Functions</h2>
-<p><a id="storage_8h_1a09093bc97a03919f0854c4b6683837b7"></a></p>
-<h3 id="function-savetosd">Function saveToSD</h3>
+<p><a id="storage_8h_1a576d7131c80320b3f5129de67ea60253"></a></p>
+<h3 id="function-savetocsvbatch">Function saveToCsvBatch</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">saveToSD</span><span class="p">(</span><span class="n">SdFat</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">saveToCsvBatch</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
 </code></pre></div>
-<p>Saves sensor data to SD card as a JSON file.</p>
-<p>Creates a JSON document with sensor data and saves it to the SD card in a date-organized folder structure. Creates directories as needed and handles file writing with proper timestamping.</p>
-<p><strong>Parameters</strong>:</p>
+<p>Saves sensor data to CSV files in batch mode during network outages.</p>
+<p>This function implements intelligent batch CSV storage that creates new files when needed and manages file rotation. It's designed as a fallback mechanism when MQTT transmission is unavailable due to network connectivity issues.</p>
+<p><strong>Batch Management:</strong>
+* Maintains a static filename for the current active CSV file</p>
 <ul>
-<li><strong>sdRef</strong>: Reference to the SD card file system instance.</li>
-<li><strong>celsius</strong>: Temperature reading in Celsius.</li>
-<li><strong>now</strong>: Current date and time for timestamp and file organization.</li>
-<li><strong>sequence</strong>: Sequence number for the reading.</li>
+<li>
+<p>Creates new files when the current file reaches maximum line limit</p>
+</li>
+<li>
+<p>Uses timestamp-based filenames for uniqueness and organization</p>
+</li>
+</ul>
+<p><strong>File Organization:</strong>
+* Creates date-based folders automatically (e.g., "2025/")</p>
+<ul>
+<li>
+<p>Stores files with minute-precision timestamps in filename</p>
+</li>
+<li>
+<p>Format: "YYYY/MMDDHHMM.csv" (e.g., "2025/08051430.csv")</p>
+</li>
+</ul>
+<p><strong>Data Format:</strong>
+* CSV format: timestamp,temperature,sequence</p>
+<ul>
+<li>
+<p>Temperature precision: 5 decimal places</p>
+</li>
+<li>
+<p>Unix timestamp for absolute time reference</p>
+</li>
 </ul>
 <p><strong>Parameters</strong>:</p>
 <ul>
-<li>sdRefSdFat &amp; <strong>sd</strong></li>
-<li>float <strong>celsius</strong></li>
+<li><strong>now</strong>: Current timestamp for folder creation and data logging</li>
+<li><strong>celsius</strong>: Temperature reading in Celsius (stored with 5 decimal precision)</li>
+<li><strong>sequence</strong>: Sequence number for the measurement</li>
+</ul>
+<p>?&gt; This function uses static variables to maintain state across calls</p>
+<p>?&gt; Files are automatically rotated after MAX_LINES_PER_CSV_FILE entries</p>
+<p><strong>See also</strong>: <a href="./#storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e">createFolderName()</a> for folder naming convention, <a href="./#storage_8h_1a99398dc180671d28434aa4982bfd36ca">createFilename()</a> for CSV filename generation</p>
+<p><strong>Parameters</strong>:</p>
+<ul>
 <li>const DateTime &amp; <strong>now</strong></li>
+<li>float <strong>celsius</strong></li>
 <li>int <strong>sequence</strong></li>
 </ul>
 <p><strong>Return type</strong>: void</p>
-<p><a id="storage_8h_1a677bacd38e6f20c32dbcc32e29714db8"></a></p>
-<h3 id="function-saverecoveredjsontosd">Function saveRecoveredJsonToSd</h3>
+<p><a id="storage_8h_1a712233a12d2ef3c7d797e0a06149ca73"></a></p>
+<h3 id="function-deletecsvfile">Function deleteCsvFile</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">saveRecoveredJsonToSd</span><span class="p">(</span><span class="n">SdFat</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">*</span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">deleteCsvFile</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">filepath</span><span class="p">)</span>
 </code></pre></div>
-<p>Saves consolidated recovered sensor data to SD card as a single JSON file.</p>
-<p>Takes multiple recovered sensor data entries and saves them as one consolidated JSON file with a "_recovered" suffix. This file serves as a backup of the data that was sent to the MQTT broker.</p>
-<p><strong>Parameters</strong>:</p>
+<p>Deletes a CSV file from the SD card storage system.</p>
+<p>This function provides safe file deletion with comprehensive error handling and logging. It's primarily used during the data recovery process to clean up CSV files after they have been successfully transmitted via MQTT.</p>
+<p><strong>Safety Features:</strong>
+* Checks file existence before attempting deletion</p>
 <ul>
-<li><strong>sdRef</strong>: Reference to the SD card file system instance.</li>
-<li><strong>fileList</strong>: Array of original file paths that were recovered.</li>
-<li><strong>count</strong>: Number of files in the array.</li>
-<li><strong>now</strong>: Current date and time for filename generation.</li>
+<li>
+<p>Provides detailed success/failure logging</p>
+</li>
+<li>
+<p>Handles SD card filesystem errors gracefully</p>
+</li>
+</ul>
+<p><strong>Use Cases:</strong>
+* Cleanup after successful batch data transmission</p>
+<ul>
+<li>
+<p>Manual file management during storage maintenance</p>
+</li>
+<li>
+<p>Recovery process completion in data transmission pipeline</p>
+</li>
+</ul>
+<p><strong>Error Scenarios:</strong>
+* File does not exist (silently ignored)</p>
+<ul>
+<li>
+<p>SD card write protection or filesystem errors</p>
+</li>
+<li>
+<p>Insufficient permissions or corrupted filesystem</p>
+</li>
 </ul>
 <p><strong>Parameters</strong>:</p>
 <ul>
-<li>sdRefSdFat &amp; <strong>sd</strong></li>
-<li>String * <strong>fileList</strong></li>
-<li>int <strong>count</strong></li>
-<li>const DateTime &amp; <strong>now</strong></li>
+<li><strong>filepath</strong>: Complete path to the CSV file to be deleted</li>
 </ul>
-<p><strong>Return type</strong>: void</p>
-<p><a id="storage_8h_1ad52b53beacc87b5cc365800cd88f492e"></a></p>
-<h3 id="function-listsavedfiles">Function listSavedFiles</h3>
-<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">listSavedFiles</span><span class="p">(</span><span class="n">SdFat</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">*</span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxFiles</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">)</span>
-</code></pre></div>
-<p>Lists saved sensor data files from the last 24 hours.</p>
-<p>Scans the SD card for JSON files in the current date folder, filters them based on their timestamp to include only files from the last 24 hours, and excludes recovery files.</p>
+<p>?&gt; Function silently ignores attempts to delete non-existent files</p>
+<p>?&gt; All operations are logged to Serial for debugging and monitoring</p>
+<p><strong>See also</strong>: <a href="../storage_8cpp/#storage_8cpp_1a7e33188776964f5ea7504de34669407d">buildRecoveredJsonFromCsv()</a> for file processing before deletion, <a href="../mqtt_8h/#mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e">sendPendingData()</a> in <a href="../mqtt_8cpp/#mqtt_8cpp">mqtt.cpp</a> for recovery workflow integration</p>
 <p><strong>Parameters</strong>:</p>
 <ul>
-<li><strong>sdRef</strong>: Reference to the SD card file system instance.</li>
-<li><strong>fileList</strong>: Array to store the found file paths.</li>
-<li><strong>maxFiles</strong>: Maximum number of files to list.</li>
-<li><strong>now</strong>: Current date and time for filtering files within 24 hours.</li>
-</ul>
-<p><strong>Returns</strong>:</p>
-<p>Number of files found and added to the list.</p>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li>sdRefSdFat &amp; <strong>sd</strong></li>
-<li>String * <strong>fileList</strong></li>
-<li>int <strong>maxFiles</strong></li>
-<li>const DateTime &amp; <strong>now</strong></li>
-</ul>
-<p><strong>Return type</strong>: int</p>
-<p><a id="storage_8h_1ae1177c93c12dbb9a461014a22be241eb"></a></p>
-<h3 id="function-deleterecoveredandpendingsourcefiles">Function deleteRecoveredAndPendingSourceFiles</h3>
-<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">deleteRecoveredAndPendingSourceFiles</span><span class="p">(</span><span class="n">SdFat</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">*</span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">&amp;</span><span class="n">recoveredFilename</span><span class="p">)</span>
-</code></pre></div>
-<p>Deletes original sensor data files and the recovery file after successful transmission.</p>
-<p>Removes the original sensor data files that were consolidated and sent, as well as the recovery file that was created as backup. This cleanup prevents duplicate data transmission and manages storage space.</p>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li><strong>sdRef</strong>: Reference to the SD card file system instance.</li>
-<li><strong>fileList</strong>: Array of original file paths to delete.</li>
-<li><strong>count</strong>: Number of files in the array.</li>
-<li><strong>now</strong>: Current date and time for folder path generation.</li>
-<li><strong>recoveredFilename</strong>: Name of the recovery file to delete.</li>
-</ul>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li>sdRefSdFat &amp; <strong>sd</strong></li>
-<li>const String * <strong>fileList</strong></li>
-<li>int <strong>count</strong></li>
-<li>const DateTime &amp; <strong>now</strong></li>
-<li>const String &amp; <strong>recoveredFilename</strong></li>
+<li>const char * <strong>filepath</strong></li>
 </ul>
 <p><strong>Return type</strong>: void</p>
 <p><a id="storage_8h_1ab16364c7bad54765d7deca604d19f172"></a></p>
@@ -1669,15 +1634,41 @@ click 4 "storage_8cpp.md#storage_8cpp"
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
 <div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">buildJson</span><span class="p">(</span><span class="n">JsonDocument</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
 </code></pre></div>
-<p>Builds a JSON document for sensor data.</p>
-<p>Creates a standardized JSON structure containing sensor reading, timestamp, sequence number, and metadata fields.</p>
+<p>Builds a JSON document from live sensor data for real-time transmission.</p>
+<p>This function creates a properly formatted JSON document containing current sensor readings for immediate MQTT transmission. The JSON structure follows a standardized format for IoT temperature monitoring systems with metadata support.</p>
+<p><strong>JSON Structure:</strong> <code>json { "timestamp": 1737024000, "value": [25.12345], "sequence": 42, "meta": [null] }</code></p>
+<p><strong>Data Precision:</strong>
+* Temperature: 5 decimal places for high precision monitoring</p>
+<ul>
+<li>
+<p>Timestamp: Unix timestamp (seconds since epoch)</p>
+</li>
+<li>
+<p>Sequence: Integer measurement counter</p>
+</li>
+<li>
+<p>Value array: Supports future multi-sensor expansion</p>
+</li>
+</ul>
+<p><strong>Performance Considerations:</strong>
+* Modifies existing JsonDocument for memory efficiency</p>
+<ul>
+<li>
+<p>Clears previous data to prevent accumulation</p>
+</li>
+<li>
+<p>Optimized for embedded systems with limited memory</p>
+</li>
+</ul>
 <p><strong>Parameters</strong>:</p>
 <ul>
-<li><strong>doc</strong>: JSON document to populate with sensor data.</li>
-<li><strong>celsius</strong>: Temperature reading in Celsius.</li>
-<li><strong>now</strong>: Current date and time for timestamp.</li>
-<li><strong>sequence</strong>: Sequence number for the reading.</li>
+<li><strong>doc</strong>: JsonDocument reference to populate (cleared before use)</li>
+<li><strong>celsius</strong>: Temperature reading in Celsius (stored with 5 decimal precision)</li>
+<li><strong>now</strong>: Current timestamp for the measurement</li>
+<li><strong>sequence</strong>: Sequence number for the measurement</li>
 </ul>
+<p>?&gt; The function clears the document before populating new data</p>
+<p><strong>See also</strong>: <a href="../storage_8cpp/#storage_8cpp_1a7e33188776964f5ea7504de34669407d">buildRecoveredJsonFromCsv()</a> for batch recovery JSON format, <a href="../storage_8cpp/#storage_8cpp_1a576d7131c80320b3f5129de67ea60253">saveToCsvBatch()</a> for CSV fallback storage format</p>
 <p><strong>Parameters</strong>:</p>
 <ul>
 <li><a href="../mock__json_8h/#mock__json_8h_1a54db1bfd55a2f11a001e5854071c899c">JsonDocument</a> &amp; <strong>doc</strong></li>
@@ -1686,106 +1677,54 @@ click 4 "storage_8cpp.md#storage_8cpp"
 <li>int <strong>sequence</strong></li>
 </ul>
 <p><strong>Return type</strong>: void</p>
-<p><a id="storage_8h_1a49ffb7f647d6701d9cea3decdac97cf1"></a></p>
-<h3 id="function-buildrecoveredjson">Function buildRecoveredJson</h3>
+<p><a id="storage_8h_1a7e33188776964f5ea7504de34669407d"></a></p>
+<h3 id="function-buildrecoveredjsonfromcsv">Function buildRecoveredJsonFromCsv</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">buildRecoveredJson</span><span class="p">(</span><span class="n">JsonDocument</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">*</span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">buildRecoveredJsonFromCsv</span><span class="p">(</span><span class="n">JsonDocument</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">filepath</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">)</span>
 </code></pre></div>
-<p>Builds a JSON document containing recovered sensor data from multiple files.</p>
-<p>Reads multiple JSON files from storage, parses them, and consolidates their contents into a single JSON document with metadata array containing all recovered entries.</p>
+<p>Builds a JSON document from CSV batch data for recovery transmission.</p>
+<p>This function processes stored CSV data files and converts them into JSON format for batch transmission when network connectivity is restored. It handles multiple measurements in a metadata array structure for efficient network utilization during recovery operations.</p>
+<p><strong>Recovery JSON Structure:</strong> <code>json { "timestamp": 1737024000, "sequence": null, "value": [null], "meta": [ {"timestamp": 1737024000, "value": [25.12345], "sequence": 42}, {"timestamp": 1737024060, "value": [25.12567], "sequence": 43} ] }</code></p>
+<p><strong>Processing Logic:</strong>
+* Reads each line from the specified CSV file using secure fgets()</p>
+<ul>
+<li>
+<p>Parses CSV format: timestamp,temperature,sequence using strtok()</p>
+</li>
+<li>
+<p>Creates individual JSON objects for each measurement in meta array</p>
+</li>
+<li>
+<p>Uses null placeholders for top-level value and sequence fields</p>
+</li>
+</ul>
+<p><strong>Error Handling:</strong>
+* Returns early if file cannot be opened</p>
+<ul>
+<li>
+<p>Skips malformed lines during CSV parsing</p>
+</li>
+<li>
+<p>Continues processing even if some lines fail</p>
+</li>
+<li>
+<p>Reports total number of successfully recovered entries</p>
+</li>
+</ul>
 <p><strong>Parameters</strong>:</p>
 <ul>
-<li><strong>doc</strong>: JSON document to populate with recovered data.</li>
-<li><strong>fileList</strong>: Array of file paths to read and consolidate.</li>
-<li><strong>count</strong>: Number of files in the fileList array.</li>
-<li><strong>now</strong>: Current date and time for the recovery timestamp.</li>
+<li><strong>doc</strong>: JsonDocument reference to populate (cleared before use)</li>
+<li><strong>filepath</strong>: Path to the CSV file containing batch sensor data</li>
+<li><strong>now</strong>: Current timestamp for the recovery operation</li>
 </ul>
+<p>?&gt; Uses strtok() for safe CSV parsing with buffer protection</p>
+<p>?&gt; Clears the document before populating new batch data</p>
+<p><strong>See also</strong>: <a href="../storage_8cpp/#storage_8cpp_1a576d7131c80320b3f5129de67ea60253">saveToCsvBatch()</a> for CSV storage format details, <a href="../mqtt_8h/#mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e">sendPendingData()</a> in <a href="../mqtt_8cpp/#mqtt_8cpp">mqtt.cpp</a> for recovery transmission</p>
 <p><strong>Parameters</strong>:</p>
 <ul>
 <li><a href="../mock__json_8h/#mock__json_8h_1a54db1bfd55a2f11a001e5854071c899c">JsonDocument</a> &amp; <strong>doc</strong></li>
-<li>String * <strong>fileList</strong></li>
-<li>int <strong>count</strong></li>
+<li>const char * <strong>filepath</strong></li>
 <li>const DateTime &amp; <strong>now</strong></li>
-</ul>
-<p><strong>Return type</strong>: void</p>
-<p><a id="storage_8h_1a03d6491b13757e01963c2ed90e52aa5f"></a></p>
-<h3 id="function-savedatatosd">Function saveDataToSD</h3>
-<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">saveDataToSD</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
-</code></pre></div>
-<p>Wrapper function to save sensor data to SD card using global SD instance.</p>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li><strong>celsius</strong>: Temperature reading in Celsius.</li>
-<li><strong>now</strong>: Current date and time for timestamp and file organization.</li>
-<li><strong>sequence</strong>: Sequence number for the reading.</li>
-</ul>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li>float <strong>celsius</strong></li>
-<li>const DateTime &amp; <strong>now</strong></li>
-<li>int <strong>sequence</strong></li>
-</ul>
-<p><strong>Return type</strong>: void</p>
-<p><a id="storage_8h_1a9b1aef5a070bc35c2abe6ef4721e421b"></a></p>
-<h3 id="function-saverecoveredjsondatatosd">Function saveRecoveredJsonDataToSd</h3>
-<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">saveRecoveredJsonDataToSd</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="o">*</span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">)</span>
-</code></pre></div>
-<p>Wrapper function to save recovered JSON data using global SD instance.</p>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li><strong>fileList</strong>: Array of file paths that were recovered.</li>
-<li><strong>count</strong>: Number of files in the array.</li>
-<li><strong>now</strong>: Current date and time for filename generation.</li>
-</ul>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li>String * <strong>fileList</strong></li>
-<li>int <strong>count</strong></li>
-<li>const DateTime &amp; <strong>now</strong></li>
-</ul>
-<p><strong>Return type</strong>: void</p>
-<p><a id="storage_8h_1a4ebfbb31311cdc384f46f28627733869"></a></p>
-<h3 id="function-listsavedfilesdata">Function listSavedFilesData</h3>
-<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">listSavedFilesData</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="o">*</span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxFiles</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">)</span>
-</code></pre></div>
-<p>Wrapper function to list saved files using global SD instance.</p>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li><strong>fileList</strong>: Array to store the found file paths.</li>
-<li><strong>maxFiles</strong>: Maximum number of files to list.</li>
-<li><strong>now</strong>: Current date and time for filtering files within 24 hours.</li>
-</ul>
-<p><strong>Returns</strong>:</p>
-<p>Number of files found and added to the list.</p>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li>String * <strong>fileList</strong></li>
-<li>int <strong>maxFiles</strong></li>
-<li>const DateTime &amp; <strong>now</strong></li>
-</ul>
-<p><strong>Return type</strong>: int</p>
-<p><a id="storage_8h_1a655fe9b7f9b52e408b888ce3aadd62a2"></a></p>
-<h3 id="function-deleterecoveredandpendingsourcefilesdata">Function deleteRecoveredAndPendingSourceFilesData</h3>
-<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">deleteRecoveredAndPendingSourceFilesData</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">*</span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">&amp;</span><span class="n">recoveredFilename</span><span class="p">)</span>
-</code></pre></div>
-<p>Wrapper function to delete recovered and pending files using global SD instance.</p>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li><strong>fileList</strong>: Array of original file paths to delete.</li>
-<li><strong>count</strong>: Number of files in the array.</li>
-<li><strong>now</strong>: Current date and time for folder path generation.</li>
-<li><strong>recoveredFilename</strong>: Name of the recovery file to delete.</li>
-</ul>
-<p><strong>Parameters</strong>:</p>
-<ul>
-<li>const String * <strong>fileList</strong></li>
-<li>int <strong>count</strong></li>
-<li>const DateTime &amp; <strong>now</strong></li>
-<li>const String &amp; <strong>recoveredFilename</strong></li>
 </ul>
 <p><strong>Return type</strong>: void</p>
 <p><a id="storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e"></a></p>
@@ -1810,6 +1749,20 @@ click 4 "storage_8cpp.md#storage_8cpp"
 <li>const DateTime &amp; <strong>now</strong></li>
 </ul>
 <p><strong>Return type</strong>: void</p>
+<p><a id="storage_8h_1a6c1e7509576dad1d0d8c0b8e4b169f1b"></a></p>
+<h3 id="function-createrecoveredfilename">Function createRecoveredFilename</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">createRecoveredFilename</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">recoveredFilename</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">bufferSize</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">baseLength</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">suffix</span><span class="o">=</span><span class="s">&quot;_recovered.json&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li>char * <strong>recoveredFilename</strong></li>
+<li>size_t <strong>bufferSize</strong></li>
+<li>const DateTime &amp; <strong>now</strong></li>
+<li>int <strong>baseLength</strong></li>
+<li>const char * <strong>suffix</strong> = "_recovered.json" </li>
+</ul>
+<p><strong>Return type</strong>: void</p>
 <h2 id="source">Source</h2>
 <div class="highlight"><pre><span></span><code><span class="cp">#pragma once</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;platform.h&quot;</span>
@@ -1817,13 +1770,11 @@ click 4 "storage_8cpp.md#storage_8cpp"
 
 <span class="cp">#ifndef UNIT_TEST</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="nf">saveToSD</span><span class="p">(</span><span class="n">SdFat</span><span class="o">&amp;</span><span class="w"> </span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sequence</span><span class="p">);</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">saveRecoveredJsonToSd</span><span class="p">(</span><span class="n">SdFat</span><span class="o">&amp;</span><span class="w"> </span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">*</span><span class="w"> </span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
-<span class="kt">int</span><span class="w"> </span><span class="nf">listSavedFiles</span><span class="p">(</span><span class="n">SdFat</span><span class="o">&amp;</span><span class="w"> </span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">*</span><span class="w"> </span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxFiles</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">deleteRecoveredAndPendingSourceFiles</span><span class="p">(</span><span class="n">SdFat</span><span class="o">&amp;</span><span class="w"> </span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">String</span><span class="o">*</span><span class="w"> </span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">String</span><span class="o">&amp;</span><span class="w"> </span><span class="n">recoveredFilename</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">saveToCsvBatch</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sequence</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">deleteCsvFile</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">filepath</span><span class="p">);</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">buildJson</span><span class="p">(</span><span class="n">JsonDocument</span><span class="o">&amp;</span><span class="w"> </span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sequence</span><span class="p">);</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">buildRecoveredJson</span><span class="p">(</span><span class="n">JsonDocument</span><span class="o">&amp;</span><span class="w"> </span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">*</span><span class="w"> </span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">buildRecoveredJsonFromCsv</span><span class="p">(</span><span class="n">JsonDocument</span><span class="o">&amp;</span><span class="w"> </span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">filepath</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
 
 <span class="cp">#else</span>
 
@@ -1850,12 +1801,6 @@ click 4 "storage_8cpp.md#storage_8cpp"
 
 <span class="cp">#endif</span>
 
-<span class="c1">// --- Wrapper functions (Arduino only) ---</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">saveDataToSD</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sequence</span><span class="p">);</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">saveRecoveredJsonDataToSd</span><span class="p">(</span><span class="n">String</span><span class="o">*</span><span class="w"> </span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
-<span class="kt">int</span><span class="w"> </span><span class="nf">listSavedFilesData</span><span class="p">(</span><span class="n">String</span><span class="o">*</span><span class="w"> </span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxFiles</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">deleteRecoveredAndPendingSourceFilesData</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">String</span><span class="o">*</span><span class="w"> </span><span class="n">fileList</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">String</span><span class="o">&amp;</span><span class="w"> </span><span class="n">recoveredFilename</span><span class="p">);</span>
-
 <span class="c1">// --- Inline helper functions (shared) ---</span>
 <span class="kr">inline</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="nf">createFolderName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">folderName</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
@@ -1864,10 +1809,17 @@ click 4 "storage_8cpp.md#storage_8cpp"
 <span class="p">}</span>
 
 <span class="kr">inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">createFilename</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">bufferSize</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">snprintf</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">bufferSize</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;%s/%02d%02d%02d%02d.json&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">snprintf</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">bufferSize</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;%s/%02d%02d%02d%02d.csv&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="n">createFolderName</span><span class="p">(</span><span class="n">now</span><span class="p">),</span>
 <span class="w">                  </span><span class="n">now</span><span class="p">.</span><span class="n">month</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">day</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">hour</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">minute</span><span class="p">());</span>
 <span class="p">}</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">createRecoveredFilename</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">recoveredFilename</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">bufferSize</span><span class="p">,</span>
+<span class="w">                                    </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">baseLength</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">suffix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;_recovered.json&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">baseFilename</span><span class="p">[</span><span class="mi">64</span><span class="p">];</span>
+<span class="w">    </span><span class="n">createFilename</span><span class="p">(</span><span class="n">baseFilename</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">baseFilename</span><span class="p">),</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">snprintf</span><span class="p">(</span><span class="n">recoveredFilename</span><span class="p">,</span><span class="w"> </span><span class="n">bufferSize</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;%.*s%s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">baseLength</span><span class="p">,</span><span class="w"> </span><span class="n">baseFilename</span><span class="p">,</span><span class="w"> </span><span class="n">suffix</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span>
 </code></pre></div>
 
 
@@ -1889,7 +1841,7 @@ click 4 "storage_8cpp.md#storage_8cpp"
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 5, 2025 13:02:51 UTC">August 5, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 5, 2025 20:09:01 UTC">August 5, 2025</span>
   </span>
 
     

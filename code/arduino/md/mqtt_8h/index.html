@@ -1388,6 +1388,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#function-createfulltopic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function createFullTopic
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1483,18 +1492,21 @@ click 4 "network_8cpp.md#network_8cpp"
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
 <div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">sendToMqtt</span><span class="p">(</span><span class="n">MqttClient</span><span class="w"> </span><span class="o">&amp;</span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">topicPrefix</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">sensorId</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
 </code></pre></div>
-<p>Publishes sensor data to an MQTT topic.</p>
-<p>Constructs a JSON payload with sensor data and publishes it to an MQTT topic constructed from the given prefix, sensor type, and sensor ID.</p>
+<p>Publishes real-time sensor data to MQTT broker.</p>
+<p>This function handles the complete process of publishing current sensor readings to the MQTT broker, including JSON formatting and topic construction.</p>
+<p><strong>Process Flow:</strong> 1. Polls MQTT client to maintain connection 2. Constructs appropriate topic based on sensor information 3. Builds JSON payload with sensor data 4. Attempts to publish data to broker 5. Provides status feedback via serial output</p>
 <p><strong>Parameters</strong>:</p>
 <ul>
-<li><strong>mqttClient</strong>: Reference to the MQTT client used for publishing.</li>
-<li><strong>topicPrefix</strong>: Prefix for the MQTT topic (e.g., "sensors/").</li>
-<li><strong>sensorType</strong>: Type of the sensor (e.g., "temperature").</li>
-<li><strong>sensorId</strong>: Unique identifier for the sensor.</li>
-<li><strong>celsius</strong>: Sensor reading in Celsius.</li>
-<li><strong>now</strong>: Current date and time.</li>
-<li><strong>sequence</strong>: Sequence number for the message.</li>
+<li><strong>mqttClient</strong>: Reference to the MQTT client instance</li>
+<li><strong>topicPrefix</strong>: Base MQTT topic prefix</li>
+<li><strong>sensorType</strong>: Type identifier for the sensor</li>
+<li><strong>sensorId</strong>: Unique identifier for this sensor</li>
+<li><strong>celsius</strong>: Temperature reading in Celsius</li>
+<li><strong>now</strong>: Current timestamp for the reading</li>
+<li><strong>sequence</strong>: Sequence number for the measurement</li>
 </ul>
+<p>?&gt; This function does not handle connection failures - the caller should verify MQTT connectivity before calling</p>
+<p><strong>See also</strong>: <a href="../storage_8h/#storage_8h_1ab16364c7bad54765d7deca604d19f172">buildJson()</a> for JSON payload structure, <a href="../mqtt_8cpp/#mqtt_8cpp_1a61adb6a9fd42b65f57c7f643e6f239f4">createFullTopic()</a> for <a href="../core_8cpp/#core_8cpp_1a4ed7b4c951621dbec76099594f64d249">topic</a> construction details</p>
 <p><strong>Parameters</strong>:</p>
 <ul>
 <li>MqttClient &amp; <strong>mqttClient</strong></li>
@@ -1506,21 +1518,41 @@ click 4 "network_8cpp.md#network_8cpp"
 <li>int <strong>sequence</strong></li>
 </ul>
 <p><strong>Return type</strong>: void</p>
-<p><a id="mqtt_8h_1ab2a92cb70a772c6c95d8b818c6b01f77"></a></p>
+<p><a id="mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e"></a></p>
 <h3 id="function-sendpendingdata">Function sendPendingData</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">sendPendingData</span><span class="p">(</span><span class="n">MqttClient</span><span class="w"> </span><span class="o">&amp;</span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">topicPrefix</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">sensorId</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="n">sendPendingData</span><span class="p">(</span><span class="n">MqttClient</span><span class="w"> </span><span class="o">&amp;</span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">topicPrefix</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">sensorId</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="o">&amp;</span><span class="n">now</span><span class="p">)</span>
 </code></pre></div>
-<p>Sends pending sensor data that was saved offline to MQTT broker.</p>
-<p>Retrieves saved sensor data files from the last 24 hours, consolidates them into a single JSON payload, and publishes to a recovery topic. After successful transmission, the original files and recovery file are deleted from storage.</p>
+<p>Processes and transmits pending CSV files from offline periods.</p>
+<p>This function implements the data recovery mechanism that ensures no sensor data is lost during network outages. It scans for CSV files created during offline periods, converts them to JSON format, and transmits them via MQTT.</p>
+<p><strong>Recovery Process:</strong> 1. <strong>File Discovery</strong>: Scans the current date folder for CSV files 2. <strong>Age Filtering</strong>: Skips files older than 24 hours to prevent stale data 3. <strong>Content Validation</strong>: Checks for valid data before transmission 4. <strong>Size Management</strong>: Handles large payloads that exceed buffer limits 5. <strong>Transmission</strong>: Publishes data to recovery topic 6. <strong>Cleanup</strong>: Deletes successfully transmitted files 7. <strong>Timeout Handling</strong>: Prevents infinite processing loops</p>
+<p><strong>Error Handling:</strong>
+* Skips empty or corrupted files</p>
+<ul>
+<li>
+<p>Handles oversized payloads gracefully</p>
+</li>
+<li>
+<p>Preserves files if transmission fails</p>
+</li>
+<li>
+<p>Implements timeout protection</p>
+</li>
+</ul>
 <p><strong>Parameters</strong>:</p>
 <ul>
-<li><strong>mqttClient</strong>: Reference to the MQTT client used for publishing.</li>
-<li><strong>topicPrefix</strong>: Prefix for the MQTT topic (e.g., "sensors/").</li>
-<li><strong>sensorType</strong>: Type of the sensor (e.g., "temperature").</li>
-<li><strong>sensorId</strong>: Unique identifier for the sensor.</li>
-<li><strong>now</strong>: Current date and time for file filtering.</li>
+<li><strong>mqttClient</strong>: Reference to the MQTT client instance</li>
+<li><strong>topicPrefix</strong>: Base MQTT topic prefix</li>
+<li><strong>sensorType</strong>: Type identifier for the sensor</li>
+<li><strong>sensorId</strong>: Unique identifier for this sensor</li>
+<li><strong>now</strong>: Current timestamp for filtering and processing</li>
 </ul>
+<p><strong>Returns</strong>:</p>
+<p>true if all pending files were successfully processed, false if timeout occurred or some files could not be transmitted</p>
+<p>?&gt; This function uses the "/recovered" topic suffix for transmitted data</p>
+<p>!&gt; <strong>Warning</strong> \
+Files older than 24 hours are automatically skipped</p>
+<p><strong>See also</strong>: <a href="../storage_8h/#storage_8h_1a7e33188776964f5ea7504de34669407d">buildRecoveredJsonFromCsv()</a> for CSV to JSON conversion, <a href="../storage_8h/#storage_8h_1a712233a12d2ef3c7d797e0a06149ca73">deleteCsvFile()</a> for file cleanup after successful transmission</p>
 <p><strong>Parameters</strong>:</p>
 <ul>
 <li>MqttClient &amp; <strong>mqttClient</strong></li>
@@ -1528,6 +1560,21 @@ click 4 "network_8cpp.md#network_8cpp"
 <li>const char * <strong>sensorType</strong></li>
 <li>const char * <strong>sensorId</strong></li>
 <li>const DateTime &amp; <strong>now</strong></li>
+</ul>
+<p><strong>Return type</strong>: bool</p>
+<p><a id="mqtt_8h_1aa9addf0d646507c6b47509cc143a9d46"></a></p>
+<h3 id="function-createfulltopic">Function createFullTopic</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">createFullTopic</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">bufferSize</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">topicPrefix</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">sensorId</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">suffix</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li>char * <strong>buffer</strong></li>
+<li>size_t <strong>bufferSize</strong></li>
+<li>const char * <strong>topicPrefix</strong></li>
+<li>const char * <strong>sensorType</strong></li>
+<li>const char * <strong>sensorId</strong></li>
+<li>const char * <strong>suffix</strong> = "" </li>
 </ul>
 <p><strong>Return type</strong>: void</p>
 <h2 id="source">Source</h2>
@@ -1538,8 +1585,11 @@ click 4 "network_8cpp.md#network_8cpp"
 <span class="kt">void</span><span class="w"> </span><span class="nf">sendToMqtt</span><span class="p">(</span><span class="n">MqttClient</span><span class="o">&amp;</span><span class="w"> </span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topicPrefix</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span>
 <span class="w">                </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorId</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sequence</span><span class="p">);</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="nf">sendPendingData</span><span class="p">(</span><span class="n">MqttClient</span><span class="o">&amp;</span><span class="w"> </span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topicPrefix</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span>
-<span class="w">                </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorId</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">sendPendingData</span><span class="p">(</span><span class="n">MqttClient</span><span class="o">&amp;</span><span class="w"> </span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topicPrefix</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span>
+<span class="w">                     </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorId</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DateTime</span><span class="o">&amp;</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">createFullTopic</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">bufferSize</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topicPrefix</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span>
+<span class="w">                     </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorId</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">suffix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
 </code></pre></div>
 
 
@@ -1561,7 +1611,7 @@ click 4 "network_8cpp.md#network_8cpp"
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 5, 2025 13:02:51 UTC">August 5, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 5, 2025 20:09:01 UTC">August 5, 2025</span>
   </span>
 
     

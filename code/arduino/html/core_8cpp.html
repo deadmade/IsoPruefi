@@ -92,14 +92,18 @@ $(function() {
 Functions</h2></td></tr>
 <tr class="memitem:aa36be85ab02519b9969bf118f8647728" id="r_aa36be85ab02519b9969bf118f8647728"><td class="memItemLeft" align="right" valign="top">static MqttClient&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#aa36be85ab02519b9969bf118f8647728">mqttClient</a> (<a class="el" href="core_8cpp.html#a64f7c60366b0a82c42d7a1dbf4e9505a">wifiClient</a>)</td></tr>
 <tr class="separator:aa36be85ab02519b9969bf118f8647728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecaef34a5b4c910faf41faad214950fd" id="r_aecaef34a5b4c910faf41faad214950fd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#aecaef34a5b4c910faf41faad214950fd">isWifiConnected</a> ()</td></tr>
+<tr class="separator:aecaef34a5b4c910faf41faad214950fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a636ad73f43ed4a9e30c58de52e8030d0" id="r_a636ad73f43ed4a9e30c58de52e8030d0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#a636ad73f43ed4a9e30c58de52e8030d0">isMqttConnected</a> ()</td></tr>
+<tr class="separator:a636ad73f43ed4a9e30c58de52e8030d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84b7ee25d4d43e3b6dd6b3193a2547f0" id="r_a84b7ee25d4d43e3b6dd6b3193a2547f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#a84b7ee25d4d43e3b6dd6b3193a2547f0">dateTime</a> (uint16_t *date, uint16_t *time)</td></tr>
-<tr class="memdesc:a84b7ee25d4d43e3b6dd6b3193a2547f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current date and time from the RTC and formats them for FAT file systems.  <br /></td></tr>
+<tr class="memdesc:a84b7ee25d4d43e3b6dd6b3193a2547f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function for FAT file system timestamp generation.  <br /></td></tr>
 <tr class="separator:a84b7ee25d4d43e3b6dd6b3193a2547f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fb1675443ce002d3928dd3edf3b2a72" id="r_a9fb1675443ce002d3928dd3edf3b2a72"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#a9fb1675443ce002d3928dd3edf3b2a72">coreSetup</a> ()</td></tr>
-<tr class="memdesc:a9fb1675443ce002d3928dd3edf3b2a72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes core system components.  <br /></td></tr>
+<tr class="memdesc:a9fb1675443ce002d3928dd3edf3b2a72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes all core system components and peripherals.  <br /></td></tr>
 <tr class="separator:a9fb1675443ce002d3928dd3edf3b2a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5603fdb8113111f87914938533d1ece" id="r_aa5603fdb8113111f87914938533d1ece"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#aa5603fdb8113111f87914938533d1ece">coreLoop</a> ()</td></tr>
-<tr class="memdesc:aa5603fdb8113111f87914938533d1ece"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main loop function for core operations.  <br /></td></tr>
+<tr class="memdesc:aa5603fdb8113111f87914938533d1ece"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main operational loop for continuous sensor monitoring and data transmission.  <br /></td></tr>
 <tr class="separator:aa5603fdb8113111f87914938533d1ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
@@ -113,6 +117,7 @@ Variables</h2></td></tr>
 <tr class="memitem:a64f7c60366b0a82c42d7a1dbf4e9505a" id="r_a64f7c60366b0a82c42d7a1dbf4e9505a"><td class="memItemLeft" align="right" valign="top">static WiFiClient&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#a64f7c60366b0a82c42d7a1dbf4e9505a">wifiClient</a></td></tr>
 <tr class="separator:a64f7c60366b0a82c42d7a1dbf4e9505a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68cab60b6c724cde0fc0009e126a80d5" id="r_a68cab60b6c724cde0fc0009e126a80d5"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#a68cab60b6c724cde0fc0009e126a80d5">chipSelect</a> = 4</td></tr>
+<tr class="memdesc:a68cab60b6c724cde0fc0009e126a80d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">SD card chip select pin.  <br /></td></tr>
 <tr class="separator:a68cab60b6c724cde0fc0009e126a80d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4bd75fd80e14bbf47bb21fa3524f6c8" id="r_ad4bd75fd80e14bbf47bb21fa3524f6c8"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#ad4bd75fd80e14bbf47bb21fa3524f6c8">sensorIdOne</a> = &quot;Sensor_One&quot;</td></tr>
 <tr class="separator:ad4bd75fd80e14bbf47bb21fa3524f6c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,6 +135,8 @@ Variables</h2></td></tr>
 <tr class="separator:a4ae62406649dce01eb479e7a476a4305"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f1edbd0b6c65e5e7843bbda20bb24e2" id="r_a4f1edbd0b6c65e5e7843bbda20bb24e2"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#a4f1edbd0b6c65e5e7843bbda20bb24e2">SD_SCK_FREQUENCY_MHZ</a> = 25</td></tr>
 <tr class="separator:a4f1edbd0b6c65e5e7843bbda20bb24e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cef1bc6ccf08999da59db3b88095f7d" id="r_a6cef1bc6ccf08999da59db3b88095f7d"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#a6cef1bc6ccf08999da59db3b88095f7d">RECONNECT_INTERVAL_MS</a> = 2000</td></tr>
+<tr class="separator:a6cef1bc6ccf08999da59db3b88095f7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb6f4167f4e2989c5f0af6f10b56d33e" id="r_abb6f4167f4e2989c5f0af6f10b56d33e"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#abb6f4167f4e2989c5f0af6f10b56d33e">lastLoggedMinute</a> = -1</td></tr>
 <tr class="separator:abb6f4167f4e2989c5f0af6f10b56d33e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad43c3812e6d13e0518d9f8b8f463ffcf" id="r_ad43c3812e6d13e0518d9f8b8f463ffcf"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#ad43c3812e6d13e0518d9f8b8f463ffcf">count</a> = 0</td></tr>
@@ -138,6 +145,8 @@ Variables</h2></td></tr>
 <tr class="separator:af80c34747656b263fece5b92e5786fab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e1fbed2e9bf75293274a8fde0a5085d" id="r_a9e1fbed2e9bf75293274a8fde0a5085d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#a9e1fbed2e9bf75293274a8fde0a5085d">recoveredSent</a> = false</td></tr>
 <tr class="separator:a9e1fbed2e9bf75293274a8fde0a5085d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca3b6475cc9f45c2f6c244acb67c64f7" id="r_aca3b6475cc9f45c2f6c244acb67c64f7"><td class="memItemLeft" align="right" valign="top">static unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#aca3b6475cc9f45c2f6c244acb67c64f7">lastReconnectAttempt</a> = 0</td></tr>
+<tr class="separator:aca3b6475cc9f45c2f6c244acb67c64f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="aa5603fdb8113111f87914938533d1ece" name="aa5603fdb8113111f87914938533d1ece"></a>
@@ -155,16 +164,43 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Main loop function for core operations. </p>
-<p>This function manages the main operational loop, including:</p><ul>
-<li>Reading the current time from the RTC.</li>
-<li>Ensuring WiFi and MQTT connections are active, attempting reconnection if necessary.</li>
-<li>Logging temperature data to SD card if network connections are unavailable.</li>
-<li>Sending recovered (pending) data after reconnection.</li>
-<li>Reading and sending temperature data to MQTT broker once per minute.</li>
-<li>Polling the MQTT client and maintaining a fixed loop delay.</li>
+<p>Main operational loop for continuous sensor monitoring and data transmission. </p>
+<p>This function implements the core operational logic of the temperature monitoring system with robust connectivity handling and data persistence features.</p>
+<p>**Operational Flow:**</p>
+<p>1. **Time Management:**</p><ul>
+<li>Reads current time from RTC</li>
+<li>Tracks minute changes to prevent duplicate measurements</li>
 </ul>
-<p>The function ensures that temperature data is not lost during connectivity issues by saving to SD card and resending when connections are restored. </p>
+<p>2. **WiFi Connection Management:**</p><ul>
+<li>Monitors WiFi status with intelligent reconnection timing</li>
+<li>Falls back to CSV logging during WiFi outages</li>
+<li>Implements reconnection throttling to prevent excessive attempts</li>
+</ul>
+<p>3. **MQTT Connection Management:**</p><ul>
+<li>Verifies MQTT broker connectivity</li>
+<li>Handles automatic reconnection with status reporting</li>
+<li>Falls back to CSV logging during MQTT outages</li>
+</ul>
+<p>4. **Data Recovery Processing:**</p><ul>
+<li>Sends pending CSV data after successful reconnection</li>
+<li>Ensures recovery data is transmitted only once per reconnection cycle</li>
+</ul>
+<p>5. **Normal Operation:**</p><ul>
+<li>Performs temperature measurements once per minute</li>
+<li>Transmits data via MQTT to configured topic</li>
+<li>Maintains MQTT client polling for incoming messages</li>
+</ul>
+<p>**Error Handling:**</p><ul>
+<li>Network failures trigger CSV fallback storage</li>
+<li>Connection attempts are rate-limited to prevent resource exhaustion</li>
+<li>All measurement data is preserved during connectivity issues</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>The function maintains a fixed loop delay for consistent timing </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="core_8cpp.html#a6cef1bc6ccf08999da59db3b88095f7d">RECONNECT_INTERVAL_MS</a>, <a class="el" href="core_8cpp.html#aa9b3766a24a11a11d57c6ba9114d992b">LOOP_DELAY_MS</a> for timing configuration </dd>
+<dd>
+<a class="el" href="storage_8h.html#a576d7131c80320b3f5129de67ea60253" title="Saves sensor data to CSV files in batch mode during network outages.">saveToCsvBatch()</a> for offline data storage </dd>
+<dd>
+<a class="el" href="mqtt_8h.html#a2f6ba6fe36426e331cac4ec8f8ab4c9e" title="Processes and transmits pending CSV files from offline periods.">sendPendingData()</a> for data recovery mechanism </dd></dl>
 
 </div>
 </div>
@@ -183,18 +219,26 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initializes core system components. </p>
-<p>This function performs the following setup steps:</p><ul>
-<li>Connects to WiFi and sets the global wifiOk flag.</li>
-<li>Generates and sets the MQTT client ID based on the sensor in use.</li>
-<li>Connects to the MQTT broker if WiFi connection is successful.</li>
-<li>Initializes the real-time clock (RTC) and sets the time if power was lost.</li>
-<li>Registers the date/time callback for SD file timestamps.</li>
-<li>Initializes the SD card and halts execution if initialization fails.</li>
-<li>Initializes the temperature sensor and halts execution if initialization fails.</li>
-<li>Prints a message to the serial console upon successful setup.</li>
+<p>Initializes all core system components and peripherals. </p>
+<p>This function performs comprehensive system initialization including:</p>
+<p>**Network Setup:**</p><ul>
+<li>Establishes WiFi connection with timeout handling</li>
+<li>Configures MQTT client with unique sensor-based ID</li>
+<li>Attempts initial MQTT broker connection</li>
 </ul>
-<p>This function will halt execution (infinite loop) if any critical component fails to initialize. </p>
+<p>**Hardware Initialization:**</p><ul>
+<li>Initializes DS3231 real-time clock module</li>
+<li>Adjusts RTC time if power was lost (uses compilation timestamp)</li>
+<li>Sets up SD card with SPI communication</li>
+<li>Initializes ADT7410 temperature sensor</li>
+</ul>
+<p>**Data Recovery:**</p><ul>
+<li>Registers FAT file system timestamp callback</li>
+<li>Attempts to send any pending/recovered data from previous sessions</li>
+</ul>
+<dl class="section warning"><dt>Warning</dt><dd>This function will halt program execution (infinite loop) if any critical component fails to initialize (RTC, SD card, or temperature sensor)</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The function uses compile-time constants for timeouts and configuration </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="core_8cpp.html#a9b7578cbf8a2ac9a8a2ccb3fc5431791">WIFI_CONNECT_TIMEOUT_MS</a>, <a class="el" href="core_8cpp.html#a4ae62406649dce01eb479e7a476a4305">CLIENT_ID_BUFFER_SIZE</a>, <a class="el" href="core_8cpp.html#a4f1edbd0b6c65e5e7843bbda20bb24e2">SD_SCK_FREQUENCY_MHZ</a> </dd></dl>
 
 </div>
 </div>
@@ -224,15 +268,51 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieves the current date and time from the RTC and formats them for FAT file systems. </p>
-<p>This function obtains the current date and time from the real-time clock (RTC) and encodes them using the FAT file system date and time format macros.</p>
+<p>Callback function for FAT file system timestamp generation. </p>
+<p>This function is used by the SdFat library to obtain current date and time for file system operations. It retrieves the time from the RTC and converts it to the FAT file system format using the appropriate macros.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">date</td><td>Pointer to a uint16_t variable where the encoded FAT date will be stored. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">time</td><td>Pointer to a uint16_t variable where the encoded FAT time will be stored. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">date</td><td>Pointer to store the encoded FAT date (year, month, day) </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">time</td><td>Pointer to store the encoded FAT time (hour, minute, second)</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>This function is registered as a callback with SdFile::dateTimeCallback() </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>FAT_DATE, FAT_TIME macros for encoding format details </dd></dl>
+
+</div>
+</div>
+<a id="a636ad73f43ed4a9e30c58de52e8030d0" name="a636ad73f43ed4a9e30c58de52e8030d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a636ad73f43ed4a9e30c58de52e8030d0">&#9670;&#160;</a></span>isMqttConnected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isMqttConnected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aecaef34a5b4c910faf41faad214950fd" name="aecaef34a5b4c910faf41faad214950fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecaef34a5b4c910faf41faad214950fd">&#9670;&#160;</a></span>isWifiConnected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isWifiConnected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -282,6 +362,8 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>SD card chip select pin. </p>
 
 </div>
 </div>
@@ -351,6 +433,28 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="aca3b6475cc9f45c2f6c244acb67c64f7" name="aca3b6475cc9f45c2f6c244acb67c64f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca3b6475cc9f45c2f6c244acb67c64f7">&#9670;&#160;</a></span>lastReconnectAttempt</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned long lastReconnectAttempt = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa9b3766a24a11a11d57c6ba9114d992b" name="aa9b3766a24a11a11d57c6ba9114d992b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9b3766a24a11a11d57c6ba9114d992b">&#9670;&#160;</a></span>LOOP_DELAY_MS</h2>
 
@@ -362,6 +466,28 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">const unsigned long LOOP_DELAY_MS = 1000</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6cef1bc6ccf08999da59db3b88095f7d" name="a6cef1bc6ccf08999da59db3b88095f7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cef1bc6ccf08999da59db3b88095f7d">&#9670;&#160;</a></span>RECONNECT_INTERVAL_MS</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int RECONNECT_INTERVAL_MS = 2000</td>
         </tr>
       </table>
   </td>

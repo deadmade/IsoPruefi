@@ -112,76 +112,83 @@
           <declname>sequence</declname>
         </param>
         <briefdescription>
-<para>Publishes sensor data to an MQTT topic. </para>
+<para>Publishes real-time sensor data to MQTT broker. </para>
         </briefdescription>
         <detaileddescription>
-<para>Constructs a JSON payload with sensor data and publishes it to an MQTT topic constructed from the given prefix, sensor type, and sensor ID.</para>
+<para>This function handles the complete process of publishing current sensor readings to the MQTT broker, including JSON formatting and topic construction.</para>
+<para>**Process Flow:** 1. Polls MQTT client to maintain connection 2. Constructs appropriate topic based on sensor information 3. Builds JSON payload with sensor data 4. Attempts to publish data to broker 5. Provides status feedback via serial output</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
-<parametername>mqttClient</parametername>
+<parametername direction="in">mqttClient</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Reference to the MQTT client used for publishing. </para>
+<para>Reference to the MQTT client instance </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
-<parametername>topicPrefix</parametername>
+<parametername direction="in">topicPrefix</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Prefix for the MQTT topic (e.g., &quot;sensors/&quot;). </para>
+<para>Base MQTT topic prefix </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
-<parametername>sensorType</parametername>
+<parametername direction="in">sensorType</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Type of the sensor (e.g., &quot;temperature&quot;). </para>
+<para>Type identifier for the sensor </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
-<parametername>sensorId</parametername>
+<parametername direction="in">sensorId</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Unique identifier for the sensor. </para>
+<para>Unique identifier for this sensor </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
-<parametername>celsius</parametername>
+<parametername direction="in">celsius</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Sensor reading in Celsius. </para>
+<para>Temperature reading in Celsius </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
-<parametername>now</parametername>
+<parametername direction="in">now</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Current date and time. </para>
+<para>Current timestamp for the reading </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
-<parametername>sequence</parametername>
+<parametername direction="in">sequence</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Sequence number for the message. </para>
+<para>Sequence number for the measurement</para>
 </parameterdescription>
 </parameteritem>
 </parameterlist>
+<simplesect kind="note"><para>This function does not handle connection failures - the caller should verify MQTT connectivity before calling </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="storage_8h_1ab16364c7bad54765d7deca604d19f172" kindref="member">buildJson()</ref> for JSON payload structure </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="mqtt_8cpp_1a61adb6a9fd42b65f57c7f643e6f239f4" kindref="member">createFullTopic()</ref> for <ref refid="core_8cpp_1a4ed7b4c951621dbec76099594f64d249" kindref="member">topic</ref> construction details </para>
+</simplesect>
 </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/mqtt.h" line="5" column="6" bodyfile="src/mqtt.cpp" bodystart="25" bodyend="47" declfile="include/mqtt.h" declline="5" declcolumn="6"/>
+        <location file="include/mqtt.h" line="5" column="6" bodyfile="src/mqtt.cpp" bodystart="68" bodyend="90" declfile="include/mqtt.h" declline="5" declcolumn="6"/>
       </memberdef>
-      <memberdef kind="function" id="mqtt_8h_1ab2a92cb70a772c6c95d8b818c6b01f77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>void</type>
-        <definition>void sendPendingData</definition>
+      <memberdef kind="function" id="mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool sendPendingData</definition>
         <argsstring>(MqttClient &amp;mqttClient, const char *topicPrefix, const char *sensorType, const char *sensorId, const DateTime &amp;now)</argsstring>
         <name>sendPendingData</name>
         <param>
@@ -205,56 +212,112 @@
           <declname>now</declname>
         </param>
         <briefdescription>
-<para>Sends pending sensor data that was saved offline to MQTT broker. </para>
+<para>Processes and transmits pending CSV files from offline periods. </para>
         </briefdescription>
         <detaileddescription>
-<para>Retrieves saved sensor data files from the last 24 hours, consolidates them into a single JSON payload, and publishes to a recovery topic. After successful transmission, the original files and recovery file are deleted from storage.</para>
+<para>This function implements the data recovery mechanism that ensures no sensor data is lost during network outages. It scans for CSV files created during offline periods, converts them to JSON format, and transmits them via MQTT.</para>
+<para>**Recovery Process:** 1. **File Discovery**: Scans the current date folder for CSV files 2. **Age Filtering**: Skips files older than 24 hours to prevent stale data 3. **Content Validation**: Checks for valid data before transmission 4. **Size Management**: Handles large payloads that exceed buffer limits 5. **Transmission**: Publishes data to recovery topic 6. **Cleanup**: Deletes successfully transmitted files 7. **Timeout Handling**: Prevents infinite processing loops</para>
+<para>**Error Handling:**<itemizedlist>
+<listitem><para>Skips empty or corrupted files</para>
+</listitem><listitem><para>Handles oversized payloads gracefully</para>
+</listitem><listitem><para>Preserves files if transmission fails</para>
+</listitem><listitem><para>Implements timeout protection</para>
+</listitem></itemizedlist>
+</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
-<parametername>mqttClient</parametername>
+<parametername direction="in">mqttClient</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Reference to the MQTT client used for publishing. </para>
+<para>Reference to the MQTT client instance </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
-<parametername>topicPrefix</parametername>
+<parametername direction="in">topicPrefix</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Prefix for the MQTT topic (e.g., &quot;sensors/&quot;). </para>
+<para>Base MQTT topic prefix </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
-<parametername>sensorType</parametername>
+<parametername direction="in">sensorType</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Type of the sensor (e.g., &quot;temperature&quot;). </para>
+<para>Type identifier for the sensor </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
-<parametername>sensorId</parametername>
+<parametername direction="in">sensorId</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Unique identifier for the sensor. </para>
+<para>Unique identifier for this sensor </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
-<parametername>now</parametername>
+<parametername direction="in">now</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Current date and time for file filtering. </para>
+<para>Current timestamp for filtering and processing</para>
 </parameterdescription>
 </parameteritem>
 </parameterlist>
+<simplesect kind="return"><para>true if all pending files were successfully processed, false if timeout occurred or some files could not be transmitted</para>
+</simplesect>
+<simplesect kind="note"><para>This function uses the &quot;/recovered&quot; topic suffix for transmitted data </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="storage_8h_1a7e33188776964f5ea7504de34669407d" kindref="member">buildRecoveredJsonFromCsv()</ref> for CSV to JSON conversion </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="storage_8h_1a712233a12d2ef3c7d797e0a06149ca73" kindref="member">deleteCsvFile()</ref> for file cleanup after successful transmission </para>
+</simplesect>
+<simplesect kind="warning"><para>Files older than 24 hours are automatically skipped </para>
+</simplesect>
 </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/mqtt.h" line="8" column="6" bodyfile="src/mqtt.cpp" bodystart="62" bodyend="112" declfile="include/mqtt.h" declline="8" declcolumn="6"/>
+        <location file="include/mqtt.h" line="8" column="6" bodyfile="src/mqtt.cpp" bodystart="132" bodyend="250" declfile="include/mqtt.h" declline="8" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="mqtt_8h_1aa9addf0d646507c6b47509cc143a9d46" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void createFullTopic</definition>
+        <argsstring>(char *buffer, size_t bufferSize, const char *topicPrefix, const char *sensorType, const char *sensorId, const char *suffix=&quot;&quot;)</argsstring>
+        <name>createFullTopic</name>
+        <param>
+          <type>char *</type>
+          <declname>buffer</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>bufferSize</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>topicPrefix</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>sensorType</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>sensorId</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>suffix</declname>
+          <defval>&quot;&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/mqtt.h" line="11" column="6" bodyfile="src/mqtt.cpp" bodystart="29" bodyend="36" declfile="include/mqtt.h" declline="11" declcolumn="6"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -269,9 +332,12 @@
 <codeline lineno="5"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mqtt_8h_1ab4dfd2aed88177be74263339392bdcc0" kindref="member">sendToMqtt</ref>(MqttClient&amp;<sp/><ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,</highlight></codeline>
 <codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence);</highlight></codeline>
 <codeline lineno="7"><highlight class="normal"></highlight></codeline>
-<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mqtt_8h_1ab2a92cb70a772c6c95d8b818c6b01f77" kindref="member">sendPendingData</ref>(MqttClient&amp;<sp/><ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,</highlight></codeline>
-<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now);</highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e" kindref="member">sendPendingData</ref>(MqttClient&amp;<sp/><ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now);</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mqtt_8h_1aa9addf0d646507c6b47509cc143a9d46" kindref="member">createFullTopic</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>buffer,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>bufferSize,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>suffix<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/mqtt.h"/>
   </compounddef>

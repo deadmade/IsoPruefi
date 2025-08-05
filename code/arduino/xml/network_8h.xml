@@ -157,26 +157,12 @@
           <declname>mqttClient</declname>
         </param>
         <briefdescription>
-<para>Checks if both WiFi and MQTT connections are active. </para>
         </briefdescription>
         <detaileddescription>
-<para>Verifies the status of both WiFi and MQTT connections to ensure the device can communicate with the MQTT broker.</para>
-<para><parameterlist kind="param"><parameteritem>
-<parameternamelist>
-<parametername>mqttClient</parametername>
-</parameternamelist>
-<parameterdescription>
-<para>Reference to the MQTT client instance to check. </para>
-</parameterdescription>
-</parameteritem>
-</parameterlist>
-<simplesect kind="return"><para>true if both WiFi and MQTT are connected, false otherwise. </para>
-</simplesect>
-</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/network.h" line="9" column="6" bodyfile="src/network.cpp" bodystart="77" bodyend="79" declfile="include/network.h" declline="9" declcolumn="6"/>
+        <location file="include/network.h" line="9" column="6" bodyfile="src/network.cpp" bodystart="68" bodyend="70" declfile="include/network.h" declline="9" declcolumn="6"/>
       </memberdef>
     </sectiondef>
     <briefdescription>

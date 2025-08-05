@@ -1479,6 +1479,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#variable-reconnect_interval_ms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable RECONNECT_INTERVAL_MS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#variable-lastloggedminute" class="md-nav__link">
     <span class="md-ellipsis">
       Variable lastLoggedMinute
@@ -1514,6 +1523,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#variable-lastreconnectattempt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable lastReconnectAttempt
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1533,6 +1551,24 @@
   <a href="#function-mqttclient" class="md-nav__link">
     <span class="md-ellipsis">
       Function mqttClient
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-iswificonnected" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function isWifiConnected
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-ismqttconnected" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function isMqttConnected
     </span>
   </a>
   
@@ -1702,15 +1738,16 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-chipselect">Variable chipSelect</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 16)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 21)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">chipSelect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
 </code></pre></div>
+<p>SD card chip select pin.</p>
 <p><strong>Type</strong>: const uint8_t</p>
 <p><a id="core_8cpp_1ad4bd75fd80e14bbf47bb21fa3524f6c8"></a></p>
 <h3 id="variable-sensoridone">Variable sensorIdOne</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 17)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 22)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdOne</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sensor_One&quot;</span>
 </code></pre></div>
 <p><strong>Type</strong>: const char *</p>
@@ -1718,7 +1755,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-sensoridinuse">Variable sensorIdInUse</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 19)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 24)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">sensorIdOne</span><span class="p">](</span><span class="n">core_8cpp</span><span class="p">.</span><span class="n">md</span><span class="err">#</span><span class="n">core_8cpp_1ad4bd75fd80e14bbf47bb21fa3524f6c8</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Type</strong>: const char *</p>
@@ -1726,7 +1763,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-sensortype">Variable sensorType</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 21)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 26)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;temp&quot;</span>
 </code></pre></div>
 <p><strong>Type</strong>: const char *</p>
@@ -1734,7 +1771,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-topic">Variable topic</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 22)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 27)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dhbw/ai/si2023/2/&quot;</span>
 </code></pre></div>
 <p><strong>Type</strong>: const char *</p>
@@ -1742,7 +1779,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-wifi_connect_timeout_ms">Variable WIFI_CONNECT_TIMEOUT_MS</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 25)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 33)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15000</span>
 </code></pre></div>
 <p><strong>Type</strong>: const unsigned long</p>
@@ -1750,7 +1787,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-loop_delay_ms">Variable LOOP_DELAY_MS</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 26)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 34)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">LOOP_DELAY_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span>
 </code></pre></div>
 <p><strong>Type</strong>: const unsigned long</p>
@@ -1758,7 +1795,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-client_id_buffer_size">Variable CLIENT_ID_BUFFER_SIZE</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 27)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 35)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">CLIENT_ID_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span>
 </code></pre></div>
 <p><strong>Type</strong>: const size_t</p>
@@ -1766,15 +1803,23 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-sd_sck_frequency_mhz">Variable SD_SCK_FREQUENCY_MHZ</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 28)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 36)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">SD_SCK_FREQUENCY_MHZ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span>
 </code></pre></div>
 <p><strong>Type</strong>: const uint8_t</p>
+<p><a id="core_8cpp_1a6cef1bc6ccf08999da59db3b88095f7d"></a></p>
+<h3 id="variable-reconnect_interval_ms">Variable RECONNECT_INTERVAL_MS</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 37)</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">RECONNECT_INTERVAL_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2000</span>
+</code></pre></div>
+<p><strong>Type</strong>: const int</p>
 <p><a id="core_8cpp_1abb6f4167f4e2989c5f0af6f10b56d33e"></a></p>
 <h3 id="variable-lastloggedminute">Variable lastLoggedMinute</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 29)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 43)</p>
 <div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">lastLoggedMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span>
 </code></pre></div>
 <p><strong>Type</strong>: int</p>
@@ -1782,7 +1827,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-count">Variable count</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 30)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 44)</p>
 <div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 </code></pre></div>
 <p><strong>Type</strong>: int</p>
@@ -1790,7 +1835,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-wifiok">Variable wifiOk</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 31)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 45)</p>
 <div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="n">wifiOk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
 <p><strong>Type</strong>: bool</p>
@@ -1798,10 +1843,18 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-recoveredsent">Variable recoveredSent</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 32)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 46)</p>
 <div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
 <p><strong>Type</strong>: bool</p>
+<p><a id="core_8cpp_1aca3b6475cc9f45c2f6c244acb67c64f7"></a></p>
+<h3 id="variable-lastreconnectattempt">Variable lastReconnectAttempt</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 47)</p>
+<div class="highlight"><pre><span></span><code><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">lastReconnectAttempt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+</code></pre></div>
+<p><strong>Type</strong>: unsigned long</p>
 <h2 id="functions">Functions</h2>
 <p><a id="core_8cpp_1aa36be85ab02519b9969bf118f8647728"></a></p>
 <h3 id="function-mqttclient">Function mqttClient</h3>
@@ -1814,18 +1867,32 @@ click 1 "core_8cpp.md#core_8cpp"
 <li><a href="./#core_8cpp_1a64f7c60366b0a82c42d7a1dbf4e9505a">wifiClient</a></li>
 </ul>
 <p><strong>Return type</strong>: MqttClient</p>
+<p><a id="core_8cpp_1aecaef34a5b4c910faf41faad214950fd"></a></p>
+<h3 id="function-iswificonnected">Function isWifiConnected</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
+<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="n">isWifiConnected</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Return type</strong>: bool</p>
+<p><a id="core_8cpp_1a636ad73f43ed4a9e30c58de52e8030d0"></a></p>
+<h3 id="function-ismqttconnected">Function isMqttConnected</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
+<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="n">isMqttConnected</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Return type</strong>: bool</p>
 <p><a id="core_8cpp_1a84b7ee25d4d43e3b6dd6b3193a2547f0"></a></p>
 <h3 id="function-datetime">Function dateTime</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
 <div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">dateTime</span><span class="p">(</span><span class="kt">uint16_t</span><span class="w"> </span><span class="o">*</span><span class="n">date</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="o">*</span><span class="n">time</span><span class="p">)</span>
 </code></pre></div>
-<p>Retrieves the current date and time from the RTC and formats them for FAT file systems.</p>
-<p>This function obtains the current date and time from the real-time clock (RTC) and encodes them using the FAT file system date and time format macros.</p>
+<p>Callback function for FAT file system timestamp generation.</p>
+<p>This function is used by the SdFat library to obtain current date and time for file system operations. It retrieves the time from the RTC and converts it to the FAT file system format using the appropriate macros.</p>
 <p><strong>Parameters</strong>:</p>
 <ul>
-<li><strong>date</strong>: Pointer to a uint16_t variable where the encoded FAT date will be stored.</li>
-<li><strong>time</strong>: Pointer to a uint16_t variable where the encoded FAT time will be stored.</li>
+<li><strong>date</strong>: Pointer to store the encoded FAT date (year, month, day)</li>
+<li><strong>time</strong>: Pointer to store the encoded FAT time (hour, minute, second)</li>
 </ul>
+<p>?&gt; This function is registered as a callback with SdFile::dateTimeCallback()</p>
+<p><strong>See also</strong>: FAT_DATE, FAT_TIME macros for encoding format details</p>
 <p><strong>Parameters</strong>:</p>
 <ul>
 <li>uint16_t * <strong>date</strong></li>
@@ -1837,60 +1904,115 @@ click 1 "core_8cpp.md#core_8cpp"
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
 <div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">coreSetup</span><span class="p">()</span>
 </code></pre></div>
-<p>Initializes core system components.</p>
-<p>This function performs the following setup steps:
-* Connects to WiFi and sets the global wifiOk flag.</p>
+<p>Initializes all core system components and peripherals.</p>
+<p>This function performs comprehensive system initialization including:</p>
+<p><strong>Network Setup:</strong>
+* Establishes WiFi connection with timeout handling</p>
 <ul>
 <li>
-<p>Generates and sets the MQTT client ID based on the sensor in use.</p>
+<p>Configures MQTT client with unique sensor-based ID</p>
 </li>
 <li>
-<p>Connects to the MQTT broker if WiFi connection is successful.</p>
-</li>
-<li>
-<p>Initializes the real-time clock (RTC) and sets the time if power was lost.</p>
-</li>
-<li>
-<p>Registers the date/time callback for SD file timestamps.</p>
-</li>
-<li>
-<p>Initializes the SD card and halts execution if initialization fails.</p>
-</li>
-<li>
-<p>Initializes the temperature sensor and halts execution if initialization fails.</p>
-</li>
-<li>
-<p>Prints a message to the serial console upon successful setup.</p>
+<p>Attempts initial MQTT broker connection</p>
 </li>
 </ul>
-<p>This function will halt execution (infinite loop) if any critical component fails to initialize.</p>
+<p><strong>Hardware Initialization:</strong>
+* Initializes DS3231 real-time clock module</p>
+<ul>
+<li>
+<p>Adjusts RTC time if power was lost (uses compilation timestamp)</p>
+</li>
+<li>
+<p>Sets up SD card with SPI communication</p>
+</li>
+<li>
+<p>Initializes ADT7410 temperature sensor</p>
+</li>
+</ul>
+<p><strong>Data Recovery:</strong>
+* Registers FAT file system timestamp callback</p>
+<ul>
+<li>Attempts to send any pending/recovered data from previous sessions</li>
+</ul>
+<p>!&gt; <strong>Warning</strong> \
+This function will halt program execution (infinite loop) if any critical component fails to initialize (RTC, SD card, or temperature sensor)</p>
+<p>?&gt; The function uses compile-time constants for timeouts and configuration</p>
+<p><strong>See also</strong>: <a href="./#core_8cpp_1a9b7578cbf8a2ac9a8a2ccb3fc5431791">WIFI_CONNECT_TIMEOUT_MS</a>, <a href="./#core_8cpp_1a4ae62406649dce01eb479e7a476a4305">CLIENT_ID_BUFFER_SIZE</a>, <a href="./#core_8cpp_1a4f1edbd0b6c65e5e7843bbda20bb24e2">SD_SCK_FREQUENCY_MHZ</a></p>
 <p><strong>Return type</strong>: void</p>
 <p><a id="core_8cpp_1aa5603fdb8113111f87914938533d1ece"></a></p>
 <h3 id="function-coreloop">Function coreLoop</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
 <div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">coreLoop</span><span class="p">()</span>
 </code></pre></div>
-<p>Main loop function for core operations.</p>
-<p>This function manages the main operational loop, including:
-* Reading the current time from the RTC.</p>
+<p>Main operational loop for continuous sensor monitoring and data transmission.</p>
+<p>This function implements the core operational logic of the temperature monitoring system with robust connectivity handling and data persistence features.</p>
+<p><strong>Operational Flow:</strong></p>
+<ol>
+<li><strong>Time Management:</strong></li>
+<li>
+<p>Reads current time from RTC</p>
+</li>
+<li>
+<p>Tracks minute changes to prevent duplicate measurements</p>
+</li>
+<li>
+<p><strong>WiFi Connection Management:</strong></p>
+</li>
+<li>
+<p>Monitors WiFi status with intelligent reconnection timing</p>
+</li>
+<li>
+<p>Falls back to CSV logging during WiFi outages</p>
+</li>
+<li>
+<p>Implements reconnection throttling to prevent excessive attempts</p>
+</li>
+<li>
+<p><strong>MQTT Connection Management:</strong></p>
+</li>
+<li>
+<p>Verifies MQTT broker connectivity</p>
+</li>
+<li>
+<p>Handles automatic reconnection with status reporting</p>
+</li>
+<li>
+<p>Falls back to CSV logging during MQTT outages</p>
+</li>
+<li>
+<p><strong>Data Recovery Processing:</strong></p>
+</li>
+<li>
+<p>Sends pending CSV data after successful reconnection</p>
+</li>
+<li>
+<p>Ensures recovery data is transmitted only once per reconnection cycle</p>
+</li>
+<li>
+<p><strong>Normal Operation:</strong></p>
+</li>
+<li>
+<p>Performs temperature measurements once per minute</p>
+</li>
+<li>
+<p>Transmits data via MQTT to configured topic</p>
+</li>
+<li>
+<p>Maintains MQTT client polling for incoming messages</p>
+</li>
+</ol>
+<p><strong>Error Handling:</strong>
+* Network failures trigger CSV fallback storage</p>
 <ul>
 <li>
-<p>Ensuring WiFi and MQTT connections are active, attempting reconnection if necessary.</p>
+<p>Connection attempts are rate-limited to prevent resource exhaustion</p>
 </li>
 <li>
-<p>Logging temperature data to SD card if network connections are unavailable.</p>
-</li>
-<li>
-<p>Sending recovered (pending) data after reconnection.</p>
-</li>
-<li>
-<p>Reading and sending temperature data to MQTT broker once per minute.</p>
-</li>
-<li>
-<p>Polling the MQTT client and maintaining a fixed loop delay.</p>
+<p>All measurement data is preserved during connectivity issues</p>
 </li>
 </ul>
-<p>The function ensures that temperature data is not lost during connectivity issues by saving to SD card and resending when connections are restored.</p>
+<p>?&gt; The function maintains a fixed loop delay for consistent timing</p>
+<p><strong>See also</strong>: <a href="./#core_8cpp_1a6cef1bc6ccf08999da59db3b88095f7d">RECONNECT_INTERVAL_MS</a>, <a href="./#core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b">LOOP_DELAY_MS</a> for timing configuration, <a href="../storage_8h/#storage_8h_1a576d7131c80320b3f5129de67ea60253">saveToCsvBatch()</a> for offline data storage, <a href="../mqtt_8h/#mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e">sendPendingData()</a> for data recovery mechanism</p>
 <p><strong>Return type</strong>: void</p>
 <h2 id="source">Source</h2>
 <div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;platform.h&quot;</span>
@@ -1908,6 +2030,10 @@ click 1 "core_8cpp.md#core_8cpp"
 <span class="k">static</span><span class="w"> </span><span class="n">WiFiClient</span><span class="w"> </span><span class="n">wifiClient</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="n">MqttClient</span><span class="w"> </span><span class="nf">mqttClient</span><span class="p">(</span><span class="n">wifiClient</span><span class="p">);</span>
 
+<span class="c1">// =============================================================================</span>
+<span class="c1">// SYSTEM CONFIGURATION CONSTANTS</span>
+<span class="c1">// =============================================================================</span>
+
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">chipSelect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdOne</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sensor_One&quot;</span><span class="p">;</span>
 <span class="c1">// static const char* sensorIdTwo = &quot;Sensor_Two&quot;;</span>
@@ -1916,22 +2042,51 @@ click 1 "core_8cpp.md#core_8cpp"
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;temp&quot;</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dhbw/ai/si2023/2/&quot;</span><span class="p">;</span>
 
-<span class="c1">// Timing and connection constants</span>
+<span class="c1">// =============================================================================</span>
+<span class="c1">// TIMING AND CONNECTION CONSTANTS</span>
+<span class="c1">// =============================================================================</span>
+
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15000</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">LOOP_DELAY_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">CLIENT_ID_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">SD_SCK_FREQUENCY_MHZ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">RECONNECT_INTERVAL_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2000</span><span class="p">;</span>
+
+<span class="c1">// =============================================================================</span>
+<span class="c1">// SYSTEM STATE VARIABLES</span>
+<span class="c1">// =============================================================================</span>
+
 <span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">lastLoggedMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">wifiOk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">lastReconnectAttempt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 
+<span class="c1">// =============================================================================</span>
+<span class="c1">// CONNECTION STATUS FUNCTIONS</span>
+<span class="c1">// =============================================================================</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="nf">isWifiConnected</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">WiFi</span><span class="p">.</span><span class="n">status</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">WL_CONNECTED</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="nf">isMqttConnected</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">mqttClient</span><span class="p">.</span><span class="n">connected</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// =============================================================================</span>
+<span class="c1">// FAT FILE SYSTEM CALLBACK FUNCTIONS</span>
+<span class="c1">// =============================================================================</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">dateTime</span><span class="p">(</span><span class="kt">uint16_t</span><span class="o">*</span><span class="w"> </span><span class="n">date</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="o">*</span><span class="w"> </span><span class="n">time</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">DateTime</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtc</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
 <span class="w">  </span><span class="o">*</span><span class="n">date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FAT_DATE</span><span class="p">(</span><span class="n">now</span><span class="p">.</span><span class="n">year</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">month</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">day</span><span class="p">());</span>
 <span class="w">  </span><span class="o">*</span><span class="n">time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FAT_TIME</span><span class="p">(</span><span class="n">now</span><span class="p">.</span><span class="n">hour</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">minute</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">second</span><span class="p">());</span>
 <span class="p">}</span>
+
+<span class="c1">// =============================================================================</span>
+<span class="c1">// SYSTEM INITIALIZATION FUNCTIONS</span>
+<span class="c1">// =============================================================================</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">coreSetup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">wifiOk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">connectWiFi</span><span class="p">(</span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="p">);</span>
@@ -1948,10 +2103,12 @@ click 1 "core_8cpp.md#core_8cpp"
 <span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 
+<span class="w">  </span><span class="c1">// Set RTC time if power was lost (uses compilation timestamp)</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rtc</span><span class="p">.</span><span class="n">lostPower</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">rtc</span><span class="p">.</span><span class="n">adjust</span><span class="p">(</span><span class="n">DateTime</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="n">__DATE__</span><span class="p">),</span><span class="w"> </span><span class="n">F</span><span class="p">(</span><span class="n">__TIME__</span><span class="p">)));</span>
 <span class="w">  </span><span class="p">}</span>
 
+<span class="w">  </span><span class="c1">// Register callback for SD file timestamps and initialize SD card</span>
 <span class="w">  </span><span class="n">SdFile</span><span class="o">::</span><span class="n">dateTimeCallback</span><span class="p">(</span><span class="n">dateTime</span><span class="p">);</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">sd</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="n">chipSelect</span><span class="p">,</span><span class="w"> </span><span class="n">SD_SCK_MHZ</span><span class="p">(</span><span class="n">SD_SCK_FREQUENCY_MHZ</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;SD card failed.&quot;</span><span class="p">);</span>
@@ -1963,11 +2120,16 @@ click 1 "core_8cpp.md#core_8cpp"
 <span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="c1">// DateTime now = rtc.now();</span>
-<span class="w">  </span><span class="c1">// sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);</span>
+<span class="w">  </span><span class="c1">// Attempt to send any pending recovery data from previous sessions</span>
+<span class="w">  </span><span class="n">DateTime</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtc</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="w">  </span><span class="n">sendPendingData</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
 
 <span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Setup complete.&quot;</span><span class="p">);</span>
 <span class="p">}</span>
+
+<span class="c1">// =============================================================================</span>
+<span class="c1">// MAIN OPERATIONAL LOOP</span>
+<span class="c1">// =============================================================================</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">coreLoop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">DateTime</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtc</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
@@ -1978,19 +2140,19 @@ click 1 "core_8cpp.md#core_8cpp"
 <span class="w">    </span><span class="n">alreadyLoggedThisMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="c1">// Reconnect WiFi</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">wifiOk</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">WiFi</span><span class="p">.</span><span class="n">status</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">WL_CONNECTED</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;WiFi not connected. Trying to reconnect...&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">wifiOk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">connectWiFi</span><span class="p">(</span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="p">);</span>
+<span class="w">  </span><span class="c1">// Step 1: Check WiFi connection</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isWifiConnected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lastReconnectAttempt</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">RECONNECT_INTERVAL_MS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">lastReconnectAttempt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;WiFi not connected. Trying to reconnect...&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">wifiOk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">connectWiFi</span><span class="p">(</span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">wifiOk</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">connectMQTT</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;WiFi ok: Reconnected to MQTT.&quot;</span><span class="p">);</span>
-<span class="w">      </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w">  </span><span class="c1">// Reset to allow sending recovered data again</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Reconnect failed. Skipping loop.&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">wifiOk</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;WiFi reconnect failed. Skipping loop.&quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">alreadyLoggedThisMinute</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readTemperatureCelsius</span><span class="p">();</span>
-<span class="w">        </span><span class="n">saveToSD</span><span class="p">(</span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
+<span class="w">        </span><span class="n">saveToCsvBatch</span><span class="p">(</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
 <span class="w">        </span><span class="n">alreadyLoggedThisMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 <span class="w">        </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
 <span class="w">      </span><span class="p">}</span>
@@ -1999,31 +2161,33 @@ click 1 "core_8cpp.md#core_8cpp"
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="c1">// Reconnect MQTT</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mqttClient</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Step 2: Check MQTT connection</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isMqttConnected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;MQTT not connected. Trying to reconnect...&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">connectMQTT</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;MQTT still not connected.&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;MQTT reconnect failed. Skipping loop.&quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">alreadyLoggedThisMinute</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readTemperatureCelsius</span><span class="p">();</span>
-<span class="w">        </span><span class="n">saveToSD</span><span class="p">(</span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
+<span class="w">        </span><span class="n">saveToCsvBatch</span><span class="p">(</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
 <span class="w">        </span><span class="n">alreadyLoggedThisMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 <span class="w">        </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">      </span><span class="n">delay</span><span class="p">(</span><span class="n">LOOP_DELAY_MS</span><span class="p">);</span>
 <span class="w">      </span><span class="k">return</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
+
 <span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;MQTT reconnected successfully.&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="c1">// Reset to allow sending recovered data again</span>
+<span class="w">    </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="c1">// Allow recovery again</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="c1">// After successful MQTT connection, send pending data</span>
+<span class="w">  </span><span class="c1">// Step 3: After successful MQTT reconnect → send old CSVs</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mqttClient</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">sendPendingData</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
-<span class="w">    </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sendPendingData</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="c1">// normal operation: read temperature and send to MQTT</span>
+<span class="w">  </span><span class="c1">// Step 4: Normal measurement and MQTT transmission</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">alreadyLoggedThisMinute</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readTemperatureCelsius</span><span class="p">();</span>
 <span class="w">    </span><span class="n">sendToMqtt</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
@@ -2031,6 +2195,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <span class="w">    </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 
+<span class="w">  </span><span class="c1">// Step 5: MQTT loop and wait time</span>
 <span class="w">  </span><span class="n">mqttClient</span><span class="p">.</span><span class="n">poll</span><span class="p">();</span>
 <span class="w">  </span><span class="n">delay</span><span class="p">(</span><span class="n">LOOP_DELAY_MS</span><span class="p">);</span>
 <span class="p">}</span>
@@ -2055,7 +2220,7 @@ click 1 "core_8cpp.md#core_8cpp"
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 5, 2025 13:02:51 UTC">August 5, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 5, 2025 20:09:01 UTC">August 5, 2025</span>
   </span>
 
     

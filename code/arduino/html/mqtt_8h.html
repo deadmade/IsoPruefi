@@ -86,21 +86,75 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ab4dfd2aed88177be74263339392bdcc0" id="r_ab4dfd2aed88177be74263339392bdcc0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8h.html#ab4dfd2aed88177be74263339392bdcc0">sendToMqtt</a> (MqttClient &amp;<a class="el" href="core_8cpp.html#aa36be85ab02519b9969bf118f8647728">mqttClient</a>, const char *topicPrefix, const char *<a class="el" href="core_8cpp.html#abf39fa4821630d1a42cee86df5b43f39">sensorType</a>, const char *sensorId, float celsius, const DateTime &amp;now, int sequence)</td></tr>
-<tr class="memdesc:ab4dfd2aed88177be74263339392bdcc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Publishes sensor data to an MQTT topic.  <br /></td></tr>
+<tr class="memdesc:ab4dfd2aed88177be74263339392bdcc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Publishes real-time sensor data to MQTT broker.  <br /></td></tr>
 <tr class="separator:ab4dfd2aed88177be74263339392bdcc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2a92cb70a772c6c95d8b818c6b01f77" id="r_ab2a92cb70a772c6c95d8b818c6b01f77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8h.html#ab2a92cb70a772c6c95d8b818c6b01f77">sendPendingData</a> (MqttClient &amp;<a class="el" href="core_8cpp.html#aa36be85ab02519b9969bf118f8647728">mqttClient</a>, const char *topicPrefix, const char *<a class="el" href="core_8cpp.html#abf39fa4821630d1a42cee86df5b43f39">sensorType</a>, const char *sensorId, const DateTime &amp;now)</td></tr>
-<tr class="memdesc:ab2a92cb70a772c6c95d8b818c6b01f77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends pending sensor data that was saved offline to MQTT broker.  <br /></td></tr>
-<tr class="separator:ab2a92cb70a772c6c95d8b818c6b01f77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f6ba6fe36426e331cac4ec8f8ab4c9e" id="r_a2f6ba6fe36426e331cac4ec8f8ab4c9e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8h.html#a2f6ba6fe36426e331cac4ec8f8ab4c9e">sendPendingData</a> (MqttClient &amp;<a class="el" href="core_8cpp.html#aa36be85ab02519b9969bf118f8647728">mqttClient</a>, const char *topicPrefix, const char *<a class="el" href="core_8cpp.html#abf39fa4821630d1a42cee86df5b43f39">sensorType</a>, const char *sensorId, const DateTime &amp;now)</td></tr>
+<tr class="memdesc:a2f6ba6fe36426e331cac4ec8f8ab4c9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes and transmits pending CSV files from offline periods.  <br /></td></tr>
+<tr class="separator:a2f6ba6fe36426e331cac4ec8f8ab4c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9addf0d646507c6b47509cc143a9d46" id="r_aa9addf0d646507c6b47509cc143a9d46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8h.html#aa9addf0d646507c6b47509cc143a9d46">createFullTopic</a> (char *buffer, size_t bufferSize, const char *topicPrefix, const char *<a class="el" href="core_8cpp.html#abf39fa4821630d1a42cee86df5b43f39">sensorType</a>, const char *sensorId, const char *suffix=&quot;&quot;)</td></tr>
+<tr class="separator:aa9addf0d646507c6b47509cc143a9d46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ab2a92cb70a772c6c95d8b818c6b01f77" name="ab2a92cb70a772c6c95d8b818c6b01f77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2a92cb70a772c6c95d8b818c6b01f77">&#9670;&#160;</a></span>sendPendingData()</h2>
+<a id="aa9addf0d646507c6b47509cc143a9d46" name="aa9addf0d646507c6b47509cc143a9d46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9addf0d646507c6b47509cc143a9d46">&#9670;&#160;</a></span>createFullTopic()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void sendPendingData </td>
+          <td class="memname">void createFullTopic </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>bufferSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>topicPrefix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>sensorType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>sensorId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>suffix</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2f6ba6fe36426e331cac4ec8f8ab4c9e" name="a2f6ba6fe36426e331cac4ec8f8ab4c9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f6ba6fe36426e331cac4ec8f8ab4c9e">&#9670;&#160;</a></span>sendPendingData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool sendPendingData </td>
           <td>(</td>
           <td class="paramtype">MqttClient &amp;&#160;</td>
           <td class="paramname"><em>mqttClient</em>, </td>
@@ -137,18 +191,31 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sends pending sensor data that was saved offline to MQTT broker. </p>
-<p>Retrieves saved sensor data files from the last 24 hours, consolidates them into a single JSON payload, and publishes to a recovery topic. After successful transmission, the original files and recovery file are deleted from storage.</p>
+<p>Processes and transmits pending CSV files from offline periods. </p>
+<p>This function implements the data recovery mechanism that ensures no sensor data is lost during network outages. It scans for CSV files created during offline periods, converts them to JSON format, and transmits them via MQTT.</p>
+<p>**Recovery Process:** 1. **File Discovery**: Scans the current date folder for CSV files 2. **Age Filtering**: Skips files older than 24 hours to prevent stale data 3. **Content Validation**: Checks for valid data before transmission 4. **Size Management**: Handles large payloads that exceed buffer limits 5. **Transmission**: Publishes data to recovery topic 6. **Cleanup**: Deletes successfully transmitted files 7. **Timeout Handling**: Prevents infinite processing loops</p>
+<p>**Error Handling:**</p><ul>
+<li>Skips empty or corrupted files</li>
+<li>Handles oversized payloads gracefully</li>
+<li>Preserves files if transmission fails</li>
+<li>Implements timeout protection</li>
+</ul>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mqttClient</td><td>Reference to the MQTT client used for publishing. </td></tr>
-    <tr><td class="paramname">topicPrefix</td><td>Prefix for the MQTT topic (e.g., "sensors/"). </td></tr>
-    <tr><td class="paramname">sensorType</td><td>Type of the sensor (e.g., "temperature"). </td></tr>
-    <tr><td class="paramname">sensorId</td><td>Unique identifier for the sensor. </td></tr>
-    <tr><td class="paramname">now</td><td>Current date and time for file filtering. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mqttClient</td><td>Reference to the MQTT client instance </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">topicPrefix</td><td>Base MQTT topic prefix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sensorType</td><td>Type identifier for the sensor </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sensorId</td><td>Unique identifier for this sensor </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">now</td><td>Current timestamp for filtering and processing</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>true if all pending files were successfully processed, false if timeout occurred or some files could not be transmitted</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function uses the "/recovered" topic suffix for transmitted data </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="storage_8h.html#a7e33188776964f5ea7504de34669407d" title="Builds a JSON document from CSV batch data for recovery transmission.">buildRecoveredJsonFromCsv()</a> for CSV to JSON conversion </dd>
+<dd>
+<a class="el" href="storage_8h.html#a712233a12d2ef3c7d797e0a06149ca73" title="Deletes a CSV file from the SD card storage system.">deleteCsvFile()</a> for file cleanup after successful transmission </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Files older than 24 hours are automatically skipped </dd></dl>
 
 </div>
 </div>
@@ -208,20 +275,25 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Publishes sensor data to an MQTT topic. </p>
-<p>Constructs a JSON payload with sensor data and publishes it to an MQTT topic constructed from the given prefix, sensor type, and sensor ID.</p>
+<p>Publishes real-time sensor data to MQTT broker. </p>
+<p>This function handles the complete process of publishing current sensor readings to the MQTT broker, including JSON formatting and topic construction.</p>
+<p>**Process Flow:** 1. Polls MQTT client to maintain connection 2. Constructs appropriate topic based on sensor information 3. Builds JSON payload with sensor data 4. Attempts to publish data to broker 5. Provides status feedback via serial output</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mqttClient</td><td>Reference to the MQTT client used for publishing. </td></tr>
-    <tr><td class="paramname">topicPrefix</td><td>Prefix for the MQTT topic (e.g., "sensors/"). </td></tr>
-    <tr><td class="paramname">sensorType</td><td>Type of the sensor (e.g., "temperature"). </td></tr>
-    <tr><td class="paramname">sensorId</td><td>Unique identifier for the sensor. </td></tr>
-    <tr><td class="paramname">celsius</td><td>Sensor reading in Celsius. </td></tr>
-    <tr><td class="paramname">now</td><td>Current date and time. </td></tr>
-    <tr><td class="paramname">sequence</td><td>Sequence number for the message. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mqttClient</td><td>Reference to the MQTT client instance </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">topicPrefix</td><td>Base MQTT topic prefix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sensorType</td><td>Type identifier for the sensor </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sensorId</td><td>Unique identifier for this sensor </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">celsius</td><td>Temperature reading in Celsius </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">now</td><td>Current timestamp for the reading </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sequence</td><td>Sequence number for the measurement</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>This function does not handle connection failures - the caller should verify MQTT connectivity before calling </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="storage_8h.html#ab16364c7bad54765d7deca604d19f172" title="Builds a JSON document from live sensor data for real-time transmission.">buildJson()</a> for JSON payload structure </dd>
+<dd>
+<a class="el" href="mqtt_8cpp.html#a61adb6a9fd42b65f57c7f643e6f239f4">createFullTopic()</a> for <a class="el" href="core_8cpp.html#a4ed7b4c951621dbec76099594f64d249">topic</a> construction details </dd></dl>
 
 </div>
 </div>

@@ -29,25 +29,39 @@
         <argsstring>()</argsstring>
         <name>coreSetup</name>
         <briefdescription>
-<para>Initializes core system components. </para>
+<para>Initializes all core system components and peripherals. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs the following setup steps:<itemizedlist>
-<listitem><para>Connects to WiFi and sets the global wifiOk flag.</para>
-</listitem><listitem><para>Generates and sets the MQTT client ID based on the sensor in use.</para>
-</listitem><listitem><para>Connects to the MQTT broker if WiFi connection is successful.</para>
-</listitem><listitem><para>Initializes the real-time clock (RTC) and sets the time if power was lost.</para>
-</listitem><listitem><para>Registers the date/time callback for SD file timestamps.</para>
-</listitem><listitem><para>Initializes the SD card and halts execution if initialization fails.</para>
-</listitem><listitem><para>Initializes the temperature sensor and halts execution if initialization fails.</para>
-</listitem><listitem><para>Prints a message to the serial console upon successful setup.</para>
+<para>This function performs comprehensive system initialization including:</para>
+<para>**Network Setup:**<itemizedlist>
+<listitem><para>Establishes WiFi connection with timeout handling</para>
+</listitem><listitem><para>Configures MQTT client with unique sensor-based ID</para>
+</listitem><listitem><para>Attempts initial MQTT broker connection</para>
 </listitem></itemizedlist>
 </para>
-<para>This function will halt execution (infinite loop) if any critical component fails to initialize. </para>
+<para>**Hardware Initialization:**<itemizedlist>
+<listitem><para>Initializes DS3231 real-time clock module</para>
+</listitem><listitem><para>Adjusts RTC time if power was lost (uses compilation timestamp)</para>
+</listitem><listitem><para>Sets up SD card with SPI communication</para>
+</listitem><listitem><para>Initializes ADT7410 temperature sensor</para>
+</listitem></itemizedlist>
+</para>
+<para>**Data Recovery:**<itemizedlist>
+<listitem><para>Registers FAT file system timestamp callback</para>
+</listitem><listitem><para>Attempts to send any pending/recovered data from previous sessions</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="warning"><para>This function will halt program execution (infinite loop) if any critical component fails to initialize (RTC, SD card, or temperature sensor)</para>
+</simplesect>
+<simplesect kind="note"><para>The function uses compile-time constants for timeouts and configuration </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="core_8cpp_1a9b7578cbf8a2ac9a8a2ccb3fc5431791" kindref="member">WIFI_CONNECT_TIMEOUT_MS</ref>, <ref refid="core_8cpp_1a4ae62406649dce01eb479e7a476a4305" kindref="member">CLIENT_ID_BUFFER_SIZE</ref>, <ref refid="core_8cpp_1a4f1edbd0b6c65e5e7843bbda20bb24e2" kindref="member">SD_SCK_FREQUENCY_MHZ</ref> </para>
+</simplesect>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/core.h" line="3" column="6" bodyfile="src/core.cpp" bodystart="65" bodyend="99" declfile="include/core.h" declline="3" declcolumn="6"/>
+        <location file="include/core.h" line="3" column="6" bodyfile="src/core.cpp" bodystart="114" bodyend="151" declfile="include/core.h" declline="3" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="core_8h_1aa5603fdb8113111f87914938533d1ece" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -55,23 +69,58 @@
         <argsstring>()</argsstring>
         <name>coreLoop</name>
         <briefdescription>
-<para>Main loop function for core operations. </para>
+<para>Main operational loop for continuous sensor monitoring and data transmission. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function manages the main operational loop, including:<itemizedlist>
-<listitem><para>Reading the current time from the RTC.</para>
-</listitem><listitem><para>Ensuring WiFi and MQTT connections are active, attempting reconnection if necessary.</para>
-</listitem><listitem><para>Logging temperature data to SD card if network connections are unavailable.</para>
-</listitem><listitem><para>Sending recovered (pending) data after reconnection.</para>
-</listitem><listitem><para>Reading and sending temperature data to MQTT broker once per minute.</para>
-</listitem><listitem><para>Polling the MQTT client and maintaining a fixed loop delay.</para>
+<para>This function implements the core operational logic of the temperature monitoring system with robust connectivity handling and data persistence features.</para>
+<para>**Operational Flow:**</para>
+<para>1. **Time Management:**<itemizedlist>
+<listitem><para>Reads current time from RTC</para>
+</listitem><listitem><para>Tracks minute changes to prevent duplicate measurements</para>
 </listitem></itemizedlist>
 </para>
-<para>The function ensures that temperature data is not lost during connectivity issues by saving to SD card and resending when connections are restored. </para>
+<para>2. **WiFi Connection Management:**<itemizedlist>
+<listitem><para>Monitors WiFi status with intelligent reconnection timing</para>
+</listitem><listitem><para>Falls back to CSV logging during WiFi outages</para>
+</listitem><listitem><para>Implements reconnection throttling to prevent excessive attempts</para>
+</listitem></itemizedlist>
+</para>
+<para>3. **MQTT Connection Management:**<itemizedlist>
+<listitem><para>Verifies MQTT broker connectivity</para>
+</listitem><listitem><para>Handles automatic reconnection with status reporting</para>
+</listitem><listitem><para>Falls back to CSV logging during MQTT outages</para>
+</listitem></itemizedlist>
+</para>
+<para>4. **Data Recovery Processing:**<itemizedlist>
+<listitem><para>Sends pending CSV data after successful reconnection</para>
+</listitem><listitem><para>Ensures recovery data is transmitted only once per reconnection cycle</para>
+</listitem></itemizedlist>
+</para>
+<para>5. **Normal Operation:**<itemizedlist>
+<listitem><para>Performs temperature measurements once per minute</para>
+</listitem><listitem><para>Transmits data via MQTT to configured topic</para>
+</listitem><listitem><para>Maintains MQTT client polling for incoming messages</para>
+</listitem></itemizedlist>
+</para>
+<para>**Error Handling:**<itemizedlist>
+<listitem><para>Network failures trigger CSV fallback storage</para>
+</listitem><listitem><para>Connection attempts are rate-limited to prevent resource exhaustion</para>
+</listitem><listitem><para>All measurement data is preserved during connectivity issues</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="note"><para>The function maintains a fixed loop delay for consistent timing </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="core_8cpp_1a6cef1bc6ccf08999da59db3b88095f7d" kindref="member">RECONNECT_INTERVAL_MS</ref>, <ref refid="core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b" kindref="member">LOOP_DELAY_MS</ref> for timing configuration </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="storage_8h_1a576d7131c80320b3f5129de67ea60253" kindref="member">saveToCsvBatch()</ref> for offline data storage </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e" kindref="member">sendPendingData()</ref> for data recovery mechanism </para>
+</simplesect>
+</para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/core.h" line="4" column="6" bodyfile="src/core.cpp" bodystart="115" bodyend="179" declfile="include/core.h" declline="4" declcolumn="6"/>
+        <location file="include/core.h" line="4" column="6" bodyfile="src/core.cpp" bodystart="198" bodyend="265" declfile="include/core.h" declline="4" declcolumn="6"/>
       </memberdef>
     </sectiondef>
     <briefdescription>

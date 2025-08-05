@@ -46,7 +46,8 @@
   </compound>
   <compound refid="mqtt_8h" kind="file"><name>mqtt.h</name>
     <member refid="mqtt_8h_1ab4dfd2aed88177be74263339392bdcc0" kind="function"><name>sendToMqtt</name></member>
-    <member refid="mqtt_8h_1ab2a92cb70a772c6c95d8b818c6b01f77" kind="function"><name>sendPendingData</name></member>
+    <member refid="mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e" kind="function"><name>sendPendingData</name></member>
+    <member refid="mqtt_8h_1aa9addf0d646507c6b47509cc143a9d46" kind="function"><name>createFullTopic</name></member>
   </compound>
   <compound refid="network_8h" kind="file"><name>network.h</name>
     <member refid="network_8h_1a0757debfda15f5757976bc2c53c955c7" kind="function"><name>connectWiFi</name></member>
@@ -70,18 +71,13 @@
     <member refid="sensor_8h_1a800eabe870c45c5a4b574e2223f39916" kind="function"><name>formatTimestamp</name></member>
   </compound>
   <compound refid="storage_8h" kind="file"><name>storage.h</name>
-    <member refid="storage_8h_1a09093bc97a03919f0854c4b6683837b7" kind="function"><name>saveToSD</name></member>
-    <member refid="storage_8h_1a677bacd38e6f20c32dbcc32e29714db8" kind="function"><name>saveRecoveredJsonToSd</name></member>
-    <member refid="storage_8h_1ad52b53beacc87b5cc365800cd88f492e" kind="function"><name>listSavedFiles</name></member>
-    <member refid="storage_8h_1ae1177c93c12dbb9a461014a22be241eb" kind="function"><name>deleteRecoveredAndPendingSourceFiles</name></member>
+    <member refid="storage_8h_1a576d7131c80320b3f5129de67ea60253" kind="function"><name>saveToCsvBatch</name></member>
+    <member refid="storage_8h_1a712233a12d2ef3c7d797e0a06149ca73" kind="function"><name>deleteCsvFile</name></member>
     <member refid="storage_8h_1ab16364c7bad54765d7deca604d19f172" kind="function"><name>buildJson</name></member>
-    <member refid="storage_8h_1a49ffb7f647d6701d9cea3decdac97cf1" kind="function"><name>buildRecoveredJson</name></member>
-    <member refid="storage_8h_1a03d6491b13757e01963c2ed90e52aa5f" kind="function"><name>saveDataToSD</name></member>
-    <member refid="storage_8h_1a9b1aef5a070bc35c2abe6ef4721e421b" kind="function"><name>saveRecoveredJsonDataToSd</name></member>
-    <member refid="storage_8h_1a4ebfbb31311cdc384f46f28627733869" kind="function"><name>listSavedFilesData</name></member>
-    <member refid="storage_8h_1a655fe9b7f9b52e408b888ce3aadd62a2" kind="function"><name>deleteRecoveredAndPendingSourceFilesData</name></member>
+    <member refid="storage_8h_1a7e33188776964f5ea7504de34669407d" kind="function"><name>buildRecoveredJsonFromCsv</name></member>
     <member refid="storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e" kind="function"><name>createFolderName</name></member>
     <member refid="storage_8h_1a99398dc180671d28434aa4982bfd36ca" kind="function"><name>createFilename</name></member>
+    <member refid="storage_8h_1a6c1e7509576dad1d0d8c0b8e4b169f1b" kind="function"><name>createRecoveredFilename</name></member>
   </compound>
   <compound refid="core_8cpp" kind="file"><name>core.cpp</name>
     <member refid="core_8cpp_1afa042f998806fcdedab1794cebbeaad3" kind="variable"><name>rtc</name></member>
@@ -97,11 +93,15 @@
     <member refid="core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b" kind="variable"><name>LOOP_DELAY_MS</name></member>
     <member refid="core_8cpp_1a4ae62406649dce01eb479e7a476a4305" kind="variable"><name>CLIENT_ID_BUFFER_SIZE</name></member>
     <member refid="core_8cpp_1a4f1edbd0b6c65e5e7843bbda20bb24e2" kind="variable"><name>SD_SCK_FREQUENCY_MHZ</name></member>
+    <member refid="core_8cpp_1a6cef1bc6ccf08999da59db3b88095f7d" kind="variable"><name>RECONNECT_INTERVAL_MS</name></member>
     <member refid="core_8cpp_1abb6f4167f4e2989c5f0af6f10b56d33e" kind="variable"><name>lastLoggedMinute</name></member>
     <member refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kind="variable"><name>count</name></member>
     <member refid="core_8cpp_1af80c34747656b263fece5b92e5786fab" kind="variable"><name>wifiOk</name></member>
     <member refid="core_8cpp_1a9e1fbed2e9bf75293274a8fde0a5085d" kind="variable"><name>recoveredSent</name></member>
+    <member refid="core_8cpp_1aca3b6475cc9f45c2f6c244acb67c64f7" kind="variable"><name>lastReconnectAttempt</name></member>
     <member refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kind="function"><name>mqttClient</name></member>
+    <member refid="core_8cpp_1aecaef34a5b4c910faf41faad214950fd" kind="function"><name>isWifiConnected</name></member>
+    <member refid="core_8cpp_1a636ad73f43ed4a9e30c58de52e8030d0" kind="function"><name>isMqttConnected</name></member>
     <member refid="core_8cpp_1a84b7ee25d4d43e3b6dd6b3193a2547f0" kind="function"><name>dateTime</name></member>
     <member refid="core_8cpp_1a9fb1675443ce002d3928dd3edf3b2a72" kind="function"><name>coreSetup</name></member>
     <member refid="core_8cpp_1aa5603fdb8113111f87914938533d1ece" kind="function"><name>coreLoop</name></member>
@@ -113,11 +113,16 @@
   <compound refid="mqtt_8cpp" kind="file"><name>mqtt.cpp</name>
     <member refid="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kind="variable"><name>SMALL_BUFFER_SIZE</name></member>
     <member refid="mqtt_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" kind="variable"><name>LARGE_BUFFER_SIZE</name></member>
-    <member refid="mqtt_8cpp_1a391eb2dea9857ac975b04b1b37fd9e97" kind="variable"><name>BASE_FILENAME_BUFFER_SIZE</name></member>
-    <member refid="mqtt_8cpp_1a711805414ac200c85253f9c3d8c73916" kind="variable"><name>MAX_PENDING_FILES</name></member>
-    <member refid="mqtt_8cpp_1a10aaa940168502f25286e34dd53f08a0" kind="variable"><name>FILE_EXTENSION_LENGTH</name></member>
+    <member refid="mqtt_8cpp_1aa4d6a09459b76d7be490a8804e8bffe4" kind="variable"><name>FILE_NAME_BUFFER_SIZE</name></member>
+    <member refid="mqtt_8cpp_1a407875f5e946a88244a5d566c3d29d03" kind="variable"><name>MAX_RECOVERY_FILES_PER_LOOP</name></member>
+    <member refid="mqtt_8cpp_1a633b6d91d2a6b9fe94d49679bf76cf8d" kind="variable"><name>FOLDER_NAME_BUFFER_SIZE</name></member>
+    <member refid="mqtt_8cpp_1ac89604b3a86db0dabb5538b2f3a5cdd6" kind="variable"><name>FULL_PATH_BUFFER_SIZE</name></member>
+    <member refid="mqtt_8cpp_1abb1c8ff7f876cef50bab38d6ac9a4d10" kind="variable"><name>LINE_BUFFER_SIZE</name></member>
+    <member refid="mqtt_8cpp_1a700fb0855fc0d557992d5068df21e937" kind="variable"><name>SECONDS_IN_24_HOURS</name></member>
+    <member refid="mqtt_8cpp_1a8fa547868639ebfd54dcfd92dc6f0dc7" kind="variable"><name>RECOVERY_TIMEOUT_MS</name></member>
+    <member refid="mqtt_8cpp_1a61adb6a9fd42b65f57c7f643e6f239f4" kind="function"><name>createFullTopic</name></member>
     <member refid="mqtt_8cpp_1ab4dfd2aed88177be74263339392bdcc0" kind="function"><name>sendToMqtt</name></member>
-    <member refid="mqtt_8cpp_1ab2a92cb70a772c6c95d8b818c6b01f77" kind="function"><name>sendPendingData</name></member>
+    <member refid="mqtt_8cpp_1a2f6ba6fe36426e331cac4ec8f8ab4c9e" kind="function"><name>sendPendingData</name></member>
   </compound>
   <compound refid="network_8cpp" kind="file"><name>network.cpp</name>
     <member refid="network_8cpp_1a2961a3ee6daab3612c6258629032802d" kind="variable"><name>ssid</name></member>
@@ -140,18 +145,13 @@
     <member refid="storage_8cpp_1a633b6d91d2a6b9fe94d49679bf76cf8d" kind="variable"><name>FOLDER_NAME_BUFFER_SIZE</name></member>
     <member refid="storage_8cpp_1a58ee493fbe4f650e9becc0e32cf30bf4" kind="variable"><name>RECOVERED_NAME_BUFFER_SIZE</name></member>
     <member refid="storage_8cpp_1aa4d6a09459b76d7be490a8804e8bffe4" kind="variable"><name>FILE_NAME_BUFFER_SIZE</name></member>
-    <member refid="storage_8cpp_1a10aaa940168502f25286e34dd53f08a0" kind="variable"><name>FILE_EXTENSION_LENGTH</name></member>
-    <member refid="storage_8cpp_1a700fb0855fc0d557992d5068df21e937" kind="variable"><name>SECONDS_IN_24_HOURS</name></member>
+    <member refid="storage_8cpp_1a82c6a24dff83f73f64ebefbce62f03c1" kind="variable"><name>CURRENT_FILENAME_BUFFER_SIZE</name></member>
+    <member refid="storage_8cpp_1ad779ef8fe37c1e5b281818b8a1a9c4e7" kind="variable"><name>CSV_LINE_BUFFER_SIZE</name></member>
+    <member refid="storage_8cpp_1a58a44f18fcb1ee66a6ffec02016568a3" kind="variable"><name>MAX_LINES_PER_CSV_FILE</name></member>
+    <member refid="storage_8cpp_1a576d7131c80320b3f5129de67ea60253" kind="function"><name>saveToCsvBatch</name></member>
     <member refid="storage_8cpp_1ab16364c7bad54765d7deca604d19f172" kind="function"><name>buildJson</name></member>
-    <member refid="storage_8cpp_1a49ffb7f647d6701d9cea3decdac97cf1" kind="function"><name>buildRecoveredJson</name></member>
-    <member refid="storage_8cpp_1a03d6491b13757e01963c2ed90e52aa5f" kind="function"><name>saveDataToSD</name></member>
-    <member refid="storage_8cpp_1aec99e2896ee5b3c8e188437407b97357" kind="function"><name>saveToSD</name></member>
-    <member refid="storage_8cpp_1a9b1aef5a070bc35c2abe6ef4721e421b" kind="function"><name>saveRecoveredJsonDataToSd</name></member>
-    <member refid="storage_8cpp_1a104eb1fa19e5eb32fc2465c1d994b242" kind="function"><name>saveRecoveredJsonToSd</name></member>
-    <member refid="storage_8cpp_1a4ebfbb31311cdc384f46f28627733869" kind="function"><name>listSavedFilesData</name></member>
-    <member refid="storage_8cpp_1a1bad01efdba2c79507efa46876326e50" kind="function"><name>listSavedFiles</name></member>
-    <member refid="storage_8cpp_1a655fe9b7f9b52e408b888ce3aadd62a2" kind="function"><name>deleteRecoveredAndPendingSourceFilesData</name></member>
-    <member refid="storage_8cpp_1a2a56012e4c76aa4f343b849a0d926c93" kind="function"><name>deleteRecoveredAndPendingSourceFiles</name></member>
+    <member refid="storage_8cpp_1a7e33188776964f5ea7504de34669407d" kind="function"><name>buildRecoveredJsonFromCsv</name></member>
+    <member refid="storage_8cpp_1a712233a12d2ef3c7d797e0a06149ca73" kind="function"><name>deleteCsvFile</name></member>
   </compound>
   <compound refid="dir_d44c64559bbebec7f509842c48db8b23" kind="dir"><name>include</name>
   </compound>

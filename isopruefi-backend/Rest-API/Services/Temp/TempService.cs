@@ -45,17 +45,7 @@ public class TempService : ITempService
         var existingEntry = await _settingsRepo.ExistsPostalCode(postalCode);
         if (existingEntry)
         {
-            // If an entry exists the time for that entry is updated.
-            var newTime = DateTime.UtcNow;
-            try
-            {
-                await _settingsRepo.UpdateTime(postalCode, newTime);
-                _logger.LogInformation("Time for location updated succesfully.");
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Exception while updating the time for the location.");
-            }
+            _logger.LogInformation("There is an existing entry for that postalcode.");
         }
         else
         {

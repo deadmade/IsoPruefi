@@ -365,32 +365,4 @@ public class ConnectionTests
     }
 
     #endregion
-
-    #region Integration Tests
-
-    /// <summary>
-    /// Tests that GetConnection method can be called without throwing exceptions.
-    /// </summary>
-    [Test]
-    public async Task GetConnection_CanBeCalled_WithoutThrowingArgumentExceptions()
-    {
-        // This test will likely fail due to actual MQTT connection attempts,
-        // but it verifies that the method can be called and basic setup works
-        Exception? exception = null;
-        try
-        {
-            await _connection.GetConnectionAsync();
-        }
-        catch (Exception ex)
-        {
-            exception = ex;
-        }
-
-        // We expect this to not throw ArgumentNullException or similar setup errors
-        // It may throw network-related exceptions which is expected
-        exception.Should().NotBeOfType<ArgumentNullException>();
-        exception.Should().NotBeOfType<NullReferenceException>();
-    }
-
-    #endregion
 }

@@ -1,20 +1,30 @@
-using Database.EntityFramework.Models;
-using Database.Repository.SettingsRepo;
 using System.Globalization;
 using System.Text.Json;
+using Database.EntityFramework.Models;
+using Database.Repository.SettingsRepo;
 
-namespace Rest_API;
+namespace Rest_API.Services.Temp;
 
-public class TransformPostalCode
+/// <summary>
+/// Provides operations related to the location for the outside temperature data, for example getting the right coordinates for the postalcode.
+/// </summary>
+public class TempService : ITempService
 {
-    private readonly ILogger<TransformPostalCode> _logger;
+    private readonly ILogger<TempService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ISettingsRepo _settingsRepo;
     private readonly IConfiguration _configuration;
 
     private readonly string _geocodingApi;
     
-    public TransformPostalCode(ILogger<TransformPostalCode> logger, IHttpClientFactory httpClientFactory, ISettingsRepo settingsRepo, IConfiguration configuration)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TempService"/> class.
+    /// </summary>
+    /// <param name="logger">The logger instance for logging actions and errors.</param>
+    /// <param name="httpClientFactory">The httpClient for API calls.</param>
+    /// <param name="settingsRepo">The settingsRepo instance for connection with the postgres database.</param>
+    /// <param name="configuration"></param>
+    public TempService(ILogger<TempService> logger, IHttpClientFactory httpClientFactory, ISettingsRepo settingsRepo, IConfiguration configuration)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
@@ -27,6 +37,7 @@ public class TransformPostalCode
             _geocodingApi = "https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=";
     }
     
+    /// <inheritdoc />
     public async Task GetCoordinates(int postalCode)
     {
         // Checking if there is an entry for that location in the database.
@@ -85,8 +96,7 @@ public class TransformPostalCode
                                 PostalCode = postalCode,
                                 Location = locationName,
                                 Latitude = latDouble,
-                                Longitude = lonDouble,
-                                LastUsed = DateTime.UtcNow
+                                Longitude = lonDouble
                             };
 
                             // Saving the new location in the database.
@@ -117,5 +127,11 @@ public class TransformPostalCode
                 _logger.LogError(e, "Error while calling geocoding API.");
             }
         }
+    }
+
+    /// <inheritdoc />
+    public async Task<List<int>> ShowAvailablePostalcodes()
+    {
+        
     }
 }

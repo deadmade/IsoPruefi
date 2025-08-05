@@ -21,7 +21,7 @@ public interface ISettingsRepo
     /// <exception cref="ArgumentNullException">Thrown when topicSetting is null.</exception>
     /// <exception cref="InvalidOperationException">Thrown when the add operation fails.</exception>
     Task<int> AddTopicSettingAsync(TopicSetting topicSetting);
-    
+
     /// <summary>
     /// Inserts a new combination of postalcode and coordinates.
     /// </summary>
@@ -32,7 +32,7 @@ public interface ISettingsRepo
     /// Retrieves the coordinates of the postalcode that was inserted last.
     /// </summary>
     /// <returns>Returns coordinates of the location that was last chosen by the User.</returns>
-    Task<CoordinateMapping> GetLocation();
+    Task<CoordinateMapping?> GetLocation();
 
     /// <summary>
     /// Checks if there is an entry for that opstal code in the database.

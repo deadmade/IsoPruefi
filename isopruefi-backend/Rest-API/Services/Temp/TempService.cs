@@ -1,7 +1,7 @@
-using System.Globalization;
-using System.Text.Json;
 using Database.EntityFramework.Models;
 using Database.Repository.SettingsRepo;
+using System.Globalization;
+using System.Text.Json;
 
 namespace Rest_API.Services.Temp;
 
@@ -24,7 +24,8 @@ public class TempService : ITempService
     /// <param name="httpClientFactory">The httpClient for API calls.</param>
     /// <param name="settingsRepo">The settingsRepo instance for connection with the postgres database.</param>
     /// <param name="configuration"></param>
-    public TempService(ILogger<TempService> logger, IHttpClientFactory httpClientFactory, ISettingsRepo settingsRepo, IConfiguration configuration)
+    public TempService(ILogger<TempService> logger, IHttpClientFactory httpClientFactory, 
+        ISettingsRepo settingsRepo, IConfiguration configuration)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
@@ -32,9 +33,9 @@ public class TempService : ITempService
         _configuration = configuration;
 
         //_geocodingApi = _configuration["Weather:NominatimApiUrl"] ?? throw new InvalidOperationException(
-            //"Weather:NominatimApiUrl configuration is missing");
+        //"Weather:NominatimApiUrl configuration is missing");
 
-            _geocodingApi = "https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=";
+        _geocodingApi = "https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=";
     }
     
     /// <inheritdoc />
@@ -62,11 +63,11 @@ public class TempService : ITempService
             var httpClient = _httpClientFactory.CreateClient();
 
             // Creating a user agent for accessing the API.
-            string userAgent =
+            var userAgent =
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36";
             httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
 
-            
+
             try
             {
                 // Getting the coordinates from nominatim.
@@ -89,8 +90,8 @@ public class TempService : ITempService
                             var lonDouble = double.Parse(lon.GetString(), CultureInfo.InvariantCulture);
                             var locationString = location.GetString();
                             var splitLocation = locationString.Split(",");
-                            string locationName = splitLocation[1];
-                            
+                            var locationName = splitLocation[1];
+
                             var postalCodeLocation = new CoordinateMapping
                             {
                                 PostalCode = postalCode,
@@ -108,7 +109,7 @@ public class TempService : ITempService
                             {
                                 _logger.LogError(e, "Exception while saving new location.");
                             }
-                            
+
                             _logger.LogInformation("Coordinates retrieved successfully");
                         }
                         else

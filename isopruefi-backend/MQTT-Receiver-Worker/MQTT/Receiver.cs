@@ -12,17 +12,20 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// This class is responsible for subscribing to configured topics from the settings repository
 /// and managing the connection to the MQTT broker.
 /// </summary>
-public class Receiver : IReceiver{
+public class Receiver : IReceiver
+{
     private readonly IServiceProvider _serviceProvider;
     private readonly IConnection _connection;
     private readonly ILogger<Receiver> _logger;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Receiver"/> class.
     /// </summary>
     /// <param name="serviceProvider">Service provider for dependency injection.</param>
     /// <param name="connection">Connection manager for the MQTT client.</param>
     /// <param name="logger">Logger for diagnostic information.</param>
-    public Receiver(IServiceProvider serviceProvider, IConnection connection, ILogger<Receiver> logger)    {
+    public Receiver(IServiceProvider serviceProvider, IConnection connection, ILogger<Receiver> logger)
+    {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _connection = connection ?? throw new ArgumentNullException(nameof(connection));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));

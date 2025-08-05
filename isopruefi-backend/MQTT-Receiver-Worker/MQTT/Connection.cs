@@ -13,7 +13,8 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// Establishes a connection to the MQTT broker, subscribes to topics,
 /// and processes incoming temperature sensor messages.
 /// </summary>
-public class Connection : IConnection{
+public class Connection : IConnection
+{
     private IServiceProvider _serviceProvider;
     private MqttClientOptions _options;
     private IMqttClient _mqttClient;

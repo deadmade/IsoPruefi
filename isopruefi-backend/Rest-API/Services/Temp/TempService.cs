@@ -15,7 +15,7 @@ public class TempService : ITempService
     private readonly ISettingsRepo _settingsRepo;
 
     private readonly string _geocodingApi;
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="TempService"/> class.
     /// </summary>
@@ -35,7 +35,7 @@ public class TempService : ITempService
 
         _geocodingApi = "https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=";
     }
-    
+
     /// <inheritdoc />
     public async Task GetCoordinates(int postalCode)
     {

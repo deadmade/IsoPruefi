@@ -121,7 +121,7 @@ public class TempService : ITempService
     }
 
     /// <inheritdoc />
-    public async Task<List<int>> ShowAvailablePostalcodes()
+    public async Task<List<int>?> ShowAvailablePostalcodes()
     {
         try
         {
@@ -130,7 +130,7 @@ public class TempService : ITempService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error while fetching postalcodes from the database.");
+            _logger.LogError(e, "Error while fetching postalcodes from the database");
         }
 
         return null;

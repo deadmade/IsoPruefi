@@ -16,7 +16,7 @@ internal class Program
         while (true)
         {
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            double[] value = [Math.Round(rnd.NextDouble() * 100, 1)];
+            double?[]? value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             var tempGen = new TempSensorReading { Timestamp = timestamp, Value = value, Sequence = sequenceOne++ };
             var json = System.Text.Json.JsonSerializer.Serialize(tempGen);

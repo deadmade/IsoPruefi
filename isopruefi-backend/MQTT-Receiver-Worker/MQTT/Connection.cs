@@ -1,8 +1,5 @@
+using System.Text.Json;
 using Database.Repository.InfluxRepo;
-using Database.Repository.SettingsRepo;
-using Google.Protobuf.WellKnownTypes;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using MQTT_Receiver_Worker.MQTT.Models;
 using MQTTnet;
 using MQTTnet.Formatter;
@@ -42,7 +39,7 @@ public class Connection
     private void InitialMqttConfig()
     {
         var broker = _configuration["Mqtt:BrokerHost"];
-        var port = _configuration.GetValue<int>("Mqtt:BrokerPort", 1883);
+        var port = _configuration.GetValue("Mqtt:BrokerPort", 1883);
         var clientId = Guid.NewGuid().ToString();
 
         _logger.LogDebug("Initializing MQTT client with broker: {Broker}:{Port}, ClientId: {ClientId}", broker, port,
@@ -90,82 +87,97 @@ public class Connection
         }
     }
 
-    private Task<Task> ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
+    private async Task<Task> ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
     {
-        using var scope = _serviceProvider.CreateScope();
-        var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
-
-        var topic = e.ApplicationMessage.Topic;
-        var sensorName = topic.Split('/').Last();
-
-        var message = e.ApplicationMessage.ConvertPayloadToString();
-        _logger.LogInformation("Received message from sensor {SensorName}: {Message}", sensorName, message);
-
         try
         {
+            using var scope = _serviceProvider.CreateScope();
+            var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
 
+            var topic = e.ApplicationMessage.Topic;
+            var sensorName = topic.Split('/').Last();
 
-        var tempSensorReading = System.Text.Json.JsonSerializer.Deserialize<TempSensorReading>(message);
+            var message = e.ApplicationMessage.ConvertPayloadToString();
+            _logger.LogInformation("Received message from sensor {SensorName}: {Message}", sensorName, message);
 
-        if (tempSensorReading == null || tempSensorReading.Value == null)
+            var tempSensorReading = JsonSerializer.Deserialize<TempSensorReading>(message);
+
+            if (tempSensorReading == null)
+            {
+                _logger.LogError("Failed to deserialize message from sensor {SensorName}. Skipping processing",
+                    sensorName);
+                return Task.FromResult(Task.CompletedTask);
+            }
+
+            if (sensorName != "recovered") return await ProcessSensorReading(tempSensorReading, sensorName, influxRepo);
+            var recoveredSensorName = topic.Split('/').ElementAtOrDefault(topic.Split('/').Length - 1);
+
+            if (recoveredSensorName != null)
+                return await ProcessBatchSensorReading(tempSensorReading, recoveredSensorName, influxRepo);
+
+            _logger.LogError("Recovered sensor name is null. Skipping processing");
+            return Task.FromResult(Task.CompletedTask);
+
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error processing message from MQTT broker");
+        }
+
+        return Task.FromResult(Task.CompletedTask);
+    }
+
+    private async Task<Task> ProcessSensorReading(TempSensorReading tempSensorReading, string sensorName,
+        IInfluxRepo influxRepo)
+    {
+        if (tempSensorReading.Value == null)
         {
             _logger.LogWarning("Received null sensor reading from {SensorName}. Skipping processing",
                 sensorName);
             return Task.FromResult(Task.CompletedTask);
         }
-        
-        if (tempSensorReading.Value.Length == 0)
+
+        switch (tempSensorReading.Value.Length)
         {
-            _logger.LogWarning("Received empty sensor reading from {SensorName}. Skipping processing",
-                sensorName);
-            return Task.FromResult(Task.CompletedTask);
-        }
-        
-        if (tempSensorReading.Value.Length == 1 && tempSensorReading.Value[0] != null && tempSensorReading.Meta == null)
-        {
-            influxRepo.WriteSensorData(
-                tempSensorReading.Value[0] ?? 0,
-                sensorName,
-                tempSensorReading.Timestamp,
-                tempSensorReading.Sequence ?? 0);
-        }
-        else if (tempSensorReading.Value.Length > 1)
-        {
-            _logger.LogInformation(
-                "Received multiple values in sensor reading from {SensorName}. Only the first value will be processed",
-                sensorName);
-            return Task.FromResult(Task.CompletedTask);
-        }
-        else if (tempSensorReading is { Sequence: null, Meta: not null })
-        {
-            foreach (var reading in tempSensorReading.Meta)
-            {
-                if (reading.Value == null || reading.Value.Length == 0)
-                {
-                    _logger.LogWarning("Received empty value in sensor reading from {SensorName}. Skipping processing",
-                        sensorName);
-                    continue;
-                }
-                
-                influxRepo.WriteSensorData(
-                    reading.Value[0] ?? 0,
+            case 0:
+                _logger.LogWarning("Received empty sensor reading from {SensorName}. Skipping processing",
+                    sensorName);
+                break;
+            case 1 when tempSensorReading.Value[0] != null && tempSensorReading.Meta == null:
+                await influxRepo.WriteSensorData(
+                    tempSensorReading.Value[0] ?? 0,
                     sensorName,
-                    reading.Timestamp,
-                    reading.Sequence ?? 0);
-            }
+                    tempSensorReading.Timestamp,
+                    tempSensorReading.Sequence ?? 0);
+                break;
+            case > 1:
+                _logger.LogInformation(
+                    "Received multiple values in sensor reading from {SensorName}. Only the first value will be processed",
+                    sensorName);
+                break;
+            default:
+                _logger.LogError(
+                    "Received sensor reading with unexpected format from {SensorName}. Skipping processing",
+                    sensorName);
+                break;
         }
-        else
+
+        return Task.FromResult(Task.CompletedTask);
+    }
+
+    private async Task<Task> ProcessBatchSensorReading(TempSensorReading tempSensorReading, string sensorName,
+        IInfluxRepo influxRepo)
+    {
+        if (tempSensorReading is { Sequence: not null, Meta: null, Value: not null, Value.Length: > 0 })
         {
             _logger.LogWarning("Received sensor reading with unexpected format from {SensorName}. Skipping processing",
                 sensorName);
             return Task.FromResult(Task.CompletedTask);
         }
-        }
-        catch (Exception exception)
-        {
-            _logger.LogError(exception, "Error processing message from sensor {SensorName}: {Message}", sensorName, message);
-            return Task.FromResult(Task.CompletedTask);
-        }
+
+        if (tempSensorReading.Meta != null && tempSensorReading.Meta.Count != 0)
+            await Parallel.ForEachAsync(tempSensorReading.Meta,
+                async (value, cancellationToken) => { await ProcessSensorReading(value, sensorName, influxRepo); });
 
         return Task.FromResult(Task.CompletedTask);
     }

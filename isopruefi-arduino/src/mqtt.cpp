@@ -173,6 +173,8 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
       if (tsFile.fgets(line, sizeof(line)) > 0) {
         char* p = strtok(line, ",");
         if (p) {
+          Serial.print("Malformed CSV line (no timestamp): ");
+          Serial.println(line);
           uint32_t ts = atol(p);
           if (now.unixtime() - ts > SECONDS_IN_24_HOURS) {
             Serial.print("Skipping old CSV file (>24h): ");

@@ -213,15 +213,27 @@ void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const Da
 
     // Parse CSV format: timestamp,temperature,sequence
     char* p = strtok(line, ",");
-    if (!p) continue;
+    if (!p) {
+      Serial.print("Malformed CSV line (no timestamp): ");
+      Serial.println(line);
+      continue;
+    }
     uint32_t ts = atol(p);
 
     p = strtok(nullptr, ",");
-    if (!p) continue;
+    if (!p) {
+      Serial.print("Malformed CSV line (no temperature): ");
+      Serial.println(line);
+      continue;
+    }
     float temp = atof(p);
 
     p = strtok(nullptr, ",");
-    if (!p) continue;
+    if (!p) {
+      Serial.print("Malformed CSV line (no sequence): ");
+      Serial.println(line);
+      continue;
+    }
     int seq = atoi(p);
 
     // Create individual measurement entry in metadata

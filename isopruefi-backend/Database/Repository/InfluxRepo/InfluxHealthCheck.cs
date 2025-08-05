@@ -29,24 +29,25 @@ public class InfluxHealthCheck : IHealthCheck
     /// <param name="context">The health check context.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A health check result indicating the status of InfluxDB.</returns>
-    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
+        CancellationToken cancellationToken = default)
     {
         try
         {
             // Perform a simple query to check connectivity
             var testStart = DateTime.UtcNow.AddMinutes(-1);
             var testEnd = DateTime.UtcNow;
-            
+
             // Use a simple query that should work regardless of data presence
             var query = _influxRepo.GetSensorWeatherData(testStart, testEnd);
-            
+
             // Try to get the first result or complete if empty
             await using var enumerator = query.GetAsyncEnumerator(cancellationToken);
-            
+
             // Just checking if we can connect and execute a query
             // We don't need actual data, just successful connection
             var hasData = await enumerator.MoveNextAsync();
-            
+
             _logger.LogDebug("InfluxDB health check completed successfully. Has data: {HasData}", hasData);
             return HealthCheckResult.Healthy("InfluxDB connection is healthy");
         }

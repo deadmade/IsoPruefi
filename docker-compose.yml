@@ -121,8 +121,11 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    volumes:
+    - ./isopruefi-docker/loki/prometheus.yml:/etc/prometheus/prometheus.yml:ro  # Add this line
     networks:
       - isopruefi-monitoring
+      - isopruefi-network
 
   alloy:
     image: grafana/alloy:v1.9.2

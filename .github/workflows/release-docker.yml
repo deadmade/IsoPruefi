@@ -26,7 +26,7 @@ jobs:
           password: ${{ secrets.CR_PAT }}
 
       - name: Build & push Rest-API
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           working-directory: ./isopruefi-backend
           file: Rest-API/Dockerfile
@@ -36,7 +36,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/Rest-API:latest
 
       - name: Build & push MQTT-Receiver-Worker
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           working-directory: ./isopruefi-backend
           file: MQTT-Receiver-Worker/Dockerfile
@@ -46,7 +46,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/MQTT-Receiver-Worker:latest
 
       - name: Build & push Get Weather Worker 
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           working-directory: ./isopruefi-backend
           file: Get-weatherData-worker/Dockerfile 
@@ -56,7 +56,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/Get-weatherData-worker:latest
 
       - name: Build & push Frontend
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           working-directory: ./isopruefi-frontend
           file: Dockerfile

@@ -50,14 +50,14 @@ public class ConnectionTests
         // Setup service provider and scope
         var mockScopeServiceProvider = new Mock<IServiceProvider>();
         mockScopeServiceProvider.Setup(sp => sp.GetService(typeof(IInfluxRepo)))
-                               .Returns(_mockInfluxRepo.Object);
+            .Returns(_mockInfluxRepo.Object);
         _mockServiceScope.Setup(s => s.ServiceProvider).Returns(mockScopeServiceProvider.Object);
-        
+
         // Setup IServiceScopeFactory instead of extension method
         var mockScopeFactory = new Mock<IServiceScopeFactory>();
         mockScopeFactory.Setup(f => f.CreateScope()).Returns(_mockServiceScope.Object);
         _mockServiceProvider.Setup(sp => sp.GetService(typeof(IServiceScopeFactory)))
-                           .Returns(mockScopeFactory.Object);
+            .Returns(mockScopeFactory.Object);
 
         _connection = new Connection(_mockLogger.Object, _mockServiceProvider.Object, _configuration);
     }
@@ -160,13 +160,13 @@ public class ConnectionTests
     public void JsonSerializerOptions_AreConfiguredCorrectly()
     {
         // Access private field using reflection
-        var field = typeof(Connection).GetField("_jsonSerializerOptions", 
+        var field = typeof(Connection).GetField("_jsonSerializerOptions",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
+
         if (field != null)
         {
             var options = (JsonSerializerOptions)field.GetValue(_connection)!;
-            
+
             options.PropertyNameCaseInsensitive.Should().BeTrue();
             options.DefaultIgnoreCondition.Should().Be(JsonIgnoreCondition.WhenWritingNull);
         }
@@ -179,12 +179,12 @@ public class ConnectionTests
     public void JsonDeserialization_ValidSensorReading_DeserializesCorrectly()
     {
         var json = """
-        {
-            "timestamp": 1234567890,
-            "value": [25.5],
-            "sequence": 1
-        }
-        """;
+                   {
+                       "timestamp": 1234567890,
+                       "value": [25.5],
+                       "sequence": 1
+                   }
+                   """;
 
         var reading = JsonSerializer.Deserialize<TempSensorReading>(json);
 
@@ -225,12 +225,13 @@ public class ConnectionTests
         };
 
         // Use reflection to access the private method
-        var method = typeof(Connection).GetMethod("ProcessSensorReading", 
+        var method = typeof(Connection).GetMethod("ProcessSensorReading",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
+
         if (method != null)
         {
-            var task = (Task)method.Invoke(_connection, new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
+            var task = (Task)method.Invoke(_connection,
+                new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
             await task;
 
             _mockInfluxRepo.Verify(r => r.WriteSensorData(25.5, "testSensor", 1234567890, 1), Times.Once);
@@ -250,15 +251,18 @@ public class ConnectionTests
             Sequence = 1
         };
 
-        var method = typeof(Connection).GetMethod("ProcessSensorReading", 
+        var method = typeof(Connection).GetMethod("ProcessSensorReading",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
+
         if (method != null)
         {
-            var task = (Task)method.Invoke(_connection, new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
+            var task = (Task)method.Invoke(_connection,
+                new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
             await task;
 
-            _mockInfluxRepo.Verify(r => r.WriteSensorData(It.IsAny<double>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<int>()), Times.Never);
+            _mockInfluxRepo.Verify(
+                r => r.WriteSensorData(It.IsAny<double>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<int>()),
+                Times.Never);
         }
     }
 
@@ -275,15 +279,18 @@ public class ConnectionTests
             Sequence = 1
         };
 
-        var method = typeof(Connection).GetMethod("ProcessSensorReading", 
+        var method = typeof(Connection).GetMethod("ProcessSensorReading",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
+
         if (method != null)
         {
-            var task = (Task)method.Invoke(_connection, new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
+            var task = (Task)method.Invoke(_connection,
+                new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
             await task;
 
-            _mockInfluxRepo.Verify(r => r.WriteSensorData(It.IsAny<double>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<int>()), Times.Never);
+            _mockInfluxRepo.Verify(
+                r => r.WriteSensorData(It.IsAny<double>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<int>()),
+                Times.Never);
         }
     }
 
@@ -304,16 +311,19 @@ public class ConnectionTests
             Meta = metaReadings
         };
 
-        var method = typeof(Connection).GetMethod("ProcessBatchSensorReading", 
+        var method = typeof(Connection).GetMethod("ProcessBatchSensorReading",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
+
         if (method != null)
         {
-            var task = (Task)method.Invoke(_connection, new object[] { batchReading, "testSensor", _mockInfluxRepo.Object })!;
+            var task = (Task)method.Invoke(_connection,
+                new object[] { batchReading, "testSensor", _mockInfluxRepo.Object })!;
             await task;
 
             // Should process each meta reading
-            _mockInfluxRepo.Verify(r => r.WriteSensorData(It.IsAny<double>(), "testSensor", It.IsAny<long>(), It.IsAny<int>()), Times.AtLeast(1));
+            _mockInfluxRepo.Verify(
+                r => r.WriteSensorData(It.IsAny<double>(), "testSensor", It.IsAny<long>(), It.IsAny<int>()),
+                Times.AtLeast(1));
         }
     }
 
@@ -327,8 +337,9 @@ public class ConnectionTests
     [Test]
     public async Task ProcessSensorReading_DatabaseError_HandlesGracefully()
     {
-        _mockInfluxRepo.Setup(r => r.WriteSensorData(It.IsAny<double>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<int>()))
-                      .ThrowsAsync(new InvalidOperationException("Database error"));
+        _mockInfluxRepo.Setup(r =>
+                r.WriteSensorData(It.IsAny<double>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<int>()))
+            .ThrowsAsync(new InvalidOperationException("Database error"));
 
         var sensorReading = new TempSensorReading
         {
@@ -337,19 +348,20 @@ public class ConnectionTests
             Sequence = 1
         };
 
-        var method = typeof(Connection).GetMethod("ProcessSensorReading", 
+        var method = typeof(Connection).GetMethod("ProcessSensorReading",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
+
         if (method != null)
         {
             var action = async () =>
             {
-                var task = (Task)method.Invoke(_connection, new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
+                var task = (Task)method.Invoke(_connection,
+                    new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
                 await task;
             };
 
             await action.Should().ThrowAsync<InvalidOperationException>()
-                       .WithMessage("Database error");
+                .WithMessage("Database error");
         }
     }
 

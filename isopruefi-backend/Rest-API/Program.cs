@@ -155,13 +155,14 @@ public class Program
         app.UseAuthorization();
 
         //HealthCheck Middleware
-        app.MapHealthChecks("/api/health", new HealthCheckOptions()
+        app.MapHealthChecks("/api/health", new HealthCheckOptions
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
 
-        app.UseHealthChecksPrometheusExporter("/api/healthoka", options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
+        app.UseHealthChecksPrometheusExporter("/api/healthoka",
+            options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
 
         app.MapControllers();
 

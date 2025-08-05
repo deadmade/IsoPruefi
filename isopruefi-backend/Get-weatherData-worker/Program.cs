@@ -32,7 +32,7 @@ public class Program
         builder.ConfigureHealthChecks();
 
         // Only in Development do we wire up the secret store:
-        if (builder.Environment.IsDevelopment()) 
+        if (builder.Environment.IsDevelopment())
             builder.Configuration.AddUserSecrets<Program>();
 
         builder.Services.AddHostedService<Worker>();
@@ -40,12 +40,12 @@ public class Program
         var app = builder.Build();
 
         // Configure health check endpoints
-        app.MapHealthChecks("/api/health", new HealthCheckOptions()
+        app.MapHealthChecks("/api/health", new HealthCheckOptions
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
-        
+
         app.Run();
     }
 }

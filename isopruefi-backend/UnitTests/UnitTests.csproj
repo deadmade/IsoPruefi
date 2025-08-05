@@ -36,7 +36,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="MqttReceiver\" />
+        <Folder Include="MqttReceiver\"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -7,7 +7,7 @@ public static class HealthCheck
     public static void ConfigureHealthChecks(this WebApplicationBuilder builder)
     {
         builder.Services.AddHealthChecks()
-            .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty, healthQuery: "select 1", name: "Postgress", failureStatus: HealthStatus.Unhealthy, tags: new[] {  "Database" });
-
+            .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty, "select 1",
+                name: "Postgress", failureStatus: HealthStatus.Unhealthy, tags: new[] { "Database" });
     }
 }

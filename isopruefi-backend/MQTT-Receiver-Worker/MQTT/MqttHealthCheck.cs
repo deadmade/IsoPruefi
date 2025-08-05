@@ -17,7 +17,9 @@ public class MqttHealthCheck : IHealthCheck
     {
         try
         {
-            return _connection.IsConnected ? HealthCheckResult.Healthy("MQTT connection is active") : HealthCheckResult.Unhealthy("MQTT connection is not active");
+            return _connection.IsConnected
+                ? HealthCheckResult.Healthy("MQTT connection is active")
+                : HealthCheckResult.Unhealthy("MQTT connection is not active");
         }
         catch (Exception ex)
         {

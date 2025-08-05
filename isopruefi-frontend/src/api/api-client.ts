@@ -19,9 +19,9 @@ export class AuthenticationClient {
     }
 
     /**
-     * Die Login-Methode.
-     * @param input Login-Datenübertragungsobjekt.
-     * @return JWT-Token bei erfolgreichem Login.
+     * Authenticates a user and returns a JWT token for API access.
+     * @param input The login credentials containing username and password.
+     * @return Authentication successful. Returns JWT access token and refresh token.
      */
     login(input: Login): Promise<FileResponse> {
         let url_ = this.baseUrl + "/v1/Authentication/Login";
@@ -66,11 +66,11 @@ export class AuthenticationClient {
     }
 
     /**
-     * Registers a new user in the system.
-     * @param input The registration data containing user credentials and information.
+     * Registers a new user in the system. Admin access required.
+     * @param input The registration data containing username and password for the new user.
      * @return User registered successfully.
      */
-    register(input: Register): Promise<FileResponse> {
+    register(input: Register): Promise<void> {
         let url_ = this.baseUrl + "/v1/Authentication/Register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -81,7 +81,6 @@ export class AuthenticationClient {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
             }
         };
 
@@ -90,34 +89,52 @@ export class AuthenticationClient {
         });
     }
 
-    protected processRegister(response: Response): Promise<FileResponse> {
+    protected processRegister(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid registration data, missing fields, or username already exists.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied. Admin role required for user registration.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+            return throwException("Internal server error occurred during registration.", status, _responseText, _headers);
+            });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FileResponse>(null as any);
+        return Promise.resolve<void>(null as any);
     }
 
     /**
-     * Handles the refresh token request. Validates the incoming JWT token and issues a new access token if valid.
-     * @param token The JWT token containing the refresh token and access token.
-     * @return Returns a new access token if the refresh is successful; otherwise, returns an error response.
+     * Refreshes an expired JWT access token using a valid refresh token.
+     * @param token The JWT token object containing both the expired access token and valid refresh token.
+     * @return Token refresh successful. Returns new access and refresh tokens.
      */
-    refresh(token: JwtToken): Promise<FileResponse> {
+    refresh(token: JwtToken): Promise<void> {
         let url_ = this.baseUrl + "/v1/Authentication/Refresh";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -128,7 +145,6 @@ export class AuthenticationClient {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
             }
         };
 
@@ -137,26 +153,37 @@ export class AuthenticationClient {
         });
     }
 
-    protected processRefresh(response: Response): Promise<FileResponse> {
+    protected processRefresh(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid token format or missing required fields.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Refresh token is invalid, expired, or has been revoked.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+            return throwException("Internal server error occurred during token refresh.", status, _responseText, _headers);
+            });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FileResponse>(null as any);
+        return Promise.resolve<void>(null as any);
     }
 }
 
@@ -171,12 +198,12 @@ export class TemperatureDataClient {
     }
 
     /**
-     * Gets temperature data for the specified time range and location, with optional Fahrenheit conversion.
-     * @param start (optional) Start date and time for the data range.
-     * @param end (optional) End date and time for the data range.
-     * @param place (optional) Location for outside temperature data.
-     * @param isFahrenheit (optional) If true, converts temperatures to Fahrenheit.
-     * @return Temperature data overview.
+     * Retrieves comprehensive temperature data for a specified time range and location.
+     * @param start (optional) Start date and time for the data range (ISO 8601 format).
+     * @param end (optional) End date and time for the data range (ISO 8601 format).
+     * @param place (optional) Location name for external weather data (e.g., "Berlin", "Munich").
+     * @param isFahrenheit (optional) Optional. If true, converts all temperatures to Fahrenheit. Default is false (Celsius).
+     * @return Successfully retrieved temperature data. Returns comprehensive temperature overview.
      */
     getTemperature(start?: Date | undefined, end?: Date | undefined, place?: string | undefined, isFahrenheit?: boolean | undefined): Promise<TemperatureDataOverview> {
         let url_ = this.baseUrl + "/api/v1/TemperatureData/GetTemperature?";
@@ -220,6 +247,31 @@ export class TemperatureDataClient {
             result200 = TemperatureDataOverview.fromJS(resultData200);
             return result200;
             });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid parameters. Check date format, ensure start is before end date, or verify location name.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied. User or Admin role required.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+            return throwException("Internal server error. Possible issues with database connection or external weather service.", status, _responseText, _headers);
+            });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -240,8 +292,8 @@ export class TopicClient {
     }
 
     /**
-     * Gets all available topic settings
-     * @return A list of all topic settings
+     * Retrieves all configured MQTT topic settings from the system.
+     * @return Successfully retrieved all topic settings.
      */
     getAllTopics(): Promise<TopicSetting[]> {
         let url_ = this.baseUrl + "/api/v1/Topic/GetAllTopics";
@@ -276,9 +328,23 @@ export class TopicClient {
             }
             return result200;
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied. Admin role required to view topic configurations.", status, _responseText, _headers, result403);
+            });
         } else if (status === 500) {
             return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
+            return throwException("Internal server error. Database connection issues or configuration service unavailable.", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -289,9 +355,9 @@ export class TopicClient {
     }
 
     /**
-     * Creates a new topic setting
-     * @param topicSetting The topic setting to create
-     * @return The ID of the created topic setting
+     * Creates a new MQTT topic configuration for sensor monitoring.
+     * @param topicSetting The complete topic setting configuration to create.
+     * @return Topic setting created successfully. Returns the new topic ID.
      */
     createTopic(topicSetting: TopicSetting): Promise<any> {
         let url_ = this.baseUrl + "/api/v1/Topic/CreateTopic";
@@ -329,11 +395,25 @@ export class TopicClient {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            return throwException("Invalid topic setting data, missing required fields, or duplicate sensor name.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied. Admin role required to create topic configurations.", status, _responseText, _headers, result403);
             });
         } else if (status === 500) {
             return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
+            return throwException("Internal server error. Database connection issues or configuration service unavailable.", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -352,48 +432,6 @@ export class UserInfoClient {
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl ?? "";
-    }
-
-    /**
-     * Retrieves all users from the system.
-     * @return A list of all users.
-     */
-    getAllUsers(): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/v1/UserInfo/GetAllUsers";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-                "Accept": "application/octet-stream"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetAllUsers(_response);
-        });
-    }
-
-    protected processGetAllUsers(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
     }
 
     /**
@@ -631,6 +669,70 @@ export interface ILogin {
     password: string;
 }
 
+export class ProblemDetails implements IProblemDetails {
+    type?: string | undefined;
+    title?: string | undefined;
+    status?: number | undefined;
+    detail?: string | undefined;
+    instance?: string | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: IProblemDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.type = _data["type"];
+            this.title = _data["title"];
+            this.status = _data["status"];
+            this.detail = _data["detail"];
+            this.instance = _data["instance"];
+        }
+    }
+
+    static fromJS(data: any): ProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["type"] = this.type;
+        data["title"] = this.title;
+        data["status"] = this.status;
+        data["detail"] = this.detail;
+        data["instance"] = this.instance;
+        return data;
+    }
+}
+
+export interface IProblemDetails {
+    type?: string | undefined;
+    title?: string | undefined;
+    status?: number | undefined;
+    detail?: string | undefined;
+    instance?: string | undefined;
+
+    [key: string]: any;
+}
+
 /** Represents the registration credentials for a new user. */
 export class Register implements IRegister {
     /** Gets or sets the username for the new user. */
@@ -687,6 +789,8 @@ export class JwtToken implements IJwtToken {
     expiryDate?: Date;
     /** Gets or sets the creation date and time of the JWT token. */
     createdDate?: Date;
+    /** Gets or sets the user roles associated with the JWT token. */
+    roles?: string[] | undefined;
 
     constructor(data?: IJwtToken) {
         if (data) {
@@ -703,6 +807,11 @@ export class JwtToken implements IJwtToken {
             this.refreshToken = _data["refreshToken"];
             this.expiryDate = _data["expiryDate"] ? new Date(_data["expiryDate"].toString()) : <any>undefined;
             this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(item);
+            }
         }
     }
 
@@ -719,6 +828,11 @@ export class JwtToken implements IJwtToken {
         data["refreshToken"] = this.refreshToken;
         data["expiryDate"] = this.expiryDate ? this.expiryDate.toISOString() : <any>undefined;
         data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
         return data;
     }
 }
@@ -733,6 +847,8 @@ export interface IJwtToken {
     expiryDate?: Date;
     /** Gets or sets the creation date and time of the JWT token. */
     createdDate?: Date;
+    /** Gets or sets the user roles associated with the JWT token. */
+    roles?: string[] | undefined;
 }
 
 /** Represents an overview of temperature data for different locations. */
@@ -931,70 +1047,6 @@ export interface ITopicSetting {
     sensorLocation?: string | undefined;
     /** Gets or sets a value indicating whether this topic setting has recovery enabled. */
     hasRecovery?: boolean;
-}
-
-export class ProblemDetails implements IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-
-    [key: string]: any;
-
-    constructor(data?: IProblemDetails) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-            this.type = _data["type"];
-            this.title = _data["title"];
-            this.status = _data["status"];
-            this.detail = _data["detail"];
-            this.instance = _data["instance"];
-        }
-    }
-
-    static fromJS(data: any): ProblemDetails {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        data["type"] = this.type;
-        data["title"] = this.title;
-        data["status"] = this.status;
-        data["detail"] = this.detail;
-        data["instance"] = this.instance;
-        return data;
-    }
-}
-
-export interface IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-
-    [key: string]: any;
 }
 
 /** Represents a request to change a user's password. */

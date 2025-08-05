@@ -54,7 +54,7 @@ public class Worker : BackgroundService
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to retrieve coordinates.");
+                _logger.LogError(e, "Failed to retrieve coordinates");
             }
 
             // Sending GET-Request to Meteo.
@@ -82,19 +82,19 @@ public class Worker : BackgroundService
                         }
                         catch (Exception e)
                         {
-                            _logger.LogError(e, "Outside Weather data could not be saved in the database.");
+                            _logger.LogError(e, "Outside Weather data could not be saved in the database");
                         }
 
-                        _logger.LogInformation("Weather data from Meteo retrieved successfully.");
+                        _logger.LogInformation("Weather data from Meteo retrieved successfully");
                     }
                     else
                     {
-                        _logger.LogError("Data from Meteo incomplete.");
+                        _logger.LogError("Data from Meteo incomplete");
                     }
                 }
                 else
                 {
-                    _logger.LogError("Data from Meteo incomplete.");
+                    _logger.LogError("Data from Meteo incomplete");
                 }
             }
             else
@@ -125,24 +125,24 @@ public class Worker : BackgroundService
                             }
                             catch (Exception e)
                             {
-                                _logger.LogError(e, "Outside Weather data could not be saved in the database.");
+                                _logger.LogError(e, "Outside Weather data could not be saved in the database");
                             }
 
-                            _logger.LogInformation("Weather data from Bright Sky retrieved successfully.");
+                            _logger.LogInformation("Weather data from Bright Sky retrieved successfully");
                         }
                         else
                         {
-                            _logger.LogError("Data from Bright Sky incomplete.");
+                            _logger.LogError("Data from Bright Sky incomplete");
                         }
                     }
                     else
                     {
-                        _logger.LogError("Data from Bright Sky incomplete.");
+                        _logger.LogError("Data from Bright Sky incomplete");
                     }
                 }
                 else
                 {
-                    _logger.LogError("Failed to retrieve data from both sources.");
+                    _logger.LogError("Failed to retrieve data from both sources");
                 }
             }
 

@@ -121,6 +121,8 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    networks:
+      - isopruefi-monitoring
 
   alloy:
     image: grafana/alloy:v1.9.2

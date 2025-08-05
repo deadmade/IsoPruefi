@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using Asp.Versioning;
 using Database.EntityFramework;
@@ -5,17 +6,23 @@ using Database.EntityFramework.Models;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using Database.Repository.TokenRepo;
+using HealthChecks.UI.Client;
+using InfluxDB.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using NSwag.AspNetCore;
+using Rest_API.Helper;
 using Rest_API.Models;
 using Rest_API.Seeder;
 using Rest_API.Services.Auth;
 using Rest_API.Services.Token;
 using Rest_API.Services.User;
+using InfluxDBClient = InfluxDB3.Client.InfluxDBClient;
 
 namespace Rest_API;
 
@@ -115,6 +122,8 @@ public class Program
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
         builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
 
+        builder.ConfigureHealthChecks();
+
         builder.Services.AddControllers();
 
         var app = builder.Build();
@@ -145,7 +154,17 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        //HealthCheck Middleware
+        app.MapHealthChecks("/api/health", new HealthCheckOptions()
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        app.UseHealthChecksPrometheusExporter("/api/healthoka", options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
+
         app.MapControllers();
+
         // Seed the database with initial data
         await SeedUser.SeedData(app);
 

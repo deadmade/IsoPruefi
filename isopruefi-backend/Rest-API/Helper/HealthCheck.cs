@@ -1,0 +1,13 @@
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+
+namespace Rest_API.Helper;
+
+public static class HealthCheck
+{
+    public static void ConfigureHealthChecks(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddHealthChecks()
+            .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty, healthQuery: "select 1", name: "Postgress", failureStatus: HealthStatus.Unhealthy, tags: new[] {  "Database" });
+
+    }
+}

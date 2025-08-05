@@ -13,4 +13,9 @@ public interface IConnection
     /// </summary>
     /// <returns>A task that represents the asynchronous operation. The task result contains the connected MQTT client.</returns>
     Task<IMqttClient> GetConnection();
+
+    Task DisconnectAsync();
+    Task<bool> TryConnectAsync();
+
+    bool IsConnected { get; }
 }

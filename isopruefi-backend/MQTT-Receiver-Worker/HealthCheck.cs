@@ -1,0 +1,16 @@
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MQTT_Receiver_Worker.MQTT;
+
+namespace MQTT_Receiver_Worker;
+
+public static class HealthCheck
+{
+    public static void ConfigureHealthChecks(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddHealthChecks()
+            .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty, healthQuery: "select 1", name: "Postgress", failureStatus: HealthStatus.Unhealthy, tags: new[] {  "Database" })
+            .AddCheck<MqttHealthCheck>("MQTT Connection", failureStatus: HealthStatus.Unhealthy, tags: new[] { "MQTT" });
+
+    }
+}

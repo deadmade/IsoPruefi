@@ -13,7 +13,6 @@ public class TempService : ITempService
     private readonly ILogger<TempService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ISettingsRepo _settingsRepo;
-    private readonly IConfiguration _configuration;
 
     private readonly string _geocodingApi;
     
@@ -25,12 +24,11 @@ public class TempService : ITempService
     /// <param name="settingsRepo">The settingsRepo instance for connection with the postgres database.</param>
     /// <param name="configuration"></param>
     public TempService(ILogger<TempService> logger, IHttpClientFactory httpClientFactory, 
-        ISettingsRepo settingsRepo, IConfiguration configuration)
+        ISettingsRepo settingsRepo)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
         _settingsRepo = settingsRepo;
-        _configuration = configuration;
 
         //_geocodingApi = _configuration["Weather:NominatimApiUrl"] ?? throw new InvalidOperationException(
         //"Weather:NominatimApiUrl configuration is missing");
@@ -45,23 +43,19 @@ public class TempService : ITempService
         var existingEntry = await _settingsRepo.ExistsPostalCode(postalCode);
         if (existingEntry)
         {
-            _logger.LogInformation("There is an existing entry for that postalcode.");
+            _logger.LogInformation("There is an existing entry for that postalcode");
         }
         else
         {
-            // If there is no entry an API will be used to get the coordinates.
-            var httpClient = _httpClientFactory.CreateClient();
-
-            // Creating a user agent for accessing the API.
-            var userAgent =
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36";
-            httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
-
-
+            var response = await GetCoordinatesApi(postalCode);
+            if (response == null)
+            {
+                _logger.LogError("No response received from API");
+                return;
+            }
+            
             try
             {
-                // Getting the coordinates from nominatim.
-                var response = await httpClient.GetAsync(_geocodingApi + postalCode);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -97,14 +91,14 @@ public class TempService : ITempService
                             }
                             catch (Exception e)
                             {
-                                _logger.LogError(e, "Exception while saving new location.");
+                                _logger.LogError(e, "Exception while saving new location");
                             }
 
                             _logger.LogInformation("Coordinates retrieved successfully");
                         }
                         else
                         {
-                            _logger.LogError("Coordinates and city name could not be retrieved.");
+                            _logger.LogError("Coordinates and city name could not be retrieved");
                         }
                     }
                 }
@@ -115,9 +109,33 @@ public class TempService : ITempService
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error while calling geocoding API.");
+                _logger.LogError(e, "Error while calling geocoding API");
             }
         }
+    }
+
+    private async Task<HttpResponseMessage?> GetCoordinatesApi(int postalCode)
+    {
+        // If there is no entry an API will be used to get the coordinates.
+        var httpClient = _httpClientFactory.CreateClient();
+
+        // Creating a user agent for accessing the API.
+        var userAgent =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36";
+        httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
+
+        try
+        {
+            // Getting the coordinates from nominatim.
+            var response = await httpClient.GetAsync(_geocodingApi + postalCode);
+            return response;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Calling the API was not successful");
+        }
+
+        return null;
     }
 
     /// <inheritdoc />

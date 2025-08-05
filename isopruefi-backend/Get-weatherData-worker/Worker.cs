@@ -1,7 +1,6 @@
 using System.Text.Json;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
-using Rest_API.Services.Temp;
 
 namespace Get_weatherData_worker;
 

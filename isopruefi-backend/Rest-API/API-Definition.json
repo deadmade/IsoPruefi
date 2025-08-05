@@ -554,6 +554,10 @@
             "description": "Gets or sets the location of the sensor.",
             "maxLength": 50,
             "nullable": true
+          },
+          "hasRecovery": {
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether this topic setting has recovery enabled."
           }
         }
       },

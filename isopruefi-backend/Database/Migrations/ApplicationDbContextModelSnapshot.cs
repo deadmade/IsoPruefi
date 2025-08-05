@@ -86,6 +86,28 @@ namespace Database.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Database.EntityFramework.Models.CoordinateMapping", b =>
+                {
+                    b.Property<int>("PostalCode")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PostalCode"));
+
+                    b.Property<DateTime>("LastUsed")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("PostalCode");
+
+                    b.ToTable("CoordinateMappings");
+                });
+
             modelBuilder.Entity("Database.EntityFramework.Models.TokenInfo", b =>
                 {
                     b.Property<int>("Id")

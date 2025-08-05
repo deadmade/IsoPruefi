@@ -16,5 +16,5 @@ RUN dotnet restore "Database/Database.csproj"
 #WORKDIR "/src/MQTT-Receiver-Worker"
 
 # Run the app with hot reload
-ENTRYPOINT ["dotnet", "watch", "run", "--project", "MQTT-Receiver-Worker/MQTT-Receiver-Worker.csproj"]
+ENTRYPOINT ["dotnet", "run", "--project", "MQTT-Receiver-Worker/MQTT-Receiver-Worker.csproj"]
 

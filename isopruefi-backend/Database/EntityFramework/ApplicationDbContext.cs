@@ -1,6 +1,7 @@
 using Database.EntityFramework.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Database.EntityFramework;
 
@@ -8,16 +9,21 @@ namespace Database.EntityFramework;
 public class ApplicationDbContext : IdentityDbContext<ApiUser>
 {
     //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
-
+    
     /// <summary>
     /// Represents the collection of TopicSetting entities in the database.
     /// </summary>
-    public virtual DbSet<TopicSetting> TopicSettings { get; set; }
-
+    public DbSet<TopicSetting> TopicSettings { get; set; }
+    
     /// <summary>
     /// Represents the collection of TokenInfo entities in the database.
     /// </summary>
-    public virtual DbSet<TokenInfo> TokenInfos { get; set; }
+    public DbSet<TokenInfo> TokenInfos { get; set; }
+    
+    /// <summary>
+    /// Represents the collection of CoordinateMappings entities in the database.
+    /// </summary>
+    public DbSet<CoordinateMapping> CoordinateMappings { get; set; }
 
     /// <inheritdoc />
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -50,4 +56,21 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
             );
         });
     }
+
+    /// <summary>
+    /// Applies any pending migrations for the specified DbContext.
+    /// </summary>
+    /// <param name="scope"></param>
+    /// <typeparam name="TDbContext"></typeparam>
+    public static void ApplyMigration<TDbContext>(IServiceScope scope)
+        where TDbContext : DbContext
+    {
+        using var context = scope.ServiceProvider
+            .GetRequiredService<TDbContext>();
+
+        context.Database.Migrate();
+    }
+
+
+
 }

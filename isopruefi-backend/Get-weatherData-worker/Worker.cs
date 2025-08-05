@@ -36,17 +36,30 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var httpClient = _httpClientFactory.CreateClient();
-
+        double lat = 0.0;
+        double lon = 0.0;
+        
         while (!stoppingToken.IsCancellationRequested)
         {
             using var scope = _serviceProvider.CreateScope();
+            var settingsRepo = scope.ServiceProvider.GetRequiredService<ISettingsRepo>();
             var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
-
             var weatherData = new WeatherData();
+            
+            // Getting the coordinates from the database.
+            try
+            {
+                var coordinates = await settingsRepo.GetCoordinates();
+                lat = coordinates.Item1;
+                lon = coordinates.Item2;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed to retrieve coordinates.");
+            }
 
             // Sending GET-Request to Meteo.
-            var response = await httpClient.GetAsync(_weatherDataApi);
+            var response = await callMeteoApi(lat, lon);
 
             if (response.IsSuccessStatusCode)
             {
@@ -63,8 +76,15 @@ public class Worker : BackgroundService
                         weatherData.Temperature = temperature.GetDouble();
 
                         // Saving the temperature in the database.
-                        await influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
-                            weatherData.Timestamp);
+                        try
+                        {
+                            await influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
+                                weatherData.Timestamp);
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e, "Outside Weather data could not be saved in the database.");
+                        }
 
                         _logger.LogInformation("Weather data from Meteo retrieved successfully.");
                     }
@@ -81,7 +101,7 @@ public class Worker : BackgroundService
             else
             {
                 // Sending GET-Request to Bright Sky.
-                var alternativeResponse = await httpClient.GetAsync(_alternativeWeatherDataApi);
+                var alternativeResponse = await callBrightSkyApi(lat, lon);
 
                 if (alternativeResponse.IsSuccessStatusCode)
                 {
@@ -99,8 +119,16 @@ public class Worker : BackgroundService
                             weatherData.Temperature = temperature.GetDouble();
 
                             // Saving the temperature in the database.
-                            await influxRepo.WriteOutsideWeatherData(_location, "Bright Sky", weatherData.Temperature,
-                                weatherData.Timestamp);
+                            try
+                            {
+                                await influxRepo.WriteOutsideWeatherData(_location, "Bright Sky",
+                                    weatherData.Temperature,
+                                    weatherData.Timestamp);
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogError(e, "Outside Weather data could not be saved in the database.");
+                            }
 
                             _logger.LogInformation("Weather data from Bright Sky retrieved successfully.");
                         }
@@ -122,5 +150,31 @@ public class Worker : BackgroundService
 
             await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
+    }
+
+    private async Task<HttpResponseMessage> callMeteoApi(double lat, double lon)
+    {
+        var httpClient = _httpClientFactory.CreateClient();
+        
+        var weatherDataApi = _weatherDataApi
+            .Replace("{lat}", lat.ToString())
+            .Replace("{lon}", lon.ToString());
+        
+        var response = await httpClient.GetAsync(weatherDataApi);
+
+        return response;
+    }
+    
+    private async Task<HttpResponseMessage> callBrightSkyApi(double lat, double lon)
+    {
+        var httpClient = _httpClientFactory.CreateClient();
+        
+        var weatherDataApi = _alternativeWeatherDataApi
+            .Replace("{lat}", lat.ToString())
+            .Replace("{lon}", lon.ToString());
+        
+        var response = await httpClient.GetAsync(weatherDataApi);
+
+        return response;
     }
 }

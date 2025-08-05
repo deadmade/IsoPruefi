@@ -165,10 +165,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TemperatureData"
-                  }
+                  "$ref": "#/components/schemas/TemperatureDataOverview"
                 }
               }
             }
@@ -473,6 +470,34 @@
             "type": "string",
             "description": "Gets or sets the creation date and time of the JWT token.",
             "format": "date-time"
+          }
+        }
+      },
+      "TemperatureDataOverview": {
+        "type": "object",
+        "description": "Represents an overview of temperature data for different locations.",
+        "additionalProperties": false,
+        "properties": {
+          "temperatureSouth": {
+            "type": "array",
+            "description": "Gets or sets the list of temperature data for the south location.",
+            "items": {
+              "$ref": "#/components/schemas/TemperatureData"
+            }
+          },
+          "temperatureNord": {
+            "type": "array",
+            "description": "Gets or sets the list of temperature data for the north location.",
+            "items": {
+              "$ref": "#/components/schemas/TemperatureData"
+            }
+          },
+          "temperatureOutside": {
+            "type": "array",
+            "description": "Gets or sets the list of temperature data for the outside location.",
+            "items": {
+              "$ref": "#/components/schemas/TemperatureData"
+            }
           }
         }
       },

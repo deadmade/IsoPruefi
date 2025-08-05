@@ -9,7 +9,7 @@ public static class HealthCheck
     {
         builder.Services.AddHealthChecks()
             .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty, "select 1",
-                name: "Postgress", failureStatus: HealthStatus.Unhealthy, tags: new[] { "Database" })
+                name: "PostgreSQL", failureStatus: HealthStatus.Unhealthy, tags: new[] { "Database" })
             .AddCheck<InfluxHealthCheck>("InfluxDB", HealthStatus.Unhealthy, new[] { "Database" });
     }
 }

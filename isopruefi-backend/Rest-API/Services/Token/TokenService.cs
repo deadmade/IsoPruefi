@@ -33,14 +33,14 @@ public class TokenService : ITokenService
         var tokenHandler = new JwtSecurityTokenHandler();
 
         // Create a symmetric security key using the secret key from the configuration.
-        var secret = _configuration["JWT:Secret"] ??
+        var secret = _configuration["Jwt:Secret"] ??
                      throw new InvalidOperationException("JWT:Secret configuration is missing");
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Issuer = _configuration["JWT:ValidIssuer"],
-            Audience = _configuration["JWT:ValidAudience"],
+            Issuer = _configuration["Jwt:ValidIssuer"],
+            Audience = _configuration["Jwt:ValidAudience"],
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.Now.AddMinutes(15),
             SigningCredentials = new SigningCredentials
@@ -49,7 +49,7 @@ public class TokenService : ITokenService
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var tokenString = tokenHandler.WriteToken(token);
-        _logger.LogInformation("Access token generated successfully.");
+        _logger.LogInformation("Access token generated successfully");
         return tokenString;
     }
 
@@ -84,13 +84,13 @@ public class TokenService : ITokenService
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidAudience = _configuration["JWT:ValidAudience"],
-                ValidIssuer = _configuration["JWT:ValidIssuer"],
+                ValidAudience = _configuration["Jwt:ValidAudience"],
+                ValidIssuer = _configuration["Jwt:ValidIssuer"],
                 ValidateLifetime = false,
                 ClockSkew = TimeSpan.Zero,
                 IssuerSigningKey = new SymmetricSecurityKey
-                (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ??
-                                        throw new InvalidOperationException("JWT:Secret configuration is missing")))
+                (Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"] ??
+                                        throw new InvalidOperationException("Jwt:Secret configuration is missing")))
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

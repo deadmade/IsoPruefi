@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
@@ -15,7 +15,6 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FluentAssertions" Version="8.5.0"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.7"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/>
         <PackageReference Include="Moq" Version="4.20.72"/>
         <PackageReference Include="NUnit" Version="4.3.2"/>
@@ -25,6 +24,7 @@
         </PackageReference>
         <PackageReference Include="NUnit3TestAdapter" Version="5.0.0"/>
     </ItemGroup>
+
     <ItemGroup>
         <Using Include="NUnit.Framework"/>
     </ItemGroup>
@@ -37,6 +37,12 @@
 
     <ItemGroup>
       <Folder Include="MqttReceiver\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="Microsoft.Extensions.Identity.Stores">
+            <HintPath>..\..\..\..\..\..\..\program files\dotnet\shared\Microsoft.AspNetCore.App\9.0.7\Microsoft.Extensions.Identity.Stores.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>

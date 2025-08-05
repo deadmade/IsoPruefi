@@ -125,7 +125,28 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    volumes:
+      - ./isopruefi-docker/loki/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./isopruefi-docker/loki/alerts.yml:/etc/prometheus/alerts.yml:ro
+    networks:
+      - loki
+      - isopruefi-network
 
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: alertmanager
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./isopruefi-docker/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    networks:
+      - loki
+      - isopruefi-network
+    depends_on:
+      - prometheus
   alloy:
     image: grafana/alloy:v1.9.2
     container_name: alloy

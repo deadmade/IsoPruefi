@@ -16,7 +16,7 @@ public class TempService : ITempService
     private readonly IConfiguration _configuration;
 
     private readonly string _geocodingApi;
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="TempService"/> class.
     /// </summary>
@@ -24,7 +24,7 @@ public class TempService : ITempService
     /// <param name="httpClientFactory">The httpClient for API calls.</param>
     /// <param name="settingsRepo">The settingsRepo instance for connection with the postgres database.</param>
     /// <param name="configuration"></param>
-    public TempService(ILogger<TempService> logger, IHttpClientFactory httpClientFactory, 
+    public TempService(ILogger<TempService> logger, IHttpClientFactory httpClientFactory,
         ISettingsRepo settingsRepo, IConfiguration configuration)
     {
         _logger = logger;
@@ -37,7 +37,7 @@ public class TempService : ITempService
 
         _geocodingApi = "https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=";
     }
-    
+
     /// <inheritdoc />
     public async Task GetCoordinates(int postalCode)
     {

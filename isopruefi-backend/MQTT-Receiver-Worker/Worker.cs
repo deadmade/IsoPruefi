@@ -18,12 +18,14 @@ public class Worker : BackgroundService
     /// MQTT receiver component that handles topic subscriptions.
     /// </summary>
     private readonly IReceiver _receiver;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Worker"/> class.
     /// </summary>
     /// <param name="logger">Logger for recording service events.</param>
     /// <param name="receiver">MQTT receiver for subscribing to topics.</param>
-    public Worker(ILogger<Worker> logger, IReceiver receiver)    {
+    public Worker(ILogger<Worker> logger, IReceiver receiver)
+    {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _receiver = receiver ?? throw new ArgumentNullException(nameof(receiver));
     }

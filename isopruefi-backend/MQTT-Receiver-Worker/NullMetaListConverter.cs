@@ -27,14 +27,10 @@ public class NullMetaListConverter : JsonConverter<List<TempSensorReading>?>
     {
         // Create new options without this converter to avoid infinite recursion
         var newOptions = new JsonSerializerOptions(options);
-        for (int i = newOptions.Converters.Count - 1; i >= 0; i--)
-        {
+        for (var i = newOptions.Converters.Count - 1; i >= 0; i--)
             if (newOptions.Converters[i] is NullMetaListConverter)
-            {
                 newOptions.Converters.RemoveAt(i);
-            }
-        }
-        
+
         var list = JsonSerializer.Deserialize<List<TempSensorReading>?>(ref reader, newOptions);
 
         if (list == null || list.Count == 0)
@@ -46,6 +42,7 @@ public class NullMetaListConverter : JsonConverter<List<TempSensorReading>?>
 
         return list;
     }
+
     /// <summary>
     /// Writes the List&lt;TempSensorReading&gt; to JSON.
     /// Uses the default serialization behavior without any custom logic.
@@ -57,13 +54,10 @@ public class NullMetaListConverter : JsonConverter<List<TempSensorReading>?>
     {
         // Create new options without this converter to avoid infinite recursion
         var newOptions = new JsonSerializerOptions(options);
-        for (int i = newOptions.Converters.Count - 1; i >= 0; i--)
-        {
+        for (var i = newOptions.Converters.Count - 1; i >= 0; i--)
             if (newOptions.Converters[i] is NullMetaListConverter)
-            {
                 newOptions.Converters.RemoveAt(i);
-            }
-        }
-        
+
         JsonSerializer.Serialize(writer, value, newOptions);
-    }}
+    }
+}

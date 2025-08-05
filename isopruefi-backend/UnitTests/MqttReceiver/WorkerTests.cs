@@ -26,7 +26,7 @@ public class WorkerTests
     {
         _mockLogger = new Mock<ILogger<Worker>>();
         _mockReceiver = new Mock<IReceiver>();
-        
+
         _worker = new Worker(_mockLogger.Object, _mockReceiver.Object);
     }
 
@@ -95,10 +95,10 @@ public class WorkerTests
         using var cancellationTokenSource = new CancellationTokenSource();
 
         await _worker.StartAsync(cancellationTokenSource.Token);
-        
+
         // Give the background service a moment to start
         await Task.Delay(100, cancellationTokenSource.Token);
-        
+
         await _worker.StopAsync(cancellationTokenSource.Token);
 
         _mockReceiver.Verify(r => r.SubscribeToTopics(), Times.Once);
@@ -114,10 +114,10 @@ public class WorkerTests
         using var cancellationTokenSource = new CancellationTokenSource();
 
         await _worker.StartAsync(cancellationTokenSource.Token);
-        
+
         // Cancel the operation
         cancellationTokenSource.Cancel();
-        
+
         var stopTask = _worker.StopAsync(CancellationToken.None);
         await stopTask.WaitAsync(TimeSpan.FromSeconds(5));
 
@@ -139,10 +139,10 @@ public class WorkerTests
 
         // Start the worker
         await _worker.StartAsync(cancellationTokenSource.Token);
-        
+
         // Verify it's running
         await Task.Delay(50);
-        
+
         // Stop the worker
         await _worker.StopAsync(cancellationTokenSource.Token);
 
@@ -198,7 +198,7 @@ public class WorkerTests
     public void Dispose_MultipleCalls_DoesNotThrow()
     {
         _worker.Dispose();
-        
+
         var action = () => _worker.Dispose();
 
         action.Should().NotThrow();

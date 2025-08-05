@@ -176,7 +176,7 @@ namespace Database.Migrations
                             TopicSettingId = 1,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
-                            HasRecovery = false,
+                            HasRecovery = true,
                             SensorLocation = "North",
                             SensorName = "Sensor_One",
                             SensorType = "temp"
@@ -186,7 +186,7 @@ namespace Database.Migrations
                             TopicSettingId = 2,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
-                            HasRecovery = false,
+                            HasRecovery = true,
                             SensorLocation = "South",
                             SensorName = "Sensor_Two",
                             SensorType = "temp"

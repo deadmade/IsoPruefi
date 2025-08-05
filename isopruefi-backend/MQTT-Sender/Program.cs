@@ -118,14 +118,14 @@ internal class Program
         }
     ]
 }";
-            
+
             applicationMessage = new MqttApplicationMessageBuilder()
                 .WithTopic("dhbw/ai/si2023/2/temp/Sensor_One/recovered")
                 .WithPayload(json)
                 .Build();
-            
-            await client.PublishAsync(applicationMessage, CancellationToken.None); 
-            
+
+            await client.PublishAsync(applicationMessage, CancellationToken.None);
+
             timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             value = [Math.Round(rnd.NextDouble() * 100, 1)];
 

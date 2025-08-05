@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Database.Repository.InfluxRepo;
 using MQTT_Receiver_Worker.MQTT.Models;
 using MQTTnet;
@@ -18,11 +19,12 @@ public class Connection
     private IMqttClient _mqttClient;
     private readonly ILogger<Connection> _logger;
     private readonly IConfiguration _configuration;
+    private JsonSerializerOptions _jsonSerializerOptions;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Connection"/> class.
     /// </summary>
-    /// <param name="influxRepo">Repository for writing sensor data to InfluxDB</param>
+    /// <param name="serviceProvider"></param>
     /// <param name="logger">Logger for recording connection events</param>
     /// <param name="configuration">Configuration for MQTT settings</param>
     public Connection(ILogger<Connection> logger, IServiceProvider serviceProvider, IConfiguration configuration)
@@ -31,6 +33,12 @@ public class Connection
         _logger = logger;
         _configuration = configuration;
         InitialMqttConfig();
+
+        _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
     }
 
     /// <summary>
@@ -95,7 +103,8 @@ public class Connection
             var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
 
             var topic = e.ApplicationMessage.Topic;
-            var sensorName = topic.Split('/').Last();
+            var topics = topic.Split('/');
+            var sensorName = topics.Last();
 
             var message = e.ApplicationMessage.ConvertPayloadToString();
             _logger.LogInformation("Received message from sensor {SensorName}: {Message}", sensorName, message);
@@ -110,14 +119,13 @@ public class Connection
             }
 
             if (sensorName != "recovered") return await ProcessSensorReading(tempSensorReading, sensorName, influxRepo);
-            var recoveredSensorName = topic.Split('/').ElementAtOrDefault(topic.Split('/').Length - 1);
+            var recoveredSensorName = topics.ElementAtOrDefault(topics.Length - 2);
 
             if (recoveredSensorName != null)
                 return await ProcessBatchSensorReading(tempSensorReading, recoveredSensorName, influxRepo);
 
             _logger.LogError("Recovered sensor name is null. Skipping processing");
             return Task.FromResult(Task.CompletedTask);
-
         }
         catch (Exception exception)
         {
@@ -143,7 +151,7 @@ public class Connection
                 _logger.LogWarning("Received empty sensor reading from {SensorName}. Skipping processing",
                     sensorName);
                 break;
-            case 1 when tempSensorReading.Value[0] != null && tempSensorReading.Meta == null:
+            case 1 when tempSensorReading.Value[0] != null && tempSensorReading.Meta is null:
                 await influxRepo.WriteSensorData(
                     tempSensorReading.Value[0] ?? 0,
                     sensorName,

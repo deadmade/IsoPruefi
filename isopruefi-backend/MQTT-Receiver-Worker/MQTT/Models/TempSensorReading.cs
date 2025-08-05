@@ -28,11 +28,13 @@ public class TempSensorReading
     /// </summary>
     [JsonPropertyName("sequence")]
     public int? Sequence { get; set; }
-    
+
     /// <summary>
     /// Gets or sets additional metadata associated with the sensor reading.
     /// This includes information for the bulk insert
     /// </summary>
     [JsonPropertyName("meta")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonConverter(typeof(NullMetaListConverter))]
     public List<TempSensorReading>? Meta { get; set; }
 }

@@ -67,14 +67,14 @@ public class Receiver
             .Build();
 
         await mqttClient.SubscribeAsync(filter, CancellationToken.None);
-        
+
         filter = new MqttTopicFilterBuilder()
             .WithTopic(topic + "/recovered")
             .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
             .Build();
 
         await mqttClient.SubscribeAsync(filter, CancellationToken.None);
-        
+
         _logger.LogInformation("Successfully subscribed to topic: {Topic}", topic);
     }
 }

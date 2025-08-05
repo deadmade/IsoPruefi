@@ -1,0 +1,2128 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Core 8cpp - IsoPrüfi</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#file-corecpp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="IsoPrüfi" class="md-header__button md-logo" aria-label="IsoPrüfi" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IsoPrüfi
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Core 8cpp
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="IsoPrüfi" class="md-nav__button md-logo" aria-label="IsoPrüfi" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    IsoPrüfi
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Build
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dev-Guidelines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Code Documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Code Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Rest-API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Rest-API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../MQTT-Receiver-Worker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MQTT-Receiver-Worker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../MQTT-Sender/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MQTT-Sender
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Database
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../UnitTests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    UnitTests
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Arduino
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Frontend
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            Frontend
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7_2" id="__nav_4_7_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    App
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            App
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../frontend/App/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    App Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../frontend/App/functions/default/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    App Component
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7_3" id="__nav_4_7_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Weather
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            Weather
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../frontend/Weather/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Weather Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7_3_2" id="__nav_4_7_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Components
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_7_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Components
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../frontend/Weather/functions/WeatherChartTitle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Chart Title
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../frontend/Weather/functions/TempChart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Temp Chart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7_3_3" id="__nav_4_7_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Data Types
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_7_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Data Types
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../frontend/Weather/type-aliases/WeatherEntry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    WeatherEntry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../frontend/Weather/variables/WeatherData.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    WeatherData
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Docker
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Docker
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../docker-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker Dev Environment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    IsoPrüfi Documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            IsoPrüfi Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/arc42-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    00 arc42 Template with Explanation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/01_introduction_and_goals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    01 Introduction and Goals
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/02_architecture_constraints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    02 Architecture Constrains
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/03_context_and_scope/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    03 Context and Scope
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/04_solution_strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    04 Solution Strategy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/05_building_block_view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    05 Building Block View
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/06_runtime_view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    06 Runtime View
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/07_deployment_view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    07 Deployment View
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/08_concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    08 Concepts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/09_architecture_decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    09 Architecture Decisions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/10_quality_requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    10 Quality Requirements
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/11_technical_risks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    11 Technical Risks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../documentation/12_glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    12 Glossary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#includes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Includes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-rtc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable rtc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-tempsensor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable tempsensor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-sd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable sd
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-wificlient" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable wifiClient
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-chipselect" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable chipSelect
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-sensoridone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable sensorIdOne
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-sensoridinuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable sensorIdInUse
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-sensortype" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable sensorType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-topic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable topic
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-wifi_connect_timeout_ms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable WIFI_CONNECT_TIMEOUT_MS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-loop_delay_ms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable LOOP_DELAY_MS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-client_id_buffer_size" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable CLIENT_ID_BUFFER_SIZE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-sd_sck_frequency_mhz" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable SD_SCK_FREQUENCY_MHZ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-lastloggedminute" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable lastLoggedMinute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable count
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-wifiok" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable wifiOk
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-recoveredsent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable recoveredSent
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-mqttclient" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function mqttClient
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-datetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function dateTime
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-coresetup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function coreSetup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-coreloop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function coreLoop
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<p><a id="core_8cpp"></a></p>
+<h1 id="file-corecpp">File core.cpp</h1>
+<p><img alt="" src="https://img.shields.io/badge/language-C%2B%2B-blue" title="C++" /></p>
+<p><strong>Location</strong>: <code>src/core.cpp</code></p>
+<h2 id="includes">Includes</h2>
+<ul>
+<li><a href="../platform_8h/#platform_8h">platform.h</a></li>
+<li><a href="../core_8h/#core_8h">core.h</a></li>
+<li><a href="../network_8h/#network_8h">network.h</a></li>
+<li><a href="../mqtt_8h/#mqtt_8h">mqtt.h</a></li>
+<li><a href="../sensor_8h/#sensor_8h">sensor.h</a></li>
+<li><a href="../storage_8h/#storage_8h">storage.h</a></li>
+<li>secrets.h</li>
+</ul>
+<pre class="mermaid"><code>graph LR
+10["core.h"]
+click 10 "core_8h.md#core_8h"
+
+12["mqtt.h"]
+click 12 "mqtt_8h.md#mqtt_8h"
+12 --&gt; 2
+
+11["network.h"]
+click 11 "network_8h.md#network_8h"
+11 --&gt; 2
+
+2["platform.h"]
+click 2 "platform_8h.md#platform_8h"
+2 --&gt; 3
+2 --&gt; 4
+2 --&gt; 5
+2 --&gt; 6
+2 --&gt; 7
+2 --&gt; 8
+2 --&gt; 9
+
+13["sensor.h"]
+click 13 "sensor_8h.md#sensor_8h"
+13 --&gt; 2
+
+14["storage.h"]
+click 14 "storage_8h.md#storage_8h"
+14 --&gt; 2
+14 --&gt; 15
+
+1["src/core.cpp"]
+click 1 "core_8cpp.md#core_8cpp"
+1 --&gt; 2
+1 --&gt; 10
+1 --&gt; 11
+1 --&gt; 12
+1 --&gt; 13
+1 --&gt; 14
+1 --&gt; 16
+
+7["Adafruit_ADT7410.h"]
+
+3["Arduino.h"]
+
+8["ArduinoJson.h"]
+
+9["ArduinoMqttClient.h"]
+
+6["RTClib.h"]
+
+5["SdFat.h"]
+
+4["Wire.h"]
+
+15["cstdio"]
+
+16["secrets.h"]
+</code></pre>
+<h2 id="variables">Variables</h2>
+<p><a id="core_8cpp_1afa042f998806fcdedab1794cebbeaad3"></a></p>
+<h3 id="variable-rtc">Variable rtc</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 9)</p>
+<div class="highlight"><pre><span></span><code><span class="n">RTC_DS3231</span><span class="w"> </span><span class="n">rtc</span>
+</code></pre></div>
+<p><strong>Type</strong>: RTC_DS3231</p>
+<p><a id="core_8cpp_1af19292dee25d42580f9588b754ddbedc"></a></p>
+<h3 id="variable-tempsensor">Variable tempsensor</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 10)</p>
+<div class="highlight"><pre><span></span><code><span class="n">Adafruit_ADT7410</span><span class="w"> </span><span class="n">tempsensor</span>
+</code></pre></div>
+<p><strong>Type</strong>: Adafruit_ADT7410</p>
+<p><a id="core_8cpp_1a15e6b7e1f0fb2d1e0fe1654721bb5302"></a></p>
+<h3 id="variable-sd">Variable sd</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 11)</p>
+<div class="highlight"><pre><span></span><code><span class="n">SdFat</span><span class="w"> </span><span class="n">sd</span>
+</code></pre></div>
+<p><strong>Type</strong>: SdFat</p>
+<p><a id="core_8cpp_1a64f7c60366b0a82c42d7a1dbf4e9505a"></a></p>
+<h3 id="variable-wificlient">Variable wifiClient</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 13)</p>
+<div class="highlight"><pre><span></span><code><span class="n">WiFiClient</span><span class="w"> </span><span class="n">wifiClient</span>
+</code></pre></div>
+<p><strong>Type</strong>: WiFiClient</p>
+<p><a id="core_8cpp_1a68cab60b6c724cde0fc0009e126a80d5"></a></p>
+<h3 id="variable-chipselect">Variable chipSelect</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 16)</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">chipSelect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+</code></pre></div>
+<p><strong>Type</strong>: const uint8_t</p>
+<p><a id="core_8cpp_1ad4bd75fd80e14bbf47bb21fa3524f6c8"></a></p>
+<h3 id="variable-sensoridone">Variable sensorIdOne</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 17)</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdOne</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sensor_One&quot;</span>
+</code></pre></div>
+<p><strong>Type</strong>: const char *</p>
+<p><a id="core_8cpp_1a6d11f0d69393ced0e86a5ec6ff1d520e"></a></p>
+<h3 id="variable-sensoridinuse">Variable sensorIdInUse</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 19)</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">sensorIdOne</span><span class="p">](</span><span class="n">core_8cpp</span><span class="p">.</span><span class="n">md</span><span class="err">#</span><span class="n">core_8cpp_1ad4bd75fd80e14bbf47bb21fa3524f6c8</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Type</strong>: const char *</p>
+<p><a id="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39"></a></p>
+<h3 id="variable-sensortype">Variable sensorType</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 21)</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;temp&quot;</span>
+</code></pre></div>
+<p><strong>Type</strong>: const char *</p>
+<p><a id="core_8cpp_1a4ed7b4c951621dbec76099594f64d249"></a></p>
+<h3 id="variable-topic">Variable topic</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 22)</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dhbw/ai/si2023/2/&quot;</span>
+</code></pre></div>
+<p><strong>Type</strong>: const char *</p>
+<p><a id="core_8cpp_1a9b7578cbf8a2ac9a8a2ccb3fc5431791"></a></p>
+<h3 id="variable-wifi_connect_timeout_ms">Variable WIFI_CONNECT_TIMEOUT_MS</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 25)</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15000</span>
+</code></pre></div>
+<p><strong>Type</strong>: const unsigned long</p>
+<p><a id="core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b"></a></p>
+<h3 id="variable-loop_delay_ms">Variable LOOP_DELAY_MS</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 26)</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">LOOP_DELAY_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span>
+</code></pre></div>
+<p><strong>Type</strong>: const unsigned long</p>
+<p><a id="core_8cpp_1a4ae62406649dce01eb479e7a476a4305"></a></p>
+<h3 id="variable-client_id_buffer_size">Variable CLIENT_ID_BUFFER_SIZE</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 27)</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">CLIENT_ID_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span>
+</code></pre></div>
+<p><strong>Type</strong>: const size_t</p>
+<p><a id="core_8cpp_1a4f1edbd0b6c65e5e7843bbda20bb24e2"></a></p>
+<h3 id="variable-sd_sck_frequency_mhz">Variable SD_SCK_FREQUENCY_MHZ</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 28)</p>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">SD_SCK_FREQUENCY_MHZ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span>
+</code></pre></div>
+<p><strong>Type</strong>: const uint8_t</p>
+<p><a id="core_8cpp_1abb6f4167f4e2989c5f0af6f10b56d33e"></a></p>
+<h3 id="variable-lastloggedminute">Variable lastLoggedMinute</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 29)</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">lastLoggedMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span>
+</code></pre></div>
+<p><strong>Type</strong>: int</p>
+<p><a id="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf"></a></p>
+<h3 id="variable-count">Variable count</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 30)</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+</code></pre></div>
+<p><strong>Type</strong>: int</p>
+<p><a id="core_8cpp_1af80c34747656b263fece5b92e5786fab"></a></p>
+<h3 id="variable-wifiok">Variable wifiOk</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 31)</p>
+<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="n">wifiOk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
+</code></pre></div>
+<p><strong>Type</strong>: bool</p>
+<p><a id="core_8cpp_1a9e1fbed2e9bf75293274a8fde0a5085d"></a></p>
+<h3 id="variable-recoveredsent">Variable recoveredSent</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 32)</p>
+<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
+</code></pre></div>
+<p><strong>Type</strong>: bool</p>
+<h2 id="functions">Functions</h2>
+<p><a id="core_8cpp_1aa36be85ab02519b9969bf118f8647728"></a></p>
+<h3 id="function-mqttclient">Function mqttClient</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="n">MqttClient</span><span class="w"> </span><span class="n">mqttClient</span><span class="p">(</span><span class="n">wifiClient</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><a href="./#core_8cpp_1a64f7c60366b0a82c42d7a1dbf4e9505a">wifiClient</a></li>
+</ul>
+<p><strong>Return type</strong>: MqttClient</p>
+<p><a id="core_8cpp_1a84b7ee25d4d43e3b6dd6b3193a2547f0"></a></p>
+<h3 id="function-datetime">Function dateTime</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">dateTime</span><span class="p">(</span><span class="kt">uint16_t</span><span class="w"> </span><span class="o">*</span><span class="n">date</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="o">*</span><span class="n">time</span><span class="p">)</span>
+</code></pre></div>
+<p>Retrieves the current date and time from the RTC and formats them for FAT file systems.</p>
+<p>This function obtains the current date and time from the real-time clock (RTC) and encodes them using the FAT file system date and time format macros.</p>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><strong>date</strong>: Pointer to a uint16_t variable where the encoded FAT date will be stored.</li>
+<li><strong>time</strong>: Pointer to a uint16_t variable where the encoded FAT time will be stored.</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li>uint16_t * <strong>date</strong></li>
+<li>uint16_t * <strong>time</strong></li>
+</ul>
+<p><strong>Return type</strong>: void</p>
+<p><a id="core_8cpp_1a9fb1675443ce002d3928dd3edf3b2a72"></a></p>
+<h3 id="function-coresetup">Function coreSetup</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">coreSetup</span><span class="p">()</span>
+</code></pre></div>
+<p>Initializes core system components.</p>
+<p>This function performs the following setup steps:
+* Connects to WiFi and sets the global wifiOk flag.</p>
+<ul>
+<li>
+<p>Generates and sets the MQTT client ID based on the sensor in use.</p>
+</li>
+<li>
+<p>Connects to the MQTT broker if WiFi connection is successful.</p>
+</li>
+<li>
+<p>Initializes the real-time clock (RTC) and sets the time if power was lost.</p>
+</li>
+<li>
+<p>Registers the date/time callback for SD file timestamps.</p>
+</li>
+<li>
+<p>Initializes the SD card and halts execution if initialization fails.</p>
+</li>
+<li>
+<p>Initializes the temperature sensor and halts execution if initialization fails.</p>
+</li>
+<li>
+<p>Prints a message to the serial console upon successful setup.</p>
+</li>
+</ul>
+<p>This function will halt execution (infinite loop) if any critical component fails to initialize.</p>
+<p><strong>Return type</strong>: void</p>
+<p><a id="core_8cpp_1aa5603fdb8113111f87914938533d1ece"></a></p>
+<h3 id="function-coreloop">Function coreLoop</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">coreLoop</span><span class="p">()</span>
+</code></pre></div>
+<p>Main loop function for core operations.</p>
+<p>This function manages the main operational loop, including:
+* Reading the current time from the RTC.</p>
+<ul>
+<li>
+<p>Ensuring WiFi and MQTT connections are active, attempting reconnection if necessary.</p>
+</li>
+<li>
+<p>Logging temperature data to SD card if network connections are unavailable.</p>
+</li>
+<li>
+<p>Sending recovered (pending) data after reconnection.</p>
+</li>
+<li>
+<p>Reading and sending temperature data to MQTT broker once per minute.</p>
+</li>
+<li>
+<p>Polling the MQTT client and maintaining a fixed loop delay.</p>
+</li>
+</ul>
+<p>The function ensures that temperature data is not lost during connectivity issues by saving to SD card and resending when connections are restored.</p>
+<p><strong>Return type</strong>: void</p>
+<h2 id="source">Source</h2>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;platform.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;core.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;network.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;mqtt.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;sensor.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;storage.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;secrets.h&quot;</span>
+
+<span class="n">RTC_DS3231</span><span class="w"> </span><span class="n">rtc</span><span class="p">;</span>
+<span class="n">Adafruit_ADT7410</span><span class="w"> </span><span class="n">tempsensor</span><span class="p">;</span><span class="w">   </span>
+<span class="n">SdFat</span><span class="w"> </span><span class="n">sd</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">WiFiClient</span><span class="w"> </span><span class="n">wifiClient</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="n">MqttClient</span><span class="w"> </span><span class="nf">mqttClient</span><span class="p">(</span><span class="n">wifiClient</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">chipSelect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdOne</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sensor_One&quot;</span><span class="p">;</span>
+<span class="c1">// static const char* sensorIdTwo = &quot;Sensor_Two&quot;;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensorIdOne</span><span class="p">;</span><span class="w"> </span>
+<span class="c1">//const char* sensorIdInUse = sensorIdTwo; // Uncomment to use the second</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;temp&quot;</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dhbw/ai/si2023/2/&quot;</span><span class="p">;</span>
+
+<span class="c1">// Timing and connection constants</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15000</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">LOOP_DELAY_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">CLIENT_ID_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">SD_SCK_FREQUENCY_MHZ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">lastLoggedMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">wifiOk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">dateTime</span><span class="p">(</span><span class="kt">uint16_t</span><span class="o">*</span><span class="w"> </span><span class="n">date</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="o">*</span><span class="w"> </span><span class="n">time</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">DateTime</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtc</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="w">  </span><span class="o">*</span><span class="n">date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FAT_DATE</span><span class="p">(</span><span class="n">now</span><span class="p">.</span><span class="n">year</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">month</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">day</span><span class="p">());</span>
+<span class="w">  </span><span class="o">*</span><span class="n">time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FAT_TIME</span><span class="p">(</span><span class="n">now</span><span class="p">.</span><span class="n">hour</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">minute</span><span class="p">(),</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">second</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">coreSetup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">wifiOk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">connectWiFi</span><span class="p">(</span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">clientId</span><span class="p">[</span><span class="n">CLIENT_ID_BUFFER_SIZE</span><span class="p">];</span>
+<span class="w">  </span><span class="n">snprintf</span><span class="p">(</span><span class="n">clientId</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">clientId</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;IsoPruefi_%s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="p">);</span>
+<span class="w">  </span><span class="n">mqttClient</span><span class="p">.</span><span class="n">setId</span><span class="p">(</span><span class="n">clientId</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">wifiOk</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">connectMQTT</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">rtc</span><span class="p">.</span><span class="n">begin</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;RTC not found!&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rtc</span><span class="p">.</span><span class="n">lostPower</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">rtc</span><span class="p">.</span><span class="n">adjust</span><span class="p">(</span><span class="n">DateTime</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="n">__DATE__</span><span class="p">),</span><span class="w"> </span><span class="n">F</span><span class="p">(</span><span class="n">__TIME__</span><span class="p">)));</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">SdFile</span><span class="o">::</span><span class="n">dateTimeCallback</span><span class="p">(</span><span class="n">dateTime</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">sd</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="n">chipSelect</span><span class="p">,</span><span class="w"> </span><span class="n">SD_SCK_MHZ</span><span class="p">(</span><span class="n">SD_SCK_FREQUENCY_MHZ</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;SD card failed.&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">initSensor</span><span class="p">(</span><span class="n">tempsensor</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;ADT7410 init failed!&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// DateTime now = rtc.now();</span>
+<span class="w">  </span><span class="c1">// sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);</span>
+
+<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Setup complete.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">coreLoop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">DateTime</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtc</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">alreadyLoggedThisMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="p">.</span><span class="n">minute</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">lastLoggedMinute</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">lastLoggedMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">minute</span><span class="p">();</span>
+<span class="w">    </span><span class="n">alreadyLoggedThisMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Reconnect WiFi</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">wifiOk</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">WiFi</span><span class="p">.</span><span class="n">status</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">WL_CONNECTED</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;WiFi not connected. Trying to reconnect...&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">wifiOk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">connectWiFi</span><span class="p">(</span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">wifiOk</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">connectMQTT</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;WiFi ok: Reconnected to MQTT.&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w">  </span><span class="c1">// Reset to allow sending recovered data again</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Reconnect failed. Skipping loop.&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">alreadyLoggedThisMinute</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readTemperatureCelsius</span><span class="p">();</span>
+<span class="w">        </span><span class="n">saveToSD</span><span class="p">(</span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
+<span class="w">        </span><span class="n">alreadyLoggedThisMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="n">delay</span><span class="p">(</span><span class="n">LOOP_DELAY_MS</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Reconnect MQTT</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mqttClient</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;MQTT not connected. Trying to reconnect...&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">connectMQTT</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;MQTT still not connected.&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">alreadyLoggedThisMinute</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readTemperatureCelsius</span><span class="p">();</span>
+<span class="w">        </span><span class="n">saveToSD</span><span class="p">(</span><span class="n">sd</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
+<span class="w">        </span><span class="n">alreadyLoggedThisMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="n">delay</span><span class="p">(</span><span class="n">LOOP_DELAY_MS</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;MQTT reconnected successfully.&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="c1">// Reset to allow sending recovered data again</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// After successful MQTT connection, send pending data</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mqttClient</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">sendPendingData</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
+<span class="w">    </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// normal operation: read temperature and send to MQTT</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">alreadyLoggedThisMinute</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readTemperatureCelsius</span><span class="p">();</span>
+<span class="w">    </span><span class="n">sendToMqtt</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
+<span class="w">    </span><span class="n">alreadyLoggedThisMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">mqttClient</span><span class="p">.</span><span class="n">poll</span><span class="p">();</span>
+<span class="w">  </span><span class="n">delay</span><span class="p">(</span><span class="n">LOOP_DELAY_MS</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 5, 2025 12:47:15 UTC">August 5, 2025</span>
+  </span>
+
+    
+    
+    
+      
+  
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Contributors">
+      
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.54 5.54 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13zM0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20zm24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9z"/></svg>
+      
+    </span>
+    <nav>
+      
+    </nav>
+  </span>
+
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["instant_navigation", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

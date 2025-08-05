@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer
-} from 'recharts';import { TemperatureDataClient, ApiException } from './api/api-client';
+    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+} from 'recharts';
+import { TemperatureDataClient, ApiException } from '../api/api-client.ts';
+
+/*
+JSON format of temperature data
+ */
 
 export type WeatherEntry = {
     timestamp: string;
@@ -17,15 +15,19 @@ export type WeatherEntry = {
     tempOutside: number;
 };
 
+// website heading
 export function WeatherChartTitle() {
     return <h1>Weather Chart</h1>
 }
 
 const style = { width: '100%', height: 400 };
 
-// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:7240';
 const temperatureClient = new TemperatureDataClient('http://localhost:5160');
 
+/*
+    Function that fetches data from DB.
+    Throws errors if problems occur
+ */
 export function TempChart() {
     const [weatherData, setWeatherData] = useState<WeatherEntry[]>([]);
     const [filter, setFilter] = useState<'all'|'hour'|'day'|'week'>('all');
@@ -48,8 +50,8 @@ export function TempChart() {
                     end,
                     place,
                     isFahrenheit) as any;
-                console.log('📦 Raw API response:', data);
 
+                // ACTIVATE AFTER SOUTH DATA WILL BE MEASURED AND STORED
                 // const south = data.temperatureSouth || [];
                 const north = data.temperatureNord || [];
                 const outside = data.temperatureOutside || [];
@@ -62,14 +64,6 @@ export function TempChart() {
                 const minLength =
                     Math.min(north.length, outside.length);
 
-                // old implementation
-
-                // const formatted: WeatherEntry[] = [];
-                // for (let i = 0; i < minLength; i++) {
-                //     const southData = data.temperatureSouth?.[i];
-                //     const nordData = data.temperatureNord?.[i];
-                //     const outsideData = data.temperatureOutside?.[i];
-
                 const formatted: WeatherEntry[] = Array.from(
                     { length: minLength },
                     (_, i) => ({
@@ -81,17 +75,6 @@ export function TempChart() {
                         tempOutside: outside[i]?.temperature ?? 0,
                     })
                 );
-                console.log("Formatted weatherData", formatted);
-
-                //     if (southData?.timestamp) {
-                //         formatted.push({
-                //             timestamp: new Date(southData.timestamp).toISOString(),
-                //             tempSouth: southData.temperature || 0,
-                //             tempNorth: nordData?.temperature || 0,
-                //             tempOutside: outsideData?.temperature || 0,
-                //         });
-                //     }
-                // }
 
                 setWeatherData(formatted);
             } catch (error) {
@@ -112,7 +95,14 @@ export function TempChart() {
         fetchData();
     }, []);
 
-    // filtering
+/*
+    The logic of filtering data.
+    Filters it showing responsive chart.
+    Filters to show data:
+    - last hour
+    - last 24 hours
+    - last week
+*/
 
     const now = new Date().getTime();
     let cutoff = 0;
@@ -138,8 +128,6 @@ export function TempChart() {
             return !isNaN(time) && time >= cutoff;
         });
 
-    console.log("Filtered", filteredData.length, "of", weatherData.length);
-
     if (loading) {
         return <div style={style}>Loading temperature data...</div>;
     }
@@ -152,9 +140,6 @@ export function TempChart() {
             </div>
         );
     }
-
-    console.log("Filtered data", filteredData);
-    console.log("Sample timestamps", weatherData.map(e => e.timestamp));
 
     return (
         <div style={style}>

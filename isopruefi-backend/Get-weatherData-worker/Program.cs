@@ -1,12 +1,13 @@
+using System.Net;
 using Database.EntityFramework;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
-using Microsoft.EntityFrameworkCore;
 using Get_weatherData_worker.Helper;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Get_weatherData_worker;
 
@@ -45,6 +46,9 @@ public class Program
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
+
+        app.UseHealthChecksPrometheusExporter("/api/healthoka",
+            options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
 
         app.Run();
     }

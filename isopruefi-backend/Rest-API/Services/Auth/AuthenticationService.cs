@@ -5,7 +5,6 @@ using Database.EntityFramework.Models;
 using Database.Repository.TokenRepo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Rest_API.Helper;
 using Rest_API.Models;
 using Rest_API.Services.Token;

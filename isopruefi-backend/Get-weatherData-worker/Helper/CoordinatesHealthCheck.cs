@@ -1,6 +1,5 @@
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.EntityFrameworkCore;
 using Database.EntityFramework;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Get_weatherData_worker.Helper;
 

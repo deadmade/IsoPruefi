@@ -1,6 +1,4 @@
-using Database.EntityFramework.Models;
 using Database.Repository.SettingsRepo;
-using Microsoft.Extensions.Logging;
 using MQTT_Receiver_Worker.MQTT.Interfaces;
 using MQTTnet;
 using MQTTnet.Protocol;

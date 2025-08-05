@@ -7,7 +7,6 @@ using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using Database.Repository.TokenRepo;
 using HealthChecks.UI.Client;
-using InfluxDB.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
@@ -16,13 +15,13 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using NSwag.AspNetCore;
+using NSwag.Generation.Processors.Security;
 using Rest_API.Helper;
 using Rest_API.Models;
 using Rest_API.Seeder;
 using Rest_API.Services.Auth;
 using Rest_API.Services.Token;
 using Rest_API.Services.User;
-using InfluxDBClient = InfluxDB3.Client.InfluxDBClient;
 
 namespace Rest_API;
 
@@ -67,7 +66,7 @@ public class Program
             });
 
             configure.OperationProcessors.Add(
-                new NSwag.Generation.Processors.Security.AspNetCoreOperationSecurityScopeProcessor("Bearer"));
+                new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
         });
         builder.Services.AddEndpointsApiExplorer();
 

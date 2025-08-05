@@ -1,4 +1,4 @@
-using System.Text;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Database.Repository.InfluxRepo;
@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using MQTT_Receiver_Worker.MQTT;
 using MQTT_Receiver_Worker.MQTT.Models;
-using MQTTnet;
 
 namespace UnitTests.MqttReceiver;
 
@@ -161,7 +160,7 @@ public class ConnectionTests
     {
         // Access private field using reflection
         var field = typeof(Connection).GetField("_jsonSerializerOptions",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (field != null)
         {
@@ -226,7 +225,7 @@ public class ConnectionTests
 
         // Use reflection to access the private method
         var method = typeof(Connection).GetMethod("ProcessSensorReading",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (method != null)
         {
@@ -252,7 +251,7 @@ public class ConnectionTests
         };
 
         var method = typeof(Connection).GetMethod("ProcessSensorReading",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (method != null)
         {
@@ -280,7 +279,7 @@ public class ConnectionTests
         };
 
         var method = typeof(Connection).GetMethod("ProcessSensorReading",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (method != null)
         {
@@ -312,7 +311,7 @@ public class ConnectionTests
         };
 
         var method = typeof(Connection).GetMethod("ProcessBatchSensorReading",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (method != null)
         {
@@ -349,7 +348,7 @@ public class ConnectionTests
         };
 
         var method = typeof(Connection).GetMethod("ProcessSensorReading",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (method != null)
         {

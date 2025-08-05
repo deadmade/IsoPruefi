@@ -1,6 +1,6 @@
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Get_weatherData_worker.Helper;
+using Database.Repository.InfluxRepo;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Get_weatherData_worker.Helper;
 
@@ -22,6 +22,9 @@ public static class HealthCheck
                 new[] { "WeatherAPI", "External" })
             .AddCheck<CoordinatesHealthCheck>("Coordinates Database",
                 HealthStatus.Unhealthy,
-                new[] { "Coordinates", "External" });
+                new[] { "Coordinates", "External" })
+            .AddCheck<InfluxHealthCheck>("InfluxDB",
+                HealthStatus.Unhealthy,
+                new[] { "Database" });
     }
 }

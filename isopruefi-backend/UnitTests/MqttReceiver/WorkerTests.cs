@@ -1,9 +1,7 @@
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MQTT_Receiver_Worker;
-using MQTT_Receiver_Worker.MQTT;
 using MQTT_Receiver_Worker.MQTT.Interfaces;
 
 namespace UnitTests.MqttReceiver;

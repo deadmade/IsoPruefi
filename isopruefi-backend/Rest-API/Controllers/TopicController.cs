@@ -1,8 +1,8 @@
 ﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Mvc;
-using Database.Repository.SettingsRepo;
 using Database.EntityFramework.Models;
+using Database.Repository.SettingsRepo;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Rest_API.Controllers;
 

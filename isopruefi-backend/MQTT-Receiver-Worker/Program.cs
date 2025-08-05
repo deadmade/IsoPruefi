@@ -48,15 +48,18 @@ public class Program
 
         builder.Services.AddHostedService<Worker>();
 
-        var host = builder.Build();
+        var app = builder.Build();
 
         //HealthCheck Middleware
-        host.MapHealthChecks("/api/health", new HealthCheckOptions
+        app.MapHealthChecks("/api/health", new HealthCheckOptions
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
 
-        host.Run();
+        app.UseHealthChecksPrometheusExporter("/api/healthoka",
+            options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
+
+        app.Run();
     }
 }

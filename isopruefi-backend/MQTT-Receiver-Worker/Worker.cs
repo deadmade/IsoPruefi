@@ -1,4 +1,3 @@
-using MQTT_Receiver_Worker.MQTT;
 using MQTT_Receiver_Worker.MQTT.Interfaces;
 
 namespace MQTT_Receiver_Worker;

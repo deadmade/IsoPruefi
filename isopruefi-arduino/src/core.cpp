@@ -30,7 +30,15 @@ static int lastLoggedMinute = -1;
 static int count = 0;
 static bool wifiOk = false;
 static bool recoveredSent = false;
+static const int RECONNECT_INTERVAL_MS = 2000;
+static unsigned long lastReconnectAttempt = 0;
 
+bool isWifiConnected() {
+  return WiFi.status() == WL_CONNECTED;
+}
+bool isMqttConnected() {
+  return mqttClient.connected();
+}
 
 /**
  * @brief Retrieves the current date and time from the RTC and formats them for FAT file systems.
@@ -92,8 +100,8 @@ void coreSetup() {
     while (1);
   }
 
-  // DateTime now = rtc.now();
-  // sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
+  DateTime now = rtc.now();
+  sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
 
   Serial.println("Setup complete.");
 }
@@ -114,6 +122,8 @@ void coreSetup() {
  */
 void coreLoop() {
   DateTime now = rtc.now();
+  Serial.print("RTC time: ");
+  Serial.println(now.timestamp());
   static bool alreadyLoggedThisMinute = false;
 
   if (now.minute() != lastLoggedMinute) {
@@ -121,19 +131,19 @@ void coreLoop() {
     alreadyLoggedThisMinute = false;
   }
 
-  // Reconnect WiFi
-  if (!wifiOk || WiFi.status() != WL_CONNECTED) {
-    Serial.println("WiFi not connected. Trying to reconnect...");
-    wifiOk = connectWiFi(WIFI_CONNECT_TIMEOUT_MS);
+  // Schritt 1: WiFi-Verbindung prüfen
+  if (!isWifiConnected()) {
+    if (millis() - lastReconnectAttempt > RECONNECT_INTERVAL_MS) {
+      lastReconnectAttempt = millis();
+      Serial.println("WiFi not connected. Trying to reconnect...");
+      wifiOk = connectWiFi(WIFI_CONNECT_TIMEOUT_MS);
+    }
 
-    if (wifiOk && connectMQTT(mqttClient)) {
-      Serial.println("WiFi ok: Reconnected to MQTT.");
-      recoveredSent = false;  // Reset to allow sending recovered data again
-    } else {
-      Serial.println("Reconnect failed. Skipping loop.");
+    if (!wifiOk) {
+      Serial.println("WiFi reconnect failed. Skipping loop.");
       if (!alreadyLoggedThisMinute) {
         float c = readTemperatureCelsius();
-        saveToSD(sd, c, now, count);
+        saveToCsvBatch(now, c, count);
         alreadyLoggedThisMinute = true;
         count++;
       }
@@ -142,31 +152,33 @@ void coreLoop() {
     }
   }
 
-  // Reconnect MQTT
-  if (!mqttClient.connected()) {
+  // Schritt 2: MQTT-Verbindung prüfen
+  if (!isMqttConnected()) {
     Serial.println("MQTT not connected. Trying to reconnect...");
     if (!connectMQTT(mqttClient)) {
-      Serial.println("MQTT still not connected.");
+      Serial.println("MQTT reconnect failed. Skipping loop.");
       if (!alreadyLoggedThisMinute) {
         float c = readTemperatureCelsius();
-        saveToSD(sd, c, now, count);
+        saveToCsvBatch(now, c, count);
         alreadyLoggedThisMinute = true;
         count++;
       }
       delay(LOOP_DELAY_MS);
       return;
     }
+
     Serial.println("MQTT reconnected successfully.");
-    recoveredSent = false; // Reset to allow sending recovered data again
+    recoveredSent = false; // Wiederherstellung erneut erlauben
   }
 
-  // After successful MQTT connection, send pending data
+  // Schritt 3: Nach erfolgreichem MQTT-Reconnect → alte CSVs senden
   if (!recoveredSent && mqttClient.connected()) {
-    sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
-    recoveredSent = true;
+    if (sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now)) {
+      recoveredSent = true;
+    }
   }
 
-  // normal operation: read temperature and send to MQTT
+  // Schritt 4: Normale Messung und MQTT-Versand
   if (!alreadyLoggedThisMinute) {
     float c = readTemperatureCelsius();
     sendToMqtt(mqttClient, topic, sensorType, sensorIdInUse, c, now, count);
@@ -174,6 +186,7 @@ void coreLoop() {
     count++;
   }
 
+  // Schritt 5: MQTT-Loop und Wartezeit
   mqttClient.poll();
   delay(LOOP_DELAY_MS);
 }

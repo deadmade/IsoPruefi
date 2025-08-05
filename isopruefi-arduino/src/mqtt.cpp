@@ -3,10 +3,9 @@
 
 // MQTT and JSON buffer size constants
 static const size_t SMALL_BUFFER_SIZE = 128;  // For topics, payloads, and small JSON docs
-static const size_t LARGE_BUFFER_SIZE = 1024; // For large payloads and JSON docs
-static const size_t BASE_FILENAME_BUFFER_SIZE = 64;
-static const int MAX_PENDING_FILES = 500;
-static const int FILE_EXTENSION_LENGTH = 5;
+static const size_t LARGE_BUFFER_SIZE = 2048; // For large payloads and JSON docs
+static const size_t FILE_NAME_BUFFER_SIZE = 64;
+static const int MAX_RECOVERY_FILES_PER_LOOP = 3;
 
 void createFullTopic(char* buffer, size_t bufferSize, const char* topicPrefix, const char* sensorType,
                      const char* sensorId, const char* suffix) {
@@ -17,20 +16,6 @@ void createFullTopic(char* buffer, size_t bufferSize, const char* topicPrefix, c
   }
 }
 
-/**
- * @brief Publishes sensor data to an MQTT topic.
- *
- * Constructs a JSON payload with sensor data and publishes it to an MQTT topic
- * constructed from the given prefix, sensor type, and sensor ID.
- *
- * @param mqttClient   Reference to the MQTT client used for publishing.
- * @param topicPrefix  Prefix for the MQTT topic (e.g., "sensors/").
- * @param sensorType   Type of the sensor (e.g., "temperature").
- * @param sensorId     Unique identifier for the sensor.
- * @param celsius      Sensor reading in Celsius.
- * @param now          Current date and time.
- * @param sequence     Sequence number for the message.
- */
 void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
                 const char* sensorId, float celsius, const DateTime& now, int sequence) {
   mqttClient.poll();
@@ -55,68 +40,116 @@ void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
   }
 }
 
-/**
- * @brief Sends pending sensor data that was saved offline to MQTT broker.
- *
- * Retrieves saved sensor data files from the last 24 hours, consolidates them
- * into a single JSON payload, and publishes to a recovery topic. After successful
- * transmission, the original files and recovery file are deleted from storage.
- *
- * @param mqttClient   Reference to the MQTT client used for publishing.
- * @param topicPrefix  Prefix for the MQTT topic (e.g., "sensors/").
- * @param sensorType   Type of the sensor (e.g., "temperature").
- * @param sensorId     Unique identifier for the sensor.
- * @param now          Current date and time for file filtering.
- */
-void sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
+bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
                      const char* sensorId, const DateTime& now) {
-  Serial.println("Sending pending data");
+  Serial.println("Looking for pending CSV files...");
 
-  String fileList[MAX_PENDING_FILES];
-  int count = listSavedFilesData(fileList, MAX_PENDING_FILES, now);
-  Serial.println("Pending files count: " + String(count));
+  const unsigned long startMillis = millis();
+  bool allFilesSent = true;
 
-  if (count == 0) return;
-
-  StaticJsonDocument<LARGE_BUFFER_SIZE> mainDoc;
-  buildRecoveredJson(mainDoc, fileList, count, now);
-
-  if (!mainDoc.containsKey("meta") || mainDoc["meta"].size() == 0) {
-    Serial.println("No valid recovered entries to send.");
-    return;
+  char folder[8];
+  strncpy(folder, createFolderName(now), sizeof(folder)); 
+  File root = sd.open(folder);
+  if (!root) {
+    Serial.println("No folder found for pending data.");
+    return true; // kein Ordner = keine Arbeit mehr
   }
 
-  Serial.println("Recovered entries to send: " + String(mainDoc["meta"].size()));
+  int sentCount = 0;
+  int checkedFiles = 0;
+  int skippedEmptyFiles = 0;
 
-  saveRecoveredJsonDataToSd(fileList, count, now);
+  File entry;
+  while ((entry = root.openNextFile())) {
+    if (entry.isDirectory()) continue;
 
-  // Prepare filename for deletion
-  char baseFilename[BASE_FILENAME_BUFFER_SIZE];
-  createFilename(baseFilename, sizeof(baseFilename), now);
-  String recoveredFilename = String(baseFilename);
-  recoveredFilename.remove(recoveredFilename.length() - FILE_EXTENSION_LENGTH);  
-  recoveredFilename += "_recovered.json";
+    char filename[64];
+    entry.getName(filename, sizeof(filename));
+    entry.close();
 
-  char payload[LARGE_BUFFER_SIZE];
-  size_t len = serializeJson(mainDoc, payload, sizeof(payload));
-  if (len >= sizeof(payload)) {
-    Serial.println("Payload too large, skipping publish.");
-    return;
+    String nameStr(filename);
+    if (!nameStr.endsWith(".csv")) continue;
+
+    checkedFiles++;
+
+    // Prüfen, ob Datei älter als 24 Stunden ist
+    char fullPath[64];
+    snprintf(fullPath, sizeof(fullPath), "%s/%s", folder, filename);
+    File tsFile = sd.open(fullPath, FILE_READ);
+    if (tsFile) {
+      char line[64];
+      if (tsFile.fgets(line, sizeof(line)) > 0) {
+        char* p = strtok(line, ",");
+        if (p) {
+          uint32_t ts = atol(p);
+          if (now.unixtime() - ts > 86400) {
+            Serial.print("Skipping old CSV file (>24h): ");
+            Serial.println(nameStr);
+            tsFile.close();
+            continue;
+          }
+        }
+      }
+      tsFile.close();
+    }
+
+    // Umwandlung in JSON
+    StaticJsonDocument<LARGE_BUFFER_SIZE> doc;
+    buildRecoveredJsonFromCsv(doc, fullPath, now);
+
+    if (!doc.containsKey("meta") || doc["meta"].size() == 0) {
+      Serial.println("No valid data in: " + nameStr);
+      skippedEmptyFiles++;
+      continue;
+    }
+
+    char payload[LARGE_BUFFER_SIZE];
+    size_t len = serializeJson(doc, payload, sizeof(payload));
+    if (len >= sizeof(payload)) {
+      Serial.println("Payload too large, skipping file: " + nameStr);
+      allFilesSent = false;
+      continue;
+    }
+
+    char fullTopic[SMALL_BUFFER_SIZE];
+    createFullTopic(fullTopic, sizeof(fullTopic), topicPrefix, sensorType, sensorId, "recovered");
+
+    Serial.print("Publishing recovered CSV: ");
+    Serial.println(nameStr);
+    Serial.print("MQTT payload: ");
+    Serial.println(payload);
+
+    if (mqttClient.beginMessage(fullTopic)) {
+      mqttClient.print(payload);
+      mqttClient.endMessage();
+      Serial.println("Published and deleting file.");
+      deleteCsvFile(fullPath); // aktivieren wenn Test erfolgreich
+      sentCount++;
+    } else {
+      Serial.println("Failed to publish. Keeping file: " + nameStr);
+      allFilesSent = false;
+    }
+
+    // Abbruchbedingung: Zeitlimit überschritten?
+    if (millis() - startMillis > 60000) {
+      Serial.println("Aborting recovery: 60s time limit exceeded.");
+      allFilesSent = false;
+      break;
+    }
   }
 
-  char fullTopic[SMALL_BUFFER_SIZE];
-  createFullTopic(fullTopic, sizeof(fullTopic), topicPrefix, sensorType, sensorId, "recovered");
-  Serial.print("Publishing recovered data to ");
-  Serial.println(fullTopic);
+  root.close();
 
-  if (mqttClient.beginMessage(fullTopic)) {
-    mqttClient.print(payload);
-    mqttClient.endMessage();
-    Serial.println("Published recovered data.");
+  if (checkedFiles == 0) {
+    Serial.println("No CSV recovery files found.");
+  } else if (sentCount == 0 && skippedEmptyFiles == checkedFiles) {
+    Serial.println("All found recovery files were empty, too old, or invalid.");
+  } else {
+    Serial.print("Recovered files sent this loop: ");
+    Serial.println(sentCount);
+  }
 
-  deleteRecoveredAndPendingSourceFilesData(fileList, count, now, recoveredFilename);
-} else {
-  Serial.println("MQTT recovered publish failed.");
+  return allFilesSent;
 }
-}
+
 

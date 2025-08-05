@@ -7,6 +7,7 @@ void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
 
 bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
                      const char* sensorId, const DateTime& now);
-
+                     
 void createFullTopic(char* buffer, size_t bufferSize, const char* topicPrefix, const char* sensorType,
-                     const char* sensorId, const char* suffix = nullptr);
+                     const char* sensorId, const char* suffix = "");
+

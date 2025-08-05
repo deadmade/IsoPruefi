@@ -5,14 +5,9 @@
 #ifndef UNIT_TEST
 
 void saveToCsvBatch(const DateTime& now, float celsius, int sequence);
-void saveToSD(SdFat& sd, float celsius, const DateTime& now, int sequence);
-void saveRecoveredJsonToSd(SdFat& sd, String* fileList, int count, const DateTime& now);
-int listSavedFiles(SdFat& sd, String* fileList, int maxFiles, const DateTime& now);
-void deleteRecoveredAndPendingSourceFiles(SdFat& sd, const String* fileList, int count, const DateTime& now, const String& recoveredFilename);
 void deleteCsvFile(const char* filepath);
 
 void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence);
-void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, const DateTime& now);
 void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const DateTime& now);
 
 #else
@@ -39,12 +34,6 @@ inline void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, c
 }
 
 #endif
-
-// --- Wrapper functions (Arduino only) ---
-void saveDataToSD(float celsius, const DateTime& now, int sequence);
-void saveRecoveredJsonDataToSd(String* fileList, int count, const DateTime& now);
-int listSavedFilesData(String* fileList, int maxFiles, const DateTime& now);
-void deleteRecoveredAndPendingSourceFilesData(const String* fileList, int count, const DateTime& now, const String& recoveredFilename);
 
 // --- Inline helper functions (shared) ---
 inline const char* createFolderName(const DateTime& now) {

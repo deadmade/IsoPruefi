@@ -13,6 +13,11 @@ SdFat sd;
 static WiFiClient wifiClient;
 static MqttClient mqttClient(wifiClient);
 
+// =============================================================================
+// SYSTEM CONFIGURATION CONSTANTS
+// =============================================================================
+
+/// SD card chip select pin
 static const uint8_t chipSelect = 4;
 static const char* sensorIdOne = "Sensor_One";
 // static const char* sensorIdTwo = "Sensor_Two";
@@ -21,33 +26,54 @@ static const char* sensorIdInUse = sensorIdOne;
 static const char* sensorType = "temp";
 static const char* topic = "dhbw/ai/si2023/2/";
 
-// Timing and connection constants
+// =============================================================================
+// TIMING AND CONNECTION CONSTANTS
+// =============================================================================
+
 static const unsigned long WIFI_CONNECT_TIMEOUT_MS = 15000;
 static const unsigned long LOOP_DELAY_MS = 1000;
 static const size_t CLIENT_ID_BUFFER_SIZE = 64;
 static const uint8_t SD_SCK_FREQUENCY_MHZ = 25;
+static const int RECONNECT_INTERVAL_MS = 2000;
+
+// =============================================================================
+// SYSTEM STATE VARIABLES
+// =============================================================================
+
 static int lastLoggedMinute = -1;
 static int count = 0;
 static bool wifiOk = false;
 static bool recoveredSent = false;
-static const int RECONNECT_INTERVAL_MS = 2000;
 static unsigned long lastReconnectAttempt = 0;
+
+// =============================================================================
+// CONNECTION STATUS FUNCTIONS
+// =============================================================================
 
 bool isWifiConnected() {
   return WiFi.status() == WL_CONNECTED;
 }
+
 bool isMqttConnected() {
   return mqttClient.connected();
 }
 
+// =============================================================================
+// FAT FILE SYSTEM CALLBACK FUNCTIONS
+// =============================================================================
+
 /**
- * @brief Retrieves the current date and time from the RTC and formats them for FAT file systems.
- *
- * This function obtains the current date and time from the real-time clock (RTC)
- * and encodes them using the FAT file system date and time format macros.
- *
- * @param[out] date Pointer to a uint16_t variable where the encoded FAT date will be stored.
- * @param[out] time Pointer to a uint16_t variable where the encoded FAT time will be stored.
+ * @brief Callback function for FAT file system timestamp generation
+ * 
+ * This function is used by the SdFat library to obtain current date and time
+ * for file system operations. It retrieves the time from the RTC and converts
+ * it to the FAT file system format using the appropriate macros.
+ * 
+ * @param[out] date Pointer to store the encoded FAT date (year, month, day)
+ * @param[out] time Pointer to store the encoded FAT time (hour, minute, second)
+ * 
+ * @note This function is registered as a callback with SdFile::dateTimeCallback()
+ * @see FAT_DATE, FAT_TIME macros for encoding format details
  */
 void dateTime(uint16_t* date, uint16_t* time) {
   DateTime now = rtc.now();
@@ -55,20 +81,35 @@ void dateTime(uint16_t* date, uint16_t* time) {
   *time = FAT_TIME(now.hour(), now.minute(), now.second());
 }
 
+// =============================================================================
+// SYSTEM INITIALIZATION FUNCTIONS
+// =============================================================================
+
 /**
- * @brief Initializes core system components.
- *
- * This function performs the following setup steps:
- * - Connects to WiFi and sets the global wifiOk flag.
- * - Generates and sets the MQTT client ID based on the sensor in use.
- * - Connects to the MQTT broker if WiFi connection is successful.
- * - Initializes the real-time clock (RTC) and sets the time if power was lost.
- * - Registers the date/time callback for SD file timestamps.
- * - Initializes the SD card and halts execution if initialization fails.
- * - Initializes the temperature sensor and halts execution if initialization fails.
- * - Prints a message to the serial console upon successful setup.
- *
- * This function will halt execution (infinite loop) if any critical component fails to initialize.
+ * @brief Initializes all core system components and peripherals
+ * 
+ * This function performs comprehensive system initialization including:
+ * 
+ * **Network Setup:**
+ * - Establishes WiFi connection with timeout handling
+ * - Configures MQTT client with unique sensor-based ID
+ * - Attempts initial MQTT broker connection
+ * 
+ * **Hardware Initialization:**
+ * - Initializes DS3231 real-time clock module
+ * - Adjusts RTC time if power was lost (uses compilation timestamp)
+ * - Sets up SD card with SPI communication
+ * - Initializes ADT7410 temperature sensor
+ * 
+ * **Data Recovery:**
+ * - Registers FAT file system timestamp callback
+ * - Attempts to send any pending/recovered data from previous sessions
+ * 
+ * @warning This function will halt program execution (infinite loop) if any
+ *          critical component fails to initialize (RTC, SD card, or temperature sensor)
+ * 
+ * @note The function uses compile-time constants for timeouts and configuration
+ * @see WIFI_CONNECT_TIMEOUT_MS, CLIENT_ID_BUFFER_SIZE, SD_SCK_FREQUENCY_MHZ
  */
 void coreSetup() {
   wifiOk = connectWiFi(WIFI_CONNECT_TIMEOUT_MS);
@@ -85,10 +126,12 @@ void coreSetup() {
     while (1);
   }
 
+  // Set RTC time if power was lost (uses compilation timestamp)
   if (rtc.lostPower()) {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
 
+  // Register callback for SD file timestamps and initialize SD card
   SdFile::dateTimeCallback(dateTime);
   if (!sd.begin(chipSelect, SD_SCK_MHZ(SD_SCK_FREQUENCY_MHZ))) {
     Serial.println("SD card failed.");
@@ -100,30 +143,60 @@ void coreSetup() {
     while (1);
   }
 
+  // Attempt to send any pending recovery data from previous sessions
   DateTime now = rtc.now();
   sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
 
   Serial.println("Setup complete.");
 }
 
+// =============================================================================
+// MAIN OPERATIONAL LOOP
+// =============================================================================
+
 /**
- * @brief Main loop function for core operations.
- *
- * This function manages the main operational loop, including:
- * - Reading the current time from the RTC.
- * - Ensuring WiFi and MQTT connections are active, attempting reconnection if necessary.
- * - Logging temperature data to SD card if network connections are unavailable.
- * - Sending recovered (pending) data after reconnection.
- * - Reading and sending temperature data to MQTT broker once per minute.
- * - Polling the MQTT client and maintaining a fixed loop delay.
- *
- * The function ensures that temperature data is not lost during connectivity issues
- * by saving to SD card and resending when connections are restored.
+ * @brief Main operational loop for continuous sensor monitoring and data transmission
+ * 
+ * This function implements the core operational logic of the temperature monitoring
+ * system with robust connectivity handling and data persistence features.
+ * 
+ * **Operational Flow:**
+ * 
+ * 1. **Time Management:**
+ *    - Reads current time from RTC
+ *    - Tracks minute changes to prevent duplicate measurements
+ * 
+ * 2. **WiFi Connection Management:**
+ *    - Monitors WiFi status with intelligent reconnection timing
+ *    - Falls back to CSV logging during WiFi outages
+ *    - Implements reconnection throttling to prevent excessive attempts
+ * 
+ * 3. **MQTT Connection Management:**
+ *    - Verifies MQTT broker connectivity
+ *    - Handles automatic reconnection with status reporting
+ *    - Falls back to CSV logging during MQTT outages
+ * 
+ * 4. **Data Recovery Processing:**
+ *    - Sends pending CSV data after successful reconnection
+ *    - Ensures recovery data is transmitted only once per reconnection cycle
+ * 
+ * 5. **Normal Operation:**
+ *    - Performs temperature measurements once per minute
+ *    - Transmits data via MQTT to configured topic
+ *    - Maintains MQTT client polling for incoming messages
+ * 
+ * **Error Handling:**
+ * - Network failures trigger CSV fallback storage
+ * - Connection attempts are rate-limited to prevent resource exhaustion
+ * - All measurement data is preserved during connectivity issues
+ * 
+ * @note The function maintains a fixed loop delay for consistent timing
+ * @see RECONNECT_INTERVAL_MS, LOOP_DELAY_MS for timing configuration
+ * @see saveToCsvBatch() for offline data storage
+ * @see sendPendingData() for data recovery mechanism
  */
 void coreLoop() {
   DateTime now = rtc.now();
-  Serial.print("RTC time: ");
-  Serial.println(now.timestamp());
   static bool alreadyLoggedThisMinute = false;
 
   if (now.minute() != lastLoggedMinute) {
@@ -131,7 +204,7 @@ void coreLoop() {
     alreadyLoggedThisMinute = false;
   }
 
-  // Schritt 1: WiFi-Verbindung prüfen
+  // Step 1: Check WiFi connection
   if (!isWifiConnected()) {
     if (millis() - lastReconnectAttempt > RECONNECT_INTERVAL_MS) {
       lastReconnectAttempt = millis();
@@ -152,7 +225,7 @@ void coreLoop() {
     }
   }
 
-  // Schritt 2: MQTT-Verbindung prüfen
+  // Step 2: Check MQTT connection
   if (!isMqttConnected()) {
     Serial.println("MQTT not connected. Trying to reconnect...");
     if (!connectMQTT(mqttClient)) {
@@ -168,17 +241,17 @@ void coreLoop() {
     }
 
     Serial.println("MQTT reconnected successfully.");
-    recoveredSent = false; // Wiederherstellung erneut erlauben
+    recoveredSent = false; // Allow recovery again
   }
 
-  // Schritt 3: Nach erfolgreichem MQTT-Reconnect → alte CSVs senden
+  // Step 3: After successful MQTT reconnect → send old CSVs
   if (!recoveredSent && mqttClient.connected()) {
     if (sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now)) {
       recoveredSent = true;
     }
   }
 
-  // Schritt 4: Normale Messung und MQTT-Versand
+  // Step 4: Normal measurement and MQTT transmission
   if (!alreadyLoggedThisMinute) {
     float c = readTemperatureCelsius();
     sendToMqtt(mqttClient, topic, sensorType, sensorIdInUse, c, now, count);
@@ -186,7 +259,7 @@ void coreLoop() {
     count++;
   }
 
-  // Schritt 5: MQTT-Loop und Wartezeit
+  // Step 5: MQTT loop and wait time
   mqttClient.poll();
   delay(LOOP_DELAY_MS);
 }

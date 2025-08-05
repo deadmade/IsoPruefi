@@ -24,4 +24,9 @@ public class JwtToken
     /// Gets or sets the creation date and time of the JWT token.
     /// </summary>
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+
+    /// <summary>
+    /// Gets or sets the user roles associated with the JWT token.
+    /// </summary>
+    public IList<string>? Roles { get; set; }
 }

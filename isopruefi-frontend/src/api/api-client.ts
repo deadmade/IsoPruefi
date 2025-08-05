@@ -789,6 +789,8 @@ export class JwtToken implements IJwtToken {
     expiryDate?: Date;
     /** Gets or sets the creation date and time of the JWT token. */
     createdDate?: Date;
+    /** Gets or sets the user roles associated with the JWT token. */
+    role?: string[] | undefined;
 
     constructor(data?: IJwtToken) {
         if (data) {
@@ -805,6 +807,11 @@ export class JwtToken implements IJwtToken {
             this.refreshToken = _data["refreshToken"];
             this.expiryDate = _data["expiryDate"] ? new Date(_data["expiryDate"].toString()) : <any>undefined;
             this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
+            if (Array.isArray(_data["role"])) {
+                this.role = [] as any;
+                for (let item of _data["role"])
+                    this.role!.push(item);
+            }
         }
     }
 
@@ -821,6 +828,11 @@ export class JwtToken implements IJwtToken {
         data["refreshToken"] = this.refreshToken;
         data["expiryDate"] = this.expiryDate ? this.expiryDate.toISOString() : <any>undefined;
         data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        if (Array.isArray(this.role)) {
+            data["role"] = [];
+            for (let item of this.role)
+                data["role"].push(item);
+        }
         return data;
     }
 }
@@ -835,6 +847,8 @@ export interface IJwtToken {
     expiryDate?: Date;
     /** Gets or sets the creation date and time of the JWT token. */
     createdDate?: Date;
+    /** Gets or sets the user roles associated with the JWT token. */
+    role?: string[] | undefined;
 }
 
 /** Represents an overview of temperature data for different locations. */

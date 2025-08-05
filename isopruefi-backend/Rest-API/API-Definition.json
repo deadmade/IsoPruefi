@@ -637,6 +637,14 @@
             "type": "string",
             "description": "Gets or sets the creation date and time of the JWT token.",
             "format": "date-time"
+          },
+          "role": {
+            "type": "array",
+            "description": "Gets or sets the user roles associated with the JWT token.",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
           }
         }
       },

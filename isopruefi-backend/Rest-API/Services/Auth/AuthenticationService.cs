@@ -140,7 +140,8 @@ public class AuthenticationService(
                 Token = token,
                 RefreshToken = refreshToken,
                 ExpiryDate = tokenInfo.ExpiredAt,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                Roles = userRoles
             };
         }
         catch (Exception e)

@@ -66,9 +66,12 @@ jobs:
       - name: Generate Arduino Documentation
         working-directory: ./arduino
         run: doxygen Doxyfile
+        
+      - name: Install npm dependencies
+        run: npm ci
        
       - name: Generate Arduino Documentation
-        working-directory: ./isopruefi-docs\docs\code\arduino
+        working-directory: ./isopruefi-docs/docs/code/arduino
         run: npx seaborg xml md
 
       - name: Setup Python

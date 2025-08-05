@@ -47,4 +47,10 @@ public interface ISettingsRepo
     /// <param name="postalcode">Defines which entry will be updated.</param>
     /// <param name="newTime">Defines the new time for that entry.</param>
     Task UpdateTime(int postalcode, DateTime newTime);
+
+    /// <summary>
+    /// Gets all postalcodes that are saved in the database.
+    /// </summary>
+    /// <returns>List with all postalcodes.</returns>
+    Task<List<int>> GetAllPostalcodes();
 }

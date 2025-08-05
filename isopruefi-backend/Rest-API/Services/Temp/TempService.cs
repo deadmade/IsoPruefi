@@ -133,6 +133,16 @@ public class TempService : ITempService
     /// <inheritdoc />
     public async Task<List<int>> ShowAvailablePostalcodes()
     {
-        
+        try
+        {
+            var allPostalcodes = await _settingsRepo.GetAllPostalcodes();
+            return allPostalcodes;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error while fetching postalcodes from the database.");
+        }
+
+        return null;
     }
 }

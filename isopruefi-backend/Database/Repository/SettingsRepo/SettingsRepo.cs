@@ -70,4 +70,14 @@ public class SettingsRepo : ISettingsRepo
 
         return null;
     }
+
+    /// <inheritdoc />
+    public async Task<List<int>> GetAllPostalcodes()
+    {
+        var result = await _applicationDbContext.CoordinateMappings
+            .Select(c => c.PostalCode)
+            .ToListAsync();
+
+        return result;
+    }
 }

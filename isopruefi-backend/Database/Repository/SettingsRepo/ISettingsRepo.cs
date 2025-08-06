@@ -21,7 +21,7 @@ public interface ISettingsRepo
     /// <exception cref="ArgumentNullException">Thrown when topicSetting is null.</exception>
     /// <exception cref="InvalidOperationException">Thrown when the add operation fails.</exception>
     Task<int> AddTopicSettingAsync(TopicSetting topicSetting);
-    
+
     /// <summary>
     /// Inserts a new combination of postalcode and coordinates.
     /// </summary>

@@ -63,6 +63,7 @@ public class WorkerTests
     public void Constructor_WithNullLogger_ThrowsArgumentNullException()
     {
         var receiver = Mock.Of<IReceiver>();
+        var connection = Mock.Of<IConnection>();
 
         var action = () => new Worker(null!, receiver, connection);
 
@@ -127,7 +128,6 @@ public class WorkerTests
     }
 
     #endregion
-
 
 
     #region Dispose Tests

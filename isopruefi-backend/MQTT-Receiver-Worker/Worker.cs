@@ -40,7 +40,7 @@ public class Worker : BackgroundService
     /// </summary>
     /// <param name="logger">Logger for recording service events.</param>
     /// <param name="receiver">MQTT receiver for subscribing to topics.</param>
-       public Worker(ILogger<Worker> logger, IReceiver receiver, IConnection connection)
+    public Worker(ILogger<Worker> logger, IReceiver receiver, IConnection connection)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _receiver = receiver ?? throw new ArgumentNullException(nameof(receiver));

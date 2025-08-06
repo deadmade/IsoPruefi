@@ -33,11 +33,10 @@ public class TempServiceTests
             _mockLogger.Object,
             _mockHttpClientFactory.Object,
             _mockSettingsRepo.Object
-            );
-
+        );
     }
-    
-    
+
+
     #region Get Coordinates Test
 
     /// <summary>
@@ -61,7 +60,8 @@ public class TempServiceTests
             .ReturnsAsync(new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("[{\"lat\":\"52.5\",\"lon\":\"13.4\",\"display_name\":\"City, Region, Country\"}]")
+                Content = new StringContent(
+                    "[{\"lat\":\"52.5\",\"lon\":\"13.4\",\"display_name\":\"City, Region, Country\"}]")
             });
 
         var httpClient = new HttpClient(handlerMock.Object);
@@ -72,13 +72,13 @@ public class TempServiceTests
 
         // Act & Assert
         await _tempService.GetCoordinates(postalCode);
-        
+
         _mockSettingsRepo.Verify<Task>(r => r.InsertNewPostalCode(It.Is<CoordinateMapping>(c =>
-                c.PostalCode == postalCode &&
-                c.Latitude == 52.5 &&
-                c.Longitude == 13.4 &&
-                c.Location == " Region"
-            )), Times.Once);
+            c.PostalCode == postalCode &&
+            c.Latitude == 52.5 &&
+            c.Longitude == 13.4 &&
+            c.Location == " Region"
+        )), Times.Once);
     }
 
     /// <summary>
@@ -90,21 +90,21 @@ public class TempServiceTests
         // Arrange
         var postalCode = 12345;
         _mockSettingsRepo.Setup(x => x.ExistsPostalCode(postalCode)).ReturnsAsync(true);
-        
+
         // Act & Assert
         await _tempService.GetCoordinates(postalCode);
-        
+
         _mockHttpClientFactory.Verify(f => f.CreateClient(It.IsAny<string>()), Times.Never);
         _mockSettingsRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
         _mockLogger.Verify(x => x.Log(
-            LogLevel.Information,
-            It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("There is an existing entry for that postalcode")),
-            It.IsAny<Exception>(),
-            It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("There is an existing entry for that postalcode")),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
     }
-    
+
     /// <summary>
     /// Tests that the GetCoordinates function does not insert anything into the database, when there are missing fields in the JSON response.
     /// </summary>
@@ -134,17 +134,18 @@ public class TempServiceTests
         _mockHttpClientFactory
             .Setup(f => f.CreateClient(It.IsAny<string>()))
             .Returns(httpClient);
-        
+
         // Act & Assert
         await _tempService.GetCoordinates(postalCode);
-        
+
         _mockSettingsRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
         _mockLogger.Verify(x => x.Log(
-            LogLevel.Error,
-            It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Coordinates and city name could not be retrieved")),
-            It.IsAny<Exception>(),
-            It.IsAny<Func<It.IsAnyType, Exception?, string>>()), 
+                LogLevel.Error,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) =>
+                    v.ToString()!.Contains("Coordinates and city name could not be retrieved")),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
     }
 
@@ -170,25 +171,27 @@ public class TempServiceTests
             {
                 StatusCode = HttpStatusCode.Forbidden
             });
-        
+
         var httpClient = new HttpClient(handlerMock.Object);
 
         _mockHttpClientFactory
             .Setup(f => f.CreateClient(It.IsAny<string>()))
             .Returns(httpClient);
-        
+
         // Act & Assert
         await _tempService.GetCoordinates(postalCode);
-        
+
         _mockSettingsRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
         _mockLogger.Verify(x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Getting coordinates failed with HTTP status code: " + HttpStatusCode.Forbidden)),
+                It.Is<It.IsAnyType>((v, t) =>
+                    v.ToString()!.Contains("Getting coordinates failed with HTTP status code: " +
+                                           HttpStatusCode.Forbidden)),
                 It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()), 
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
     }
-    
+
     #endregion
 }

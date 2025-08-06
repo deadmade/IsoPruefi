@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using MQTT_Receiver_Worker.MQTT;
 using MQTT_Receiver_Worker.MQTT.Models;
-using MQTTnet;
 
 namespace UnitTests.MqttReceiver;
 
@@ -161,7 +160,7 @@ public class ConnectionTests
     {
         // Access private field using reflection
         var field = typeof(Connection).GetField("_jsonSerializerOptions",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (field != null)
         {
@@ -226,7 +225,7 @@ public class ConnectionTests
 
         // Use reflection to access the private method
         var method = typeof(Connection).GetMethod("ProcessSensorReading",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (method != null)
         {
@@ -252,7 +251,7 @@ public class ConnectionTests
         };
 
         var method = typeof(Connection).GetMethod("ProcessSensorReading",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (method != null)
         {
@@ -280,7 +279,7 @@ public class ConnectionTests
         };
 
         var method = typeof(Connection).GetMethod("ProcessSensorReading",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (method != null)
         {
@@ -312,7 +311,7 @@ public class ConnectionTests
         };
 
         var method = typeof(Connection).GetMethod("ProcessBatchSensorReading",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (method != null)
         {
@@ -349,16 +348,14 @@ public class ConnectionTests
         };
 
         var method = typeof(Connection).GetMethod("ProcessSensorReading",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-        var method = typeof(Connection).GetMethod("ProcessSensorReading",
             BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (method != null)
         {
             var action = async () =>
             {
-                var task = (Task)method.Invoke(_connection, new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
+                var task = (Task)method.Invoke(_connection,
+                    new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
                 await task;
             };
 

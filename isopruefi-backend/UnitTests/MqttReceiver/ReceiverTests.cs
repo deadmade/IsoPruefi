@@ -44,16 +44,16 @@ public class ReceiverTests
 
         var mockScopeServiceProvider = new Mock<IServiceProvider>();
         mockScopeServiceProvider.Setup(sp => sp.GetService(typeof(ISettingsRepo)))
-                               .Returns(_mockSettingsRepo.Object);
+            .Returns(_mockSettingsRepo.Object);
         _mockServiceScope.Setup(s => s.ServiceProvider).Returns(mockScopeServiceProvider.Object);
-        
+
         _mockServiceScopeFactory.Setup(f => f.CreateScope()).Returns(_mockServiceScope.Object);
         _mockServiceProvider.Setup(sp => sp.GetService(typeof(IServiceScopeFactory)))
-                           .Returns(_mockServiceScopeFactory.Object);
+            .Returns(_mockServiceScopeFactory.Object);
 
         // Create mock connection that returns our mock MQTT client
         _mockConnection = new Mock<IConnection>();
-        _mockConnection.Setup(c => c.GetConnection()).ReturnsAsync(_mockMqttClient.Object);
+        _mockConnection.Setup(c => c.GetConnectionAsync()).ReturnsAsync(_mockMqttClient.Object);
 
         // Setup test topic settings
         _testTopicSettings = new List<TopicSetting>
@@ -79,7 +79,7 @@ public class ReceiverTests
         };
 
         _mockSettingsRepo.Setup(r => r.GetTopicSettingsAsync())
-                        .ReturnsAsync(_testTopicSettings);
+            .ReturnsAsync(_testTopicSettings);
 
         _receiver = new Receiver(_mockServiceProvider.Object, _mockConnection.Object, _mockLogger.Object);
     }
@@ -159,7 +159,7 @@ public class ReceiverTests
         _mockSettingsRepo.Verify(r => r.GetTopicSettingsAsync(), Times.Once);
 
         // Verify that connection was established
-        _mockConnection.Verify(c => c.GetConnection(), Times.Once);
+        _mockConnection.Verify(c => c.GetConnectionAsync(), Times.Once);
     }
 
     /// <summary>
@@ -169,12 +169,12 @@ public class ReceiverTests
     public async Task SubscribeToTopics_WithEmptySettings_CompletesWithoutError()
     {
         _mockSettingsRepo.Setup(r => r.GetTopicSettingsAsync())
-                        .ReturnsAsync(new List<TopicSetting>());
+            .ReturnsAsync(new List<TopicSetting>());
 
         await _receiver.SubscribeToTopics();
 
         _mockSettingsRepo.Verify(r => r.GetTopicSettingsAsync(), Times.Once);
-        _mockConnection.Verify(c => c.GetConnection(), Times.Once);
+        _mockConnection.Verify(c => c.GetConnectionAsync(), Times.Once);
     }
 
     /// <summary>
@@ -184,7 +184,7 @@ public class ReceiverTests
     public async Task SubscribeToTopics_WithNullSettings_ThrowsException()
     {
         _mockSettingsRepo.Setup(r => r.GetTopicSettingsAsync())
-                        .ReturnsAsync((List<TopicSetting>)null!);
+            .ReturnsAsync((List<TopicSetting>)null!);
 
         var action = async () => await _receiver.SubscribeToTopics();
 
@@ -199,12 +199,12 @@ public class ReceiverTests
     {
         var expectedException = new InvalidOperationException("Database error");
         _mockSettingsRepo.Setup(r => r.GetTopicSettingsAsync())
-                        .ThrowsAsync(expectedException);
+            .ThrowsAsync(expectedException);
 
         var action = async () => await _receiver.SubscribeToTopics();
 
         await action.Should().ThrowAsync<InvalidOperationException>()
-                   .WithMessage("Database error");
+            .WithMessage("Database error");
     }
 
     /// <summary>
@@ -214,13 +214,13 @@ public class ReceiverTests
     public async Task SubscribeToTopics_WhenConnectionFails_PropagatesException()
     {
         var expectedException = new InvalidOperationException("Connection failed");
-        _mockConnection.Setup(c => c.GetConnection())
-                      .ThrowsAsync(expectedException);
+        _mockConnection.Setup(c => c.GetConnectionAsync())
+            .ThrowsAsync(expectedException);
 
         var action = async () => await _receiver.SubscribeToTopics();
 
         await action.Should().ThrowAsync<InvalidOperationException>()
-                   .WithMessage("Connection failed");
+            .WithMessage("Connection failed");
     }
 
     #endregion
@@ -246,7 +246,7 @@ public class ReceiverTests
     public async Task SubscribeToTopics_DisposesScope_EvenWhenExceptionOccurs()
     {
         _mockSettingsRepo.Setup(r => r.GetTopicSettingsAsync())
-                        .ThrowsAsync(new InvalidOperationException("Test exception"));
+            .ThrowsAsync(new InvalidOperationException("Test exception"));
 
         var action = async () => await _receiver.SubscribeToTopics();
 
@@ -269,7 +269,7 @@ public class ReceiverTests
         // Verify the complete workflow
         _mockServiceScopeFactory.Verify(f => f.CreateScope(), Times.Once);
         _mockSettingsRepo.Verify(r => r.GetTopicSettingsAsync(), Times.Once);
-        _mockConnection.Verify(c => c.GetConnection(), Times.Once);
+        _mockConnection.Verify(c => c.GetConnectionAsync(), Times.Once);
         _mockServiceScope.Verify(s => s.Dispose(), Times.Once);
     }
 

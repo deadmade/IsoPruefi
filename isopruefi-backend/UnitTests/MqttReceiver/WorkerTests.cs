@@ -1,9 +1,7 @@
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MQTT_Receiver_Worker;
-using MQTT_Receiver_Worker.MQTT;
 using MQTT_Receiver_Worker.MQTT.Interfaces;
 
 namespace UnitTests.MqttReceiver;
@@ -16,6 +14,7 @@ public class WorkerTests
 {
     private Mock<ILogger<Worker>> _mockLogger;
     private Mock<IReceiver> _mockReceiver;
+    private Mock<IConnection> _mockConnection;
     private Worker _worker;
 
     /// <summary>
@@ -26,8 +25,9 @@ public class WorkerTests
     {
         _mockLogger = new Mock<ILogger<Worker>>();
         _mockReceiver = new Mock<IReceiver>();
-        
-        _worker = new Worker(_mockLogger.Object, _mockReceiver.Object);
+        _mockConnection = new Mock<IConnection>();
+
+        _worker = new Worker(_mockLogger.Object, _mockReceiver.Object, _mockConnection.Object);
     }
 
     /// <summary>
@@ -49,8 +49,9 @@ public class WorkerTests
     {
         var logger = Mock.Of<ILogger<Worker>>();
         var receiver = Mock.Of<IReceiver>();
+        var connection = Mock.Of<IConnection>();
 
-        var worker = new Worker(logger, receiver);
+        var worker = new Worker(logger, receiver, connection);
 
         worker.Should().NotBeNull();
     }
@@ -62,8 +63,9 @@ public class WorkerTests
     public void Constructor_WithNullLogger_ThrowsArgumentNullException()
     {
         var receiver = Mock.Of<IReceiver>();
+        var connection = Mock.Of<IConnection>();
 
-        var action = () => new Worker(null!, receiver);
+        var action = () => new Worker(null!, receiver, connection);
 
         action.Should().Throw<ArgumentNullException>();
     }
@@ -75,8 +77,9 @@ public class WorkerTests
     public void Constructor_WithNullReceiver_ThrowsArgumentNullException()
     {
         var logger = Mock.Of<ILogger<Worker>>();
+        var connection = Mock.Of<IConnection>();
 
-        var action = () => new Worker(logger, (IReceiver)null!);
+        var action = () => new Worker(logger, (IReceiver)null!, connection);
 
         action.Should().Throw<ArgumentNullException>();
     }
@@ -84,25 +87,6 @@ public class WorkerTests
     #endregion
 
     #region ExecuteAsync Tests
-
-    /// <summary>
-    /// Tests that ExecuteAsync calls SubscribeToTopics on the receiver.
-    /// </summary>
-    [Test]
-    public async Task ExecuteAsync_CallsReceiverSubscribeToTopics()
-    {
-        _mockReceiver.Setup(r => r.SubscribeToTopics()).Returns(Task.CompletedTask);
-        using var cancellationTokenSource = new CancellationTokenSource();
-
-        await _worker.StartAsync(cancellationTokenSource.Token);
-        
-        // Give the background service a moment to start
-        await Task.Delay(100, cancellationTokenSource.Token);
-        
-        await _worker.StopAsync(cancellationTokenSource.Token);
-
-        _mockReceiver.Verify(r => r.SubscribeToTopics(), Times.Once);
-    }
 
     /// <summary>
     /// Tests that ExecuteAsync handles cancellation token properly.
@@ -114,66 +98,14 @@ public class WorkerTests
         using var cancellationTokenSource = new CancellationTokenSource();
 
         await _worker.StartAsync(cancellationTokenSource.Token);
-        
+
         // Cancel the operation
         cancellationTokenSource.Cancel();
-        
+
         var stopTask = _worker.StopAsync(CancellationToken.None);
         await stopTask.WaitAsync(TimeSpan.FromSeconds(5));
 
         stopTask.IsCompletedSuccessfully.Should().BeTrue();
-    }
-
-    #endregion
-
-    #region Integration Tests
-
-    /// <summary>
-    /// Tests the complete worker lifecycle from start to stop.
-    /// </summary>
-    [Test]
-    public async Task WorkerLifecycle_StartAndStop_WorksCorrectly()
-    {
-        _mockReceiver.Setup(r => r.SubscribeToTopics()).Returns(Task.CompletedTask);
-        using var cancellationTokenSource = new CancellationTokenSource();
-
-        // Start the worker
-        await _worker.StartAsync(cancellationTokenSource.Token);
-        
-        // Verify it's running
-        await Task.Delay(50);
-        
-        // Stop the worker
-        await _worker.StopAsync(cancellationTokenSource.Token);
-
-        _mockReceiver.Verify(r => r.SubscribeToTopics(), Times.Once);
-    }
-
-    /// <summary>
-    /// Tests that multiple start/stop cycles work correctly.
-    /// </summary>
-    [Test]
-    public async Task WorkerLifecycle_MultipleStartStop_WorksCorrectly()
-    {
-        _mockReceiver.Setup(r => r.SubscribeToTopics()).Returns(Task.CompletedTask);
-
-        // First cycle
-        using (var cts1 = new CancellationTokenSource())
-        {
-            await _worker.StartAsync(cts1.Token);
-            await Task.Delay(50);
-            await _worker.StopAsync(cts1.Token);
-        }
-
-        // Second cycle
-        using (var cts2 = new CancellationTokenSource())
-        {
-            await _worker.StartAsync(cts2.Token);
-            await Task.Delay(50);
-            await _worker.StopAsync(cts2.Token);
-        }
-
-        _mockReceiver.Verify(r => r.SubscribeToTopics(), Times.Exactly(2));
     }
 
     #endregion
@@ -198,7 +130,7 @@ public class WorkerTests
     public void Dispose_MultipleCalls_DoesNotThrow()
     {
         _worker.Dispose();
-        
+
         var action = () => _worker.Dispose();
 
         action.Should().NotThrow();

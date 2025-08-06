@@ -5,7 +5,6 @@ using Database.EntityFramework.Models;
 using Database.Repository.TokenRepo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Rest_API.Helper;
 using Rest_API.Models;
 using Rest_API.Services.Token;
@@ -49,7 +48,8 @@ public class AuthenticationService(
             else
             {
                 var errorDescriptions = string.Join(" ", result.Errors.Select(e => e.Description));
-                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName.SanitizeString(), errorDescriptions);
+                logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName.SanitizeString(),
+                    errorDescriptions);
                 throw new Exception($"ErrorDto: {errorDescriptions}");
             }
 
@@ -64,7 +64,8 @@ public class AuthenticationService(
         }
         catch (Exception e)
         {
-            logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName.SanitizeString(), e.Message);
+            logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName.SanitizeString(),
+                e.Message);
             throw;
         }
     }
@@ -146,7 +147,8 @@ public class AuthenticationService(
         }
         catch (Exception e)
         {
-            logger.LogError("Error logging in user {InputUserName}: {EMessage}", input.UserName.SanitizeString(), e.Message);
+            logger.LogError("Error logging in user {InputUserName}: {EMessage}", input.UserName.SanitizeString(),
+                e.Message);
             throw;
         }
     }

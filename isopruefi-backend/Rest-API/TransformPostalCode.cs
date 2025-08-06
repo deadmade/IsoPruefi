@@ -1,7 +1,7 @@
-using Database.EntityFramework.Models;
-using Database.Repository.SettingsRepo;
 using System.Globalization;
 using System.Text.Json;
+using Database.EntityFramework.Models;
+using Database.Repository.SettingsRepo;
 
 namespace Rest_API;
 

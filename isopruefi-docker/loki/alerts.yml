@@ -1,0 +1,99 @@
+groups:
+- name: isopruefi-services
+  rules:
+  # Service Down Alerts
+  - alert: IsoPruefiAPIDown
+    expr: up{job="isopruefi-backend-api"} == 0
+    for: 30s
+    labels:
+      severity: critical
+      service: api
+    annotations:
+      summary: "IsoPruefi Backend API is down"
+      description: "The IsoPruefi Backend API has been down for more than 30 seconds. Service: {{ $labels.instance }}"
+
+  - alert: MQTTReceiverDown
+    expr: up{job="isopruefi-mqtt-receiver"} == 0
+    for: 30s
+    labels:
+      severity: critical
+      service: mqtt
+    annotations:
+      summary: "IsoPruefi MQTT Receiver is down"
+      description: "The IsoPruefi MQTT Receiver has been down for more than 30 seconds. Service: {{ $labels.instance }}"
+
+  - alert: WeatherWorkerDown
+    expr: up{job="isopruefi-weather-worker"} == 0
+    for: 30s
+    labels:
+      severity: critical
+      service: weather
+    annotations:
+      summary: "IsoPruefi Weather Worker is down"
+      description: "The IsoPruefi Weather Worker has been down for more than 30 seconds. Service: {{ $labels.instance }}"
+
+  # Health Check Alerts
+  - alert: ServiceHealthCheckFailing
+    expr: probe_success{job=~"isopruefi-.*"} == 0
+    for: 1m
+    labels:
+      severity: warning
+      service: health
+    annotations:
+      summary: "Service health check failing"
+      description: "Health check for {{ $labels.job }} has been failing for more than 1 minute. Instance: {{ $labels.instance }}"
+
+  # Response Time Alerts
+  - alert: HighResponseTime
+    expr: probe_duration_seconds{job=~"isopruefi-.*"} > 5
+    for: 2m
+    labels:
+      severity: warning
+      service: performance
+    annotations:
+      summary: "High response time detected"
+      description: "{{ $labels.job }} response time is {{ $value }}s, which is above the 5s threshold. Instance: {{ $labels.instance }}"
+
+- name: infrastructure
+  rules:
+  # Database Connectivity
+  - alert: InfluxDBDown
+    expr: up{job="influxdb"} == 0
+    for: 30s
+    labels:
+      severity: critical
+      service: database
+    annotations:
+      summary: "InfluxDB is down"
+      description: "InfluxDB has been unreachable for more than 30 seconds"
+
+  - alert: PostgreSQLDown
+    expr: up{job="postgres"} == 0
+    for: 30s
+    labels:
+      severity: critical
+      service: database
+    annotations:
+      summary: "PostgreSQL is down"
+      description: "PostgreSQL has been unreachable for more than 30 seconds"
+
+  # Prometheus Self-Monitoring
+  - alert: PrometheusConfigReloadFailed
+    expr: prometheus_config_last_reload_successful == 0
+    for: 5m
+    labels:
+      severity: warning
+      service: monitoring
+    annotations:
+      summary: "Prometheus configuration reload failed"
+      description: "Prometheus configuration reload has been failing for 5 minutes"
+
+  - alert: PrometheusTargetDown
+    expr: up == 0
+    for: 1m
+    labels:
+      severity: warning
+      service: monitoring
+    annotations:
+      summary: "Prometheus target down"
+      description: "Target {{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute"

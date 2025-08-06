@@ -1,6 +1,5 @@
 using System.Security.Authentication;
 using Asp.Versioning;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rest_API.Models;

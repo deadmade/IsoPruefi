@@ -85,6 +85,7 @@ public class UserInfoController : ControllerBase
     [Produces("application/json")]
     [Consumes("application/json")]
     [Authorize(Policy = "AdminOnly")]
+    [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any, VaryByHeader = "Authorization")]
     public async Task<ActionResult> GetAllUsers()
     {
         try
@@ -109,6 +110,7 @@ public class UserInfoController : ControllerBase
     [Produces("application/json")]
     [Consumes("application/json")]
     [Authorize(Policy = "UserOrAdmin")]
+    [ResponseCache(Duration = 300, VaryByQueryKeys = new[] { "userId" }, VaryByHeader = "Authorization")]
     public async Task<ActionResult> GetUserById(string userId)
     {
         try
@@ -135,6 +137,7 @@ public class UserInfoController : ControllerBase
     [Produces("application/json")]
     [Consumes("application/json")]
     [Authorize(Policy = "UserOrAdmin")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<ActionResult> ChangePassword([FromBody] ChangePassword input)
     {
         if (!ModelState.IsValid)
@@ -167,6 +170,7 @@ public class UserInfoController : ControllerBase
     [Produces("application/json")]
     [Consumes("application/json")]
     [Authorize(Policy = "AdminOnly")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<ActionResult> ChangeUser([FromBody] ApiUser user)
     {
         if (!ModelState.IsValid)
@@ -196,6 +200,7 @@ public class UserInfoController : ControllerBase
     [Produces("application/json")]
     [Consumes("application/json")]
     [Authorize(Policy = "AdminOnly")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<ActionResult> DeleteUser(string userId)
     {
         try

@@ -117,6 +117,12 @@ public class Program
 
         builder.Services.AddControllers();
 
+        // Add response caching services
+        builder.Services.AddResponseCaching(options =>
+        {
+            options.UseCaseSensitivePaths = false;
+        });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -141,6 +147,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseResponseCaching();
 
         app.UseAuthentication();
         app.UseAuthorization();

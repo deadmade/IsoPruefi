@@ -94,6 +94,7 @@ public class TemperatureDataController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = "UserOrAdmin")]
+    [ResponseCache(Duration = 300, VaryByQueryKeys = new[] { "start", "end", "place", "isFahrenheit" }, VaryByHeader = "Authorization")]
     public async Task<IActionResult> GetTemperature([FromQuery] DateTime start, [FromQuery] DateTime end,
         [FromQuery] string place, [FromQuery] bool isFahrenheit = false)
     {

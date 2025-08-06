@@ -24,7 +24,7 @@ public class TempService : ITempService
     /// <param name="httpClientFactory">The httpClient for API calls.</param>
     /// <param name="settingsRepo">The settingsRepo instance for connection with the postgres database.</param>
     /// <param name="configuration"></param>
-    public TempService(ILogger<TempService> logger, IHttpClientFactory httpClientFactory, 
+    public TempService(ILogger<TempService> logger, IHttpClientFactory httpClientFactory,
         ISettingsRepo settingsRepo)
     {
         _logger = logger;
@@ -54,10 +54,9 @@ public class TempService : ITempService
                 _logger.LogError("No response received from API");
                 return;
             }
-            
+
             try
             {
-
                 if (response.IsSuccessStatusCode)
                 {
                     using var json = JsonDocument.Parse(await response.Content.ReadAsStreamAsync());

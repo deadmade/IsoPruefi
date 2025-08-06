@@ -4,13 +4,11 @@
 
 #ifndef UNIT_TEST
 
-void saveToSD(SdFat& sd, float celsius, const DateTime& now, int sequence);
-void saveRecoveredJsonToSd(SdFat& sd, String* fileList, int count, const DateTime& now);
-int listSavedFiles(SdFat& sd, String* fileList, int maxFiles, const DateTime& now);
-void deleteRecoveredAndPendingSourceFiles(SdFat& sd, const String* fileList, int count, const DateTime& now, const String& recoveredFilename);
+void saveToCsvBatch(const DateTime& now, float celsius, int sequence);
+void deleteCsvFile(const char* filepath);
 
 void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence);
-void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, const DateTime& now);
+void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const DateTime& now);
 
 #else
 
@@ -37,12 +35,6 @@ inline void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, c
 
 #endif
 
-// --- Wrapper functions (Arduino only) ---
-void saveDataToSD(float celsius, const DateTime& now, int sequence);
-void saveRecoveredJsonDataToSd(String* fileList, int count, const DateTime& now);
-int listSavedFilesData(String* fileList, int maxFiles, const DateTime& now);
-void deleteRecoveredAndPendingSourceFilesData(const String* fileList, int count, const DateTime& now, const String& recoveredFilename);
-
 // --- Inline helper functions (shared) ---
 inline const char* createFolderName(const DateTime& now) {
     static char folderName[8];
@@ -51,7 +43,14 @@ inline const char* createFolderName(const DateTime& now) {
 }
 
 inline void createFilename(char* buffer, size_t bufferSize, const DateTime& now) {
-    std::snprintf(buffer, bufferSize, "%s/%02d%02d%02d%02d.json",
+    std::snprintf(buffer, bufferSize, "%s/%02d%02d%02d%02d.csv",
                   createFolderName(now),
                   now.month(), now.day(), now.hour(), now.minute());
 }
+
+inline void createRecoveredFilename(char* recoveredFilename, size_t bufferSize,
+                                    const DateTime& now, int baseLength, const char* suffix = "_recovered.json") {
+    char baseFilename[64];
+    createFilename(baseFilename, sizeof(baseFilename), now);
+    std::snprintf(recoveredFilename, bufferSize, "%.*s%s", baseLength, baseFilename, suffix);
+} 

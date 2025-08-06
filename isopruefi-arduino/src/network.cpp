@@ -23,14 +23,14 @@ bool connectWiFi(unsigned long timeoutMs) {
   unsigned long startAttemptTime = millis();
   while (WiFi.status() != WL_CONNECTED) {
     if (millis() - startAttemptTime >= timeoutMs) {
-      Serial.println("\nWiFi connection timed out.");
+      Serial.println("WiFi connection timed out.");
       return false;
     }
     delay(500);
     Serial.print(".");
   }
 
-  Serial.println("\nWiFi connected.");
+  Serial.println("WiFi connected.");
   return true;
 }
 
@@ -54,7 +54,7 @@ bool connectMQTT(MqttClient& mqttClient, unsigned long timeoutMs) {
 
   while (!mqttClient.connect(broker, port)) {
     if (millis() - startAttemptTime >= timeoutMs) {
-      Serial.println("\nMQTT connection timed out.");
+      Serial.println("MQTT connection timed out.");
       return false;
     }
     Serial.print(".");
@@ -65,15 +65,6 @@ bool connectMQTT(MqttClient& mqttClient, unsigned long timeoutMs) {
   return true;
 }
 
-/**
- * @brief Checks if both WiFi and MQTT connections are active.
- *
- * Verifies the status of both WiFi and MQTT connections to ensure the device
- * can communicate with the MQTT broker.
- *
- * @param mqttClient Reference to the MQTT client instance to check.
- * @return true if both WiFi and MQTT are connected, false otherwise.
- */
 bool isConnectedToServer(MqttClient& mqttClient) {
   return WiFi.status() == WL_CONNECTED && mqttClient.connected();
 }

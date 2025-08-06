@@ -1,7 +1,6 @@
 using Database.Repository.InfluxRepo;
 using FluentAssertions;
 using InfluxDB3.Client;
-using InfluxDB3.Client.Write;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;

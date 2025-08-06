@@ -22,7 +22,7 @@ export default function AuthForm({mode, onSuccess}: AuthFormProps) {
             if (mode === "signin") {
                 result = await login(username, password);
                 console.log("Login success:", result);
-                // Here we store tokens in localStorage
+                // Here the tokens will be stored localStorage
                 localStorage.setItem("accessToken", result.token);
                 localStorage.setItem("refreshToken", result.refreshToken);
             } else {

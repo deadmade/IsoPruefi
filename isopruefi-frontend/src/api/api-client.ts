@@ -623,7 +623,7 @@ export class UserInfoClient {
     }
 }
 
-/** Represents the auth credentials for a user. */
+/** Represents the login credentials for a user. */
 export class Login implements ILogin {
     /** Gets or sets the username of the user. */
     userName!: string;
@@ -661,7 +661,7 @@ export class Login implements ILogin {
     }
 }
 
-/** Represents the auth credentials for a user. */
+/** Represents the login credentials for a user. */
 export interface ILogin {
     /** Gets or sets the username of the user. */
     userName: string;
@@ -1117,7 +1117,7 @@ export class IdentityUserOfString implements IIdentityUserOfString {
     emailConfirmed?: boolean;
     /** Gets or sets a salted and hashed representation of the password for this user. */
     passwordHash?: string | undefined;
-    /** A random value that must change whenever a users credentials change (password changed, auth removed) */
+    /** A random value that must change whenever a users credentials change (password changed, login removed) */
     securityStamp?: string | undefined;
     /** A random value that must change whenever a user is persisted to the store */
     concurrencyStamp?: string | undefined;
@@ -1131,7 +1131,7 @@ export class IdentityUserOfString implements IIdentityUserOfString {
     lockoutEnd?: Date | undefined;
     /** Gets or sets a flag indicating if the user could be locked out. */
     lockoutEnabled?: boolean;
-    /** Gets or sets the number of failed auth attempts for the current user. */
+    /** Gets or sets the number of failed login attempts for the current user. */
     accessFailedCount?: number;
 
     constructor(data?: IIdentityUserOfString) {
@@ -1207,7 +1207,7 @@ export interface IIdentityUserOfString {
     emailConfirmed?: boolean;
     /** Gets or sets a salted and hashed representation of the password for this user. */
     passwordHash?: string | undefined;
-    /** A random value that must change whenever a users credentials change (password changed, auth removed) */
+    /** A random value that must change whenever a users credentials change (password changed, login removed) */
     securityStamp?: string | undefined;
     /** A random value that must change whenever a user is persisted to the store */
     concurrencyStamp?: string | undefined;
@@ -1221,7 +1221,7 @@ export interface IIdentityUserOfString {
     lockoutEnd?: Date | undefined;
     /** Gets or sets a flag indicating if the user could be locked out. */
     lockoutEnabled?: boolean;
-    /** Gets or sets the number of failed auth attempts for the current user. */
+    /** Gets or sets the number of failed login attempts for the current user. */
     accessFailedCount?: number;
 }
 

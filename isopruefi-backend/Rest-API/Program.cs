@@ -14,6 +14,7 @@ using NSwag.AspNetCore;
 using Rest_API.Models;
 using Rest_API.Seeder;
 using Rest_API.Services.Auth;
+using Rest_API.Services.Temp;
 using Rest_API.Services.Token;
 using Rest_API.Services.User;
 
@@ -109,6 +110,10 @@ public class Program
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<ITempService, TempService>();
+        
+        // Register HttpFactory
+        builder.Services.AddHttpClient();
 
         // Register Repos
         builder.Services.AddScoped<ITokenRepo, TokenRepo>();

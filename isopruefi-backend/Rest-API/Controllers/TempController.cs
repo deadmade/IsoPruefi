@@ -37,7 +37,7 @@ public class TempController : ControllerBase
     {
         try
         {
-            var postalcodes = await _tempService.ShowAvailablePostalcodes();
+            var postalcodes = await _tempService.ShowAvailableLocations();
             return Ok(postalcodes);
         }
         catch (Exception e)
@@ -59,6 +59,11 @@ public class TempController : ControllerBase
         {
             await _tempService.GetCoordinates(postalcode);
             return Ok();
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex, "Forbidden while inserting a new location");
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = ex.Message });
         }
         catch (Exception e)
         {

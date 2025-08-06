@@ -72,10 +72,10 @@ public class SettingsRepo : ISettingsRepo
     }
 
     /// <inheritdoc />
-    public async Task<List<int>> GetAllPostalcodes()
+    public async Task<List<Tuple<int, string>>> GetAllLocations()
     {
         var result = await _applicationDbContext.CoordinateMappings
-            .Select(c => c.PostalCode)
+            .Select(c => new Tuple<int, string>(c.PostalCode, c.Location))
             .ToListAsync();
 
         return result;

@@ -52,5 +52,5 @@ public interface ISettingsRepo
     /// Gets all postalcodes that are saved in the database.
     /// </summary>
     /// <returns>List with all postalcodes.</returns>
-    Task<List<int>> GetAllPostalcodes();
+    Task<List<Tuple<int, string>>> GetAllLocations();
 }

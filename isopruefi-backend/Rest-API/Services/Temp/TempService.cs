@@ -1,6 +1,7 @@
 using Database.EntityFramework.Models;
 using Database.Repository.SettingsRepo;
 using System.Globalization;
+using System.Net;
 using System.Text.Json;
 
 namespace Rest_API.Services.Temp;
@@ -104,6 +105,8 @@ public class TempService : ITempService
                 }
                 else
                 {
+                    if (response.StatusCode == HttpStatusCode.Forbidden)
+                        throw new InvalidOperationException("The limit is exceeded, please try again later.");
                     _logger.LogError("Getting coordinates failed with HTTP status code: " + response.StatusCode);
                 }
             }
@@ -139,11 +142,11 @@ public class TempService : ITempService
     }
 
     /// <inheritdoc />
-    public async Task<List<int>?> ShowAvailablePostalcodes()
+    public async Task<List<Tuple<int, string>>?> ShowAvailableLocations()
     {
         try
         {
-            var allPostalcodes = await _settingsRepo.GetAllPostalcodes();
+            var allPostalcodes = await _settingsRepo.GetAllLocations();
             return allPostalcodes;
         }
         catch (Exception e)

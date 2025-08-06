@@ -12,5 +12,5 @@ public interface ITempService
     /// Retrieves all postalcodes that are saved in the database for the user to chose from.
     /// </summary>
     /// <returns>A list containing all postalcodes.</returns>
-    Task<List<int>?> ShowAvailablePostalcodes();
+    Task<List<Tuple<int, string>>?> ShowAvailableLocations();
 }

@@ -104,9 +104,9 @@ public class TempService : ITempService
                 }
                 else
                 {
+                    _logger.LogError("Getting coordinates failed with HTTP status code: " + response.StatusCode);
                     if (response.StatusCode == HttpStatusCode.Forbidden)
                         throw new InvalidOperationException("The limit is exceeded, please try again later.");
-                    _logger.LogError("Getting coordinates failed with HTTP status code: " + response.StatusCode);
                 }
             }
             catch (Exception e)

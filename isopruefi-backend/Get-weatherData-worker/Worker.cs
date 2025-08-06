@@ -1,7 +1,7 @@
 using System.Text.Json;
+using Database.EntityFramework.Models;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
-using Microsoft.Extensions.Configuration;
 
 namespace Get_weatherData_worker;
 
@@ -36,9 +36,6 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        double lat = 0.0;
-        double lon = 0.0;
-        
         while (!stoppingToken.IsCancellationRequested)
         {
             using var scope = _serviceProvider.CreateScope();
@@ -47,66 +44,46 @@ public class Worker : BackgroundService
             var weatherData = new WeatherData();
             
             // Getting the location information for the next unlocked entry.
-            try
-            {
-                var result = await settingsRepo.GetUnlockedLocation();
-                if (result != null)
+            var result = await GetAvailableCoordinateMapping(settingsRepo);
+            if (result != null)
+            { 
+                var lat = result.Latitude; 
+                var lon = result.Longitude;
+                
+                // Sending GET-Request to Meteo.
+                var response = await callMeteoApi(lat, lon);
+                
+                if (response.IsSuccessStatusCode)
                 {
-                    lat = result.Latitude;
-                    lon = result.Longitude;
-                    // Implement the logic.
-                }
-                else
-                {
-                    _logger.LogInformation("All locations have up to date weather data.");
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Unlocked entries could not be retrieved from the database.");
-            }
-            
-            // Getting the coordinates from the database.
-            try
-            {
-                var coordinates = await settingsRepo.GetCoordinates();
-                lat = coordinates.Item1;
-                lon = coordinates.Item2;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Failed to retrieve coordinates.");
-            }
-
-            // Sending GET-Request to Meteo.
-            var response = await callMeteoApi(lat, lon);
-
-            if (response.IsSuccessStatusCode)
-            {
-                // Getting temperature data from the Meteo response.
-                using var json = JsonDocument.Parse(await response.Content.ReadAsStreamAsync());
-                var root = json.RootElement;
-                if (root.TryGetProperty("current", out var current))
-                {
-                    // Getting the time and temperature data from the JSON file.
-                    if (current.TryGetProperty("time", out var time) &&
-                        current.TryGetProperty("temperature_2m", out var temperature))
+                    // Getting temperature data from the Meteo response.
+                    using var json = JsonDocument.Parse(await response.Content.ReadAsStreamAsync());
+                    var root = json.RootElement;
+                    if (root.TryGetProperty("current", out var current))
                     {
-                        weatherData.Timestamp = time.GetDateTime();
-                        weatherData.Temperature = temperature.GetDouble();
-
-                        // Saving the temperature in the database.
-                        try
+                        // Getting the time and temperature data from the JSON file.
+                        if (current.TryGetProperty("time", out var time) &&
+                            current.TryGetProperty("temperature_2m", out var temperature))
                         {
-                            await influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
-                                weatherData.Timestamp);
-                        }
-                        catch (Exception e)
-                        {
-                            _logger.LogError(e, "Outside Weather data could not be saved in the database.");
-                        }
+                            weatherData.Timestamp = time.GetDateTime();
+                            weatherData.Temperature = temperature.GetDouble();
 
-                        _logger.LogInformation("Weather data from Meteo retrieved successfully.");
+                            // Saving the temperature in the database.
+                            try
+                            {
+                                await influxRepo.WriteOutsideWeatherData(_location, "Meteo", weatherData.Temperature,
+                                    weatherData.Timestamp);
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogError(e, "Outside Weather data could not be saved in the database.");
+                            }
+
+                            _logger.LogInformation("Weather data from Meteo retrieved successfully.");
+                        }
+                        else
+                        {
+                            _logger.LogError("Data from Meteo incomplete.");
+                        }
                     }
                     else
                     {
@@ -115,42 +92,41 @@ public class Worker : BackgroundService
                 }
                 else
                 {
-                    _logger.LogError("Data from Meteo incomplete.");
-                }
-            }
-            else
-            {
-                // Sending GET-Request to Bright Sky.
-                var alternativeResponse = await callBrightSkyApi(lat, lon);
+                    // Sending GET-Request to Bright Sky.
+                    var alternativeResponse = await callBrightSkyApi(lat, lon);
 
-                if (alternativeResponse.IsSuccessStatusCode)
-                {
-                    // Getting temperature data from the Bright Sky response.
-                    using var alternativeJson =
-                        JsonDocument.Parse(await alternativeResponse.Content.ReadAsStreamAsync());
-                    var root = alternativeJson.RootElement;
-                    if (root.TryGetProperty("weather", out var weather))
+                    if (alternativeResponse.IsSuccessStatusCode)
                     {
-                        // Getting the time and temperature data from the JSON file.
-                        if (weather.TryGetProperty("timestamp", out var time) &&
-                            weather.TryGetProperty("temperature", out var temperature))
+                        // Getting temperature data from the Bright Sky response.
+                        using var alternativeJson =
+                            JsonDocument.Parse(await alternativeResponse.Content.ReadAsStreamAsync());
+                        var root = alternativeJson.RootElement;
+                        if (root.TryGetProperty("weather", out var weather))
                         {
-                            weatherData.Timestamp = time.GetDateTime();
-                            weatherData.Temperature = temperature.GetDouble();
-
-                            // Saving the temperature in the database.
-                            try
+                            // Getting the time and temperature data from the JSON file.
+                            if (weather.TryGetProperty("timestamp", out var time) &&
+                                weather.TryGetProperty("temperature", out var temperature))
                             {
-                                await influxRepo.WriteOutsideWeatherData(_location, "Bright Sky",
-                                    weatherData.Temperature,
-                                    weatherData.Timestamp);
-                            }
-                            catch (Exception e)
-                            {
-                                _logger.LogError(e, "Outside Weather data could not be saved in the database.");
-                            }
+                                weatherData.Timestamp = time.GetDateTime();
+                                weatherData.Temperature = temperature.GetDouble();
 
-                            _logger.LogInformation("Weather data from Bright Sky retrieved successfully.");
+                                // Saving the temperature in the database.
+                                try
+                                {
+                                    await influxRepo.WriteOutsideWeatherData(_location, "Bright Sky", 
+                                        weatherData.Temperature, weatherData.Timestamp);
+                                }
+                                catch (Exception e)
+                                {
+                                    _logger.LogError(e, "Outside Weather data could not be saved in the database.");
+                                }
+
+                                _logger.LogInformation("Weather data from Bright Sky retrieved successfully.");
+                            }
+                            else
+                            {
+                                _logger.LogError("Data from Bright Sky incomplete.");
+                            }
                         }
                         else
                         {
@@ -159,17 +135,31 @@ public class Worker : BackgroundService
                     }
                     else
                     {
-                        _logger.LogError("Data from Bright Sky incomplete.");
+                        _logger.LogError("Failed to retrieve data from both sources.");
                     }
                 }
-                else
-                {
-                    _logger.LogError("Failed to retrieve data from both sources.");
-                }
+            }   
+            else
+            {
+                _logger.LogInformation("All locations have up to date weather data.");
             }
-
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
         }
+    }
+
+    private async Task<CoordinateMapping?> GetAvailableCoordinateMapping(ISettingsRepo? settingsRepo)
+    {
+        try
+        {
+            var result = await settingsRepo.GetUnlockedLocation();
+            return result;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unlocked entries could not be retrieved from the database.");
+        }
+
+        return null;
     }
 
     private async Task<HttpResponseMessage> callMeteoApi(double lat, double lon)

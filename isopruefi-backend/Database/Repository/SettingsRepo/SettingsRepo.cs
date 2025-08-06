@@ -81,7 +81,7 @@ public class SettingsRepo : ISettingsRepo
         
         var result = await _applicationDbContext.CoordinateMappings
             .FromSqlRaw(
-                @"SELECT * FROM CoordinateMappings WHERE LockedUntil IS NULL OR LockedUntil < NOW() ORDER BY LastUsed ASC NULLS FIRST LIMIT 1 FOR UPDATE SKIP LOCKED")
+                @"SELECT * FROM ""CoordinateMappings"" WHERE ""LockedUntil"" IS NULL OR ""LockedUntil"" < NOW() ORDER BY ""LastUsed"" ASC NULLS FIRST LIMIT 1 FOR UPDATE SKIP LOCKED")
             .FirstOrDefaultAsync();
         if (result != null)
         {

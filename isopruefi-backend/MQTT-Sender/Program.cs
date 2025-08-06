@@ -1,4 +1,5 @@
-﻿using MQTT_Receiver_Worker.MQTT.Models;
+﻿using System.Text.Json;
+using MQTT_Receiver_Worker.MQTT.Models;
 using MQTTnet;
 
 namespace MQTT_Sender;
@@ -19,7 +20,7 @@ internal class Program
             double?[]? value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             var tempGen = new TempSensorReading { Timestamp = timestamp, Value = value, Sequence = sequenceOne++ };
-            var json = System.Text.Json.JsonSerializer.Serialize(tempGen);
+            var json = JsonSerializer.Serialize(tempGen);
 
 
             var applicationMessage = new MqttApplicationMessageBuilder()
@@ -130,7 +131,7 @@ internal class Program
             value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             tempGen = new TempSensorReading { Timestamp = timestamp, Value = value, Sequence = sequenceTwo++ };
-            json = System.Text.Json.JsonSerializer.Serialize(tempGen);
+            json = JsonSerializer.Serialize(tempGen);
 
             applicationMessage = new MqttApplicationMessageBuilder()
                 .WithTopic("dhbw/ai/si2023/2/temp/Sensor_Two")

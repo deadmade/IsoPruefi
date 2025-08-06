@@ -82,19 +82,19 @@ public class TempSensorReadingTests
     public void Deserialize_CompleteJson_ProducesCorrectObject()
     {
         var json = """
-        {
-            "timestamp": "1234567890",
-            "value": [25.5, 26.0],
-            "sequence": 42,
-            "meta": [
-                {
-                    "timestamp": "1234567888",
-                    "value": [24.0],
-                    "sequence": 40
-                }
-            ]
-        }
-        """;
+                   {
+                       "timestamp": "1234567890",
+                       "value": [25.5, 26.0],
+                       "sequence": 42,
+                       "meta": [
+                           {
+                               "timestamp": "1234567888",
+                               "value": [24.0],
+                               "sequence": 40
+                           }
+                       ]
+                   }
+                   """;
 
         var reading = JsonSerializer.Deserialize<TempSensorReading>(json, _options);
 
@@ -116,11 +116,11 @@ public class TempSensorReadingTests
     public void Deserialize_MinimalJson_ProducesCorrectObject()
     {
         var json = """
-        {
-            "timestamp": "1234567890",
-            "value": [25.5]
-        }
-        """;
+                   {
+                       "timestamp": "1234567890",
+                       "value": [25.5]
+                   }
+                   """;
 
         var reading = JsonSerializer.Deserialize<TempSensorReading>(json, _options);
 
@@ -138,11 +138,11 @@ public class TempSensorReadingTests
     public void Deserialize_TimestampAsString_ParsesCorrectly()
     {
         var json = """
-        {
-            "timestamp": "1234567890",
-            "value": [25.5]
-        }
-        """;
+                   {
+                       "timestamp": "1234567890",
+                       "value": [25.5]
+                   }
+                   """;
 
         var reading = JsonSerializer.Deserialize<TempSensorReading>(json, _options);
 
@@ -157,11 +157,11 @@ public class TempSensorReadingTests
     public void Deserialize_TimestampAsNumber_ParsesCorrectly()
     {
         var json = """
-        {
-            "timestamp": 1234567890,
-            "value": [25.5]
-        }
-        """;
+                   {
+                       "timestamp": 1234567890,
+                       "value": [25.5]
+                   }
+                   """;
 
         var reading = JsonSerializer.Deserialize<TempSensorReading>(json, _options);
 
@@ -176,11 +176,11 @@ public class TempSensorReadingTests
     public void Deserialize_NullValuesInArray_HandlesCorrectly()
     {
         var json = """
-        {
-            "timestamp": 1234567890,
-            "value": [25.5, null, 26.0]
-        }
-        """;
+                   {
+                       "timestamp": 1234567890,
+                       "value": [25.5, null, 26.0]
+                   }
+                   """;
 
         var reading = JsonSerializer.Deserialize<TempSensorReading>(json, _options);
 
@@ -198,12 +198,12 @@ public class TempSensorReadingTests
     public void Deserialize_NullMetaList_ConvertedToNull()
     {
         var json = """
-        {
-            "timestamp": 1234567890,
-            "value": [25.5],
-            "meta": [null, null]
-        }
-        """;
+                   {
+                       "timestamp": 1234567890,
+                       "value": [25.5],
+                       "meta": [null, null]
+                   }
+                   """;
 
         var reading = JsonSerializer.Deserialize<TempSensorReading>(json, _options);
 

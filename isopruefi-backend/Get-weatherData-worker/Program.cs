@@ -1,7 +1,13 @@
+using System.Net;
 using Database.EntityFramework;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
+using Get_weatherData_worker.Helper;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Get_weatherData_worker;
 
@@ -9,7 +15,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = Host.CreateApplicationBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
@@ -23,12 +29,27 @@ public class Program
         // Register Business Logic
         builder.Services.AddHttpClient();
 
+        // Configure health checks
+        builder.ConfigureHealthChecks();
+
         // Only in Development do we wire up the secret store:
-        if (builder.Environment.IsDevelopment()) builder.Configuration.AddUserSecrets<Program>();
+        if (builder.Environment.IsDevelopment())
+            builder.Configuration.AddUserSecrets<Program>();
 
         builder.Services.AddHostedService<Worker>();
 
-        var host = builder.Build();
-        host.Run();
+        var app = builder.Build();
+
+        // Configure health check endpoints
+        app.MapHealthChecks("/api/health", new HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        app.UseHealthChecksPrometheusExporter("/api/healthoka",
+            options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
+
+        app.Run();
     }
 }

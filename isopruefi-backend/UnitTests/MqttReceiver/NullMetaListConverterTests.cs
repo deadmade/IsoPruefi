@@ -37,9 +37,9 @@ public class NullMetaListConverterTests
     public void Read_NullJson_ReturnsNull()
     {
         var json = "null";
-        
+
         var result = JsonSerializer.Deserialize<List<TempSensorReading>?>(json, _options);
-        
+
         result.Should().BeNull();
     }
 
@@ -50,9 +50,9 @@ public class NullMetaListConverterTests
     public void Read_EmptyArray_ReturnsNull()
     {
         var json = "[]";
-        
+
         var result = JsonSerializer.Deserialize<List<TempSensorReading>?>(json, _options);
-        
+
         result.Should().BeNull();
     }
 
@@ -63,9 +63,9 @@ public class NullMetaListConverterTests
     public void Read_ArrayWithOnlyNulls_ReturnsNull()
     {
         var json = "[null, null, null]";
-        
+
         var result = JsonSerializer.Deserialize<List<TempSensorReading>?>(json, _options);
-        
+
         result.Should().BeNull();
     }
 
@@ -76,22 +76,22 @@ public class NullMetaListConverterTests
     public void Read_ArrayWithValidObjects_ReturnsArray()
     {
         var json = """
-        [
-            {
-                "timestamp": 1234567890,
-                "value": [25.5],
-                "sequence": 1
-            },
-            {
-                "timestamp": 1234567891,
-                "value": [26.0],
-                "sequence": 2
-            }
-        ]
-        """;
-        
+                   [
+                       {
+                           "timestamp": 1234567890,
+                           "value": [25.5],
+                           "sequence": 1
+                       },
+                       {
+                           "timestamp": 1234567891,
+                           "value": [26.0],
+                           "sequence": 2
+                       }
+                   ]
+                   """;
+
         var result = JsonSerializer.Deserialize<List<TempSensorReading>?>(json, _options);
-        
+
         result.Should().NotBeNull();
         result.Should().HaveCount(2);
         result![0].Timestamp.Should().Be(1234567890);
@@ -109,19 +109,19 @@ public class NullMetaListConverterTests
     public void Read_ArrayWithMixedNullAndValidObjects_ReturnsArray()
     {
         var json = """
-        [
-            null,
-            {
-                "timestamp": 1234567890,
-                "value": [25.5],
-                "sequence": 1
-            },
-            null
-        ]
-        """;
-        
+                   [
+                       null,
+                       {
+                           "timestamp": 1234567890,
+                           "value": [25.5],
+                           "sequence": 1
+                       },
+                       null
+                   ]
+                   """;
+
         var result = JsonSerializer.Deserialize<List<TempSensorReading>?>(json, _options);
-        
+
         result.Should().NotBeNull();
         result.Should().HaveCount(3);
         result![0].Should().BeNull();
@@ -137,17 +137,17 @@ public class NullMetaListConverterTests
     public void Read_ArrayWithSingleValidObject_ReturnsArray()
     {
         var json = """
-        [
-            {
-                "timestamp": 1234567890,
-                "value": [25.5],
-                "sequence": 1
-            }
-        ]
-        """;
-        
+                   [
+                       {
+                           "timestamp": 1234567890,
+                           "value": [25.5],
+                           "sequence": 1
+                       }
+                   ]
+                   """;
+
         var result = JsonSerializer.Deserialize<List<TempSensorReading>?>(json, _options);
-        
+
         result.Should().NotBeNull();
         result.Should().HaveCount(1);
         result![0].Timestamp.Should().Be(1234567890);
@@ -164,9 +164,9 @@ public class NullMetaListConverterTests
     public void Write_NullList_SerializesAsNull()
     {
         List<TempSensorReading>? list = null;
-        
+
         var json = JsonSerializer.Serialize(list, _options);
-        
+
         json.Should().Be("null");
     }
 
@@ -177,9 +177,9 @@ public class NullMetaListConverterTests
     public void Write_EmptyList_SerializesAsEmptyArray()
     {
         var list = new List<TempSensorReading>();
-        
+
         var json = JsonSerializer.Serialize(list, _options);
-        
+
         json.Should().Be("[]");
     }
 
@@ -198,9 +198,9 @@ public class NullMetaListConverterTests
                 Sequence = 1
             }
         };
-        
+
         var json = JsonSerializer.Serialize(list, _options);
-        
+
         json.Should().Contain("1234567890");
         json.Should().Contain("25.5");
         json.Should().Contain("1");
@@ -213,9 +213,9 @@ public class NullMetaListConverterTests
     public void Write_ListWithNullObjects_SerializesCorrectly()
     {
         var list = new List<TempSensorReading?> { null, null };
-        
+
         var json = JsonSerializer.Serialize(list, _options);
-        
+
         json.Should().Be("[null,null]");
     }
 

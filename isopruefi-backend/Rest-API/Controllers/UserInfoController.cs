@@ -1,8 +1,7 @@
-using Asp.Versioning;
-using Microsoft.AspNetCore.Mvc;
-using Rest_API.Services.Auth;
+﻿using Asp.Versioning;
 using Database.EntityFramework.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Rest_API.Models;
 using Rest_API.Services.User;
 

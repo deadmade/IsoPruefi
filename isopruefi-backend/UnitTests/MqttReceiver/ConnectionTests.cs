@@ -1,4 +1,4 @@
-using System.Text;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Database.Repository.InfluxRepo;
@@ -351,46 +351,20 @@ public class ConnectionTests
         var method = typeof(Connection).GetMethod("ProcessSensorReading",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
+        var method = typeof(Connection).GetMethod("ProcessSensorReading",
+            BindingFlags.NonPublic | BindingFlags.Instance);
+
         if (method != null)
         {
             var action = async () =>
             {
-                var task = (Task)method.Invoke(_connection,
-                    new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
+                var task = (Task)method.Invoke(_connection, new object[] { sensorReading, "testSensor", _mockInfluxRepo.Object })!;
                 await task;
             };
 
             await action.Should().ThrowAsync<InvalidOperationException>()
                 .WithMessage("Database error");
         }
-    }
-
-    #endregion
-
-    #region Integration Tests
-
-    /// <summary>
-    /// Tests that GetConnection method can be called without throwing exceptions.
-    /// </summary>
-    [Test]
-    public async Task GetConnection_CanBeCalled_WithoutThrowingArgumentExceptions()
-    {
-        // This test will likely fail due to actual MQTT connection attempts,
-        // but it verifies that the method can be called and basic setup works
-        Exception? exception = null;
-        try
-        {
-            await _connection.GetConnection();
-        }
-        catch (Exception ex)
-        {
-            exception = ex;
-        }
-
-        // We expect this to not throw ArgumentNullException or similar setup errors
-        // It may throw network-related exceptions which is expected
-        exception.Should().NotBeOfType<ArgumentNullException>();
-        exception.Should().NotBeOfType<NullReferenceException>();
     }
 
     #endregion

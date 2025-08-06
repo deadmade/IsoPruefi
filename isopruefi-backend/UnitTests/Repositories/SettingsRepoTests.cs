@@ -1,5 +1,4 @@
 using Database.EntityFramework;
-using Database.EntityFramework.Models;
 using Database.Repository.SettingsRepo;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;

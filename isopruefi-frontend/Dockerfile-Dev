@@ -4,8 +4,8 @@ FROM node:24-alpine
 # Set the working directory inside the container
 WORKDIR /app
  
-# Copy package.json
-COPY package.json .
+# Copy package.json and package-lock.json
+COPY package*.json ./
  
 # Install dependencies
 RUN npm install
@@ -13,6 +13,8 @@ RUN npm install
 # Copy the rest of your application files
 COPY . .
 
-# Define the command to run your app
-CMD ["npm", "run", "dev"]
+# Expose the port that Vite dev server runs on
+EXPOSE 5173
 
+# Define the command to run your app with host binding
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

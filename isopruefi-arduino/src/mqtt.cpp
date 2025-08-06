@@ -219,7 +219,7 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
       mqttClient.print(payload);
       mqttClient.endMessage();
       Serial.println("Published and deleting file.");
-      // deleteCsvFile(fullPath); // Uncomment to delete after successful publish
+      deleteCsvFile(fullPath); // Uncomment to delete after successful publish
       sentCount++;
     } else {
       Serial.println("Failed to publish. Keeping file: " + nameStr);

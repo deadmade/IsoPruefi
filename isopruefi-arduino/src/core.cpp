@@ -20,9 +20,9 @@ static MqttClient mqttClient(wifiClient);
 /// SD card chip select pin
 static const uint8_t chipSelect = 4;
 static const char* sensorIdOne = "Sensor_One";
-// static const char* sensorIdTwo = "Sensor_Two";
 static const char* sensorIdInUse = sensorIdOne; 
-//const char* sensorIdInUse = sensorIdTwo; // Uncomment to use the second
+// static const char* sensorIdTwo = "Sensor_Two";
+// static const char* sensorIdInUse = sensorIdTwo; // Uncomment to use the second
 static const char* sensorType = "temp";
 static const char* topic = "dhbw/ai/si2023/2/";
 
@@ -145,7 +145,11 @@ void coreSetup() {
 
   // Attempt to send any pending recovery data from previous sessions
   DateTime now = rtc.now();
-  sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
+  Serial.print("Current time: ");
+  Serial.println(now.timestamp(DateTime::TIMESTAMP_FULL));
+  Serial.print("Lost Power? "); Serial.println(rtc.lostPower() ? "YES" : "NO");
+
+  // sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
 
   Serial.println("Setup complete.");
 }

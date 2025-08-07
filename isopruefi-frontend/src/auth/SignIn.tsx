@@ -10,8 +10,9 @@ export default function SignIn() {
         navigate("/user");
     }
 
+    const style = { padding: 20 };
     return (
-        <div style={{ padding: 20 }}>
+        <div style={style}>
             <AuthForm mode="signin" onSuccess={handleSuccess} />
         </div>
     );

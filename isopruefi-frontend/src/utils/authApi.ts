@@ -1,57 +1,41 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5160";
-
-/*
-    login - sends POST requests with { userName, password }
- */
+const API_VERSION = "v1";
+const BASE_URL = "https://localhost:5160";
 
 export async function login(username: string, password: string) {
-
-    const response = await fetch(`${BASE_URL}/Authentication/Login`, {
+    const response = await fetch(`${BASE_URL}/${API_VERSION}/Authentication/Login`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({userName: username, password})
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName: username, password })
     });
 
     if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || "Logic failed");
+        throw new Error(errorText || "Login failed");
     }
 
     return response.json();
 }
 
-/*
-    sends POST with { userName, password } to create a new account
- */
-
 export async function register(username: string, password: string) {
-    const response = await fetch(`${BASE_URL}/Authentication/Register`, {
+    const response = await fetch(`${BASE_URL}/${API_VERSION}/Authentication/Register`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({userName: username, password})
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName: username, password })
     });
 
     if (!response.ok) {
         const errorText = await response.text();
         throw new Error(errorText || "Registration failed");
     }
+
+    return response.json();
 }
 
-/*
-    refreshToken - keeps the session alive without forcing a new login
- */
-
 export async function refreshToken(token: string, refreshToken: string) {
-    const response = await fetch(`${BASE_URL}/Authentication/Refresh`, {
+    const response = await fetch(`${BASE_URL}/${API_VERSION}/Authentication/Refresh`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({token, refreshToken})
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, refreshToken })
     });
 
     if (!response.ok) {

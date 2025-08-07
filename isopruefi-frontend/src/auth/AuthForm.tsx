@@ -1,71 +1,70 @@
 import {useState} from "react";
 import { login, register } from "../utils/authApi.ts";
 
-type AuthFormProps = {
-    mode: "signin" | "signup";
-    onSuccess?: (data: any) => void; // callback after success (optional) (chatgpt generated)
+type Mode = "signin" | "signup";
+
+interface AuthFormProps {
+    mode: Mode;
+    onSuccess: (user: any) => void;
 }
 
-export default function AuthForm({mode, onSuccess}: AuthFormProps) {
+export default function AuthForm({ mode, onSuccess }: AuthFormProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
-        setLoading(true);
 
         try {
-            let result;
             if (mode === "signin") {
-                result = await login(username, password);
-                console.log("Login success:", result);
-                // Here the tokens will be stored localStorage
-                localStorage.setItem("accessToken", result.token);
-                localStorage.setItem("refreshToken", result.refreshToken);
-            } else {
-                result = await register(username, password);
-                console.log("Registration success:", result);
-            }
+                const tokenData = await login(username, password);
 
-            if (onSuccess) onSuccess(result);
+                // Save token and refreshToken in localStorage
+                localStorage.setItem("token", tokenData.token);
+                localStorage.setItem("refreshToken", tokenData.refreshToken);
+
+                onSuccess(tokenData);
+            } else {
+                await register(username, password);
+                alert("Registration successful. You can now log in.");
+                onSuccess("/signin");
+            }
         } catch (err: any) {
-            setError(err.message || "Something went wrong");
-        } finally {
-            setLoading(false);
+            setError(err.message || "Something went wrong.");
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", maxWidth: 300 }}>
+        <form onSubmit={handleSubmit} style={{ maxWidth: 300, margin: "auto" }}>
             <h2>{mode === "signin" ? "Sign In" : "Sign Up"}</h2>
 
-            <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                style={{ marginBottom: 10, padding: 8 }}
-            />
+            <label>
+                Username:
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+            </label>
 
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                style={{ marginBottom: 10, padding: 8 }}
-            />
+            <label>
+                Password:
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+            </label>
 
-            {error && <div style={{ color: "red", marginBottom: 10 }}>{error}</div>}
-
-            <button type="submit" disabled={loading}>
-                {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Sign Up"}
+            <button type="submit" style={{ marginTop: 12 }}>
+                {mode === "signin" ? "Login" : "Register"}
             </button>
+
+            {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
     );
 }
-

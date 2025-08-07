@@ -22,6 +22,10 @@ export default function App() {
                 <Route path="/admin" element={<AdminPage />} />
             </Routes>
         </Router>
+        // <div>
+        //     <WeatherChartTitle />
+        //     <TempChart/>
+        // </div>
     );
 }
 

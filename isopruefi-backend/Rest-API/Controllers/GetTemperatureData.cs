@@ -1,13 +1,15 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rest_API.Models;
 
 namespace Rest_API.Controllers;
 
 /// <summary>
-/// Controller for retrieving temperature data from InfluxDB.
+/// Provides endpoints for retrieving temperature data from multiple sources.
+/// Combines indoor sensor data with external weather data for comprehensive temperature monitoring.
 /// </summary>
 [ApiVersion(1)]
 [ApiController]
@@ -47,16 +49,51 @@ public class TemperatureDataController : ControllerBase
     }
 
     /// <summary>
-    /// Gets temperature data for the specified time range and location, with optional Fahrenheit conversion.
+    /// Retrieves comprehensive temperature data for a specified time range and location.
     /// </summary>
-    /// <param name="start">Start date and time for the data range.</param>
-    /// <param name="end">End date and time for the data range.</param>
-    /// <param name="place">Location for outside temperature data.</param>
-    /// <param name="isFahrenheit">If true, converts temperatures to Fahrenheit.</param>
-    /// <returns>Temperature data overview.</returns>
+    /// <remarks>
+    /// This endpoint provides temperature readings from multiple sources:
+    /// - **Indoor sensors**: North and South sensor locations
+    /// - **External weather data**: Outside temperature for the specified location
+    /// 
+    /// **Authorization Required**: Bearer token with User or Admin role
+    /// 
+    /// **Time Range Requirements**:
+    /// - Start date must be before end date
+    /// - Maximum time range is recommended to be 30 days for optimal performance
+    /// - Dates should be in ISO 8601 format (e.g., "2024-01-15T10:30:00Z")
+    /// 
+    /// **Temperature Unit Conversion**:
+    /// - Default: Celsius (°C)
+    /// - Optional: Fahrenheit (°F) by setting `isFahrenheit=true`
+    /// 
+    /// **Example Usage**:
+    /// ```
+    /// GET /api/v1/TemperatureData/GetTemperature?start=2024-01-15T00:00:00Z&amp;end=2024-01-16T00:00:00Z&amp;place=Berlin&amp;isFahrenheit=false
+    /// ```
+    /// 
+    /// **Data Quality**:
+    /// - Automatic plausibility checks are performed on all temperature readings
+    /// - Suspicious readings (outside -30°C to 45°C for outdoor, -10°C to 35°C for indoor) are logged as warnings
+    /// - Large temperature jumps (>10°C between consecutive readings) are flagged
+    /// </remarks>
+    /// <param name="start">Start date and time for the data range (ISO 8601 format).</param>
+    /// <param name="end">End date and time for the data range (ISO 8601 format).</param>
+    /// <param name="place">Location name for external weather data (e.g., "Berlin", "Munich").</param>
+    /// <param name="isFahrenheit">Optional. If true, converts all temperatures to Fahrenheit. Default is false (Celsius).</param>
+    /// <returns>Comprehensive temperature data overview containing indoor and outdoor readings.</returns>
+    /// <response code="200">Successfully retrieved temperature data. Returns comprehensive temperature overview.</response>
+    /// <response code="400">Invalid parameters. Check date format, ensure start is before end date, or verify location name.</response>
+    /// <response code="401">Authentication required. No valid JWT token provided.</response>
+    /// <response code="403">Access denied. User or Admin role required.</response>
+    /// <response code="500">Internal server error. Possible issues with database connection or external weather service.</response>
     [HttpGet]
-    [ProducesResponseType(typeof(List<TemperatureData>), 200)]
-    [ProducesResponseType(200, Type = typeof(TemperatureDataOverview))]
+    [ProducesResponseType(typeof(TemperatureDataOverview), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Policy = "UserOrAdmin")]
     public async Task<IActionResult> GetTemperature([FromQuery] DateTime start, [FromQuery] DateTime end,
         [FromQuery] string place, [FromQuery] bool isFahrenheit = false)
     {
@@ -102,31 +139,31 @@ public class TemperatureDataController : ControllerBase
         };
 
         // Testing plausibility of the deviation between consecutive temperature data.
-        for (int i = 0; i < temperatureData.TemperatureNord.Count - 1; i++)
+        for (var i = 0; i < temperatureData.TemperatureNord.Count - 1; i++)
         {
-            var northDeviation = temperatureData.TemperatureNord[i].Temperature - temperatureData.TemperatureNord[i + 1].Temperature;
+            var northDeviation = temperatureData.TemperatureNord[i].Temperature -
+                                 temperatureData.TemperatureNord[i + 1].Temperature;
             if (northDeviation > 10.0)
-            {
-                _logger.LogWarning("Inside(North) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
-            }
+                _logger.LogWarning(
+                    "Inside(North) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
         }
-        
-        for (int i = 0; i < temperatureData.TemperatureSouth.Count - 1; i++)
+
+        for (var i = 0; i < temperatureData.TemperatureSouth.Count - 1; i++)
         {
-            var southDeviation = temperatureData.TemperatureSouth[i].Temperature - temperatureData.TemperatureSouth[i + 1].Temperature;
+            var southDeviation = temperatureData.TemperatureSouth[i].Temperature -
+                                 temperatureData.TemperatureSouth[i + 1].Temperature;
             if (southDeviation > 10.0)
-            {
-                _logger.LogWarning("Inside(south) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
-            }
+                _logger.LogWarning(
+                    "Inside(south) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
         }
-        
-        for (int i = 0; i < temperatureData.TemperatureOutside.Count - 1; i++)
+
+        for (var i = 0; i < temperatureData.TemperatureOutside.Count - 1; i++)
         {
-            var outsideDeviation = temperatureData.TemperatureOutside[i].Temperature - temperatureData.TemperatureOutside[i + 1].Temperature;
+            var outsideDeviation = temperatureData.TemperatureOutside[i].Temperature -
+                                   temperatureData.TemperatureOutside[i + 1].Temperature;
             if (outsideDeviation > 10.0)
-            {
-                _logger.LogWarning("Outside temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
-            }
+                _logger.LogWarning(
+                    "Outside temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
         }
 
         return temperatureData;
@@ -157,12 +194,11 @@ public class TemperatureDataController : ControllerBase
                         timestamp, temperature, place);
                     continue;
                 }
-                
+
                 // Testing for plausibility of the temperature with boundary values.
                 if (temperature > 45.0 || temperature < -30.0)
-                {
-                    _logger.LogWarning("Outside temperature may be corrupted, the temperature has exceeded boundary values.");
-                }
+                    _logger.LogWarning(
+                        "Outside temperature may be corrupted, the temperature has exceeded boundary values.");
 
                 long.TryParse(timestamp.ToString(), out var timestampLong);
                 timestampLong /= 1000000000;
@@ -208,12 +244,11 @@ public class TemperatureDataController : ControllerBase
                         timestamp, temperature);
                     continue;
                 }
-                
+
                 // Testing for plausibility of the temperature with boundary values.
                 if (temperature > 35.0 || temperature < -10.0)
-                {
-                    _logger.LogWarning("Inside temperature may be corrupted, the temperature has exceeded boundary values.");
-                }
+                    _logger.LogWarning(
+                        "Inside temperature may be corrupted, the temperature has exceeded boundary values.");
 
                 long.TryParse(timestamp.ToString(), out var timestampLong);
                 timestampLong /= 1000000000;

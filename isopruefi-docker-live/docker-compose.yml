@@ -1,0 +1,309 @@
+name: isopruefi-live
+
+networks:
+  isopruefi-network:
+    driver: bridge
+
+services:
+  traefik:
+    image: traefik:3.4.4
+    container_name: isopruefi-loadbalancer
+    restart: unless-stopped
+    ports:
+      - 10000:80
+      - 10001:443
+      - 10002:8080
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.aicon.dhbw-heidenheim.de`)"
+      - "traefik.http.services.dashboard.loadbalancer.server.port=8432"
+
+      - "traefik.http.routers.dashboard.tls.domains[0].main=*.aicon.dhbw-heidenheim.de"
+      - "traefik.http.routers.dashboard.tls.domains[0].sans=*.aicon.dhbw-heidenheim.de"
+
+      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme = https"
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/traefik.yml:/traefik.yml:ro"
+      - "./traefik/conf:/conf:ro"
+      - "./traefik/certs/:/var/traefik/certs/:rw"
+    networks:
+      - isopruefi-network
+
+  influxdb3:
+    image: influxdb:3.2.1-core
+    container_name: isopruefi-influxdb
+    restart: unless-stopped
+    command:
+      - influxdb3
+      - serve
+      - --node-id=node0
+      - --object-store=file
+      - --data-dir=/var/lib/influxdb3/data
+      - --plugin-dir=/var/lib/influxdb3/plugins
+    volumes:
+      - type: bind
+        source: ./influx/influxdb3/data
+        # Path to store data in the container
+        target: /var/lib/influxdb3/data
+      - type: bind
+        # Path to store plugins on your host system
+        source: ./influx/influxdb3/plugins
+        # Path to store plugins in the container
+        target: /var/lib/influxdb3/plugins
+      # - ./influx/bootstrap.sh:/docker-entrypoint-initdb.d/bootstrap.sh:ro
+    networks:
+      - isopruefi-network
+
+  postgres:
+    image: postgres:17.5
+    container_name: isopruefi-postgres
+    restart: unless-stopped
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    networks:
+      - isopruefi-network
+    env_file:
+      - ./secrets.env
+
+  loki:
+    image: grafana/loki:3.5.2
+    container_name: isopruefi-loki
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
+    networks:
+      - isopruefi-network
+
+  prometheus:
+    image: prom/prometheus:v3.4.2
+    container_name: isopruefi-prometheus
+    command:
+      - --web.enable-remote-write-receiver
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./loki/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./loki/alerts.yml:/etc/prometheus/alerts.yml:ro
+    networks:
+      - isopruefi-network
+
+  alloy:
+    image: grafana/alloy:v1.9.2
+    container_name: isopruefi-alloy
+    volumes:
+      - ./loki/config.alloy:/etc/alloy/config.alloy
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+    networks:
+      - isopruefi-network
+    depends_on:
+      - loki
+      - prometheus
+
+  grafana:
+    image: grafana/grafana:12.0.2
+    container_name: isopruefi-grafana
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.aicon.dhbw-heidenheim.de`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls=true"
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_AUTH_BASIC_ENABLED=true
+      - GF_LOG_LEVEL=warn
+    env_file:
+      - ./secrets.env
+    networks:
+      - isopruefi-network
+    depends_on:
+      - loki
+      - alloy
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /etc/grafana/provisioning/datasources
+        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+        apiVersion: 1
+        datasources:
+        - name: Loki
+          type: loki
+          access: proxy
+          orgId: 1
+          url: http://loki:3100
+          basicAuth: false
+          isDefault: false
+          version: 1
+          editable: false
+        - name: Prometheus
+          type: prometheus
+          orgId: 1
+          url: http://prometheus:9090
+          basicAuth: false
+          isDefault: true
+          version: 1
+          editable: false
+        EOF
+        /run.sh
+
+  isopruefi-frontend-1:
+    build:
+      context: ./isopruefi-frontend
+      dockerfile: Dockerfile-Dev
+    container_name: isopruefi-frontend-1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`frontend.aicon.dhbw-heidenheim.de`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+    volumes:
+      - ./isopruefi-frontend:/app
+      - /app/node_modules
+    networks:
+      - isopruefi-network
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
+
+  isopruefi-frontend-2:
+    build:
+      context: ./isopruefi-frontend
+      dockerfile: Dockerfile-Dev
+    container_name: isopruefi-frontend-2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`frontend.aicon.dhbw-heidenheim.de`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+    volumes:
+      - ./isopruefi-frontend:/app
+      - /app/node_modules
+    networks:
+      - isopruefi-network
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
+
+  isopruefi-backend-api-1:
+    build:
+      context: ./isopruefi-backend
+      dockerfile: Rest-API/Dockerfile-Dev
+    container_name: isopruefi-backend-api-1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`backend.aicon.dhbw-heidenheim.de`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+    networks:
+      - isopruefi-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    env_file:
+      - ./secrets.env
+    depends_on:
+      - influxdb3
+      - postgres
+
+  isopruefi-backend-api-2:
+    build:
+      context: ./isopruefi-backend
+      dockerfile: Rest-API/Dockerfile-Dev
+    container_name: isopruefi-backend-api-2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`backend.aicon.dhbw-heidenheim.de`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+    networks:
+      - isopruefi-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    env_file:
+      - ./secrets.env
+    depends_on:
+      - influxdb3
+      - postgres
+
+  isopruefi-mqtt-receiver-1:
+    build:
+      context: ./isopruefi-backend
+      dockerfile: MQTT-Receiver-Worker/Dockerfile-Dev
+    container_name: isopruefi-mqtt-receiver-1
+    networks:
+      - isopruefi-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    env_file:
+      - ./secrets.env
+    depends_on:
+      - influxdb3
+      - postgres
+
+  isopruefi-mqtt-receiver-2:
+    build:
+      context: ./isopruefi-backend
+      dockerfile: MQTT-Receiver-Worker/Dockerfile-Dev
+    container_name: isopruefi-mqtt-receiver-2
+    networks:
+      - isopruefi-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    env_file:
+      - ./secrets.env
+    depends_on:
+      - influxdb3
+      - postgres
+
+  isopruefi-get-weather-worker-1:
+    build:
+      context: ./isopruefi-backend
+      dockerfile: Get-weatherData-worker/Dockerfile-Dev
+    container_name: isopruefi-get-weather-worker-1
+    labels:
+      - "prometheus.service=weather-worker"
+      - "prometheus.instance=1"
+    networks:
+      - isopruefi-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    env_file:
+      - ./secrets.env
+    depends_on:
+      - influxdb3
+      - postgres
+
+  isopruefi-get-weather-worker-2:
+    build:
+      context: ./isopruefi-backend
+      dockerfile: Get-weatherData-worker/Dockerfile-Dev
+    container_name: isopruefi-get-weather-worker-2
+    labels:
+      - "prometheus.service=weather-worker"
+      - "prometheus.instance=2"
+    networks:
+      - isopruefi-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    env_file:
+      - ./secrets.env
+    depends_on:
+      - influxdb3
+      - postgres
+    healthcheck:
+      test: ["CMD", "dotnet", "--info"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

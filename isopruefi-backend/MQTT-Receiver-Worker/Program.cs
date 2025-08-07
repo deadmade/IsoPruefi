@@ -51,13 +51,13 @@ public class Program
         var app = builder.Build();
 
         //HealthCheck Middleware
-        app.MapHealthChecks("/api/health", new HealthCheckOptions
+        app.MapHealthChecks("/health", new HealthCheckOptions
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
 
-        app.UseHealthChecksPrometheusExporter("/api/healthoka",
+        app.UseHealthChecksPrometheusExporter("/healthoka",
             options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
 
         app.Run();

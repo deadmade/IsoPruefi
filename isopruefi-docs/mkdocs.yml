@@ -72,10 +72,14 @@ plugins:
   - include_dir_to_nav
   - git-revision-date-localized
   - git-authors
+  - callouts
  # - to-pdf
 markdown_extensions:
   - pymdownx.extra
   - pymdownx.highlight
+  - nl2br
+  - admonition
+  - pymdownx.details
   - pymdownx.superfences
   - pymdownx.superfences:
       custom_fences:

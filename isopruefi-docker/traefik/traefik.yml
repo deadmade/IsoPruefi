@@ -21,6 +21,6 @@
             network: isopruefi-network
           file:
             watch: true
-            directory: /conf/
+            directory: ./conf
       log:
           level: "DEBUG"

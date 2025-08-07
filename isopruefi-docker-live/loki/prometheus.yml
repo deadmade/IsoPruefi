@@ -31,18 +31,21 @@ scrape_configs:
           
   - job_name: 'isopruefi-backend-api'
     static_configs:
-      - targets: ['isopruefi-backend-api:8080']
-    metrics_path: '/api/healthoka'
+      - targets: ['isopruefi-backend-api-1:8080']
+      - targets: ['isopruefi-backend-api-2:8080']
+    metrics_path: '/healthoka'
     scrape_interval: 30s
 
   - job_name: 'isopruefi-mqtt-receiver'
     static_configs:
-      - targets: ['isopruefi-mqtt-receiver:8080']
-    metrics_path: '/api/healthoka'
+      - targets: ['isopruefi-mqtt-receiver-1:8080']
+      - targets: ['isopruefi-mqtt-receiver-2:8080']
+    metrics_path: '/healthoka'
     scrape_interval: 30s
 
   - job_name: 'isopruefi-weather-worker'
     static_configs:
-      - targets: ['isopruefi-get-weather-worker:8080']
-    metrics_path: '/api/healthoka'
+      - targets: ['isopruefi-get-weather-worker-1:8080']
+      - targets: ['isopruefi-get-weather-worker-2:8080']
+    metrics_path: '/healthoka'
     scrape_interval: 30s

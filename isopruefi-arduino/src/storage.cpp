@@ -28,7 +28,7 @@ static const size_t CURRENT_FILENAME_BUFFER_SIZE = 32;
 /// Buffer size for reading individual CSV lines
 static const size_t CSV_LINE_BUFFER_SIZE = 64;
 /// Maximum number of sensor readings per CSV batch file
-static const int MAX_LINES_PER_CSV_FILE = 20;
+static const int MAX_LINES_PER_CSV_FILE = 5;
 static char currentFilename[CURRENT_FILENAME_BUFFER_SIZE] = "";
 /// Static variable to track the number of lines in the current CSV file
 static int linesInFile = 0;
@@ -76,7 +76,7 @@ void saveToCsvBatch(const DateTime& now, float celsius, int sequence) {
     sd.mkdir(folder);
   }
 
-  // Create new file if needed (first run or file is full)
+  // Create new file if needed
   if (strlen(currentFilename) == 0 || linesInFile >= MAX_LINES_PER_CSV_FILE) {
     createFilename(currentFilename, sizeof(currentFilename), now);
     linesInFile = 0;

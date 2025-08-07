@@ -7,7 +7,6 @@ type Mode = "signin" | "signup";
 
 interface AuthFormProps {
     mode: Mode;
-    onSuccess: (user: any) => void;
 }
 
 export default function AuthForm({ mode }: AuthFormProps) {

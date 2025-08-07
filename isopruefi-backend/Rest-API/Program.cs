@@ -3,6 +3,7 @@ using System.Text;
 using Asp.Versioning;
 using Database.EntityFramework;
 using Database.EntityFramework.Models;
+using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using Database.Repository.TokenRepo;
@@ -20,6 +21,7 @@ using Rest_API.Helper;
 using Rest_API.Models;
 using Rest_API.Seeder;
 using Rest_API.Services.Auth;
+using Rest_API.Services.Temp;
 using Rest_API.Services.Token;
 using Rest_API.Services.User;
 
@@ -115,11 +117,16 @@ public class Program
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<ITempService, TempService>();
+        
+        // Register HttpFactory
+        builder.Services.AddHttpClient();
 
         // Register Repos
         builder.Services.AddScoped<ITokenRepo, TokenRepo>();
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
         builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
+        builder.Services.AddScoped<ICoordinateRepo, CoordinateRepo>();
 
         builder.ConfigureHealthChecks();
 

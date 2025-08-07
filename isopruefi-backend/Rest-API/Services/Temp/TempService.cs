@@ -14,6 +14,7 @@ public class TempService : ITempService
     private readonly ILogger<TempService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ICoordinateRepo _coordinateRepo;
+    private readonly IConfiguration _configuration;
 
     private readonly string _geocodingApi;
 
@@ -25,16 +26,15 @@ public class TempService : ITempService
     /// <param name="coordinateRepo">The settingsRepo instance for connection with the postgres database.</param>
     /// <param name="configuration"></param>
     public TempService(ILogger<TempService> logger, IHttpClientFactory httpClientFactory,
-        ICoordinateRepo coordinateRepo)
+        ICoordinateRepo coordinateRepo, IConfiguration configuration)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
         _coordinateRepo = coordinateRepo;
+        _configuration = configuration;
 
-        //_geocodingApi = _configuration["Weather:NominatimApiUrl"] ?? throw new InvalidOperationException(
-        //"Weather:NominatimApiUrl configuration is missing");
-
-        _geocodingApi = "https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=";
+        _geocodingApi = _configuration["Weather:NominatimApiUrl"] ?? throw new InvalidOperationException(
+            "Weather:NominatimApiUrl configuration is missing");
     }
 
     /// <inheritdoc />

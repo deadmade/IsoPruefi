@@ -40,17 +40,18 @@ public class Worker : BackgroundService
             var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
             
             // Getting the location information for the next unlocked entry.
-            var result = await GetAvailableCoordinateMapping(settingsRepo);
+            var availableLocations = await GetAvailableCoordinateMapping(coordinateRepo);
             
-            if (result == null)
+            if (availableLocations == null)
             {
                 _logger.LogInformation("All locations have up to date weather data.");
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
                 continue;
             }
 
-            var lat = result.Latitude; 
-            var lon = result.Longitude;
+            var lat = availableLocations.Latitude; 
+            var lon = availableLocations.Longitude;
+            var location = availableLocations.Location;
                 
             // Sending GET-Request to Meteo.
             var response = await CallMeteoApi(lat, lon);
@@ -60,8 +61,8 @@ public class Worker : BackgroundService
                 // Saving the temperature in the database.
                 try
                 {
-                    await influxRepo.WriteOutsideWeatherData(_location, "Meteo", response.Temperature,
-                        response.Timestamp);
+                    await influxRepo.WriteOutsideWeatherData(location, "Meteo", response.Temperature,
+                        response.Timestamp, availableLocations.PostalCode);
                 }
                 catch (Exception e)
                 {
@@ -78,8 +79,8 @@ public class Worker : BackgroundService
                     // Saving the temperature in the database.
                     try
                     {
-                        await influxRepo.WriteOutsideWeatherData(_location, "Bright Sky",
-                            alternativeResponse.Temperature, alternativeResponse.Timestamp);
+                        await influxRepo.WriteOutsideWeatherData(location, "Bright Sky",
+                            alternativeResponse.Temperature, alternativeResponse.Timestamp, availableLocations.PostalCode);
                     }
                     catch (Exception e)
                     {
@@ -96,11 +97,11 @@ public class Worker : BackgroundService
         }
     }
 
-    private async Task<CoordinateMapping?> GetAvailableCoordinateMapping(ISettingsRepo settingsRepo)
+    private async Task<CoordinateMapping?> GetAvailableCoordinateMapping(ICoordinateRepo coordinateRepo)
     {
         try
         {
-            var result = await settingsRepo.GetUnlockedLocation();
+            var result = await coordinateRepo.GetUnlockedLocation();
             return result;
         }
         catch (Exception e)

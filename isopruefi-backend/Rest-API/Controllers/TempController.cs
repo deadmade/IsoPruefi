@@ -1,4 +1,6 @@
 using Asp.Versioning;
+using Database.Migrations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rest_API.Services.Temp;
 
@@ -33,7 +35,10 @@ public class TempController : ControllerBase
     /// </summary>
     /// <returns>A list of all postalcodes; otherwise, NotFound.</returns>
     [HttpGet]
-    public async Task<ActionResult> GetAllPostalcodes()
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    [Authorize(Policy = "UserOrAdmin")]
+    public async Task<IActionResult> GetAllPostalcodes()
     {
         try
         {
@@ -53,6 +58,9 @@ public class TempController : ControllerBase
     /// <param name="postalcode">Defines the location.</param>
     /// <returns>Ok if successful; otherwise, an error response.</returns>
     [HttpPost]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> InsertLocation([FromBody] int postalcode)
     {
         try

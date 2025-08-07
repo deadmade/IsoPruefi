@@ -23,6 +23,7 @@ export default function AuthForm({ mode, onSuccess }: AuthFormProps) {
 
                 // Save token and refreshToken in localStorage
                 localStorage.setItem("token", tokenData.token);
+                localStorage.setItem("token", tokenData.accessToken);
                 localStorage.setItem("refreshToken", tokenData.refreshToken);
 
                 onSuccess(tokenData);

@@ -16,22 +16,18 @@ export async function login(username: string, password: string) {
     return response.json();
 }
 
-export async function register(username: string, password: string, token: string) {
-    const response = await fetch(`/v1/Authentication/Register`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ userName: username, password })
-    });
+export async function register(userName: string, password: string) {
+    const res = await fetch(
+        `${BASE_URL}/${API_VERSION}/Authentication/Register`,
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userName, password })
+        }
+    );
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Registration failed");
-    }
-
-    return response.json();
+    if (!res.ok) throw new Error(await res.text() || "Registration failed");
+    return res.json();
 }
 
 export async function refreshToken(token: string, refreshToken: string) {

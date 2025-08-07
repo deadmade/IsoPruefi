@@ -24,8 +24,9 @@ public interface IInfluxRepo
     /// <param name="website"></param>
     /// <param name="temperature"></param>
     /// <param name="timestamp"></param>
+    /// <param name="postalcode"></param>
     /// <returns></returns>
-    Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp);
+    Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp, int postalcode);
 
     /// <summary>
     /// Retrieves outside weather data for a given place and time range.

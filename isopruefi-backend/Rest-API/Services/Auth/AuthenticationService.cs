@@ -5,7 +5,6 @@ using Database.EntityFramework.Models;
 using Database.Repository.TokenRepo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Rest_API.Helper;
 using Rest_API.Models;
 using Rest_API.Services.Token;
@@ -37,21 +36,7 @@ public class AuthenticationService(
             if (existingUser != null)
             {
                 logger.LogError("User {InputUserName} already exists", input.UserName.SanitizeString());
-                throw new Exception($"User {input.UserName} already exists.");
-            }
-
-            // Create User role if it doesn't exist
-            if (await roleManager.RoleExistsAsync(Roles.User) == false)
-            {
-                var roleResult = await roleManager
-                    .CreateAsync(new IdentityRole(Roles.User));
-
-                if (roleResult.Succeeded == false)
-                {
-                    var roleErros = roleResult.Errors.Select(e => e.Description);
-                    logger.LogError($"Failed to create user role. Errors : {string.Join(",", roleErros)}");
-                    throw new Exception($"Failed to create user role. Errors : {string.Join(",", roleErros)}");
-                }
+                throw new AuthenticationException($"User {input.UserName} already exists.");
             }
 
             var newUser = new ApiUser { UserName = input.UserName };
@@ -62,9 +47,10 @@ public class AuthenticationService(
             }
             else
             {
+                var errorDescriptions = string.Join(" ", result.Errors.Select(e => e.Description));
                 logger.LogError("Error creating user {InputUserName}: {Join}", input.UserName.SanitizeString(),
-                    string.Join(" ", result.Errors.Select(e => e.Description)));
-                throw new Exception($"ErrorDto: {string.Join(" ", result.Errors.Select(e => e.Description))}");
+                    errorDescriptions);
+                throw new Exception($"ErrorDto: {errorDescriptions}");
             }
 
             var addUserToRoleResult = await userManager.AddToRoleAsync(newUser, Roles.User);
@@ -78,7 +64,8 @@ public class AuthenticationService(
         }
         catch (Exception e)
         {
-            logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName.SanitizeString(), e.Message);
+            logger.LogError("Error creating user {InputUserName}: {EMessage}", input.UserName.SanitizeString(),
+                e.Message);
             throw;
         }
     }
@@ -108,10 +95,6 @@ public class AuthenticationService(
             {
                 logger.LogInformation("Login for User {InputUserName} successful", input.UserName.SanitizeString());
             }
-
-            var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("YourSigningKeyHere")),
-                SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
             {
@@ -158,12 +141,14 @@ public class AuthenticationService(
                 Token = token,
                 RefreshToken = refreshToken,
                 ExpiryDate = tokenInfo.ExpiredAt,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                Roles = userRoles
             };
         }
         catch (Exception e)
         {
-            logger.LogError("Error logging in user {InputUserName}: {EMessage}", input.UserName.SanitizeString(), e.Message);
+            logger.LogError("Error logging in user {InputUserName}: {EMessage}", input.UserName.SanitizeString(),
+                e.Message);
             throw;
         }
     }

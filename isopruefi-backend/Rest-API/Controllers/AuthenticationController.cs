@@ -2,6 +2,7 @@ using System.Security.Authentication;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Rest_API.Helper;
 using Rest_API.Models;
 using IAuthenticationService = Rest_API.Services.Auth.IAuthenticationService;
 
@@ -59,14 +60,14 @@ public class AuthenticationController(
         {
             if (ModelState.IsValid)
             {
-                _logger.LogInformation("Login attempt for user: {InputUserName}", input.UserName);
+                _logger.LogInformation("Login attempt for user: {InputUserName}", input.UserName.SanitizeString());
                 var jwt = await _authenticationService.Login(input);
-                _logger.LogInformation("Login successful for user: {InputUserName}", input.UserName);
+                _logger.LogInformation("Login successful for user: {InputUserName}", input.UserName.SanitizeString());
                 return Ok(jwt);
             }
             else
             {
-                _logger.LogWarning("Invalid model state for user: {InputUserName}", input.UserName);
+                _logger.LogWarning("Invalid model state for user: {InputUserName}", input.UserName.SanitizeString());
                 var details = new ValidationProblemDetails(ModelState)
                 {
                     Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
@@ -77,7 +78,7 @@ public class AuthenticationController(
         }
         catch (AuthenticationException e)
         {
-            _logger.LogError(e, "AuthenticationException for user: {InputUserName}", input.UserName);
+            _logger.LogError(e, "AuthenticationException for user: {InputUserName}", input.UserName.SanitizeString());
             var exceptionDetails = new ProblemDetails
             {
                 Detail = e.Message,
@@ -88,7 +89,7 @@ public class AuthenticationController(
         }
         catch (InvalidOperationException e)
         {
-            _logger.LogError(e, "InvalidOperationException for user: {InputUserName}", input.UserName);
+            _logger.LogError(e, "InvalidOperationException for user: {InputUserName}", input.UserName.SanitizeString());
             var exceptionDetails = new ProblemDetails
             {
                 Detail = e.Message,
@@ -99,7 +100,7 @@ public class AuthenticationController(
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Exception for user: {InputUserName}", input.UserName);
+            _logger.LogError(e, "Exception for user: {InputUserName}", input.UserName.SanitizeString());
             var exceptionDetails = new ProblemDetails
             {
                 Detail = e.Message,
@@ -150,14 +151,14 @@ public class AuthenticationController(
         {
             if (ModelState.IsValid)
             {
-                _logger.LogInformation("Register attempt for user: {InputUserName}", input.UserName);
+                _logger.LogInformation("Register attempt for user: {InputUserName}", input.UserName.SanitizeString());
                 await _authenticationService.Register(input);
-                _logger.LogInformation("Registration successful for user: {InputUserName}", input.UserName);
+                _logger.LogInformation("Registration successful for user: {InputUserName}", input.UserName.SanitizeString());
                 return Ok();
             }
             else
             {
-                _logger.LogWarning("Invalid model state for user: {InputUserName}", input.UserName);
+                _logger.LogWarning("Invalid model state for user: {InputUserName}", input.UserName.SanitizeString());
                 var details = new ValidationProblemDetails(ModelState)
                 {
                     Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
@@ -168,7 +169,7 @@ public class AuthenticationController(
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Exception during registration for user: {InputUserName}", input.UserName);
+            _logger.LogError(e, "Exception during registration for user: {InputUserName}", input.UserName.SanitizeString());
             var exceptionDetails = new ProblemDetails
             {
                 Detail = e.Message,

@@ -37,5 +37,9 @@ The IsoPrüfi system operates in a distributed container-based architecture host
 ### Explanation
 
 All services are containerized and grouped under a shared container orchestration layer (labelled "Gruppen Container Sammlung"). The system is fronted by a load balancer, ensuring scalability and high availability. MQTT acts as the bridge between the hardware (Arduino sensors) and the backend. Logging and observability are handled via the Loki stack, and external visibility is offered via a user-facing website and optional Grafana panels.
-  
-![IsoPrüfi System Architecture](images/docker_architecture.jpg)
+
+> [!info]- Old Architecture
+>![IsoPrüfi System Architecture](images/docker_architecture.jpg)
+
+![IsoPrüfi System Architecture](images/docker_architecture2.svg)
+

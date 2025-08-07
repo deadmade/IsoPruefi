@@ -17,5 +17,6 @@ var searchData=
   ['createnestedarray_14',['createNestedArray',['../struct_mock_json_document.html#a89a2a652b12aea547d02b6440031912e',1,'MockJsonDocument']]],
   ['createrecoveredfilename_15',['createRecoveredFilename',['../storage_8h.html#a6c1e7509576dad1d0d8c0b8e4b169f1b',1,'storage.h']]],
   ['csv_5fline_5fbuffer_5fsize_16',['CSV_LINE_BUFFER_SIZE',['../storage_8cpp.html#ad779ef8fe37c1e5b281818b8a1a9c4e7',1,'storage.cpp']]],
-  ['current_5ffilename_5fbuffer_5fsize_17',['CURRENT_FILENAME_BUFFER_SIZE',['../storage_8cpp.html#a82c6a24dff83f73f64ebefbce62f03c1',1,'storage.cpp']]]
+  ['current_5ffilename_5fbuffer_5fsize_17',['CURRENT_FILENAME_BUFFER_SIZE',['../storage_8cpp.html#a82c6a24dff83f73f64ebefbce62f03c1',1,'storage.cpp']]],
+  ['currentfilename_18',['currentFilename',['../storage_8cpp.html#a03d41aa3d99b4ac003b16bdfc0155977',1,'storage.cpp']]]
 ];

@@ -208,7 +208,7 @@ Functions</h2></td></tr>
 
 <p>Builds a JSON document from CSV batch data for recovery transmission. </p>
 <p>This function processes stored CSV data files and converts them into JSON format for batch transmission when network connectivity is restored. It handles multiple measurements in a metadata array structure for efficient network utilization during recovery operations.</p>
-<p>**Recovery JSON Structure:** ```json { "timestamp": 1737024000, "sequence": null, "value": [null], "meta": [ {"timestamp": 1737024000, "value": [25.12345], "sequence": 42}, {"timestamp": 1737024060, "value": [25.12567], "sequence": 43} ] } ```</p>
+<p>**Recovery JSON Structure:** ```json { "timestamp": 1737024000, "sequence": null, "value": [null], "meta": { "t": [1737024000, 1737024060, ..], "v": [25.12345, 25.12567, ...], "s": [42, 43, ...] } } ```</p>
 <p>**Processing Logic:**</p><ul>
 <li>Reads each line from the specified CSV file using secure fgets()</li>
 <li>Parses CSV format: timestamp,temperature,sequence using strtok()</li>

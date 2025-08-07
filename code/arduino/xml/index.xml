@@ -148,6 +148,8 @@
     <member refid="storage_8cpp_1a82c6a24dff83f73f64ebefbce62f03c1" kind="variable"><name>CURRENT_FILENAME_BUFFER_SIZE</name></member>
     <member refid="storage_8cpp_1ad779ef8fe37c1e5b281818b8a1a9c4e7" kind="variable"><name>CSV_LINE_BUFFER_SIZE</name></member>
     <member refid="storage_8cpp_1a58a44f18fcb1ee66a6ffec02016568a3" kind="variable"><name>MAX_LINES_PER_CSV_FILE</name></member>
+    <member refid="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977" kind="variable"><name>currentFilename</name></member>
+    <member refid="storage_8cpp_1aec9be327bdba67f54696d8adb23520cd" kind="variable"><name>linesInFile</name></member>
     <member refid="storage_8cpp_1a576d7131c80320b3f5129de67ea60253" kind="function"><name>saveToCsvBatch</name></member>
     <member refid="storage_8cpp_1ab16364c7bad54765d7deca604d19f172" kind="function"><name>buildJson</name></member>
     <member refid="storage_8cpp_1a7e33188776964f5ea7504de34669407d" kind="function"><name>buildRecoveredJsonFromCsv</name></member>

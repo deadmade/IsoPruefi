@@ -198,7 +198,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/core.cpp" line="24" column="19" bodyfile="src/core.cpp" bodystart="24" bodyend="-1"/>
+        <location file="src/core.cpp" line="23" column="19" bodyfile="src/core.cpp" bodystart="23" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" prot="public" static="yes" mutable="no">
         <type>const char *</type>
@@ -495,7 +495,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/core.cpp" line="114" column="6" bodyfile="src/core.cpp" bodystart="114" bodyend="151"/>
+        <location file="src/core.cpp" line="114" column="6" bodyfile="src/core.cpp" bodystart="114" bodyend="153"/>
       </memberdef>
       <memberdef kind="function" id="core_8cpp_1aa5603fdb8113111f87914938533d1ece" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -554,7 +554,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/core.cpp" line="198" column="6" bodyfile="src/core.cpp" bodystart="198" bodyend="265"/>
+        <location file="src/core.cpp" line="200" column="6" bodyfile="src/core.cpp" bodystart="200" bodyend="267"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -583,9 +583,9 @@
 <codeline lineno="19"><highlight class="normal"></highlight></codeline>
 <codeline lineno="21"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/><ref refid="core_8cpp_1a68cab60b6c724cde0fc0009e126a80d5" kindref="member">chipSelect</ref><sp/>=<sp/>4;</highlight></codeline>
 <codeline lineno="22"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="core_8cpp_1ad4bd75fd80e14bbf47bb21fa3524f6c8" kindref="member">sensorIdOne</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Sensor_One&quot;</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="23"><highlight class="normal"></highlight><highlight class="comment">//<sp/>static<sp/>const<sp/>char*<sp/>sensorIdTwo<sp/>=<sp/>&quot;Sensor_Two&quot;;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="core_8cpp_1a6d11f0d69393ced0e86a5ec6ff1d520e" kindref="member">sensorIdInUse</ref><sp/>=<sp/><ref refid="core_8cpp_1ad4bd75fd80e14bbf47bb21fa3524f6c8" kindref="member">sensorIdOne</ref>;<sp/></highlight></codeline>
-<codeline lineno="25"><highlight class="normal"></highlight><highlight class="comment">//const<sp/>char*<sp/>sensorIdInUse<sp/>=<sp/>sensorIdTwo;<sp/>//<sp/>Uncomment<sp/>to<sp/>use<sp/>the<sp/>second</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="core_8cpp_1a6d11f0d69393ced0e86a5ec6ff1d520e" kindref="member">sensorIdInUse</ref><sp/>=<sp/><ref refid="core_8cpp_1ad4bd75fd80e14bbf47bb21fa3524f6c8" kindref="member">sensorIdOne</ref>;<sp/></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="comment">//<sp/>static<sp/>const<sp/>char*<sp/>sensorIdTwo<sp/>=<sp/>&quot;Sensor_Two&quot;;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="comment">//<sp/>static<sp/>const<sp/>char*<sp/>sensorIdInUse<sp/>=<sp/>sensorIdTwo;<sp/>//<sp/>Uncomment<sp/>to<sp/>use<sp/>the<sp/>second</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="26"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;temp&quot;</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="core_8cpp_1a4ed7b4c951621dbec76099594f64d249" kindref="member">topic</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;dhbw/ai/si2023/2/&quot;</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="28"><highlight class="normal"></highlight></codeline>
@@ -669,83 +669,85 @@
 <codeline lineno="145"><highlight class="normal"></highlight></codeline>
 <codeline lineno="146"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Attempt<sp/>to<sp/>send<sp/>any<sp/>pending<sp/>recovery<sp/>data<sp/>from<sp/>previous<sp/>sessions</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="147"><highlight class="normal"><sp/><sp/>DateTime<sp/>now<sp/>=<sp/><ref refid="core_8cpp_1afa042f998806fcdedab1794cebbeaad3" kindref="member">rtc</ref>.now();</highlight></codeline>
-<codeline lineno="148"><highlight class="normal"><sp/><sp/><ref refid="mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e" kindref="member">sendPendingData</ref>(<ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/><ref refid="core_8cpp_1a4ed7b4c951621dbec76099594f64d249" kindref="member">topic</ref>,<sp/><ref refid="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,<sp/><ref refid="core_8cpp_1a6d11f0d69393ced0e86a5ec6ff1d520e" kindref="member">sensorIdInUse</ref>,<sp/>now);</highlight></codeline>
-<codeline lineno="149"><highlight class="normal"></highlight></codeline>
-<codeline lineno="150"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Setup<sp/>complete.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="151"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="152"><highlight class="normal"></highlight></codeline>
-<codeline lineno="153"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="154"><highlight class="normal"></highlight><highlight class="comment">//<sp/>MAIN<sp/>OPERATIONAL<sp/>LOOP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Current<sp/>time:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/>Serial.println(now.timestamp(DateTime::TIMESTAMP_FULL));</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Lost<sp/>Power?<sp/>&quot;</highlight><highlight class="normal">);<sp/>Serial.println(<ref refid="core_8cpp_1afa042f998806fcdedab1794cebbeaad3" kindref="member">rtc</ref>.lostPower()<sp/>?<sp/></highlight><highlight class="stringliteral">&quot;YES&quot;</highlight><highlight class="normal"><sp/>:<sp/></highlight><highlight class="stringliteral">&quot;NO&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Setup<sp/>complete.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="153"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
 <codeline lineno="155"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="156"><highlight class="normal"></highlight></codeline>
-<codeline lineno="198"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="core_8cpp_1aa5603fdb8113111f87914938533d1ece" kindref="member">coreLoop</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="199"><highlight class="normal"><sp/><sp/>DateTime<sp/>now<sp/>=<sp/><ref refid="core_8cpp_1afa042f998806fcdedab1794cebbeaad3" kindref="member">rtc</ref>.now();</highlight></codeline>
-<codeline lineno="200"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>alreadyLoggedThisMinute<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="201"><highlight class="normal"></highlight></codeline>
-<codeline lineno="202"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(now.minute()<sp/>!=<sp/><ref refid="core_8cpp_1abb6f4167f4e2989c5f0af6f10b56d33e" kindref="member">lastLoggedMinute</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1abb6f4167f4e2989c5f0af6f10b56d33e" kindref="member">lastLoggedMinute</ref><sp/>=<sp/>now.minute();</highlight></codeline>
-<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/>alreadyLoggedThisMinute<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="205"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="206"><highlight class="normal"></highlight></codeline>
-<codeline lineno="207"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Step<sp/>1:<sp/>Check<sp/>WiFi<sp/>connection</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="208"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="core_8cpp_1aecaef34a5b4c910faf41faad214950fd" kindref="member">isWifiConnected</ref>())<sp/>{</highlight></codeline>
-<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(millis()<sp/>-<sp/><ref refid="core_8cpp_1aca3b6475cc9f45c2f6c244acb67c64f7" kindref="member">lastReconnectAttempt</ref><sp/>&gt;<sp/><ref refid="core_8cpp_1a6cef1bc6ccf08999da59db3b88095f7d" kindref="member">RECONNECT_INTERVAL_MS</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1aca3b6475cc9f45c2f6c244acb67c64f7" kindref="member">lastReconnectAttempt</ref><sp/>=<sp/>millis();</highlight></codeline>
-<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;WiFi<sp/>not<sp/>connected.<sp/>Trying<sp/>to<sp/>reconnect...&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1af80c34747656b263fece5b92e5786fab" kindref="member">wifiOk</ref><sp/>=<sp/><ref refid="network_8h_1a0757debfda15f5757976bc2c53c955c7" kindref="member">connectWiFi</ref>(<ref refid="core_8cpp_1a9b7578cbf8a2ac9a8a2ccb3fc5431791" kindref="member">WIFI_CONNECT_TIMEOUT_MS</ref>);</highlight></codeline>
-<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="214"><highlight class="normal"></highlight></codeline>
-<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="core_8cpp_1af80c34747656b263fece5b92e5786fab" kindref="member">wifiOk</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;WiFi<sp/>reconnect<sp/>failed.<sp/>Skipping<sp/>loop.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!alreadyLoggedThisMinute)<sp/>{</highlight></codeline>
-<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>c<sp/>=<sp/><ref refid="sensor_8h_1a417a800c5e7a16dba92107bea03bbb2f" kindref="member">readTemperatureCelsius</ref>();</highlight></codeline>
-<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="storage_8h_1a576d7131c80320b3f5129de67ea60253" kindref="member">saveToCsvBatch</ref>(now,<sp/>c,<sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>);</highlight></codeline>
-<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>alreadyLoggedThisMinute<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>++;</highlight></codeline>
-<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>delay(<ref refid="core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b" kindref="member">LOOP_DELAY_MS</ref>);</highlight></codeline>
-<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="226"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="227"><highlight class="normal"></highlight></codeline>
-<codeline lineno="228"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Step<sp/>2:<sp/>Check<sp/>MQTT<sp/>connection</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="229"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="core_8cpp_1a636ad73f43ed4a9e30c58de52e8030d0" kindref="member">isMqttConnected</ref>())<sp/>{</highlight></codeline>
-<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>not<sp/>connected.<sp/>Trying<sp/>to<sp/>reconnect...&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="network_8h_1acc5736b55a4581c4020d736180e28306" kindref="member">connectMQTT</ref>(<ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>))<sp/>{</highlight></codeline>
-<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>reconnect<sp/>failed.<sp/>Skipping<sp/>loop.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!alreadyLoggedThisMinute)<sp/>{</highlight></codeline>
-<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>c<sp/>=<sp/><ref refid="sensor_8h_1a417a800c5e7a16dba92107bea03bbb2f" kindref="member">readTemperatureCelsius</ref>();</highlight></codeline>
-<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="storage_8h_1a576d7131c80320b3f5129de67ea60253" kindref="member">saveToCsvBatch</ref>(now,<sp/>c,<sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>);</highlight></codeline>
-<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>alreadyLoggedThisMinute<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>++;</highlight></codeline>
-<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>delay(<ref refid="core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b" kindref="member">LOOP_DELAY_MS</ref>);</highlight></codeline>
-<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="242"><highlight class="normal"></highlight></codeline>
-<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>reconnected<sp/>successfully.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1a9e1fbed2e9bf75293274a8fde0a5085d" kindref="member">recoveredSent</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">//<sp/>Allow<sp/>recovery<sp/>again</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="245"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="246"><highlight class="normal"></highlight></codeline>
-<codeline lineno="247"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Step<sp/>3:<sp/>After<sp/>successful<sp/>MQTT<sp/>reconnect<sp/>→<sp/>send<sp/>old<sp/>CSVs</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="248"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="core_8cpp_1a9e1fbed2e9bf75293274a8fde0a5085d" kindref="member">recoveredSent</ref><sp/>&amp;&amp;<sp/><ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.connected())<sp/>{</highlight></codeline>
-<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e" kindref="member">sendPendingData</ref>(<ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/><ref refid="core_8cpp_1a4ed7b4c951621dbec76099594f64d249" kindref="member">topic</ref>,<sp/><ref refid="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,<sp/><ref refid="core_8cpp_1a6d11f0d69393ced0e86a5ec6ff1d520e" kindref="member">sensorIdInUse</ref>,<sp/>now))<sp/>{</highlight></codeline>
-<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1a9e1fbed2e9bf75293274a8fde0a5085d" kindref="member">recoveredSent</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="252"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="253"><highlight class="normal"></highlight></codeline>
-<codeline lineno="254"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Step<sp/>4:<sp/>Normal<sp/>measurement<sp/>and<sp/>MQTT<sp/>transmission</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="255"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!alreadyLoggedThisMinute)<sp/>{</highlight></codeline>
-<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>c<sp/>=<sp/><ref refid="sensor_8h_1a417a800c5e7a16dba92107bea03bbb2f" kindref="member">readTemperatureCelsius</ref>();</highlight></codeline>
-<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mqtt_8h_1ab4dfd2aed88177be74263339392bdcc0" kindref="member">sendToMqtt</ref>(<ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/><ref refid="core_8cpp_1a4ed7b4c951621dbec76099594f64d249" kindref="member">topic</ref>,<sp/><ref refid="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,<sp/><ref refid="core_8cpp_1a6d11f0d69393ced0e86a5ec6ff1d520e" kindref="member">sensorIdInUse</ref>,<sp/>c,<sp/>now,<sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>);</highlight></codeline>
-<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/>alreadyLoggedThisMinute<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>++;</highlight></codeline>
-<codeline lineno="260"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="261"><highlight class="normal"></highlight></codeline>
-<codeline lineno="262"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Step<sp/>5:<sp/>MQTT<sp/>loop<sp/>and<sp/>wait<sp/>time</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="263"><highlight class="normal"><sp/><sp/><ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.poll();</highlight></codeline>
-<codeline lineno="264"><highlight class="normal"><sp/><sp/>delay(<ref refid="core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b" kindref="member">LOOP_DELAY_MS</ref>);</highlight></codeline>
-<codeline lineno="265"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight><highlight class="comment">//<sp/>MAIN<sp/>OPERATIONAL<sp/>LOOP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="core_8cpp_1aa5603fdb8113111f87914938533d1ece" kindref="member">coreLoop</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/>DateTime<sp/>now<sp/>=<sp/><ref refid="core_8cpp_1afa042f998806fcdedab1794cebbeaad3" kindref="member">rtc</ref>.now();</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>alreadyLoggedThisMinute<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(now.minute()<sp/>!=<sp/><ref refid="core_8cpp_1abb6f4167f4e2989c5f0af6f10b56d33e" kindref="member">lastLoggedMinute</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1abb6f4167f4e2989c5f0af6f10b56d33e" kindref="member">lastLoggedMinute</ref><sp/>=<sp/>now.minute();</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/>alreadyLoggedThisMinute<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Step<sp/>1:<sp/>Check<sp/>WiFi<sp/>connection</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="core_8cpp_1aecaef34a5b4c910faf41faad214950fd" kindref="member">isWifiConnected</ref>())<sp/>{</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(millis()<sp/>-<sp/><ref refid="core_8cpp_1aca3b6475cc9f45c2f6c244acb67c64f7" kindref="member">lastReconnectAttempt</ref><sp/>&gt;<sp/><ref refid="core_8cpp_1a6cef1bc6ccf08999da59db3b88095f7d" kindref="member">RECONNECT_INTERVAL_MS</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1aca3b6475cc9f45c2f6c244acb67c64f7" kindref="member">lastReconnectAttempt</ref><sp/>=<sp/>millis();</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;WiFi<sp/>not<sp/>connected.<sp/>Trying<sp/>to<sp/>reconnect...&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1af80c34747656b263fece5b92e5786fab" kindref="member">wifiOk</ref><sp/>=<sp/><ref refid="network_8h_1a0757debfda15f5757976bc2c53c955c7" kindref="member">connectWiFi</ref>(<ref refid="core_8cpp_1a9b7578cbf8a2ac9a8a2ccb3fc5431791" kindref="member">WIFI_CONNECT_TIMEOUT_MS</ref>);</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="core_8cpp_1af80c34747656b263fece5b92e5786fab" kindref="member">wifiOk</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;WiFi<sp/>reconnect<sp/>failed.<sp/>Skipping<sp/>loop.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!alreadyLoggedThisMinute)<sp/>{</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>c<sp/>=<sp/><ref refid="sensor_8h_1a417a800c5e7a16dba92107bea03bbb2f" kindref="member">readTemperatureCelsius</ref>();</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="storage_8h_1a576d7131c80320b3f5129de67ea60253" kindref="member">saveToCsvBatch</ref>(now,<sp/>c,<sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>);</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>alreadyLoggedThisMinute<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>++;</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>delay(<ref refid="core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b" kindref="member">LOOP_DELAY_MS</ref>);</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"></highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Step<sp/>2:<sp/>Check<sp/>MQTT<sp/>connection</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="core_8cpp_1a636ad73f43ed4a9e30c58de52e8030d0" kindref="member">isMqttConnected</ref>())<sp/>{</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>not<sp/>connected.<sp/>Trying<sp/>to<sp/>reconnect...&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="network_8h_1acc5736b55a4581c4020d736180e28306" kindref="member">connectMQTT</ref>(<ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>))<sp/>{</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>reconnect<sp/>failed.<sp/>Skipping<sp/>loop.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!alreadyLoggedThisMinute)<sp/>{</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>c<sp/>=<sp/><ref refid="sensor_8h_1a417a800c5e7a16dba92107bea03bbb2f" kindref="member">readTemperatureCelsius</ref>();</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="storage_8h_1a576d7131c80320b3f5129de67ea60253" kindref="member">saveToCsvBatch</ref>(now,<sp/>c,<sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>);</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>alreadyLoggedThisMinute<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>++;</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>delay(<ref refid="core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b" kindref="member">LOOP_DELAY_MS</ref>);</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>reconnected<sp/>successfully.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1a9e1fbed2e9bf75293274a8fde0a5085d" kindref="member">recoveredSent</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">//<sp/>Allow<sp/>recovery<sp/>again</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"></highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Step<sp/>3:<sp/>After<sp/>successful<sp/>MQTT<sp/>reconnect<sp/>→<sp/>send<sp/>old<sp/>CSVs</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="core_8cpp_1a9e1fbed2e9bf75293274a8fde0a5085d" kindref="member">recoveredSent</ref><sp/>&amp;&amp;<sp/><ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.connected())<sp/>{</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e" kindref="member">sendPendingData</ref>(<ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/><ref refid="core_8cpp_1a4ed7b4c951621dbec76099594f64d249" kindref="member">topic</ref>,<sp/><ref refid="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,<sp/><ref refid="core_8cpp_1a6d11f0d69393ced0e86a5ec6ff1d520e" kindref="member">sensorIdInUse</ref>,<sp/>now))<sp/>{</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1a9e1fbed2e9bf75293274a8fde0a5085d" kindref="member">recoveredSent</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"></highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Step<sp/>4:<sp/>Normal<sp/>measurement<sp/>and<sp/>MQTT<sp/>transmission</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!alreadyLoggedThisMinute)<sp/>{</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>c<sp/>=<sp/><ref refid="sensor_8h_1a417a800c5e7a16dba92107bea03bbb2f" kindref="member">readTemperatureCelsius</ref>();</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mqtt_8h_1ab4dfd2aed88177be74263339392bdcc0" kindref="member">sendToMqtt</ref>(<ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>,<sp/><ref refid="core_8cpp_1a4ed7b4c951621dbec76099594f64d249" kindref="member">topic</ref>,<sp/><ref refid="core_8cpp_1abf39fa4821630d1a42cee86df5b43f39" kindref="member">sensorType</ref>,<sp/><ref refid="core_8cpp_1a6d11f0d69393ced0e86a5ec6ff1d520e" kindref="member">sensorIdInUse</ref>,<sp/>c,<sp/>now,<sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>);</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/>alreadyLoggedThisMinute<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="core_8cpp_1ad43c3812e6d13e0518d9f8b8f463ffcf" kindref="member">count</ref>++;</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"></highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Step<sp/>5:<sp/>MQTT<sp/>loop<sp/>and<sp/>wait<sp/>time</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><ref refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kindref="member">mqttClient</ref>.poll();</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/>delay(<ref refid="core_8cpp_1aa9b3766a24a11a11d57c6ba9114d992b" kindref="member">LOOP_DELAY_MS</ref>);</highlight></codeline>
+<codeline lineno="267"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="src/core.cpp"/>
   </compounddef>

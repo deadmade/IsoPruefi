@@ -1755,7 +1755,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-sensoridinuse">Variable sensorIdInUse</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 24)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 23)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">sensorIdOne</span><span class="p">](</span><span class="n">core_8cpp</span><span class="p">.</span><span class="n">md</span><span class="err">#</span><span class="n">core_8cpp_1ad4bd75fd80e14bbf47bb21fa3524f6c8</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Type</strong>: const char *</p>
@@ -2036,9 +2036,9 @@ This function will halt program execution (infinite loop) if any critical compon
 
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">chipSelect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdOne</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sensor_One&quot;</span><span class="p">;</span>
-<span class="c1">// static const char* sensorIdTwo = &quot;Sensor_Two&quot;;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensorIdOne</span><span class="p">;</span><span class="w"> </span>
-<span class="c1">//const char* sensorIdInUse = sensorIdTwo; // Uncomment to use the second</span>
+<span class="c1">// static const char* sensorIdTwo = &quot;Sensor_Two&quot;;</span>
+<span class="c1">// static const char* sensorIdInUse = sensorIdTwo; // Uncomment to use the second</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;temp&quot;</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dhbw/ai/si2023/2/&quot;</span><span class="p">;</span>
 
@@ -2122,7 +2122,9 @@ This function will halt program execution (infinite loop) if any critical compon
 
 <span class="w">  </span><span class="c1">// Attempt to send any pending recovery data from previous sessions</span>
 <span class="w">  </span><span class="n">DateTime</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtc</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
-<span class="w">  </span><span class="n">sendPendingData</span><span class="p">(</span><span class="n">mqttClient</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">sensorType</span><span class="p">,</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Current time: &quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">now</span><span class="p">.</span><span class="n">timestamp</span><span class="p">(</span><span class="n">DateTime</span><span class="o">::</span><span class="n">TIMESTAMP_FULL</span><span class="p">));</span>
+<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Lost Power? &quot;</span><span class="p">);</span><span class="w"> </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">rtc</span><span class="p">.</span><span class="n">lostPower</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;YES&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;NO&quot;</span><span class="p">);</span>
 
 <span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Setup complete.&quot;</span><span class="p">);</span>
 <span class="p">}</span>
@@ -2220,7 +2222,7 @@ This function will halt program execution (infinite loop) if any critical compon
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 7, 2025 11:02:36 UTC">August 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 7, 2025 15:00:30 UTC">August 7, 2025</span>
   </span>
 
     

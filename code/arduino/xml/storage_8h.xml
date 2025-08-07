@@ -161,7 +161,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="7" column="6" bodyfile="src/storage.cpp" bodystart="68" bodyend="98" declfile="include/storage.h" declline="7" declcolumn="6"/>
+        <location file="include/storage.h" line="7" column="6" bodyfile="src/storage.cpp" bodystart="71" bodyend="98" declfile="include/storage.h" declline="7" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="storage_8h_1a712233a12d2ef3c7d797e0a06149ca73" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -216,7 +216,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="8" column="6" bodyfile="src/storage.cpp" bodystart="292" bodyend="302" declfile="include/storage.h" declline="8" declcolumn="6"/>
+        <location file="include/storage.h" line="8" column="6" bodyfile="src/storage.cpp" bodystart="295" bodyend="310" declfile="include/storage.h" declline="8" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="storage_8h_1ab16364c7bad54765d7deca604d19f172" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -325,7 +325,7 @@
         </briefdescription>
         <detaileddescription>
 <para>This function processes stored CSV data files and converts them into JSON format for batch transmission when network connectivity is restored. It handles multiple measurements in a metadata array structure for efficient network utilization during recovery operations.</para>
-<para>**Recovery JSON Structure:** ```json { &quot;timestamp&quot;: 1737024000, &quot;sequence&quot;: null, &quot;value&quot;: [null], &quot;meta&quot;: [ {&quot;timestamp&quot;: 1737024000, &quot;value&quot;: [25.12345], &quot;sequence&quot;: 42}, {&quot;timestamp&quot;: 1737024060, &quot;value&quot;: [25.12567], &quot;sequence&quot;: 43} ] } ```</para>
+<para>**Recovery JSON Structure:** ```json { &quot;timestamp&quot;: 1737024000, &quot;sequence&quot;: null, &quot;value&quot;: [null], &quot;meta&quot;: { &quot;t&quot;: [1737024000, 1737024060, ..], &quot;v&quot;: [25.12345, 25.12567, ...], &quot;s&quot;: [42, 43, ...] } } ```</para>
 <para>**Processing Logic:**<itemizedlist>
 <listitem><para>Reads each line from the specified CSV file using secure fgets()</para>
 </listitem><listitem><para>Parses CSV format: timestamp,temperature,sequence using strtok()</para>
@@ -377,7 +377,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="11" column="6" bodyfile="src/storage.cpp" bodystart="192" bodyend="257" declfile="include/storage.h" declline="11" declcolumn="6"/>
+        <location file="include/storage.h" line="11" column="6" bodyfile="src/storage.cpp" bodystart="194" bodyend="260" declfile="include/storage.h" declline="11" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>const char *</type>

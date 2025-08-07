@@ -1451,6 +1451,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#variable-currentfilename" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable currentFilename
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-linesinfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable linesInFile
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1663,10 +1681,27 @@ click 1 "storage_8cpp.md#storage_8cpp"
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
 <p><strong>Definition</strong>: <code>src/storage.cpp</code> (line 31)</p>
-<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MAX_LINES_PER_CSV_FILE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MAX_LINES_PER_CSV_FILE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 </code></pre></div>
 <p>Maximum number of sensor readings per CSV batch file.</p>
 <p><strong>Type</strong>: const int</p>
+<p><a id="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977"></a></p>
+<h3 id="variable-currentfilename">Variable currentFilename</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/storage.cpp</code> (line 32)</p>
+<div class="highlight"><pre><span></span><code><span class="kt">char</span><span class="w"> </span><span class="n">currentFilename</span><span class="p">[</span><span class="n">CURRENT_FILENAME_BUFFER_SIZE</span><span class="p">][</span><span class="n">CURRENT_FILENAME_BUFFER_SIZE</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+</code></pre></div>
+<p><strong>Type</strong>: char</p>
+<p><a id="storage_8cpp_1aec9be327bdba67f54696d8adb23520cd"></a></p>
+<h3 id="variable-linesinfile">Variable linesInFile</h3>
+<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" />
+<img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
+<p><strong>Definition</strong>: <code>src/storage.cpp</code> (line 34)</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">linesInFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+</code></pre></div>
+<p>Static variable to track the number of lines in the current CSV file.</p>
+<p><strong>Type</strong>: int</p>
 <h2 id="functions">Functions</h2>
 <p><a id="storage_8cpp_1a576d7131c80320b3f5129de67ea60253"></a></p>
 <h3 id="function-savetocsvbatch">Function saveToCsvBatch</h3>
@@ -1776,7 +1811,7 @@ click 1 "storage_8cpp.md#storage_8cpp"
 </code></pre></div>
 <p>Builds a JSON document from CSV batch data for recovery transmission.</p>
 <p>This function processes stored CSV data files and converts them into JSON format for batch transmission when network connectivity is restored. It handles multiple measurements in a metadata array structure for efficient network utilization during recovery operations.</p>
-<p><strong>Recovery JSON Structure:</strong> <code>json { "timestamp": 1737024000, "sequence": null, "value": [null], "meta": [ {"timestamp": 1737024000, "value": [25.12345], "sequence": 42}, {"timestamp": 1737024060, "value": [25.12567], "sequence": 43} ] }</code></p>
+<p><strong>Recovery JSON Structure:</strong> <code>json { "timestamp": 1737024000, "sequence": null, "value": [null], "meta": { "t": [1737024000, 1737024060, ..], "v": [25.12345, 25.12567, ...], "s": [42, 43, ...] } }</code></p>
 <p><strong>Processing Logic:</strong>
 * Reads each line from the specified CSV file using secure fgets()</p>
 <ul>
@@ -1889,7 +1924,9 @@ click 1 "storage_8cpp.md#storage_8cpp"
 
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">CURRENT_FILENAME_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">CSV_LINE_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">;</span>
-<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MAX_LINES_PER_CSV_FILE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MAX_LINES_PER_CSV_FILE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">currentFilename</span><span class="p">[</span><span class="n">CURRENT_FILENAME_BUFFER_SIZE</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">linesInFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 
 <span class="c1">// =============================================================================</span>
 <span class="c1">// CSV BATCH STORAGE FUNCTIONS</span>
@@ -1903,10 +1940,7 @@ click 1 "storage_8cpp.md#storage_8cpp"
 <span class="w">    </span><span class="n">sd</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">currentFilename</span><span class="p">[</span><span class="n">CURRENT_FILENAME_BUFFER_SIZE</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span><span class="w"> </span>
-<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">linesInFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">  </span><span class="c1">// Create new file if needed (first run or file is full)</span>
+<span class="w">  </span><span class="c1">// Create new file if needed</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">currentFilename</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">linesInFile</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">MAX_LINES_PER_CSV_FILE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">createFilename</span><span class="p">(</span><span class="n">currentFilename</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">currentFilename</span><span class="p">),</span><span class="w"> </span><span class="n">now</span><span class="p">);</span>
 <span class="w">    </span><span class="n">linesInFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
@@ -1951,8 +1985,12 @@ click 1 "storage_8cpp.md#storage_8cpp"
 <span class="w">  </span><span class="n">doc</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
 <span class="w">  </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;timestamp&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">unixtime</span><span class="p">();</span>
 <span class="w">  </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;sequence&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
-<span class="w">  </span><span class="n">doc</span><span class="p">.</span><span class="n">createNestedArray</span><span class="p">(</span><span class="s">&quot;value&quot;</span><span class="p">).</span><span class="n">add</span><span class="p">(</span><span class="k">nullptr</span><span class="p">);</span>
-<span class="w">  </span><span class="n">JsonArray</span><span class="w"> </span><span class="n">meta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">createNestedArray</span><span class="p">(</span><span class="s">&quot;meta&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">doc</span><span class="p">.</span><span class="n">createNestedArray</span><span class="p">(</span><span class="s">&quot;value&quot;</span><span class="p">).</span><span class="n">add</span><span class="p">(</span><span class="k">nullptr</span><span class="p">);</span><span class="w">  </span><span class="c1">// Dummy value for compatibility</span>
+
+<span class="w">  </span><span class="n">JsonObject</span><span class="w"> </span><span class="n">meta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">createNestedObject</span><span class="p">(</span><span class="s">&quot;meta&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">JsonArray</span><span class="w"> </span><span class="n">tArr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">createNestedArray</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// timestamp</span>
+<span class="w">  </span><span class="n">JsonArray</span><span class="w"> </span><span class="n">vArr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">createNestedArray</span><span class="p">(</span><span class="s">&quot;v&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// value</span>
+<span class="w">  </span><span class="n">JsonArray</span><span class="w"> </span><span class="n">sArr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">createNestedArray</span><span class="p">(</span><span class="s">&quot;s&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// sequence</span>
 
 <span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">line</span><span class="p">[</span><span class="n">CSV_LINE_BUFFER_SIZE</span><span class="p">];</span>
 <span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">added</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
@@ -1987,12 +2025,9 @@ click 1 "storage_8cpp.md#storage_8cpp"
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atoi</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">// Create individual measurement entry in metadata</span>
-<span class="w">    </span><span class="n">JsonObject</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">createNestedObject</span><span class="p">();</span>
-<span class="w">    </span><span class="n">entry</span><span class="p">[</span><span class="s">&quot;timestamp&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ts</span><span class="p">;</span>
-<span class="w">    </span><span class="n">JsonArray</span><span class="w"> </span><span class="n">valueArr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">.</span><span class="n">createNestedArray</span><span class="p">(</span><span class="s">&quot;value&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">valueArr</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
-<span class="w">    </span><span class="n">entry</span><span class="p">[</span><span class="s">&quot;sequence&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seq</span><span class="p">;</span>
+<span class="w">    </span><span class="n">tArr</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">ts</span><span class="p">);</span>
+<span class="w">    </span><span class="n">vArr</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+<span class="w">    </span><span class="n">sArr</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">seq</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">added</span><span class="o">++</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
@@ -2016,6 +2051,11 @@ click 1 "storage_8cpp.md#storage_8cpp"
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sd</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Deleted CSV file: &quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">filepath</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="w"> </span><span class="n">currentFilename</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">currentFilename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">linesInFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Reset currentFilename after deletion.&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Failed to delete CSV file: &quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">filepath</span><span class="p">);</span>
@@ -2043,7 +2083,7 @@ click 1 "storage_8cpp.md#storage_8cpp"
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 7, 2025 11:02:36 UTC">August 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 7, 2025 15:00:30 UTC">August 7, 2025</span>
   </span>
 
     

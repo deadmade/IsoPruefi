@@ -96,7 +96,7 @@
 <codeline lineno="4"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="main_8cpp_1a4fc01d736fe50cf5b977f755b675f11d" kindref="member">setup</ref>()<sp/>{</highlight></codeline>
 <codeline lineno="5"><highlight class="normal"><sp/><sp/>Serial.begin(9600);</highlight></codeline>
 <codeline lineno="6"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>startTime<sp/>=<sp/>millis();</highlight></codeline>
-<codeline lineno="7"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(!Serial<sp/>&amp;&amp;<sp/>(millis()<sp/>-<sp/>startTime<sp/>&lt;<sp/>1000));</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(!Serial<sp/>&amp;&amp;<sp/>(millis()<sp/>-<sp/>startTime<sp/>&lt;<sp/>3000));</highlight></codeline>
 <codeline lineno="8"><highlight class="normal"><sp/><sp/><ref refid="core_8h_1a9fb1675443ce002d3928dd3edf3b2a72" kindref="member">coreSetup</ref>();</highlight></codeline>
 <codeline lineno="9"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="10"><highlight class="normal"></highlight></codeline>

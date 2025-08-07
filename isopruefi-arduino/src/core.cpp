@@ -149,8 +149,6 @@ void coreSetup() {
   Serial.println(now.timestamp(DateTime::TIMESTAMP_FULL));
   Serial.print("Lost Power? "); Serial.println(rtc.lostPower() ? "YES" : "NO");
 
-  // sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
-
   Serial.println("Setup complete.");
 }
 

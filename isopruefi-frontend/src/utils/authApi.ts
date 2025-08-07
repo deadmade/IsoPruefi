@@ -1,8 +1,8 @@
 const API_VERSION = "v1";
-const BASE_URL = "https://localhost:5160";
+const BASE_URL = "http://localhost:5160";
 
 export async function login(username: string, password: string) {
-    const response = await fetch(`${BASE_URL}/${API_VERSION}/Authentication/Login`, {
+    const response = await fetch(`${BASE_URL}/${API_VERSION}/Authentication/Login`, { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userName: username, password })
@@ -16,10 +16,13 @@ export async function login(username: string, password: string) {
     return response.json();
 }
 
-export async function register(username: string, password: string) {
-    const response = await fetch(`${BASE_URL}/${API_VERSION}/Authentication/Register`, {
+export async function register(username: string, password: string, token: string) {
+    const response = await fetch(`/v1/Authentication/Register`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ userName: username, password })
     });
 

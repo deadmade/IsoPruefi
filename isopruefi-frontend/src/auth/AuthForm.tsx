@@ -41,23 +41,31 @@ export default function AuthForm({ mode, onSuccess }: AuthFormProps) {
             <h2>{mode === "signin" ? "Sign In" : "Sign Up"}</h2>
 
             <label>
-                Username:
-                <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
+                <div>
+                    Username:
+                    <p>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </p>
+                </div>
             </label>
 
             <label>
-                Password:
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
+                <div>
+                    Password:  
+                    <p>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </p>
+                </div>
             </label>
 
             <button type="submit" style={{ marginTop: 12 }}>

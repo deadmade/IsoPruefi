@@ -36,48 +36,4 @@ public class SettingsRepo : ISettingsRepo
         _applicationDbContext.TopicSettings.Add(topicSetting);
         return await _applicationDbContext.SaveChangesAsync();
     }
-
-    /// <inheritdoc />
-    public async Task InsertNewPostalCode(CoordinateMapping postalcodeLocation)
-    {
-        _applicationDbContext.CoordinateMappings.Add(postalcodeLocation);
-        await _applicationDbContext.SaveChangesAsync();
-    }
-
-    /// <inheritdoc />
-    public async Task<bool> ExistsPostalCode(int postalcode)
-    {
-        var entry = await _applicationDbContext.CoordinateMappings.AnyAsync(c => c.PostalCode == postalcode);
-        return entry;
-    }
-
-    /// <inheritdoc />
-    public async Task UpdateTime(int postalCode, DateTime newTime)
-    {
-        var entry = await _applicationDbContext.CoordinateMappings.FirstAsync(c => c.PostalCode == postalCode);
-        entry.LastUsed = newTime;
-
-        await _applicationDbContext.SaveChangesAsync();
-    }
-
-    /// <inheritdoc />
-    public async Task<CoordinateMapping?> GetLocation()
-    {
-        var result = await _applicationDbContext.CoordinateMappings
-            .OrderByDescending(c => c.LastUsed)
-            .FirstOrDefaultAsync();
-        if (result != null) return result;
-
-        return null;
-    }
-
-    /// <inheritdoc />
-    public async Task<List<Tuple<int, string>>> GetAllLocations()
-    {
-        var result = await _applicationDbContext.CoordinateMappings
-            .Select(c => new Tuple<int, string>(c.PostalCode, c.Location))
-            .ToListAsync();
-
-        return result;
-    }
 }

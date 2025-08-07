@@ -1,8 +1,8 @@
 using Database.EntityFramework.Models;
-using Database.Repository.SettingsRepo;
 using System.Globalization;
 using System.Net;
 using System.Text.Json;
+using Database.Repository.CoordinateRepo;
 
 namespace Rest_API.Services.Temp;
 
@@ -13,7 +13,7 @@ public class TempService : ITempService
 {
     private readonly ILogger<TempService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ISettingsRepo _settingsRepo;
+    private readonly ICoordinateRepo _coordinateRepo;
 
     private readonly string _geocodingApi;
 
@@ -22,14 +22,14 @@ public class TempService : ITempService
     /// </summary>
     /// <param name="logger">The logger instance for logging actions and errors.</param>
     /// <param name="httpClientFactory">The httpClient for API calls.</param>
-    /// <param name="settingsRepo">The settingsRepo instance for connection with the postgres database.</param>
+    /// <param name="coordinateRepo">The settingsRepo instance for connection with the postgres database.</param>
     /// <param name="configuration"></param>
     public TempService(ILogger<TempService> logger, IHttpClientFactory httpClientFactory,
-        ISettingsRepo settingsRepo)
+        ICoordinateRepo coordinateRepo)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
-        _settingsRepo = settingsRepo;
+        _coordinateRepo = coordinateRepo;
 
         //_geocodingApi = _configuration["Weather:NominatimApiUrl"] ?? throw new InvalidOperationException(
         //"Weather:NominatimApiUrl configuration is missing");
@@ -41,7 +41,7 @@ public class TempService : ITempService
     public async Task GetCoordinates(int postalCode)
     {
         // Checking if there is an entry for that location in the database.
-        var existingEntry = await _settingsRepo.ExistsPostalCode(postalCode);
+        var existingEntry = await _coordinateRepo.ExistsPostalCode(postalCode);
         if (existingEntry)
         {
             _logger.LogInformation("There is an existing entry for that postalcode");
@@ -87,7 +87,7 @@ public class TempService : ITempService
                             // Saving the new location in the database.
                             try
                             {
-                                await _settingsRepo.InsertNewPostalCode(postalCodeLocation);
+                                await _coordinateRepo.InsertNewPostalCode(postalCodeLocation);
                             }
                             catch (Exception e)
                             {
@@ -145,7 +145,7 @@ public class TempService : ITempService
     {
         try
         {
-            var allPostalcodes = await _settingsRepo.GetAllLocations();
+            var allPostalcodes = await _coordinateRepo.GetAllLocations();
             return allPostalcodes;
         }
         catch (Exception e)

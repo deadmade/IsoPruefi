@@ -1,6 +1,6 @@
 using System.Text.Json;
+using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
-using Database.Repository.SettingsRepo;
 
 namespace Get_weatherData_worker;
 
@@ -39,14 +39,14 @@ public class Worker : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             using var scope = _serviceProvider.CreateScope();
-            var settingsRepo = scope.ServiceProvider.GetRequiredService<ISettingsRepo>();
+            var coordinateRepo = scope.ServiceProvider.GetRequiredService<ICoordinateRepo>();
             var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
             var weatherData = new WeatherData();
 
             // Getting the coordinates from the database.
             try
             {
-                var location = await settingsRepo.GetLocation();
+                var location = await coordinateRepo.GetLocation();
                 lat = location.Latitude;
                 lon = location.Longitude;
                 locationName = location.Location;

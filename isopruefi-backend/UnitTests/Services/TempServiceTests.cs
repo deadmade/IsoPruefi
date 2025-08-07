@@ -1,6 +1,6 @@
 using System.Net;
 using Database.EntityFramework.Models;
-using Database.Repository.SettingsRepo;
+using Database.Repository.CoordinateRepo;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -16,7 +16,7 @@ public class TempServiceTests
 {
     private Mock<ILogger<TempService>> _mockLogger;
     private Mock<IHttpClientFactory> _mockHttpClientFactory;
-    private Mock<ISettingsRepo> _mockSettingsRepo;
+    private Mock<ICoordinateRepo> _mockCoordinateRepo;
     private TempService _tempService;
 
     /// <summary>
@@ -27,12 +27,12 @@ public class TempServiceTests
     {
         _mockLogger = new Mock<ILogger<TempService>>();
         _mockHttpClientFactory = new Mock<IHttpClientFactory>();
-        _mockSettingsRepo = new Mock<ISettingsRepo>();
+        _mockCoordinateRepo = new Mock<ICoordinateRepo>();
 
         _tempService = new TempService(
             _mockLogger.Object,
             _mockHttpClientFactory.Object,
-            _mockSettingsRepo.Object
+            _mockCoordinateRepo.Object
         );
     }
 
@@ -47,7 +47,7 @@ public class TempServiceTests
     {
         // Arrange
         var postalCode = 12345;
-        _mockSettingsRepo.Setup(x => x.ExistsPostalCode(postalCode)).ReturnsAsync(false);
+        _mockCoordinateRepo.Setup(x => x.ExistsPostalCode(postalCode)).ReturnsAsync(false);
 
         // Create a mock HttpMessageHandler to mock HttpMessage.
         var handlerMock = new Mock<HttpMessageHandler>();
@@ -73,7 +73,7 @@ public class TempServiceTests
         // Act & Assert
         await _tempService.GetCoordinates(postalCode);
 
-        _mockSettingsRepo.Verify<Task>(r => r.InsertNewPostalCode(It.Is<CoordinateMapping>(c =>
+        _mockCoordinateRepo.Verify<Task>(r => r.InsertNewPostalCode(It.Is<CoordinateMapping>(c =>
             c.PostalCode == postalCode &&
             c.Latitude == 52.5 &&
             c.Longitude == 13.4 &&
@@ -89,13 +89,13 @@ public class TempServiceTests
     {
         // Arrange
         var postalCode = 12345;
-        _mockSettingsRepo.Setup(x => x.ExistsPostalCode(postalCode)).ReturnsAsync(true);
+        _mockCoordinateRepo.Setup(x => x.ExistsPostalCode(postalCode)).ReturnsAsync(true);
 
         // Act & Assert
         await _tempService.GetCoordinates(postalCode);
 
         _mockHttpClientFactory.Verify(f => f.CreateClient(It.IsAny<string>()), Times.Never);
-        _mockSettingsRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
+        _mockCoordinateRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
         _mockLogger.Verify(x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
@@ -113,7 +113,7 @@ public class TempServiceTests
     {
         // Arrange
         var postalCode = 12345;
-        _mockSettingsRepo.Setup(x => x.ExistsPostalCode(postalCode)).ReturnsAsync(false);
+        _mockCoordinateRepo.Setup(x => x.ExistsPostalCode(postalCode)).ReturnsAsync(false);
 
         // Create a mock HttpMessageHandler to mock HttpMessage.
         var handlerMock = new Mock<HttpMessageHandler>();
@@ -138,7 +138,7 @@ public class TempServiceTests
         // Act & Assert
         await _tempService.GetCoordinates(postalCode);
 
-        _mockSettingsRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
+        _mockCoordinateRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
         _mockLogger.Verify(x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
@@ -157,7 +157,7 @@ public class TempServiceTests
     {
         // Arrange
         var postalCode = 12345;
-        _mockSettingsRepo.Setup(x => x.ExistsPostalCode(postalCode)).ReturnsAsync(false);
+        _mockCoordinateRepo.Setup(x => x.ExistsPostalCode(postalCode)).ReturnsAsync(false);
 
         // Create a mock HttpMessageHandler to mock HttpMessage.
         var handlerMock = new Mock<HttpMessageHandler>();
@@ -181,7 +181,7 @@ public class TempServiceTests
         // Act & Assert
         await _tempService.GetCoordinates(postalCode);
 
-        _mockSettingsRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
+        _mockCoordinateRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
         _mockLogger.Verify(x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),

@@ -1,5 +1,6 @@
 using System.Net;
 using Database.EntityFramework;
+using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using Get_weatherData_worker.Helper;
@@ -19,6 +20,7 @@ public class Program
 
         builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
+        builder.Services.AddScoped<ICoordinateRepo, CoordinateRepo>();
 
         // Register Database with proper DbContext
         builder.Services.AddDbContext<ApplicationDbContext>(options =>

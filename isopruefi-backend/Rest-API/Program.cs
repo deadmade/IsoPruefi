@@ -3,6 +3,7 @@ using System.Text;
 using Asp.Versioning;
 using Database.EntityFramework;
 using Database.EntityFramework.Models;
+using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using Database.Repository.TokenRepo;
@@ -125,6 +126,7 @@ public class Program
         builder.Services.AddScoped<ITokenRepo, TokenRepo>();
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
         builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
+        builder.Services.AddScoped<ICoordinateRepo, CoordinateRepo>();
 
         builder.ConfigureHealthChecks();
 

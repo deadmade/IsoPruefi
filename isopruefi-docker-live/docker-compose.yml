@@ -3,9 +3,6 @@ name: isopruefi-live
 networks:
   isopruefi-network:
     driver: bridge
-  database-network:
-  isopruefi-custom:
-  loki:
 
 services:
   traefik:
@@ -21,11 +18,11 @@ services:
 
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.aicon.dhbw-heidenheim.de`)"
       - "traefik.http.services.dashboard.loadbalancer.server.port=8432"
 
-      - "traefik.http.routers.dashboard.tls.domains[0].main=*.localhost.de"
-      - "traefik.http.routers.dashboard.tls.domains[0].sans=*.localhost.de"
+      - "traefik.http.routers.dashboard.tls.domains[0].main=*.aicon.dhbw-heidenheim.de"
+      - "traefik.http.routers.dashboard.tls.domains[0].sans=*.aicon.dhbw-heidenheim.de"
 
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme = https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https"
@@ -36,9 +33,6 @@ services:
       - "./traefik/certs/:/var/traefik/certs/:rw"
     networks:
       - isopruefi-network
-      - database-network
-      - loki
-      - isopruefi-custom
 
   influxdb3:
     image: influxdb:3.2.1-core
@@ -63,28 +57,7 @@ services:
         target: /var/lib/influxdb3/plugins
       # - ./influx/bootstrap.sh:/docker-entrypoint-initdb.d/bootstrap.sh:ro
     networks:
-      - database-network
-
-  influxdb-explorer:
-    image: influxdata/influxdb3-ui:1.0.3
-    container_name: isopruefi-influx-explorer
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.explorer.rule=Host(`explorer.localhost`)"
-      - "traefik.http.routers.explorer.entrypoints=websecure"
-      - "traefik.http.routers.explorer.tls=true"
-      - "traefik.http.services.explorer.loadbalancer.server.port=80"
-    command:
-      - "--mode=admin"
-    volumes:
-      - "./influx/explorer/db:/db:rw"
-      - "./influx/explorer/config:/app-root/config:ro"
-    networks:
-      - isopruefi-custom
-    depends_on:
-      - influxdb3
-      - traefik
+      - isopruefi-network
 
   postgres:
     image: postgres:17.5
@@ -92,14 +65,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./postgres:/var/lib/postgresql/data
-    labels:
-         - "traefik.enable=true"
-         - "traefik.http.routers.postgres.rule=Host(`postgres.localhost`)"
-         - "traefik.http.routers.postgres.entrypoints=websecure"
-         - "traefik.http.routers.postgres.tls=true"
-         - "traefik.http.services.postgres.loadbalancer.server.port=5432"
     networks:
-      - database-network
+      - isopruefi-network
     env_file:
       - ./secrets.env
 
@@ -111,7 +78,7 @@ services:
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
     networks:
-      - loki
+      - isopruefi-network
 
   prometheus:
     image: prom/prometheus:v3.4.2
@@ -119,6 +86,12 @@ services:
     command:
       - --web.enable-remote-write-receiver
       - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./loki/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./loki/alerts.yml:/etc/prometheus/alerts.yml:ro
+    networks:
+      - isopruefi-network
+
   alloy:
     image: grafana/alloy:v1.9.2
     container_name: isopruefi-alloy
@@ -127,7 +100,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
     networks:
-      - loki
+      - isopruefi-network
     depends_on:
       - loki
       - prometheus
@@ -137,7 +110,7 @@ services:
     container_name: isopruefi-grafana
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana.localhost`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.aicon.dhbw-heidenheim.de`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls=true"
       - traefik.http.services.grafana.loadbalancer.server.port=3000
@@ -148,7 +121,7 @@ services:
     env_file:
       - ./secrets.env
     networks:
-      - loki
+      - isopruefi-network
     depends_on:
       - loki
       - alloy
@@ -185,12 +158,12 @@ services:
        container_name: isopruefi-frontend-live
        labels:
          - "traefik.enable=true"
-         - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
+         - "traefik.http.routers.frontend.rule=Host(`frontend.aicon.dhbw-heidenheim.de`)"
          - "traefik.http.routers.frontend.entrypoints=websecure"
          - "traefik.http.routers.frontend.tls=true"
          - traefik.http.services.frontend.loadbalancer.server.port=3000
        networks:
-       - isopruefi-custom
+         - isopruefi-network
        stdin_open: true
        tty: true
 
@@ -199,12 +172,12 @@ services:
         container_name: isopruefi-rest-api
         labels:
          - "traefik.enable=true"
-         - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
+         - "traefik.http.routers.backend.rule=Host(`backend.aicon.dhbw-heidenheim.de`)"
          - "traefik.http.routers.backend.entrypoints=websecure"
          - "traefik.http.routers.backend.tls=true"
          - traefik.http.services.backend.loadbalancer.server.port=8080
         networks:
-          - isopruefi-custom
+          - isopruefi-network
         environment:
           - ASPNETCORE_ENVIRONMENT=Docker
         env_file:
@@ -214,7 +187,7 @@ services:
         image: ghcr.io/deadmade/isopruefi-mqtt-worker:latest
         container_name: isopruefi-mqtt-receiver-live
         networks:
-         - isopruefi-custom
+         - isopruefi-network
         environment:
          - ASPNETCORE_ENVIRONMENT=Docker
         env_file:
@@ -224,7 +197,7 @@ services:
         image: ghcr.io/deadmade/isopruefi-weather-worker:latest
         container_name: isopruefi-weather-worker-live
         networks:
-         - isopruefi-custom
+         - isopruefi-network
         environment:
           - ASPNETCORE_ENVIRONMENT=Docker
         env_file:

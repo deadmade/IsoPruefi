@@ -37,7 +37,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             } else {
                 await register(username, password);
                 alert("Registration successful. You can now log in.");
-                navigate("/signin");
+                navigate("/");
             }
         } catch (err: any) {
             setError(err.message || "Something went wrong.");

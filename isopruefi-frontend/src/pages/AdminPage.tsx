@@ -1,8 +1,16 @@
 import {TempChart} from "../components/Weather.tsx";
+import {useNavigate} from "react-router-dom";
+import {clearToken} from "../utils/tokenHelpers.ts";
 
 export default function AdminPage() {
 
     const style = {padding: 20};
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        clearToken();
+        navigate("/signin");
+    };
 
     return (
         <div style={style}>
@@ -10,6 +18,8 @@ export default function AdminPage() {
             <div>
                 <h2>Weather Chart on Admin page</h2>
                 <TempChart />
+                
+                <button style={style} onClick={handleLogout}>Logout</button>
             </div>
         </div>
     )

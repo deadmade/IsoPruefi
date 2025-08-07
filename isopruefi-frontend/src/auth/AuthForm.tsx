@@ -1,5 +1,7 @@
-import {useState} from "react";
+import { useState } from "react";
 import { login, register } from "../utils/authApi.ts";
+import {decodeToken, saveToken} from "../utils/tokenHelpers";
+import { useNavigate } from "react-router-dom";
 
 type Mode = "signin" | "signup";
 
@@ -8,10 +10,12 @@ interface AuthFormProps {
     onSuccess: (user: any) => void;
 }
 
-export default function AuthForm({ mode, onSuccess }: AuthFormProps) {
+export default function AuthForm({ mode }: AuthFormProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -20,17 +24,20 @@ export default function AuthForm({ mode, onSuccess }: AuthFormProps) {
         try {
             if (mode === "signin") {
                 const tokenData = await login(username, password);
+                saveToken(tokenData.token, tokenData.refreshToken);
+                const decoded = decodeToken(tokenData.token);
 
-                // Save token and refreshToken in localStorage
-                localStorage.setItem("token", tokenData.token);
-                localStorage.setItem("token", tokenData.accessToken);
-                localStorage.setItem("refreshToken", tokenData.refreshToken);
-
-                onSuccess(tokenData);
+                if (decoded?.role === "Admin") {
+                    navigate("/admin");
+                } else if (decoded?.role === "User") {
+                    navigate("/user");
+                } else {
+                    navigate("/");
+                }
             } else {
                 await register(username, password);
                 alert("Registration successful. You can now log in.");
-                onSuccess("/signin");
+                navigate("/signin");
             }
         } catch (err: any) {
             setError(err.message || "Something went wrong.");

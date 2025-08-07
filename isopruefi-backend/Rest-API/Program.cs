@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using Asp.Versioning;
 using Database.EntityFramework;
@@ -5,13 +6,22 @@ using Database.EntityFramework.Models;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using Database.Repository.TokenRepo;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
+using NSwag;
+using NSwag.AspNetCore;
+using NSwag.Generation.Processors.Security;
+using Rest_API.Helper;
+using Rest_API.Models;
 using Rest_API.Seeder;
 using Rest_API.Services.Auth;
 using Rest_API.Services.Token;
+using Rest_API.Services.User;
 
 namespace Rest_API;
 
@@ -37,12 +47,27 @@ public class Program
         });
 
         builder.Services.AddIdentity<ApiUser, IdentityRole>()
-           .AddEntityFrameworkStores<ApplicationDbContext>()
-           .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApiDocument();
+        builder.Services.AddOpenApiDocument(configure =>
+        {
+            configure.Title = "IsoPruefi API";
+            configure.Version = "v1";
+            configure.Description = "Temperature monitoring API with JWT authentication";
 
+            configure.AddSecurity("Bearer", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+            {
+                Type = OpenApiSecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "Enter your JWT token in the text input below."
+            });
+
+            configure.OperationProcessors.Add(
+                new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
+        });
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddApiVersioning(options =>
@@ -75,33 +100,28 @@ public class Program
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-                        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                        ValidAudience = builder.Configuration["Jwt:ValidAudience"],
+                        ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
                         ClockSkew = TimeSpan.Zero,
                         IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
                     };
                 }
             );
 
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("AdminOnly", policy => policy.RequireRole(Roles.Admin))
+            .AddPolicy("UserOrAdmin", policy => policy.RequireRole(Roles.User, Roles.Admin));
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IUserService, UserService>();
 
         // Register Repos
         builder.Services.AddScoped<ITokenRepo, TokenRepo>();
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
         builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
 
-        // Add CORS support
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAll", policy =>
-            {
-                policy.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            });
-        });
+        builder.ConfigureHealthChecks();
 
         builder.Services.AddControllers();
 
@@ -111,27 +131,37 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseOpenApi();
-            app.UseSwaggerUi();
+            app.UseSwaggerUi(settings =>
+            {
+                settings.DocumentTitle = "IsoPruefi API Documentation";
+                settings.OAuth2Client = new OAuth2ClientSettings
+                {
+                    ClientId = "swagger",
+                    AppName = "IsoPruefi API"
+                };
+            });
             app.UseDeveloperExceptionPage();
-            app.UseReDoc(options => { options.Path = "/redoc"; });
 
             builder.Configuration.AddUserSecrets<Program>();
 
             using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
-
-            app.UseCors("AllowAll");
-        }
-        else
-        {
-            // Enable CORS before authentication
-            app.UseCors("AllowAll");
         }
 
         app.UseHttpsRedirection();
 
-       // app.UseAuthentication();
-       // app.UseAuthorization();
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        //HealthCheck Middleware
+        app.MapHealthChecks("/api/health", new HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        app.UseHealthChecksPrometheusExporter("/api/healthoka",
+            options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
 
         app.MapControllers();
 

@@ -45,4 +45,9 @@ public class TopicSetting
     /// </summary>
     [MaxLength(50)]
     public string? SensorLocation { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this topic setting has recovery enabled.
+    /// </summary>
+    public bool HasRecovery { get; set; } = false;
 }

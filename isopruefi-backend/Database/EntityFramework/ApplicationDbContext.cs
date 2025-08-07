@@ -9,17 +9,17 @@ namespace Database.EntityFramework;
 public class ApplicationDbContext : IdentityDbContext<ApiUser>
 {
     //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
-    
+
     /// <summary>
     /// Represents the collection of TopicSetting entities in the database.
     /// </summary>
     public DbSet<TopicSetting> TopicSettings { get; set; }
-    
+
     /// <summary>
     /// Represents the collection of TokenInfo entities in the database.
     /// </summary>
     public DbSet<TokenInfo> TokenInfos { get; set; }
-    
+
     /// <summary>
     /// Represents the collection of CoordinateMappings entities in the database.
     /// </summary>
@@ -46,12 +46,12 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
                 new TopicSetting
                 {
                     TopicSettingId = 1, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "Sensor_One", SensorLocation = "North"
+                    SensorName = "Sensor_One", SensorLocation = "North", HasRecovery = true
                 },
                 new TopicSetting
                 {
                     TopicSettingId = 2, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
-                    SensorName = "Sensor_Two", SensorLocation = "South"
+                    SensorName = "Sensor_Two", SensorLocation = "South", HasRecovery = true
                 }
             );
         });
@@ -70,7 +70,4 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
 
         context.Database.Migrate();
     }
-
-
-
 }

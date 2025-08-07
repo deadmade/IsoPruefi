@@ -1,7 +1,7 @@
-using Database.EntityFramework.Models;
-using Database.Repository.SettingsRepo;
 using System.Globalization;
 using System.Text.Json;
+using Database.EntityFramework.Models;
+using Database.Repository.SettingsRepo;
 
 namespace Rest_API;
 
@@ -13,8 +13,9 @@ public class TransformPostalCode
     private readonly IConfiguration _configuration;
 
     private readonly string _geocodingApi;
-    
-    public TransformPostalCode(ILogger<TransformPostalCode> logger, IHttpClientFactory httpClientFactory, ISettingsRepo settingsRepo, IConfiguration configuration)
+
+    public TransformPostalCode(ILogger<TransformPostalCode> logger, IHttpClientFactory httpClientFactory,
+        ISettingsRepo settingsRepo, IConfiguration configuration)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
@@ -24,7 +25,7 @@ public class TransformPostalCode
         _geocodingApi = _configuration["Weather:NominatimApiUrl"] ?? throw new InvalidOperationException(
             "Weather:NominatimApiUrl configuration is missing");
     }
-    
+
     public async Task GetCoordinates(int postalCode)
     {
         // Checking if there is an entry for that location in the database.
@@ -49,11 +50,11 @@ public class TransformPostalCode
             var httpClient = _httpClientFactory.CreateClient();
 
             // Creating a user agent for accessing the API.
-            string userAgent =
+            var userAgent =
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36";
             httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
 
-            
+
             try
             {
                 // Getting the coordinates from nominatim.
@@ -73,7 +74,7 @@ public class TransformPostalCode
                         {
                             var latDouble = double.Parse(lat.GetString(), CultureInfo.InvariantCulture);
                             var lonDouble = double.Parse(lon.GetString(), CultureInfo.InvariantCulture);
-                            
+
                             var postalCodeLocation = new CoordinateMapping
                             {
                                 PostalCode = postalCode,
@@ -91,7 +92,7 @@ public class TransformPostalCode
                             {
                                 _logger.LogError(e, "Exception while saving new location.");
                             }
-                            
+
                             _logger.LogInformation("Coordinates retrieved successfully");
                         }
                         else

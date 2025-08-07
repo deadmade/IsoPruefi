@@ -31,7 +31,8 @@ public class Worker : BackgroundService
         _alternativeWeatherDataApi = _configuration["Weather:BrightSkyApiUrl"] ?? throw new InvalidOperationException(
             "Weather:BrightSkyApiUrl configuration is missing");
 
-        _location = _configuration["Weather:Location"] ?? "Heidenheim"; // Will be changed in the future to a more dynamic solution
+        _location = _configuration["Weather:Location"] ??
+                    "Heidenheim"; // Will be changed in the future to a more dynamic solution
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

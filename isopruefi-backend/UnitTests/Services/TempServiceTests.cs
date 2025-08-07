@@ -1,6 +1,7 @@
 using System.Net;
 using Database.EntityFramework.Models;
 using Database.Repository.CoordinateRepo;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -17,6 +18,7 @@ public class TempServiceTests
     private Mock<ILogger<TempService>> _mockLogger;
     private Mock<IHttpClientFactory> _mockHttpClientFactory;
     private Mock<ICoordinateRepo> _mockCoordinateRepo;
+    private Mock<IConfiguration> _mockConfiguration;
     private TempService _tempService;
 
     /// <summary>
@@ -28,11 +30,17 @@ public class TempServiceTests
         _mockLogger = new Mock<ILogger<TempService>>();
         _mockHttpClientFactory = new Mock<IHttpClientFactory>();
         _mockCoordinateRepo = new Mock<ICoordinateRepo>();
+        _mockConfiguration = new Mock<IConfiguration>();
+
+        _mockConfiguration.Setup(c =>
+            c["Weather:NominatimApiUrl"])
+                .Returns("https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=");
 
         _tempService = new TempService(
             _mockLogger.Object,
             _mockHttpClientFactory.Object,
-            _mockCoordinateRepo.Object
+            _mockCoordinateRepo.Object,
+            _mockConfiguration.Object
         );
     }
 

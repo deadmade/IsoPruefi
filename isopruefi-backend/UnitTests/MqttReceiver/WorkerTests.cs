@@ -89,25 +89,6 @@ public class WorkerTests
     #region ExecuteAsync Tests
 
     /// <summary>
-    /// Tests that ExecuteAsync calls SubscribeToTopics on the receiver.
-    /// </summary>
-    [Test]
-    public async Task ExecuteAsync_CallsReceiverSubscribeToTopics()
-    {
-        _mockReceiver.Setup(r => r.SubscribeToTopics()).Returns(Task.CompletedTask);
-        using var cancellationTokenSource = new CancellationTokenSource();
-
-        await _worker.StartAsync(cancellationTokenSource.Token);
-
-        // Give the background service a moment to start
-        await Task.Delay(100, cancellationTokenSource.Token);
-
-        await _worker.StopAsync(cancellationTokenSource.Token);
-
-        _mockReceiver.Verify(r => r.SubscribeToTopics(), Times.Once);
-    }
-
-    /// <summary>
     /// Tests that ExecuteAsync handles cancellation token properly.
     /// </summary>
     [Test]

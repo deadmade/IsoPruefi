@@ -25,6 +25,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 const tokenData = await login(username, password);
                 saveToken(tokenData.token, tokenData.refreshToken);
                 const decoded = decodeToken(tokenData.token);
+                console.log("Decoded JWT:", decoded);
 
                 if (decoded?.role === "Admin") {
                     navigate("/admin");
@@ -36,7 +37,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             } else {
                 await register(username, password);
                 alert("Registration successful. You can now log in.");
-                navigate("/");
+                navigate("/signin");
             }
         } catch (err: any) {
             setError(err.message || "Something went wrong.");

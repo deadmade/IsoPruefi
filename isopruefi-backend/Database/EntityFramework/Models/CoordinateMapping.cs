@@ -32,5 +32,11 @@ public class CoordinateMapping
     /// Gets or sets the time the postalcode was last entered by the user.
     /// </summary>
     [DataType(DataType.DateTime)]
-    public DateTime LastUsed { get; set; }
+    public DateTime? LastUsed { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the time until which the entry is locked.
+    /// </summary>
+    [DataType(DataType.DateTime)]
+    public DateTime? LockedUntil { get; set; } = null;
 }

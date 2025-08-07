@@ -94,7 +94,7 @@ namespace Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PostalCode"));
 
-                    b.Property<DateTime>("LastUsed")
+                    b.Property<DateTime?>("LastUsed")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("Latitude")
@@ -103,6 +103,9 @@ namespace Database.Migrations
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("LockedUntil")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("Longitude")
                         .HasColumnType("double precision");

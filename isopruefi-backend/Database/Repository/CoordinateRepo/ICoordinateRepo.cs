@@ -38,4 +38,10 @@ public interface ICoordinateRepo
     /// </summary>
     /// <returns>List with all postalcodes.</returns>
     Task<List<Tuple<int, string>>> GetAllLocations();
+    
+    /// <summary>
+    /// Gets the next unlocked entry in CoordinateMappings and locks it for the next minute.
+    /// </summary>
+    /// <returns></returns>
+    Task<CoordinateMapping?> GetUnlockedLocation();
 }

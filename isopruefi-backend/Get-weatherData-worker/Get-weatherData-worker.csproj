@@ -29,6 +29,5 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Database\Database.csproj"/>
-        <ProjectReference Include="..\Rest-API\Rest-API.csproj"/>
     </ItemGroup>
 </Project>

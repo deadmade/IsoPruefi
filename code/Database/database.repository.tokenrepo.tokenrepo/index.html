@@ -1615,7 +1615,7 @@
 <p>Repository implementation for managing TokenInfo entities.</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TokenRepo</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ITokenRepo</span>
 </code></pre></div>
-<p>Inheritance <a href="https://docs.microsoft.com/en-us/dotnet/api/system.object">Object</a> → <a href="./">TokenRepo</a><br>
+<p>Inheritance <a href="https://docs.microsoft.com/en-us/dotnet/api/system.object">Object</a> → <a href="./">TokenRepo</a><br><br />
 Implements <a href="../database.repository.tokenrepo.itokenrepo/">ITokenRepo</a></p>
 <h2 id="constructors">Constructors</h2>
 <h3 id="tokenrepoapplicationdbcontext"><a id="constructors-.ctor"/><strong>TokenRepo(ApplicationDbContext)</strong></h3>
@@ -1623,10 +1623,10 @@ Implements <a href="../database.repository.tokenrepo.itokenrepo/">ITokenRepo</a>
 <div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="nf">TokenRepo</span><span class="p">(</span><span class="n">ApplicationDbContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="parameters">Parameters</h4>
-<p><code>context</code> <a href="../database.entityframework.applicationdbcontext/">ApplicationDbContext</a><br>
+<p><code>context</code> <a href="../database.entityframework.applicationdbcontext/">ApplicationDbContext</a><br><br />
 The database context.</p>
 <h4 id="exceptions">Exceptions</h4>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.argumentnullexception">ArgumentNullException</a><br>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.argumentnullexception">ArgumentNullException</a><br><br />
 Thrown when context is null.</p>
 <h2 id="methods">Methods</h2>
 <h3 id="addtokeninfoasynctokeninfo"><a id="methods-addtokeninfoasync"/><strong>AddTokenInfoAsync(TokenInfo)</strong></h3>
@@ -1634,7 +1634,7 @@ Thrown when context is null.</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">AddTokenInfoAsync</span><span class="p">(</span><span class="n">TokenInfo</span><span class="w"> </span><span class="n">tokenInfo</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="parameters_1">Parameters</h4>
-<p><code>tokenInfo</code> <a href="../database.entityframework.models.tokeninfo/">TokenInfo</a><br>
+<p><code>tokenInfo</code> <a href="../database.entityframework.models.tokeninfo/">TokenInfo</a><br><br />
 The token info to add.</p>
 <h4 id="returns">Returns</h4>
 <p>A task representing the asynchronous operation.</p>
@@ -1643,7 +1643,7 @@ The token info to add.</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">TokenInfo</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetTokenInfoByRefreshTokenAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">refreshToken</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="parameters_2">Parameters</h4>
-<p><code>refreshToken</code> <a href="https://docs.microsoft.com/en-us/dotnet/api/system.string">String</a><br>
+<p><code>refreshToken</code> <a href="https://docs.microsoft.com/en-us/dotnet/api/system.string">String</a><br><br />
 The refresh token to search for.</p>
 <h4 id="returns_1">Returns</h4>
 <p>The token info if found; otherwise, null.</p>
@@ -1652,7 +1652,7 @@ The refresh token to search for.</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">TokenInfo</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetTokenInfoByUsernameAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">username</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="parameters_3">Parameters</h4>
-<p><code>username</code> <a href="https://docs.microsoft.com/en-us/dotnet/api/system.string">String</a><br>
+<p><code>username</code> <a href="https://docs.microsoft.com/en-us/dotnet/api/system.string">String</a><br><br />
 The username to search for.</p>
 <h4 id="returns_2">Returns</h4>
 <p>The token info if found; otherwise, null.</p>
@@ -1661,7 +1661,7 @@ The username to search for.</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">TokenInfo</span><span class="w"> </span><span class="nf">GetTokenInfoByUsernameSync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">username</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="parameters_4">Parameters</h4>
-<p><code>username</code> <a href="https://docs.microsoft.com/en-us/dotnet/api/system.string">String</a><br>
+<p><code>username</code> <a href="https://docs.microsoft.com/en-us/dotnet/api/system.string">String</a><br><br />
 The username to search for.</p>
 <h4 id="returns_3">Returns</h4>
 <p>The first token info if found; otherwise, null.</p>
@@ -1676,7 +1676,7 @@ The username to search for.</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">UpdateTokenInfoAsync</span><span class="p">(</span><span class="n">TokenInfo</span><span class="w"> </span><span class="n">tokenInfo</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="parameters_5">Parameters</h4>
-<p><code>tokenInfo</code> <a href="../database.entityframework.models.tokeninfo/">TokenInfo</a><br>
+<p><code>tokenInfo</code> <a href="../database.entityframework.models.tokeninfo/">TokenInfo</a><br><br />
 The token info to update.</p>
 <h4 id="returns_5">Returns</h4>
 <p>A task representing the asynchronous operation.</p>
@@ -1700,7 +1700,7 @@ The token info to update.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 7, 2025 15:10:13 UTC">August 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 7, 2025 17:44:57 UTC">August 7, 2025</span>
   </span>
 
     

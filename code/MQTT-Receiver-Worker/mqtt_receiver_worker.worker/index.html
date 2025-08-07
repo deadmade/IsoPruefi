@@ -1486,11 +1486,11 @@
 
 <h1 id="worker">Worker</h1>
 <p>Namespace: MQTT_Receiver_Worker</p>
-<p>Background worker service for handling MQTT message receiving operations.
+<p>Background worker service for handling MQTT message receiving operations.<br />
  Implements a long-running service that subscribes to MQTT topics and processes messages.</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Worker</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Microsoft</span><span class="p">.</span><span class="n">Extensions</span><span class="p">.</span><span class="n">Hosting</span><span class="p">.</span><span class="n">BackgroundService</span><span class="p">,</span><span class="w"> </span><span class="n">Microsoft</span><span class="p">.</span><span class="n">Extensions</span><span class="p">.</span><span class="n">Hosting</span><span class="p">.</span><span class="n">IHostedService</span><span class="p">,</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="n">IDisposable</span>
 </code></pre></div>
-<p>Inheritance <a href="https://docs.microsoft.com/en-us/dotnet/api/system.object">Object</a> → BackgroundService → <a href="./">Worker</a><br>
+<p>Inheritance <a href="https://docs.microsoft.com/en-us/dotnet/api/system.object">Object</a> → BackgroundService → <a href="./">Worker</a><br><br />
 Implements IHostedService, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.idisposable">IDisposable</a></p>
 <h2 id="properties">Properties</h2>
 <h3 id="executetask"><a id="properties-executetask"/><strong>ExecuteTask</strong></h3>
@@ -1504,19 +1504,19 @@ Implements IHostedService, <a href="https://docs.microsoft.com/en-us/dotnet/api/
 <div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="nf">Worker</span><span class="p">(</span><span class="n">ILogger</span><span class="o">&lt;</span><span class="n">Worker</span><span class="o">&gt;</span><span class="w"> </span><span class="n">logger</span><span class="p">,</span><span class="w"> </span><span class="n">IReceiver</span><span class="w"> </span><span class="n">receiver</span><span class="p">,</span><span class="w"> </span><span class="n">IConnection</span><span class="w"> </span><span class="n">connection</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="parameters">Parameters</h4>
-<p><code>logger</code> ILogger&lt;Worker&gt;<br>
+<p><code>logger</code> ILogger&lt;Worker&gt;<br><br />
 Logger for recording service events.</p>
-<p><code>receiver</code> <a href="../mqtt_receiver_worker.mqtt.interfaces.ireceiver/">IReceiver</a><br>
+<p><code>receiver</code> <a href="../mqtt_receiver_worker.mqtt.interfaces.ireceiver/">IReceiver</a><br><br />
 MQTT receiver for subscribing to topics.</p>
 <p><code>connection</code> <a href="../mqtt_receiver_worker.mqtt.interfaces.iconnection/">IConnection</a><br></p>
 <h2 id="methods">Methods</h2>
 <h3 id="executeasynccancellationtoken"><a id="methods-executeasync"/><strong>ExecuteAsync(CancellationToken)</strong></h3>
-<p>Executes the worker process, maintaining MQTT connection and subscribing to topics.
+<p>Executes the worker process, maintaining MQTT connection and subscribing to topics.<br />
  This is the main entry point for the background service execution.</p>
 <div class="highlight"><pre><span></span><code><span class="k">protected</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">ExecuteAsync</span><span class="p">(</span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">stoppingToken</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="parameters_1">Parameters</h4>
-<p><code>stoppingToken</code> <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a><br>
+<p><code>stoppingToken</code> <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a><br><br />
 Token that can be used to request cancellation of the operation.</p>
 <h4 id="returns">Returns</h4>
 <p>A task representing the asynchronous operation.</p>
@@ -1540,7 +1540,7 @@ Token that can be used to request cancellation of the operation.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 7, 2025 15:10:14 UTC">August 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 7, 2025 17:44:57 UTC">August 7, 2025</span>
   </span>
 
     

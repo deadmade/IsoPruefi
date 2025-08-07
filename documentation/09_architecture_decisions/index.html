@@ -2680,7 +2680,7 @@
 <p>This section describes the resulting context, after applying the decision. All consequences should be listed here, not just the "positive" ones. A particular decision may have positive, negative, and neutral consequences, but all of them affect the team and project in the future.</p>
 <h2 id="adr-0-example">ADR 0: Example</h2>
 <h3 id="context_1">Context:</h3>
-<p>Our frontend project currently uses plain JavaScript (React). Recently, we've encountered recurring bugs caused by the lack of type checking (e.g., undefined errors on objects, incorrect API responses).
+<p>Our frontend project currently uses plain JavaScript (React). Recently, we've encountered recurring bugs caused by the lack of type checking (e.g., undefined errors on objects, incorrect API responses).<br />
 The team discussed several options to improve code quality and maintainability:</p>
 <table>
 <thead>
@@ -2881,10 +2881,10 @@ The team discussed several options to improve code quality and maintainability:<
 <h2 id="adr-8-frontend">ADR 8: Frontend</h2>
 <h3 id="context_9">Context:</h3>
 <p>The IsoPruefi requires a proper frontend to display charts based on the measured temperature data.</p>
-<p>Originally, the frontend was auto-generated using Docker and based on a JavaScript React setup. 
-Later, it was decided to migrate to a TypeScript-based React app, due to the advantages 
+<p>Originally, the frontend was auto-generated using Docker and based on a JavaScript React setup. <br />
+Later, it was decided to migrate to a TypeScript-based React app, due to the advantages <br />
 TypeScript offers in terms of type safety and compiler support.</p>
-<p>However, the chosen setup was built using Create React App (CRA), 
+<p>However, the chosen setup was built using Create React App (CRA), <br />
 which led to problems with documentation generation using TypeDoc, due to version incompatibility.</p>
 <h3 id="decision_9">Decision:</h3>
 <p>It was decided to replace CRA support with the Vite-based TS React project.</p>
@@ -2911,7 +2911,7 @@ which led to problems with documentation generation using TypeDoc, due to versio
 </ul>
 <p>These components were selected to fulfill the need for offline data buffering, accurate timestamping, and reliable long-term measurements.</p>
 <h3 id="decision_10">Decision:</h3>
-<p>We used the Arduino MKR1010, as it was provided and meets the basic requirements (WiFi, sufficient RAM, low-power mode).
+<p>We used the Arduino MKR1010, as it was provided and meets the basic requirements (WiFi, sufficient RAM, low-power mode).<br />
 We deliberately added:</p>
 <ul>
 <li>An RTC module, to ensure precise timestamping regardless of power loss</li>

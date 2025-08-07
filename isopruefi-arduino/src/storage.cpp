@@ -28,7 +28,10 @@ static const size_t CURRENT_FILENAME_BUFFER_SIZE = 32;
 /// Buffer size for reading individual CSV lines
 static const size_t CSV_LINE_BUFFER_SIZE = 64;
 /// Maximum number of sensor readings per CSV batch file
-static const int MAX_LINES_PER_CSV_FILE = 20;
+static const int MAX_LINES_PER_CSV_FILE = 5;
+static char currentFilename[CURRENT_FILENAME_BUFFER_SIZE] = "";
+/// Static variable to track the number of lines in the current CSV file
+static int linesInFile = 0;
 
 // =============================================================================
 // CSV BATCH STORAGE FUNCTIONS
@@ -73,10 +76,7 @@ void saveToCsvBatch(const DateTime& now, float celsius, int sequence) {
     sd.mkdir(folder);
   }
 
-  static char currentFilename[CURRENT_FILENAME_BUFFER_SIZE] = ""; 
-  static int linesInFile = 0;
-
-  // Create new file if needed (first run or file is full)
+  // Create new file if needed
   if (strlen(currentFilename) == 0 || linesInFile >= MAX_LINES_PER_CSV_FILE) {
     createFilename(currentFilename, sizeof(currentFilename), now);
     linesInFile = 0;
@@ -161,10 +161,12 @@ void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequen
  *   "timestamp": 1737024000,
  *   "sequence": null,
  *   "value": [null],
- *   "meta": [
- *     {"timestamp": 1737024000, "value": [25.12345], "sequence": 42},
- *     {"timestamp": 1737024060, "value": [25.12567], "sequence": 43}
- *   ]
+ *   "meta": 
+ *     {
+ *        "t": [1737024000, 1737024060, ..], 
+ *        "v": [25.12345, 25.12567, ...], 
+ *        "s": [42, 43, ...]
+ *      }
  * }
  * ```
  * 
@@ -200,8 +202,12 @@ void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const Da
   doc.clear();
   doc["timestamp"] = now.unixtime();
   doc["sequence"] = nullptr;
-  doc.createNestedArray("value").add(nullptr);
-  JsonArray meta = doc.createNestedArray("meta");
+  doc.createNestedArray("value").add(nullptr);  // Dummy value for compatibility
+
+  JsonObject meta = doc.createNestedObject("meta");
+  JsonArray tArr = meta.createNestedArray("t");  // timestamp
+  JsonArray vArr = meta.createNestedArray("v");  // value
+  JsonArray sArr = meta.createNestedArray("s");  // sequence
 
   char line[CSV_LINE_BUFFER_SIZE];
   int added = 0;
@@ -236,12 +242,9 @@ void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const Da
     }
     int seq = atoi(p);
 
-    // Create individual measurement entry in metadata
-    JsonObject entry = meta.createNestedObject();
-    entry["timestamp"] = ts;
-    JsonArray valueArr = entry.createNestedArray("value");
-    valueArr.add(temp);
-    entry["sequence"] = seq;
+    tArr.add(ts);
+    vArr.add(temp);
+    sArr.add(seq);
 
     added++;
   }
@@ -294,6 +297,11 @@ void deleteCsvFile(const char* filepath) {
     if (sd.remove(filepath)) {
       Serial.print("Deleted CSV file: ");
       Serial.println(filepath);
+      if (strcmp(filepath, currentFilename) == 0) {
+        currentFilename[0] = '\0';
+        linesInFile = 0;
+        Serial.println("Reset currentFilename after deletion.");
+      }
     } else {
       Serial.print("Failed to delete CSV file: ");
       Serial.println(filepath);

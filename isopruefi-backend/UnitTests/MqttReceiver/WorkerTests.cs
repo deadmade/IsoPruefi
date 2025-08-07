@@ -110,6 +110,7 @@ public class WorkerTests
 
     #endregion
 
+
     #region Dispose Tests
 
     /// <summary>

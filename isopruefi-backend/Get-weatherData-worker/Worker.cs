@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Database.EntityFramework.Models;
+using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 
@@ -14,7 +15,6 @@ public class Worker : BackgroundService
 
     private readonly string _weatherDataApi;
     private readonly string _alternativeWeatherDataApi;
-    private readonly string _location;
 
     public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory,
         IConfiguration configuration, IServiceProvider serviceProvider)
@@ -24,15 +24,11 @@ public class Worker : BackgroundService
         _serviceProvider = serviceProvider;
         _configuration = configuration;
 
-
         _weatherDataApi = _configuration["Weather:OpenMeteoApiUrl"] ?? throw new InvalidOperationException(
             "Weather:OpenMeteoApiUrl configuration is missing");
 
         _alternativeWeatherDataApi = _configuration["Weather:BrightSkyApiUrl"] ?? throw new InvalidOperationException(
             "Weather:BrightSkyApiUrl configuration is missing");
-
-        _location = _configuration["Weather:Location"] ??
-                    "Heidenheim"; // Will be changed in the future to a more dynamic solution
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,7 +36,7 @@ public class Worker : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             using var scope = _serviceProvider.CreateScope();
-            var settingsRepo = scope.ServiceProvider.GetRequiredService<ISettingsRepo>();
+            var coordinateRepo = scope.ServiceProvider.GetRequiredService<ICoordinateRepo>();
             var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
             
             // Getting the location information for the next unlocked entry.

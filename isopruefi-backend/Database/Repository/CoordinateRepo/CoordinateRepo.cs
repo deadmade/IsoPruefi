@@ -49,9 +49,8 @@ public class CoordinateRepo : ICoordinateRepo
         var result = await _applicationDbContext.CoordinateMappings
             .OrderByDescending(c => c.LastUsed)
             .FirstOrDefaultAsync();
-        if (result != null) return result;
-
-        return null;
+        
+        return result;
     }
 
     /// <inheritdoc />

@@ -55,6 +55,18 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
                 }
             );
         });
+
+        modelBuilder.Entity<CoordinateMapping>(b =>
+        {
+            b.HasKey(t => t.PostalCode);
+            
+            b.HasData(
+            new CoordinateMapping
+            {
+                PostalCode = 89518, Latitude = 48.6852, Longitude = 10.1287, Location = "Heidenheim an der Brenz"
+            }
+            );
+        });
     }
 
     /// <summary>

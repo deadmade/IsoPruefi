@@ -1,5 +1,5 @@
 (function() {
   const script = document.getElementById('compound-list');
   const varname = script.getAttribute('data-varname');
-  this[varname] = ["struct_mock_date_time.md","struct_mock_json_array.md","struct_mock_json_document.md","mock__datetime_8h.md","core_8h.md","mock__json_8h.md","mqtt_8h.md","network_8h.md","platform_8h.md","sensor_8h.md","secrets__example_8h.md","storage_8h.md","core_8cpp.md","main_8cpp.md","network_8cpp.md","mqtt_8cpp.md","dir_d44c64559bbebec7f509842c48db8b23.md","sensor_8cpp.md","storage_8cpp.md","dir_68267d1309a1af8e8297ef4c3efbcdba.md"];
+  this[varname] = ["struct_mock_date_time.md","struct_mock_json_array.md","core_8h.md","struct_mock_json_document.md","mock__json_8h.md","mock__datetime_8h.md","mqtt_8h.md","platform_8h.md","network_8h.md","secrets__example_8h.md","sensor_8h.md","main_8cpp.md","storage_8h.md","sensor_8cpp.md","core_8cpp.md","mqtt_8cpp.md","dir_68267d1309a1af8e8297ef4c3efbcdba.md","dir_d44c64559bbebec7f509842c48db8b23.md","network_8cpp.md","storage_8cpp.md"];
   })();

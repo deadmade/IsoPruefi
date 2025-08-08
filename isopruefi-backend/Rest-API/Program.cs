@@ -155,6 +155,27 @@ public class Program
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
         }
 
+        if (app.Environment.IsEnvironment("Docker"))
+        {
+            app.UseOpenApi();
+            app.UseSwaggerUi(settings =>
+            {
+                settings.DocumentTitle = "IsoPruefi API Documentation";
+                settings.OAuth2Client = new OAuth2ClientSettings
+                {
+                    ClientId = "swagger",
+                    AppName = "IsoPruefi API"
+                };
+            });
+            app.UseDeveloperExceptionPage();
+
+            builder.Configuration.AddEnvironmentVariables();
+
+            using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
+            ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+
+        }
+
         //app.UseHttpsRedirection();
 
         app.UseAuthentication();

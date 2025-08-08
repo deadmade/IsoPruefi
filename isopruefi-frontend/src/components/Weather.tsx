@@ -136,9 +136,21 @@ export function TempChart() {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="tempSouth"   name="South"   activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="tempNorth"   name="North"   activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="tempOutside" name="Outside" />
+                    <Line type="monotone" 
+                          dataKey="tempSouth"   
+                          name="South"
+                          stroke="#8884d8"
+                          activeDot={{ r: 8 }} />
+                    <Line type="monotone" 
+                          dataKey="tempNorth"   
+                          name="North" 
+                          stroke="#84d8d2"  
+                          activeDot={{ r: 8 }} />
+                    <Line type="monotone" 
+                          dataKey="tempOutside" 
+                          name="Outside"
+                          stroke="#82ca9d" 
+                          activeDot={{r: 4}}/>
                 </LineChart>
             </ResponsiveContainer>
         </div>

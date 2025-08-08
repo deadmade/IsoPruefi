@@ -50,6 +50,9 @@ public class Program
 
         var app = builder.Build();
 
+        using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
+        ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+
         //HealthCheck Middleware
         app.MapHealthChecks("/health", new HealthCheckOptions
         {

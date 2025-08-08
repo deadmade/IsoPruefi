@@ -1,0 +1,33 @@
+http:
+  services:
+    # Backend API Load Balancer
+    backend:
+      loadBalancer:
+        servers:
+          - url: "http://isopruefi-backend-api-1:8080"
+            weight: 1
+          - url: "http://isopruefi-backend-api-2:8080"
+            weight: 1
+        healthCheck:
+          path: "/health"
+          interval: "30s"
+          timeout: "10s"
+          headers:
+            Host: "backend.localhost"
+        method: "wrr"  # weighted round robin
+
+    # Frontend Load Balancer
+    frontend:
+      loadBalancer:
+        servers:
+          - url: "http://isopruefi-frontend-1:5173"
+            weight: 1
+          - url: "http://isopruefi-frontend-2:5173"
+            weight: 1
+        healthCheck:
+          path: "/"
+          interval: "30s"
+          timeout: "10s"
+          headers:
+            Host: "frontend.localhost"
+        method: "wrr"

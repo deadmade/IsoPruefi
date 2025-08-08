@@ -1,28 +1,20 @@
-# AGENTS.md - IsoPruefi Development Guide
+# AGENTS.md - Developer Guidelines
 
-## Build/Lint/Test Commands
-- **Root**: `npm run init` (setup all projects), `npm run commitlint` (commit lint)
-- **Frontend** (isopruefi-frontend/): `npm run dev` (start dev server), `npm run build` (build), `npm run lint` (ESLint)
-- **Backend** (isopruefi-backend/): `dotnet build` (build), `dotnet test` (run all tests), `dotnet test --filter "TestName"` (single test)
-- **Docs**: `cd isopruefi-docs && mkdocs serve` (local docs)
+## Build/Test/Lint Commands
+- **Frontend**: `cd isopruefi-frontend && npm run lint` (ESLint), `npm run build` (TypeScript + Vite)
+- **Backend**: `cd isopruefi-backend && dotnet test UnitTests/UnitTests.csproj` (single test project), `dotnet build`
+- **Arduino**: `cd arduino && pio test -e native` (PlatformIO unit tests), `pio run -e mkrwifi1010` (build)
+- **Root**: `npm run init` (setup all projects), `npm run commitlint` (commit message validation)
 
-## Code Style & Conventions
+## Code Style Guidelines
+- **C#**: PascalCase for public members, camelCase for private fields, use nullable reference types (`enable`), XML docs for public APIs
+- **TypeScript/React**: camelCase variables, PascalCase components, use TypeScript strict mode, prefer function components with hooks
+- **Imports**: Use absolute imports in C# (`using Database.EntityFramework`), ES6 imports in TypeScript (`import { } from`)
+- **Error Handling**: Use proper exception types in C#, Result patterns for API responses, try-catch for async operations
+- **Naming**: Descriptive names, avoid abbreviations, use interfaces with `I` prefix in C# (`IAuthenticationService`)
+- **Formatting**: 4 spaces for C#, 2 spaces for TypeScript/JS, use EditorConfig conventions
+- **Architecture**: Dependency injection in ASP.NET Core, repository pattern for data access, separate concerns (API/Service/Repository layers)
 
-### TypeScript/React (Frontend)
-- Use ES6 imports, prefer named exports
-- TypeScript strict mode enabled, nullable types required
-- React functional components with hooks
-- Component files: PascalCase.tsx, use descriptive names
-
-### C# (Backend)
-- .NET 9.0, nullable reference types enabled
-- Primary constructors for controllers/services
-- File-scoped namespaces
-- XML documentation comments required
-- Dependency injection via constructor parameters
-- Comprehensive error handling with structured logging
-- Use `ILogger` for all logging with structured parameters
-
-### Error Handling
-- C#: Try-catch with specific exception types, return ProblemDetails for API errors
-- TypeScript: Use proper error boundaries and error state management
+## Test Structure
+- **C# Tests**: NUnit framework with FluentAssertions, Moq for mocking, arrange-act-assert pattern
+- **Arduino Tests**: Unity framework for embedded testing on native platform

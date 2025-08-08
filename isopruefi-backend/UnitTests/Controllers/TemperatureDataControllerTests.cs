@@ -2,6 +2,7 @@ using Database.EntityFramework.Models;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using FluentAssertions;
+using InfluxDB3.Client.Write;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -260,7 +261,7 @@ public class TemperatureDataControllerTests
 
     #region Helper Methods
 
-    private static async IAsyncEnumerable<InfluxDB3.Client.Write.PointDataValues> CreateEmptyAsyncEnumerable()
+    private static async IAsyncEnumerable<PointDataValues> CreateEmptyAsyncEnumerable()
     {
         await Task.CompletedTask;
         yield break;

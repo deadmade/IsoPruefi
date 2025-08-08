@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime:9.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
 
@@ -9,7 +9,8 @@ COPY ["Get-weatherData-worker/Get-weatherData-worker.csproj", "Get-weatherData-w
 COPY ["Database/Database.csproj", "Database/"]
 RUN dotnet restore "Get-weatherData-worker/Get-weatherData-worker.csproj"
 RUN dotnet restore Database/Database.csproj
-COPY . .
+COPY ["Get-weatherData-worker/", "Get-weatherData-worker/"]
+COPY ["Database/", "Database/"]
 WORKDIR "/src/Get-weatherData-worker"
 RUN dotnet build "Get-weatherData-worker.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

@@ -94,11 +94,18 @@ namespace Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PostalCode"));
 
-                    b.Property<DateTime>("LastUsed")
+                    b.Property<DateTime?>("LastUsed")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("LockedUntil")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("Longitude")
                         .HasColumnType("double precision");
@@ -106,6 +113,15 @@ namespace Database.Migrations
                     b.HasKey("PostalCode");
 
                     b.ToTable("CoordinateMappings");
+
+                    b.HasData(
+                        new
+                        {
+                            PostalCode = 89518,
+                            Latitude = 48.685200000000002,
+                            Location = "Heidenheim an der Brenz",
+                            Longitude = 10.1287
+                        });
                 });
 
             modelBuilder.Entity("Database.EntityFramework.Models.TokenInfo", b =>
@@ -150,6 +166,9 @@ namespace Database.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("HasRecovery")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("SensorLocation")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -173,6 +192,7 @@ namespace Database.Migrations
                             TopicSettingId = 1,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
+                            HasRecovery = true,
                             SensorLocation = "North",
                             SensorName = "Sensor_One",
                             SensorType = "temp"
@@ -182,6 +202,7 @@ namespace Database.Migrations
                             TopicSettingId = 2,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
+                            HasRecovery = true,
                             SensorLocation = "South",
                             SensorName = "Sensor_Two",
                             SensorType = "temp"

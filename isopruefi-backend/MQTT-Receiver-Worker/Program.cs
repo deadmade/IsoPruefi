@@ -1,8 +1,14 @@
+using System.Net;
 using Database.EntityFramework;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MQTT_Receiver_Worker.MQTT;
+using MQTT_Receiver_Worker.MQTT.Interfaces;
 
 namespace MQTT_Receiver_Worker;
 
@@ -17,7 +23,7 @@ public class Program
     /// <param name="args"></param>
     public static void Main(string[] args)
     {
-        var builder = Host.CreateApplicationBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
 
@@ -31,8 +37,10 @@ public class Program
         });
 
         // Register BusinessLogic
-        builder.Services.AddSingleton<Receiver>();
-        builder.Services.AddSingleton<Connection>();
+        builder.Services.AddSingleton<IReceiver, Receiver>();
+        builder.Services.AddSingleton<IConnection, Connection>();
+
+        builder.ConfigureHealthChecks();
 
         // Only in Development do we wire up the secret store:
         if (builder.Environment.IsDevelopment()) builder.Configuration.AddUserSecrets<Program>();
@@ -40,7 +48,21 @@ public class Program
 
         builder.Services.AddHostedService<Worker>();
 
-        var host = builder.Build();
-        host.Run();
+        var app = builder.Build();
+
+        using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
+        ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+
+        //HealthCheck Middleware
+        app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        app.UseHealthChecksPrometheusExporter("/healthoka",
+            options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
+
+        app.Run();
     }
 }

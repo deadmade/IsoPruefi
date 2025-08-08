@@ -20,11 +20,13 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`traefik.aicon.dhbw-heidenheim.de`)"
       - "traefik.http.services.dashboard.loadbalancer.server.port=5002"
 
-      - "traefik.http.routers.dashboard.tls.domains[0].main=*.aicon.dhbw-heidenheim.de"
-      - "traefik.http.routers.dashboard.tls.domains[0].sans=*.aicon.dhbw-heidenheim.de"
+      - "traefik.http.routers.dashboard.tls.domains[0].main=aicon.dhbw-heidenheim.de"
+      - "traefik.http.routers.dashboard.tls.domains[0].sans=aicon.dhbw-heidenheim.de"
 
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme = https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https"
+
+      - "logging.isopruefi.enabled=true"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik/traefik.yml:/traefik.yml:ro"
@@ -37,6 +39,8 @@ services:
     image: influxdb:3.2.1-core
     container_name: isopruefi-influxdb
     restart: unless-stopped
+    labels:
+      - logging.isopruefi.enabled=true
     command:
       - influxdb3
       - serve
@@ -44,7 +48,7 @@ services:
       - --object-store=file
       - --data-dir=/var/lib/influxdb3
     volumes:
-      - influxdb3_isopruefi:/var/lib/influxdb3
+      - influxdb3:/var/lib/influxdb3
     networks:
       - isopruefi-network
 
@@ -52,8 +56,12 @@ services:
     image: postgres:17.5
     container_name: isopruefi-postgres
     restart: unless-stopped
+    ports:
+      - 5003:5432
+    labels:
+      - "logging.isopruefi.enabled=true"
     volumes:
-      - postgres_isopruefi:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     networks:
       - isopruefi-network
     env_file:
@@ -63,6 +71,8 @@ services:
     image: grafana/loki:3.5.2
     container_name: isopruefi-loki
     command: -config.file=/etc/loki/local-config.yaml
+    labels:
+      - "logging.enabled=true"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
     networks:
@@ -71,8 +81,10 @@ services:
   prometheus:
     image: prom/prometheus:v3.4.2
     container_name: isopruefi-prometheus
+    labels:
+      - "logging.isopruefi.enabled=true"
     ports:
-      - 9090:9090
+      - 5004:9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
@@ -84,6 +96,8 @@ services:
   alloy:
     image: grafana/alloy:v1.9.2
     container_name: isopruefi-alloy
+    labels:
+      - "logging.isopruefi.enabled=true"
     volumes:
       - ./loki/config.alloy:/etc/alloy/config.alloy
       - /var/run/docker.sock:/var/run/docker.sock
@@ -97,8 +111,10 @@ services:
   grafana:
     image: grafana/grafana:12.0.2
     container_name: isopruefi-grafana
+    labels:
+      - logging.isopruefi.enabled=true
     ports:
-      - 5004:3000
+      - 5005:3000
     volumes:
       - "./grafana/grafana.ini:/etc/grafana/grafana.ini:ro"
     env_file:
@@ -147,6 +163,7 @@ services:
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - "logging.isopruefi.enabled=true"
     volumes:
       - ./isopruefi-frontend:/app
       - /app/node_modules
@@ -168,6 +185,7 @@ services:
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - "logging.isopruefi.enabled=true"
     volumes:
       - ./isopruefi-frontend:/app
       - /app/node_modules
@@ -189,6 +207,7 @@ services:
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls=true"
       - "traefik.http.services.backend.loadbalancer.server.port=8080"
+      - "logging.isopruefi.enabled=true"
     networks:
       - isopruefi-network
     environment:
@@ -211,6 +230,7 @@ services:
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls=true"
       - "traefik.http.services.backend.loadbalancer.server.port=8080"
+      - "logging.isopruefi.enabled=true"
     networks:
       - isopruefi-network
     environment:
@@ -225,6 +245,8 @@ services:
   isopruefi-mqtt-receiver-1:
     image: ghcr.io/deadmade/isopruefi-mqtt-worker:latest
     container_name: isopruefi-mqtt-receiver-1
+    labels:
+      - "logging.isopruefi.enabled=true"
     networks:
       - isopruefi-network
     environment:
@@ -239,6 +261,8 @@ services:
   isopruefi-mqtt-receiver-2:
     image: ghcr.io/deadmade/isopruefi-mqtt-worker:latest
     container_name: isopruefi-mqtt-receiver-2
+    labels:
+      - "logging.isopruefi.enabled=true"
     networks:
       - isopruefi-network
     environment:
@@ -253,6 +277,8 @@ services:
   isopruefi-get-weather-worker-1:
     image: ghcr.io/deadmade/isopruefi-weather-worker:latest
     container_name: isopruefi-get-weather-worker-1
+    labels:
+      - "logging.isopruefi.enabled=true"
     networks:
       - isopruefi-network
     environment:
@@ -267,6 +293,8 @@ services:
   isopruefi-get-weather-worker-2:
     image: ghcr.io/deadmade/isopruefi-weather-worker:latest
     container_name: isopruefi-get-weather-worker-2
+    labels:
+      - "logging.isopruefi.enabled=true"
     networks:
       - isopruefi-network
     environment:
@@ -279,5 +307,5 @@ services:
       - loki
 
 volumes:
-  influxdb3_isopruefi:
-  postgres_isopruefi:
+  influxdb3:
+  postgres:

@@ -132,6 +132,10 @@ public class Program
 
         builder.Services.AddControllers();
 
+        if (builder.Environment.IsDevelopment())
+            builder.Configuration.AddUserSecrets<Program>();
+        else if (builder.Environment.IsEnvironment("Docker")) builder.Configuration.AddEnvironmentVariables();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -148,8 +152,6 @@ public class Program
                 };
             });
             app.UseDeveloperExceptionPage();
-
-            builder.Configuration.AddUserSecrets<Program>();
 
             using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
@@ -168,8 +170,6 @@ public class Program
                 };
             });
             app.UseDeveloperExceptionPage();
-
-            builder.Configuration.AddEnvironmentVariables();
 
             using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);

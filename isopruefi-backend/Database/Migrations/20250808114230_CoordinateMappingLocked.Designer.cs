@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250808081329_LookedUntilField")]
-    partial class LookedUntilField
+    [Migration("20250808114230_CoordinateMappingLocked")]
+    partial class CoordinateMappingLocked
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,6 +116,15 @@ namespace Database.Migrations
                     b.HasKey("PostalCode");
 
                     b.ToTable("CoordinateMappings");
+
+                    b.HasData(
+                        new
+                        {
+                            PostalCode = 89518,
+                            Latitude = 48.685200000000002,
+                            Location = "Heidenheim an der Brenz",
+                            Longitude = 10.1287
+                        });
                 });
 
             modelBuilder.Entity("Database.EntityFramework.Models.TokenInfo", b =>

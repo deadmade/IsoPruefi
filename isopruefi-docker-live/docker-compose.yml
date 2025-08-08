@@ -162,7 +162,7 @@ services:
       - "traefik.http.routers.frontend.middlewares=frontend-stripprefix"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
       - "logging.isopruefi.enabled=true"
     volumes:
       - ./isopruefi-frontend:/app
@@ -184,7 +184,7 @@ services:
       - "traefik.http.routers.frontend.middlewares=frontend-stripprefix"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
       - "logging.isopruefi.enabled=true"
     volumes:
       - ./isopruefi-frontend:/app

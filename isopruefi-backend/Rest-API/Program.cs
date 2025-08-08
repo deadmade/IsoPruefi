@@ -132,6 +132,10 @@ public class Program
 
         builder.Services.AddControllers();
 
+        if (builder.Environment.IsDevelopment())
+            builder.Configuration.AddUserSecrets<Program>();
+        else if (builder.Environment.IsEnvironment("Docker")) builder.Configuration.AddEnvironmentVariables();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -149,7 +153,23 @@ public class Program
             });
             app.UseDeveloperExceptionPage();
 
-            builder.Configuration.AddUserSecrets<Program>();
+            using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
+            ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+        }
+
+        if (app.Environment.IsEnvironment("Docker"))
+        {
+            app.UseOpenApi();
+            app.UseSwaggerUi(settings =>
+            {
+                settings.DocumentTitle = "IsoPruefi API Documentation";
+                settings.OAuth2Client = new OAuth2ClientSettings
+                {
+                    ClientId = "swagger",
+                    AppName = "IsoPruefi API"
+                };
+            });
+            app.UseDeveloperExceptionPage();
 
             using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);

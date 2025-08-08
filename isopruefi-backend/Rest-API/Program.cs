@@ -173,7 +173,6 @@ public class Program
 
             using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
-
         }
 
         //app.UseHttpsRedirection();

@@ -3,6 +3,7 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { TemperatureDataClient, ApiException } from '../api/api-client.ts';
+import {getToken} from "../utils/tokenHelpers.ts";
 
 /*
 JSON format of temperature data
@@ -15,14 +16,21 @@ export type WeatherEntry = {
     tempOutside: number;
 };
 
-// website heading
-export function WeatherChartTitle() {
-    return <h1>Weather Chart</h1>
+const style = { width: '100%', height: 400 };
+const token = getToken();
+if (!token) {
+    throw new Error("Not logged in");
 }
 
-const style = { width: '100%', height: 400 };
-
-const temperatureClient = new TemperatureDataClient('http://localhost:5160');
+const temperatureClient = new TemperatureDataClient('http://localhost:5160', {
+    fetch: (input, init = {}) => {
+        init.headers = {
+            ...(init.headers || {}),
+            Authorization: `Bearer ${token}`,
+        };
+        return window.fetch(input, init);
+    }
+});
 
 /*
     Function that fetches data from DB.
@@ -52,7 +60,7 @@ export function TempChart() {
                     isFahrenheit) as any;
 
                 // ACTIVATE AFTER SOUTH DATA WILL BE MEASURED AND STORED
-                // const south = data.temperatureSouth || [];
+                const south = data.temperatureSouth || [];
                 const north = data.temperatureNord || [];
                 const outside = data.temperatureOutside || [];
 
@@ -70,7 +78,7 @@ export function TempChart() {
                         timestamp: north[i].timestamp
                             ? new Date(north[i].timestamp).toISOString()
                             : '',
-                        tempSouth: 0,
+                        tempSouth: south[i]?.temperature ?? 0,
                         tempNorth: north[i]?.temperature ?? 0,
                         tempOutside: outside[i]?.temperature ?? 0,
                     })

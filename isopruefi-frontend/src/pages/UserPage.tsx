@@ -19,7 +19,7 @@ export default function UserPage() {
                 <h2>Weather chart on user page</h2>
                 <TempChart />
             </div>
-
+            <br/><br/><br/>
             <button style={style} onClick={handleLogout}>Logout</button>
         </div>
     )

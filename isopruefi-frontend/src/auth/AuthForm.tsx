@@ -23,13 +23,24 @@ export default function AuthForm({ mode }: AuthFormProps) {
         try {
             if (mode === "signin") {
                 const tokenData = await login(username, password);
-                saveToken(tokenData.token, tokenData.refreshToken);
-                const decoded = decodeToken(tokenData.token);
-                console.log("Decoded JWT:", decoded);
 
-                if (decoded?.role === "Admin") {
+                // store tokens
+                saveToken(tokenData.token, tokenData.refreshToken);
+
+                // decode and normalize roles
+                const decoded: any = decodeToken(tokenData.token) ?? {};
+                const claim =
+                    decoded.role ??
+                    decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+                const roles: string[] =
+                    Array.isArray(claim) ? claim :
+                        typeof claim === "string" && claim ? [claim] : [];
+
+                // route based on role
+                if (roles.includes("Admin")) {
                     navigate("/admin");
-                } else if (decoded?.role === "User") {
+                } else if (roles.includes("User")) {
                     navigate("/user");
                 } else {
                     navigate("/");
@@ -43,6 +54,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             setError(err.message || "Something went wrong.");
         }
     };
+
 
     return (
         <form onSubmit={handleSubmit} style={{ maxWidth: 300, margin: "auto" }}>

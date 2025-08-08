@@ -22,12 +22,29 @@ export async function register(userName: string, password: string) {
         {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userName, password })
+            body: JSON.stringify({ userName, password }),
         }
     );
+    
+    if (!res.ok) {
+        const text = await res.text();
+        try {
+            const problem = text ? JSON.parse(text) : null;
+            const msg = problem?.detail || problem?.title || "Registration failed";
+            throw new Error(msg);
+        } catch {
+            throw new Error(text || "Registration failed");
+        }
+    }
 
-    if (!res.ok) throw new Error(await res.text() || "Registration failed");
-    return res.json();
+    const text = await res.text();
+    if (!text) return;
+
+    try {
+        return JSON.parse(text);
+    } catch {
+        return;
+    }
 }
 
 export async function refreshToken(token: string, refreshToken: string) {

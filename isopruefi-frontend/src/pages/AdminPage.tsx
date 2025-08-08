@@ -18,7 +18,7 @@ export default function AdminPage() {
             <div>
                 <h2>Weather Chart on Admin page</h2>
                 <TempChart />
-                
+                <br/><br/><br/>
                 <button style={style} onClick={handleLogout}>Logout</button>
             </div>
         </div>

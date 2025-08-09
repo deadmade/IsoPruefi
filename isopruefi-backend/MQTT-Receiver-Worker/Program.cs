@@ -25,11 +25,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
+        builder.Services.AddMemoryCache();
 
         // Register Repos
+        builder.Services.AddScoped<CachedInfluxRepo>();
+        builder.Services.AddScoped<IInfluxRepo>(provider => provider.GetRequiredService<CachedInfluxRepo>());
         builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
-
         // Register Database with proper DbContext
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
         {

@@ -48,6 +48,7 @@ public class Program
         else if (builder.Environment.IsEnvironment("Docker")) builder.Configuration.AddEnvironmentVariables();
 
         builder.Services.AddHostedService<Worker>();
+        builder.Services.AddHostedService<InfluxRetryService>();
 
         var app = builder.Build();
 

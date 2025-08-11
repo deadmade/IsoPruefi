@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['max_5flines_5fper_5fcsv_5ffile_0',['MAX_LINES_PER_CSV_FILE',['../storage_8cpp.html#a58a44f18fcb1ee66a6ffec02016568a3',1,'storage.cpp']]],
-  ['max_5frecovery_5ffiles_5fper_5floop_1',['MAX_RECOVERY_FILES_PER_LOOP',['../mqtt_8cpp.html#a407875f5e946a88244a5d566c3d29d03',1,'mqtt.cpp']]],
-  ['medium_5fbuffer_5fsize_2',['MEDIUM_BUFFER_SIZE',['../storage_8cpp.html#a09f5fe9f2f18854f57bac91913060821',1,'storage.cpp']]]
+  ['large_5fbuffer_5fsize_0',['large_buffer_size',['../mqtt_8cpp.html#abafcc50ab7d3b296d64e26083a1a876e',1,'LARGE_BUFFER_SIZE:&#160;mqtt.cpp'],['../storage_8cpp.html#abafcc50ab7d3b296d64e26083a1a876e',1,'LARGE_BUFFER_SIZE:&#160;storage.cpp']]],
+  ['lastloggedminute_1',['lastLoggedMinute',['../core_8cpp.html#abb6f4167f4e2989c5f0af6f10b56d33e',1,'core.cpp']]],
+  ['lastreconnectattempt_2',['lastReconnectAttempt',['../core_8cpp.html#aca3b6475cc9f45c2f6c244acb67c64f7',1,'core.cpp']]],
+  ['line_5fbuffer_5fsize_3',['LINE_BUFFER_SIZE',['../mqtt_8cpp.html#abb1c8ff7f876cef50bab38d6ac9a4d10',1,'mqtt.cpp']]],
+  ['linesinfile_4',['linesInFile',['../storage_8cpp.html#aec9be327bdba67f54696d8adb23520cd',1,'storage.cpp']]],
+  ['loop_5fdelay_5fms_5',['LOOP_DELAY_MS',['../core_8cpp.html#aa9b3766a24a11a11d57c6ba9114d992b',1,'core.cpp']]]
 ];

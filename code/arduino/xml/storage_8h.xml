@@ -216,7 +216,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="8" column="6" bodyfile="src/storage.cpp" bodystart="295" bodyend="310" declfile="include/storage.h" declline="8" declcolumn="6"/>
+        <location file="include/storage.h" line="8" column="6" bodyfile="src/storage.cpp" bodystart="297" bodyend="312" declfile="include/storage.h" declline="8" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="storage_8h_1ab16364c7bad54765d7deca604d19f172" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -301,7 +301,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="10" column="6" bodyfile="src/storage.cpp" bodystart="141" bodyend="148" declfile="include/storage.h" declline="10" declcolumn="6"/>
+        <location file="include/storage.h" line="10" column="6" bodyfile="src/storage.cpp" bodystart="141" bodyend="149" declfile="include/storage.h" declline="10" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="storage_8h_1a7e33188776964f5ea7504de34669407d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -377,7 +377,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/storage.h" line="11" column="6" bodyfile="src/storage.cpp" bodystart="194" bodyend="260" declfile="include/storage.h" declline="11" declcolumn="6"/>
+        <location file="include/storage.h" line="11" column="6" bodyfile="src/storage.cpp" bodystart="195" bodyend="262" declfile="include/storage.h" declline="11" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>const char *</type>

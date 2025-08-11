@@ -45,7 +45,8 @@
     <member refid="mock__json_8h_1a23d227a500ab50420b35be152ef0a5e4" kind="define"><name>JsonArray</name></member>
   </compound>
   <compound refid="mqtt_8h" kind="file"><name>mqtt.h</name>
-    <member refid="mqtt_8h_1ab4dfd2aed88177be74263339392bdcc0" kind="function"><name>sendToMqtt</name></member>
+    <member refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kind="variable"><name>mqttClient</name></member>
+    <member refid="mqtt_8h_1adb1262e589b7726a8dcf8c8c4b63d5fc" kind="function"><name>sendToMqtt</name></member>
     <member refid="mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e" kind="function"><name>sendPendingData</name></member>
     <member refid="mqtt_8h_1aa9addf0d646507c6b47509cc143a9d46" kind="function"><name>createFullTopic</name></member>
   </compound>
@@ -99,7 +100,7 @@
     <member refid="core_8cpp_1af80c34747656b263fece5b92e5786fab" kind="variable"><name>wifiOk</name></member>
     <member refid="core_8cpp_1a9e1fbed2e9bf75293274a8fde0a5085d" kind="variable"><name>recoveredSent</name></member>
     <member refid="core_8cpp_1aca3b6475cc9f45c2f6c244acb67c64f7" kind="variable"><name>lastReconnectAttempt</name></member>
-    <member refid="core_8cpp_1aa36be85ab02519b9969bf118f8647728" kind="function"><name>mqttClient</name></member>
+    <member refid="core_8cpp_1adfa37a786a938fa0bb795aeb59829e30" kind="function"><name>mqttClient</name></member>
     <member refid="core_8cpp_1aecaef34a5b4c910faf41faad214950fd" kind="function"><name>isWifiConnected</name></member>
     <member refid="core_8cpp_1a636ad73f43ed4a9e30c58de52e8030d0" kind="function"><name>isMqttConnected</name></member>
     <member refid="core_8cpp_1a84b7ee25d4d43e3b6dd6b3193a2547f0" kind="function"><name>dateTime</name></member>
@@ -111,6 +112,7 @@
     <member refid="main_8cpp_1afe461d27b9c48d5921c00d521181f12f" kind="function"><name>loop</name></member>
   </compound>
   <compound refid="mqtt_8cpp" kind="file"><name>mqtt.cpp</name>
+    <member refid="mqtt_8cpp_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kind="variable"><name>mqttClient</name></member>
     <member refid="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kind="variable"><name>SMALL_BUFFER_SIZE</name></member>
     <member refid="mqtt_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" kind="variable"><name>LARGE_BUFFER_SIZE</name></member>
     <member refid="mqtt_8cpp_1aa4d6a09459b76d7be490a8804e8bffe4" kind="variable"><name>FILE_NAME_BUFFER_SIZE</name></member>
@@ -120,8 +122,18 @@
     <member refid="mqtt_8cpp_1abb1c8ff7f876cef50bab38d6ac9a4d10" kind="variable"><name>LINE_BUFFER_SIZE</name></member>
     <member refid="mqtt_8cpp_1a700fb0855fc0d557992d5068df21e937" kind="variable"><name>SECONDS_IN_24_HOURS</name></member>
     <member refid="mqtt_8cpp_1a8fa547868639ebfd54dcfd92dc6f0dc7" kind="variable"><name>RECOVERY_TIMEOUT_MS</name></member>
+    <member refid="mqtt_8cpp_1aba2b7ae1d49c468937bdcded3695352b" kind="variable"><name>ACK_TIMEOUT_MS</name></member>
+    <member refid="mqtt_8cpp_1ad1462ad318bc6cd52a0b6ce826ca946c" kind="variable"><name>RECOVERY_ACK_TIMEOUT_MS</name></member>
+    <member refid="mqtt_8cpp_1ac4ded6926a35bdbecaf8318908797a51" kind="variable"><name>DELAY_POLLING_LOOP_MS</name></member>
+    <member refid="mqtt_8cpp_1ad5cdeb03df0da73c08309eb1693816f4" kind="variable"><name>s_ackSeen</name></member>
+    <member refid="mqtt_8cpp_1af87e53fea3cf7b797a5bd30588380511" kind="variable"><name>s_ackSeq</name></member>
+    <member refid="mqtt_8cpp_1a365552749e351abf6c38ffb0946ae993" kind="variable"><name>s_pubTopic</name></member>
+    <member refid="mqtt_8cpp_1a8671bf831d0fbe6895dfdf718ba4ca1c" kind="variable"><name>s_ackInit</name></member>
+    <member refid="mqtt_8cpp_1a0372ba208db530fdab85acc06cfb5110" kind="function"><name>extractSequence</name></member>
+    <member refid="mqtt_8cpp_1adbc7a6592f41c1a9cf686f7a5462e6c2" kind="function"><name>onMqttEchoMessage</name></member>
+    <member refid="mqtt_8cpp_1a8767f6040d3a00dd59beb69b7d22d0d5" kind="function"><name>ensureAckInit</name></member>
     <member refid="mqtt_8cpp_1a61adb6a9fd42b65f57c7f643e6f239f4" kind="function"><name>createFullTopic</name></member>
-    <member refid="mqtt_8cpp_1ab4dfd2aed88177be74263339392bdcc0" kind="function"><name>sendToMqtt</name></member>
+    <member refid="mqtt_8cpp_1adb1262e589b7726a8dcf8c8c4b63d5fc" kind="function"><name>sendToMqtt</name></member>
     <member refid="mqtt_8cpp_1a2f6ba6fe36426e331cac4ec8f8ab4c9e" kind="function"><name>sendPendingData</name></member>
   </compound>
   <compound refid="network_8cpp" kind="file"><name>network.cpp</name>

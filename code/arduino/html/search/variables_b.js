@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['values_0',['values',['../struct_mock_json_array.html#abf917a8e07e4ad39db9c8b4846751c58',1,'MockJsonArray']]]
+  ['tempsensor_0',['tempsensor',['../platform_8h.html#af19292dee25d42580f9588b754ddbedc',1,'tempsensor:&#160;core.cpp'],['../core_8cpp.html#af19292dee25d42580f9588b754ddbedc',1,'tempsensor:&#160;core.cpp']]],
+  ['topic_1',['topic',['../core_8cpp.html#a4ed7b4c951621dbec76099594f64d249',1,'core.cpp']]]
 ];

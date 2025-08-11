@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['minute_0',['minute',['../struct_mock_date_time.html#aaf0fa9f97d3821f3142e30b48e882162',1,'MockDateTime']]],
-  ['mockdatetime_1',['MockDateTime',['../struct_mock_date_time.html#afa6b81d08baa7af091324cd8fbf391cd',1,'MockDateTime']]],
-  ['month_2',['month',['../struct_mock_date_time.html#a9f82beb632246fda02518695d77c977e',1,'MockDateTime']]],
-  ['mqttclient_3',['mqttClient',['../core_8cpp.html#aa36be85ab02519b9969bf118f8647728',1,'core.cpp']]]
+  ['loop_0',['loop',['../main_8cpp.html#afe461d27b9c48d5921c00d521181f12f',1,'main.cpp']]]
 ];

@@ -1,9 +1,6 @@
 var searchData=
 [
-  ['large_5fbuffer_5fsize_0',['large_buffer_size',['../mqtt_8cpp.html#abafcc50ab7d3b296d64e26083a1a876e',1,'LARGE_BUFFER_SIZE:&#160;mqtt.cpp'],['../storage_8cpp.html#abafcc50ab7d3b296d64e26083a1a876e',1,'LARGE_BUFFER_SIZE:&#160;storage.cpp']]],
-  ['lastloggedminute_1',['lastLoggedMinute',['../core_8cpp.html#abb6f4167f4e2989c5f0af6f10b56d33e',1,'core.cpp']]],
-  ['lastreconnectattempt_2',['lastReconnectAttempt',['../core_8cpp.html#aca3b6475cc9f45c2f6c244acb67c64f7',1,'core.cpp']]],
-  ['line_5fbuffer_5fsize_3',['LINE_BUFFER_SIZE',['../mqtt_8cpp.html#abb1c8ff7f876cef50bab38d6ac9a4d10',1,'mqtt.cpp']]],
-  ['linesinfile_4',['linesInFile',['../storage_8cpp.html#aec9be327bdba67f54696d8adb23520cd',1,'storage.cpp']]],
-  ['loop_5fdelay_5fms_5',['LOOP_DELAY_MS',['../core_8cpp.html#aa9b3766a24a11a11d57c6ba9114d992b',1,'core.cpp']]]
+  ['file_5fname_5fbuffer_5fsize_0',['file_name_buffer_size',['../mqtt_8cpp.html#aa4d6a09459b76d7be490a8804e8bffe4',1,'FILE_NAME_BUFFER_SIZE:&#160;mqtt.cpp'],['../storage_8cpp.html#aa4d6a09459b76d7be490a8804e8bffe4',1,'FILE_NAME_BUFFER_SIZE:&#160;storage.cpp']]],
+  ['folder_5fname_5fbuffer_5fsize_1',['folder_name_buffer_size',['../mqtt_8cpp.html#a633b6d91d2a6b9fe94d49679bf76cf8d',1,'FOLDER_NAME_BUFFER_SIZE:&#160;mqtt.cpp'],['../storage_8cpp.html#a633b6d91d2a6b9fe94d49679bf76cf8d',1,'FOLDER_NAME_BUFFER_SIZE:&#160;storage.cpp']]],
+  ['full_5fpath_5fbuffer_5fsize_2',['FULL_PATH_BUFFER_SIZE',['../mqtt_8cpp.html#ac89604b3a86db0dabb5538b2f3a5cdd6',1,'mqtt.cpp']]]
 ];

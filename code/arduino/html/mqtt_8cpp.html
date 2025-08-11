@@ -85,17 +85,25 @@ $(function() {
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a0372ba208db530fdab85acc06cfb5110" id="r_a0372ba208db530fdab85acc06cfb5110"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#a0372ba208db530fdab85acc06cfb5110">extractSequence</a> (const char *json, long &amp;outSeq)</td></tr>
+<tr class="separator:a0372ba208db530fdab85acc06cfb5110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbc7a6592f41c1a9cf686f7a5462e6c2" id="r_adbc7a6592f41c1a9cf686f7a5462e6c2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#adbc7a6592f41c1a9cf686f7a5462e6c2">onMqttEchoMessage</a> (int messageSize)</td></tr>
+<tr class="separator:adbc7a6592f41c1a9cf686f7a5462e6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8767f6040d3a00dd59beb69b7d22d0d5" id="r_a8767f6040d3a00dd59beb69b7d22d0d5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#a8767f6040d3a00dd59beb69b7d22d0d5">ensureAckInit</a> (MqttClient &amp;client, const char *topicPrefix, const char *<a class="el" href="core_8cpp.html#abf39fa4821630d1a42cee86df5b43f39">sensorType</a>, const char *sensorId)</td></tr>
+<tr class="separator:a8767f6040d3a00dd59beb69b7d22d0d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61adb6a9fd42b65f57c7f643e6f239f4" id="r_a61adb6a9fd42b65f57c7f643e6f239f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#a61adb6a9fd42b65f57c7f643e6f239f4">createFullTopic</a> (char *buffer, size_t bufferSize, const char *topicPrefix, const char *<a class="el" href="core_8cpp.html#abf39fa4821630d1a42cee86df5b43f39">sensorType</a>, const char *sensorId, const char *suffix)</td></tr>
 <tr class="separator:a61adb6a9fd42b65f57c7f643e6f239f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4dfd2aed88177be74263339392bdcc0" id="r_ab4dfd2aed88177be74263339392bdcc0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#ab4dfd2aed88177be74263339392bdcc0">sendToMqtt</a> (MqttClient &amp;<a class="el" href="core_8cpp.html#aa36be85ab02519b9969bf118f8647728">mqttClient</a>, const char *topicPrefix, const char *<a class="el" href="core_8cpp.html#abf39fa4821630d1a42cee86df5b43f39">sensorType</a>, const char *sensorId, float celsius, const DateTime &amp;now, int sequence)</td></tr>
-<tr class="memdesc:ab4dfd2aed88177be74263339392bdcc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Publishes real-time sensor data to MQTT broker.  <br /></td></tr>
-<tr class="separator:ab4dfd2aed88177be74263339392bdcc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f6ba6fe36426e331cac4ec8f8ab4c9e" id="r_a2f6ba6fe36426e331cac4ec8f8ab4c9e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#a2f6ba6fe36426e331cac4ec8f8ab4c9e">sendPendingData</a> (MqttClient &amp;<a class="el" href="core_8cpp.html#aa36be85ab02519b9969bf118f8647728">mqttClient</a>, const char *topicPrefix, const char *<a class="el" href="core_8cpp.html#abf39fa4821630d1a42cee86df5b43f39">sensorType</a>, const char *sensorId, const DateTime &amp;now)</td></tr>
-<tr class="memdesc:a2f6ba6fe36426e331cac4ec8f8ab4c9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes and transmits pending CSV files from offline periods.  <br /></td></tr>
+<tr class="memitem:adb1262e589b7726a8dcf8c8c4b63d5fc" id="r_adb1262e589b7726a8dcf8c8c4b63d5fc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#adb1262e589b7726a8dcf8c8c4b63d5fc">sendToMqtt</a> (MqttClient &amp;<a class="el" href="mqtt_8h.html#aaf73b36dfdb5cafe8dbb8ca7563f7e56">mqttClient</a>, const char *topicPrefix, const char *<a class="el" href="core_8cpp.html#abf39fa4821630d1a42cee86df5b43f39">sensorType</a>, const char *sensorId, float celsius, const DateTime &amp;now, int sequence)</td></tr>
+<tr class="memdesc:adb1262e589b7726a8dcf8c8c4b63d5fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Publishes real-time sensor data to the MQTT broker with QoS 1 delivery.  <br /></td></tr>
+<tr class="separator:adb1262e589b7726a8dcf8c8c4b63d5fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f6ba6fe36426e331cac4ec8f8ab4c9e" id="r_a2f6ba6fe36426e331cac4ec8f8ab4c9e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#a2f6ba6fe36426e331cac4ec8f8ab4c9e">sendPendingData</a> (MqttClient &amp;<a class="el" href="mqtt_8h.html#aaf73b36dfdb5cafe8dbb8ca7563f7e56">mqttClient</a>, const char *topicPrefix, const char *<a class="el" href="core_8cpp.html#abf39fa4821630d1a42cee86df5b43f39">sensorType</a>, const char *sensorId, const DateTime &amp;now)</td></tr>
+<tr class="memdesc:a2f6ba6fe36426e331cac4ec8f8ab4c9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes and transmits pending CSV files from offline periods to the MQTT broker.  <br /></td></tr>
 <tr class="separator:a2f6ba6fe36426e331cac4ec8f8ab4c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:aaf73b36dfdb5cafe8dbb8ca7563f7e56" id="r_aaf73b36dfdb5cafe8dbb8ca7563f7e56"><td class="memItemLeft" align="right" valign="top">MqttClient&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#aaf73b36dfdb5cafe8dbb8ca7563f7e56">mqttClient</a></td></tr>
+<tr class="separator:aaf73b36dfdb5cafe8dbb8ca7563f7e56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01d5af4481e953ac242d59bd4c22765f" id="r_a01d5af4481e953ac242d59bd4c22765f"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#a01d5af4481e953ac242d59bd4c22765f">SMALL_BUFFER_SIZE</a> = 128</td></tr>
 <tr class="memdesc:a01d5af4481e953ac242d59bd4c22765f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffer size for small MQTT topics, payloads, and JSON documents.  <br /></td></tr>
 <tr class="separator:a01d5af4481e953ac242d59bd4c22765f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,6 +126,20 @@ Variables</h2></td></tr>
 <tr class="memitem:a8fa547868639ebfd54dcfd92dc6f0dc7" id="r_a8fa547868639ebfd54dcfd92dc6f0dc7"><td class="memItemLeft" align="right" valign="top">static const unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#a8fa547868639ebfd54dcfd92dc6f0dc7">RECOVERY_TIMEOUT_MS</a> = 60000</td></tr>
 <tr class="memdesc:a8fa547868639ebfd54dcfd92dc6f0dc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timeout for recovery operations in milliseconds (60 seconds)  <br /></td></tr>
 <tr class="separator:a8fa547868639ebfd54dcfd92dc6f0dc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba2b7ae1d49c468937bdcded3695352b" id="r_aba2b7ae1d49c468937bdcded3695352b"><td class="memItemLeft" align="right" valign="top">static const unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#aba2b7ae1d49c468937bdcded3695352b">ACK_TIMEOUT_MS</a> = 5000</td></tr>
+<tr class="separator:aba2b7ae1d49c468937bdcded3695352b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1462ad318bc6cd52a0b6ce826ca946c" id="r_ad1462ad318bc6cd52a0b6ce826ca946c"><td class="memItemLeft" align="right" valign="top">static const unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#ad1462ad318bc6cd52a0b6ce826ca946c">RECOVERY_ACK_TIMEOUT_MS</a> = 10000</td></tr>
+<tr class="separator:ad1462ad318bc6cd52a0b6ce826ca946c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4ded6926a35bdbecaf8318908797a51" id="r_ac4ded6926a35bdbecaf8318908797a51"><td class="memItemLeft" align="right" valign="top">static const unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#ac4ded6926a35bdbecaf8318908797a51">DELAY_POLLING_LOOP_MS</a> = 10</td></tr>
+<tr class="separator:ac4ded6926a35bdbecaf8318908797a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5cdeb03df0da73c08309eb1693816f4" id="r_ad5cdeb03df0da73c08309eb1693816f4"><td class="memItemLeft" align="right" valign="top">static volatile bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#ad5cdeb03df0da73c08309eb1693816f4">s_ackSeen</a> = false</td></tr>
+<tr class="separator:ad5cdeb03df0da73c08309eb1693816f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af87e53fea3cf7b797a5bd30588380511" id="r_af87e53fea3cf7b797a5bd30588380511"><td class="memItemLeft" align="right" valign="top">static volatile long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#af87e53fea3cf7b797a5bd30588380511">s_ackSeq</a> = -1</td></tr>
+<tr class="separator:af87e53fea3cf7b797a5bd30588380511"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a365552749e351abf6c38ffb0946ae993" id="r_a365552749e351abf6c38ffb0946ae993"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#a365552749e351abf6c38ffb0946ae993">s_pubTopic</a></td></tr>
+<tr class="separator:a365552749e351abf6c38ffb0946ae993"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8671bf831d0fbe6895dfdf718ba4ca1c" id="r_a8671bf831d0fbe6895dfdf718ba4ca1c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mqtt_8cpp.html#a8671bf831d0fbe6895dfdf718ba4ca1c">s_ackInit</a> = false</td></tr>
+<tr class="separator:a8671bf831d0fbe6895dfdf718ba4ca1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a61adb6a9fd42b65f57c7f643e6f239f4" name="a61adb6a9fd42b65f57c7f643e6f239f4"></a>
@@ -172,6 +194,116 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a8767f6040d3a00dd59beb69b7d22d0d5" name="a8767f6040d3a00dd59beb69b7d22d0d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8767f6040d3a00dd59beb69b7d22d0d5">&#9670;&#160;</a></span>ensureAckInit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ensureAckInit </td>
+          <td>(</td>
+          <td class="paramtype">MqttClient &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>topicPrefix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>sensorType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>sensorId</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0372ba208db530fdab85acc06cfb5110" name="a0372ba208db530fdab85acc06cfb5110"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0372ba208db530fdab85acc06cfb5110">&#9670;&#160;</a></span>extractSequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool extractSequence </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>json</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long &amp;&#160;</td>
+          <td class="paramname"><em>outSeq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adbc7a6592f41c1a9cf686f7a5462e6c2" name="adbc7a6592f41c1a9cf686f7a5462e6c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbc7a6592f41c1a9cf686f7a5462e6c2">&#9670;&#160;</a></span>onMqttEchoMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void onMqttEchoMessage </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>messageSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2f6ba6fe36426e331cac4ec8f8ab4c9e" name="a2f6ba6fe36426e331cac4ec8f8ab4c9e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2f6ba6fe36426e331cac4ec8f8ab4c9e">&#9670;&#160;</a></span>sendPendingData()</h2>
 
@@ -216,42 +348,31 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Processes and transmits pending CSV files from offline periods. </p>
-<p>This function implements the data recovery mechanism that ensures no sensor data is lost during network outages. It scans for CSV files created during offline periods, converts them to JSON format, and transmits them via MQTT.</p>
-<p>**Recovery Process:** 1. **File Discovery**: Scans the current date folder for CSV files 2. **Age Filtering**: Skips files older than 24 hours to prevent stale data 3. **Content Validation**: Checks for valid data before transmission 4. **Size Management**: Handles large payloads that exceed buffer limits 5. **Transmission**: Publishes data to recovery topic 6. **Cleanup**: Deletes successfully transmitted files 7. **Timeout Handling**: Prevents infinite processing loops</p>
-<p>**Error Handling:**</p><ul>
-<li>Skips empty or corrupted files</li>
-<li>Handles oversized payloads gracefully</li>
-<li>Preserves files if transmission fails</li>
-<li>Implements timeout protection</li>
-</ul>
+<p>Processes and transmits pending CSV files from offline periods to the MQTT broker. </p>
+<p>This function scans the SD card for CSV files containing unsent sensor data from previous offline periods. Each file is converted to a JSON payload and published to the MQTT topic &lt;topic&gt;/recovered with QoS 1. After publishing, it waits briefly for a PUBACK handshake from the broker to confirm delivery. If the PUBACK is not received within the timeout period, the file is saved for later transmission. Files are only deleted if the publish operation succeeds. Files older than 24 hours or with invalid data are skipped.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">mqttClient</td><td>Reference to the MQTT client instance </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">topicPrefix</td><td>Base MQTT topic prefix </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sensorType</td><td>Type identifier for the sensor </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sensorId</td><td>Unique identifier for this sensor </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">now</td><td>Current timestamp for filtering and processing</td></tr>
+    <tr><td class="paramname">mqttClient</td><td>Reference to the MQTT client instance </td></tr>
+    <tr><td class="paramname">topicPrefix</td><td>Topic prefix for MQTT publishing (e.g., "dhbw/ai/si2023/2/") </td></tr>
+    <tr><td class="paramname">sensorType</td><td>Sensor type string (e.g., "temp") </td></tr>
+    <tr><td class="paramname">sensorId</td><td>Unique sensor identifier </td></tr>
+    <tr><td class="paramname">now</td><td>Current timestamp (DateTime) </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if all pending files were successfully processed, false if timeout occurred or some files could not be transmitted</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>This function uses the "/recovered" topic suffix for transmitted data </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="storage_8h.html#a7e33188776964f5ea7504de34669407d" title="Builds a JSON document from CSV batch data for recovery transmission.">buildRecoveredJsonFromCsv()</a> for CSV to JSON conversion </dd>
-<dd>
-<a class="el" href="storage_8h.html#a712233a12d2ef3c7d797e0a06149ca73" title="Deletes a CSV file from the SD card storage system.">deleteCsvFile()</a> for file cleanup after successful transmission </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>Files older than 24 hours are automatically skipped </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if all valid files were published and deleted, false if any files remain or errors occurred</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Uses QoS 1 for reliable delivery. Skips files older than 24 hours or with invalid content. Aborts if recovery exceeds time limit. </dd></dl>
 
 </div>
 </div>
-<a id="ab4dfd2aed88177be74263339392bdcc0" name="ab4dfd2aed88177be74263339392bdcc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4dfd2aed88177be74263339392bdcc0">&#9670;&#160;</a></span>sendToMqtt()</h2>
+<a id="adb1262e589b7726a8dcf8c8c4b63d5fc" name="adb1262e589b7726a8dcf8c8c4b63d5fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb1262e589b7726a8dcf8c8c4b63d5fc">&#9670;&#160;</a></span>sendToMqtt()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void sendToMqtt </td>
+          <td class="memname">bool sendToMqtt </td>
           <td>(</td>
           <td class="paramtype">MqttClient &amp;&#160;</td>
           <td class="paramname"><em>mqttClient</em>, </td>
@@ -300,29 +421,70 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Publishes real-time sensor data to MQTT broker. </p>
-<p>This function handles the complete process of publishing current sensor readings to the MQTT broker, including JSON formatting and topic construction.</p>
-<p>**Process Flow:** 1. Polls MQTT client to maintain connection 2. Constructs appropriate topic based on sensor information 3. Builds JSON payload with sensor data 4. Attempts to publish data to broker 5. Provides status feedback via serial output</p>
+<p>Publishes real-time sensor data to the MQTT broker with QoS 1 delivery. </p>
+<p>This function builds a JSON payload from the provided sensor data and publishes it to the specified MQTT topic. After publishing, it waits briefly for a PUBACK handshake from the broker to confirm delivery. If no acknowledgment is received within the timeout window, the data is saved to a CSV file for later recovery.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">mqttClient</td><td>Reference to the MQTT client instance </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">topicPrefix</td><td>Base MQTT topic prefix </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sensorType</td><td>Type identifier for the sensor </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sensorId</td><td>Unique identifier for this sensor </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">celsius</td><td>Temperature reading in Celsius </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">now</td><td>Current timestamp for the reading </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">sequence</td><td>Sequence number for the measurement</td></tr>
+    <tr><td class="paramname">mqttClient</td><td>Reference to the MQTT client instance </td></tr>
+    <tr><td class="paramname">topicPrefix</td><td>Topic prefix for MQTT publishing (e.g., "dhbw/ai/si2023/2/") </td></tr>
+    <tr><td class="paramname">sensorType</td><td>Sensor type string (e.g., "temp") </td></tr>
+    <tr><td class="paramname">sensorId</td><td>Unique sensor identifier </td></tr>
+    <tr><td class="paramname">celsius</td><td>Measured temperature value in Celsius </td></tr>
+    <tr><td class="paramname">now</td><td>Current timestamp (DateTime) </td></tr>
+    <tr><td class="paramname">sequence</td><td>Sequence number for the measurement </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>This function does not handle connection failures - the caller should verify MQTT connectivity before calling </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="storage_8h.html#ab16364c7bad54765d7deca604d19f172" title="Builds a JSON document from live sensor data for real-time transmission.">buildJson()</a> for JSON payload structure </dd>
-<dd>
-<a class="el" href="mqtt_8cpp.html#a61adb6a9fd42b65f57c7f643e6f239f4">createFullTopic()</a> for <a class="el" href="core_8cpp.html#a4ed7b4c951621dbec76099594f64d249">topic</a> construction details </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if published and acknowledged by broker, false if fallback to CSV</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Uses QoS 1 for reliable delivery. If broker does not echo/PUBACK within the timeout, data is persisted for later transmission. </dd></dl>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="aba2b7ae1d49c468937bdcded3695352b" name="aba2b7ae1d49c468937bdcded3695352b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba2b7ae1d49c468937bdcded3695352b">&#9670;&#160;</a></span>ACK_TIMEOUT_MS</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned long ACK_TIMEOUT_MS = 5000</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac4ded6926a35bdbecaf8318908797a51" name="ac4ded6926a35bdbecaf8318908797a51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4ded6926a35bdbecaf8318908797a51">&#9670;&#160;</a></span>DELAY_POLLING_LOOP_MS</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned long DELAY_POLLING_LOOP_MS = 10</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa4d6a09459b76d7be490a8804e8bffe4" name="aa4d6a09459b76d7be490a8804e8bffe4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa4d6a09459b76d7be490a8804e8bffe4">&#9670;&#160;</a></span>FILE_NAME_BUFFER_SIZE</h2>
 
@@ -459,6 +621,50 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="aaf73b36dfdb5cafe8dbb8ca7563f7e56" name="aaf73b36dfdb5cafe8dbb8ca7563f7e56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf73b36dfdb5cafe8dbb8ca7563f7e56">&#9670;&#160;</a></span>mqttClient</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">MqttClient mqttClient</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad1462ad318bc6cd52a0b6ce826ca946c" name="ad1462ad318bc6cd52a0b6ce826ca946c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1462ad318bc6cd52a0b6ce826ca946c">&#9670;&#160;</a></span>RECOVERY_ACK_TIMEOUT_MS</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned long RECOVERY_ACK_TIMEOUT_MS = 10000</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8fa547868639ebfd54dcfd92dc6f0dc7" name="a8fa547868639ebfd54dcfd92dc6f0dc7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8fa547868639ebfd54dcfd92dc6f0dc7">&#9670;&#160;</a></span>RECOVERY_TIMEOUT_MS</h2>
 
@@ -480,6 +686,94 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Timeout for recovery operations in milliseconds (60 seconds) </p>
+
+</div>
+</div>
+<a id="a8671bf831d0fbe6895dfdf718ba4ca1c" name="a8671bf831d0fbe6895dfdf718ba4ca1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8671bf831d0fbe6895dfdf718ba4ca1c">&#9670;&#160;</a></span>s_ackInit</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool s_ackInit = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad5cdeb03df0da73c08309eb1693816f4" name="ad5cdeb03df0da73c08309eb1693816f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5cdeb03df0da73c08309eb1693816f4">&#9670;&#160;</a></span>s_ackSeen</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">volatile bool s_ackSeen = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af87e53fea3cf7b797a5bd30588380511" name="af87e53fea3cf7b797a5bd30588380511"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af87e53fea3cf7b797a5bd30588380511">&#9670;&#160;</a></span>s_ackSeq</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">volatile long s_ackSeq = -1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a365552749e351abf6c38ffb0946ae993" name="a365552749e351abf6c38ffb0946ae993"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a365552749e351abf6c38ffb0946ae993">&#9670;&#160;</a></span>s_pubTopic</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">String s_pubTopic</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

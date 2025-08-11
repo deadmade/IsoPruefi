@@ -269,7 +269,7 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
     buildRecoveredJsonFromCsv(doc, fullPath, now);
 
     // Validate that the file contains usable data
-    if (!doc["meta"].is<JsonArray>() || doc["meta"].size() == 0) {
+    if (!doc["meta"].is<JsonObject>() || doc["meta"].size() == 0) {
       Serial.println("No valid data in: " + nameStr);
       skippedEmptyFiles++;
       continue;
@@ -293,7 +293,7 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
     Serial.println(payload);
 
     bool published = false;
-    if (mqttClient.beginMessage(fullTopic, false,1)) {
+    if (mqttClient.beginMessage(fullTopic, false, 1)) {
       mqttClient.print(payload);
       if (mqttClient.endMessage()) {
         // wait for echo/PUBACK handshake

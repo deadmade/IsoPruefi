@@ -2,7 +2,9 @@
 
 #include "platform.h"
 
-void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
+extern MqttClient mqttClient;
+
+bool sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
                 const char* sensorId, float celsius, const DateTime& now, int sequence);
 
 bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,

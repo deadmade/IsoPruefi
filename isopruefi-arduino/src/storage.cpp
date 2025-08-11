@@ -141,10 +141,11 @@ void saveToCsvBatch(const DateTime& now, float celsius, int sequence) {
 void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence) {
   doc.clear();
   doc["timestamp"] = now.unixtime();
-  JsonArray arr = doc.createNestedArray("value");
-  arr.add(celsius);
+  JsonArray val = doc["value"].to<JsonArray>();
+  val.add(celsius);
   doc["sequence"] = sequence;
-  doc.createNestedArray("meta").add(nullptr);
+  JsonArray meta = doc["meta"].to<JsonArray>();
+  meta.add(nullptr);
 }
 
 /**
@@ -202,12 +203,13 @@ void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const Da
   doc.clear();
   doc["timestamp"] = now.unixtime();
   doc["sequence"] = nullptr;
-  doc.createNestedArray("value").add(nullptr);  // Dummy value for compatibility
+  JsonArray val = doc["value"].to<JsonArray>();
+  val.add(nullptr);  // Dummy value for compatibility
 
-  JsonObject meta = doc.createNestedObject("meta");
-  JsonArray tArr = meta.createNestedArray("t");  // timestamp
-  JsonArray vArr = meta.createNestedArray("v");  // value
-  JsonArray sArr = meta.createNestedArray("s");  // sequence
+  JsonObject meta = doc["meta"].to<JsonObject>();
+  JsonArray tArr = meta["t"].to<JsonArray>();  // timestamp
+  JsonArray vArr = meta["v"].to<JsonArray>();  // value
+  JsonArray sArr = meta["s"].to<JsonArray>();  // sequence
 
   char line[CSV_LINE_BUFFER_SIZE];
   int added = 0;

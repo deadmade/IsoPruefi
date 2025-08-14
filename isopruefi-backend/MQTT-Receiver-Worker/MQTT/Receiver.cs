@@ -65,6 +65,11 @@ public class Receiver : IReceiver
                 var sharedTopic =
                     $"$share/{groupName}/{topic.DefaultTopicPath}/{topic.GroupId}/{topic.SensorType}/{topic.SensorName}";
 
+                if (Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") == "Development")
+                {
+                    sharedTopic = sharedTopic + "_Dev";
+                }
+
                 await SubscribeToTopic(sharedTopic, mqttClient, topic.HasRecovery);
             }
 

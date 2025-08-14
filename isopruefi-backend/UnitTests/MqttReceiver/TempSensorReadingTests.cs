@@ -37,9 +37,11 @@ public class TempSensorReadingTests
             Timestamp = 1234567890,
             Value = new double?[] { 25.5, 26.0 },
             Sequence = 42,
-            Meta = new List<TempSensorReading>
+            Meta = new TempSensorMeta
             {
-                new() { Timestamp = 1234567888, Value = new double?[] { 24.0 }, Sequence = 40 }
+                Timestamp = [1234567888], 
+                Value = [24.0],
+                Sequence = [40]
             }
         };
 
@@ -86,13 +88,12 @@ public class TempSensorReadingTests
                        "timestamp": "1234567890",
                        "value": [25.5, 26.0],
                        "sequence": 42,
-                       "meta": [
+                       "meta": 
                            {
-                               "timestamp": "1234567888",
-                               "value": [24.0],
-                               "sequence": 40
+                               "t": ["1234567888"],
+                               "v": [24.0],
+                               "s": [40]
                            }
-                       ]
                    }
                    """;
 
@@ -103,10 +104,10 @@ public class TempSensorReadingTests
         reading.Value.Should().BeEquivalentTo(new[] { 25.5, 26.0 });
         reading.Sequence.Should().Be(42);
         reading.Meta.Should().NotBeNull();
-        reading.Meta.Should().HaveCount(1);
-        reading.Meta![0].Timestamp.Should().Be(1234567888);
-        reading.Meta[0].Value.Should().BeEquivalentTo(new[] { 24.0 });
-        reading.Meta[0].Sequence.Should().Be(40);
+        reading.Meta.Should().NotBeNull();
+        reading.Meta.Timestamp[0].Should().Be(1234567888);
+        reading.Meta.Value[0].Should().Be(24.0);
+        reading.Meta.Sequence[0].Should().Be(40);
     }
 
     /// <summary>
@@ -201,7 +202,7 @@ public class TempSensorReadingTests
                    {
                        "timestamp": 1234567890,
                        "value": [25.5],
-                       "meta": [null, null]
+                       "meta": null
                    }
                    """;
 
@@ -225,7 +226,7 @@ public class TempSensorReadingTests
         var testTimestamp = 1234567890L;
         var testValue = new double?[] { 25.5, null, 26.0 };
         var testSequence = 42;
-        var testMeta = new List<TempSensorReading>();
+        var testMeta = new TempSensorMeta();
 
         reading.Timestamp = testTimestamp;
         reading.Value = testValue;

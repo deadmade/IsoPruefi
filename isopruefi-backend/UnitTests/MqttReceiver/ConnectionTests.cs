@@ -299,10 +299,11 @@ public class ConnectionTests
     [Test]
     public async Task ProcessBatchSensorReading_WithMetaData_ProcessesAllReadings()
     {
-        var metaReadings = new List<TempSensorReading>
+        var metaReadings = new TempSensorMeta
         {
-            new() { Timestamp = 1234567890, Value = new double?[] { 25.5 }, Sequence = 1 },
-            new() { Timestamp = 1234567891, Value = new double?[] { 26.0 }, Sequence = 2 }
+            Timestamp = [1234567890, 1234567891],
+            Value = [25.5, 26.0],
+            Sequence = [1, 0]
         };
 
         var batchReading = new TempSensorReading

@@ -1,7 +1,7 @@
 import { API_BASE } from "./config";
 
 const API_VERSION  = (p: string) => `${API_BASE}/v1${p}`;
-const BASE_URL = (p: string) => `${API_BASE}/api/v1${p}`;
+// const BASE_URL = (p: string) => `${API_BASE}/api/v1${p}`;
 
 export async function login(userName: string, password: string) {
     const r = await fetch(API_VERSION("/Authentication/Login"), {
@@ -29,16 +29,11 @@ export async function register(userName: string, password: string) {
 }
 
 export async function refreshToken(token: string, refreshToken: string) {
-    const response = await fetch(`${BASE_URL}/${API_VERSION}/Authentication/Refresh`, {
+    const r = await fetch(API_VERSION("/Authentication/Refresh"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, refreshToken })
+        body: JSON.stringify({ token, refreshToken }),
     });
-
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Token refresh failed");
-    }
-
-    return response.json();
+    if (!r.ok) throw new Error((await r.text()) || "Token refresh failed");
+    return r.json();
 }

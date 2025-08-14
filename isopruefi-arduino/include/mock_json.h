@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <sstream>
+#include <cstring>
 
 struct MockJsonArray {
     std::vector<std::string> values;
@@ -14,8 +16,15 @@ struct MockJsonArray {
         values.push_back(std::to_string(value));
     }
 
+    void add(int value) {
+        values.push_back(std::to_string(value));
+    }
+
     std::string operator[](size_t i) const {
-        return values[i];
+        if (i < values.size()) {
+            return values[i];
+        }
+        return "";
     }
 
     size_t size() const {
@@ -24,6 +33,10 @@ struct MockJsonArray {
 
     void clear() {
         values.clear();
+    }
+    
+    bool is_null() const {
+        return values.empty();
     }
 };
 
@@ -41,7 +54,9 @@ struct MockJsonDocument {
     }
 
     const std::string& operator[](const std::string& key) const {
-        return primitives.at(key);
+        static std::string empty = "";
+        auto it = primitives.find(key);
+        return (it != primitives.end()) ? it->second : empty;
     }
 
     MockJsonArray& createNestedArray(const std::string& key) {
@@ -56,8 +71,69 @@ struct MockJsonDocument {
         auto it = arrays.find(key);
         return (it != arrays.end()) ? it->second.size() : 0;
     }
+    
+    // ArduinoJson compatibility methods
+    template<typename T>
+    bool is() const {
+        return false; // Simplified implementation
+    }
+    
+    // Specialized template for JsonObject check
+    bool isJsonObject(const std::string& key) const {
+        return arrays.count(key) > 0;
+    }
 };
 
-// // Redefine JsonDocument to use the mock
+// Template specialization for JsonObject check
+template<>
+inline bool MockJsonDocument::is<MockJsonArray>() const {
+    return !arrays.empty();
+}
+
+// Serialization functions to match ArduinoJson API
+inline size_t serializeJson(const MockJsonDocument& doc, char* output, size_t outputSize) {
+    std::stringstream ss;
+    ss << "{";
+    
+    bool first = true;
+    
+    // Add primitives
+    for (const auto& pair : doc.primitives) {
+        if (!first) ss << ",";
+        ss << "\"" << pair.first << "\":\"" << pair.second << "\"";
+        first = false;
+    }
+    
+    // Add arrays
+    for (const auto& pair : doc.arrays) {
+        if (!first) ss << ",";
+        ss << "\"" << pair.first << "\":[";
+        for (size_t i = 0; i < pair.second.values.size(); ++i) {
+            if (i > 0) ss << ",";
+            ss << pair.second.values[i];
+        }
+        ss << "]";
+        first = false;
+    }
+    
+    ss << "}";
+    
+    std::string result = ss.str();
+    size_t len = std::min(result.length(), outputSize - 1);
+    strncpy(output, result.c_str(), len);
+    output[len] = '\0';
+    
+    return len;
+}
+
+// StaticJsonDocument template to match ArduinoJson
+template<size_t Size>
+struct StaticJsonDocument : public MockJsonDocument {
+    StaticJsonDocument() = default;
+};
+
+#ifdef UNIT_TEST
+// Redefine JsonDocument to use the mock
 #define JsonDocument MockJsonDocument
 #define JsonArray MockJsonArray
+#endif

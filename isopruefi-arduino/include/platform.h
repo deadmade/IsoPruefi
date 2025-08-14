@@ -3,7 +3,18 @@
 #ifdef UNIT_TEST
   #include "mock_datetime.h"
   #include "mock_json.h"
+  #include "mock_wifi.h"
+  #include "mock_mqtt.h"
+  #include "mock_hardware.h"
+  #include "mock_arduino.h"
+  #include "mock_secrets.h"
   #include <string>
+  #include <cstdint>
+  #include <cstdio>
+  #include <cstdlib>
+  #include <cstring>
+  #include <cstdarg>
+  
   typedef std::string String;
   #define DateTime MockDateTime
   #define JsonDocument MockJsonDocument

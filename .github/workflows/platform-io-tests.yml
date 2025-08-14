@@ -6,6 +6,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        # All `run:` steps will be executed from this path by default
+        working-directory: ./isopruefi-arduino
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -21,4 +26,5 @@ jobs:
         run: pip install --upgrade platformio
 
       - name: Build PlatformIO Project
+        
         run: pio test -e native

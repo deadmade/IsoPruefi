@@ -244,9 +244,30 @@ public class Connection : IConnection
             return Task.FromResult(Task.CompletedTask);
         }
 
-        if (tempSensorReading.Meta != null && tempSensorReading.Meta.Count != 0)
-            await Parallel.ForEachAsync(tempSensorReading.Meta,
-                async (value, cancellationToken) => { await ProcessSensorReading(value, sensorName, influxRepo); });
+        if (tempSensorReading.Meta != null && tempSensorReading.Meta.Sequence.Length != 0 
+                                           && tempSensorReading.Meta.Sequence.Length ==
+                                           tempSensorReading.Meta.Timestamp.Length
+                                           && tempSensorReading.Meta.Sequence.Length ==
+                                           tempSensorReading.Meta.Value.Length)
+        {
+            var tempDataMeta = tempSensorReading.Meta;
+            await Parallel.ForEachAsync(Enumerable.Range(0, tempDataMeta.Sequence.Length - 1), 
+                async (value, cancellationToken) =>
+                {
+                    double?[]? values = { tempDataMeta.Value[value] };
+                    var tempData = new TempSensorReading{
+                        Timestamp = tempDataMeta.Timestamp[value],
+                        Value = values,
+                        Sequence = tempDataMeta.Sequence[value],
+                        Meta = null
+                    };
+                    await ProcessSensorReading(tempData, sensorName, influxRepo);
+                });
+        }
+        else
+        {
+            _logger.LogWarning("Sensor Meta Data contains unexpected format");
+        }
 
         return Task.FromResult(Task.CompletedTask);
     }

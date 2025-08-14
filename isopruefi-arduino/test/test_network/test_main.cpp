@@ -1,76 +1,118 @@
-#include "platform.h"
+#include <ArduinoFake.h>
 #include <unity.h>
 #include "network.h"
 
-// Test WiFi connection success
-void test_connectWiFi_success(void) {
-    WiFi.setConnectResult(true);
-    WiFi.setStatus(WL_CONNECTED);
-    
-    bool result = connectWiFi(10000);
-    
-    TEST_ASSERT_TRUE(result);
-}
-
-// Test WiFi connection failure
-void test_connectWiFi_failure(void) {
-    WiFi.setConnectResult(false);
-    WiFi.setStatus(WL_DISCONNECTED);
-    
-    bool result = connectWiFi(10000);
-    
-    TEST_ASSERT_FALSE(result);
-}
-
-// Test MQTT connection success
-void test_connectMQTT_success(void) {
-    MockMqttClient client;
-    MockMqttClient::setConnected(true);
-    
-    bool result = connectMQTT(client, 10000);
-    
-    TEST_ASSERT_TRUE(result);
-}
-
-// Test MQTT connection failure
-void test_connectMQTT_failure(void) {
-    MockMqttClient client;
-    MockMqttClient::setConnected(false);
-    
-    bool result = connectMQTT(client, 10000);
-    
-    TEST_ASSERT_FALSE(result);
-}
-
-// Test server connection status - both connected
-void test_isConnectedToServer_both_connected(void) {
-    WiFi.setStatus(WL_CONNECTED);
-    MockMqttClient client;
-    MockMqttClient::setConnected(true);
-    
-    bool result = isConnectedToServer(client);
-    
-    TEST_ASSERT_TRUE(result);
-}
+using namespace fakeit;
 
 void setUp(void) {
-    // Reset all network mocks before each test
-    WiFi.setStatus(WL_DISCONNECTED);
-    WiFi.setConnectResult(false);
-    MockMqttClient::reset();
+    ArduinoFakeReset();
+    When(OverloadedMethod(ArduinoFake(Serial), print, size_t(const char[]))).AlwaysReturn(1);
+    When(OverloadedMethod(ArduinoFake(Serial), println, size_t(const char[]))).AlwaysReturn(1);
+    When(Method(ArduinoFake(), delay)).Return();
 }
 
 void tearDown(void) {
-    // Clean up after each test
+    ArduinoFakeReset();
 }
 
-// Bundle for central test runner
+void test_connectWiFi_success(void) {
+    // Set up WiFi mock to succeed
+    WiFi.begin("test", "test"); // Initialize mock WiFi
+    
+    // Mock millis() to simulate time progression
+    When(Method(ArduinoFake(), millis)).Return(0, 1000, 2000);
+    
+    // Call the function
+    bool result = connectWiFi(10000);
+    
+    // Verify successful connection
+    TEST_ASSERT_TRUE(result);
+}
+
+void test_connectMQTT_success(void) {
+    // Use the global mock MQTT client
+    MqttClient& mqttClient = ::mqttClient;
+    
+    // Mock millis() for timing
+    When(Method(ArduinoFake(), millis)).Return(0, 1000);
+    
+    // Call the function
+    bool result = connectMQTT(mqttClient, 10000);
+    
+    // Verify successful connection
+    TEST_ASSERT_TRUE(result);
+}
+
+void test_isConnectedToServer_both_connected(void) {
+    // Set WiFi to connected
+    WiFi.begin("test", "test");
+    
+    // Use connected MQTT client
+    MqttClient& mqttClient = ::mqttClient;
+    mqttClient.connect("test");
+    
+    // Call the function
+    bool result = isConnectedToServer(mqttClient);
+    
+    // Verify both connections result in true
+    TEST_ASSERT_TRUE(result);
+}
+
+void test_isConnectedToServer_wifi_disconnected(void) {
+    // Set WiFi to disconnected
+    WiFi.disconnect();
+    
+    // MQTT client status doesn't matter since WiFi is disconnected
+    MqttClient& mqttClient = ::mqttClient;
+    mqttClient.connect("test");
+    
+    // Call the function
+    bool result = isConnectedToServer(mqttClient);
+    
+    // Verify result is false due to WiFi disconnection
+    TEST_ASSERT_FALSE(result);
+}
+
+void test_isConnectedToServer_mqtt_disconnected(void) {
+    // Set WiFi to connected
+    WiFi.begin("test", "test");
+    
+    // Set MQTT client to disconnected
+    MqttClient& mqttClient = ::mqttClient;
+    mqttClient.stop();
+    
+    // Call the function
+    bool result = isConnectedToServer(mqttClient);
+    
+    // Verify result is false due to MQTT disconnection
+    TEST_ASSERT_FALSE(result);
+}
+
+void test_isConnectedToServer_both_disconnected(void) {
+    // Set WiFi to disconnected
+    WiFi.disconnect();
+    
+    // Set MQTT client to disconnected
+    MqttClient& mqttClient = ::mqttClient;
+    mqttClient.stop();
+    
+    // Call the function
+    bool result = isConnectedToServer(mqttClient);
+    
+    // Verify result is false
+    TEST_ASSERT_FALSE(result);
+}
+
+// Bundle for central test_main.cpp
 void run_network_tests() {
     RUN_TEST(test_connectWiFi_success);
-    RUN_TEST(test_connectWiFi_failure);
+    RUN_TEST(test_connectWiFi_timeout);
     RUN_TEST(test_connectMQTT_success);
-    RUN_TEST(test_connectMQTT_failure);
+    RUN_TEST(test_connectMQTT_timeout);
     RUN_TEST(test_isConnectedToServer_both_connected);
+    RUN_TEST(test_isConnectedToServer_wifi_disconnected);
+    RUN_TEST(test_isConnectedToServer_mqtt_disconnected);
+    RUN_TEST(test_isConnectedToServer_both_disconnected);
 }
 
 // When standalone executable

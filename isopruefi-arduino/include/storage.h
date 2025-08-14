@@ -2,27 +2,11 @@
 #include "platform.h"
 #include <cstdio> // for snprintf
 
-#ifndef UNIT_TEST
-
 void saveToCsvBatch(const DateTime& now, float celsius, int sequence);
 void deleteCsvFile(const char* filepath);
 
 void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence);
 void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const DateTime& now);
-
-#else
-
-// native test versions
-inline void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence) {
-    doc["sequence"] = std::to_string(sequence);
-    doc["timestamp"] = std::to_string(now.unixtime());
-
-    auto& valArr = doc.createNestedArray("value");
-    valArr.add(celsius);
-
-    auto& metaArr = doc.createNestedArray("meta");
-    metaArr.add("null");
-}
 
 inline void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, const DateTime& now) {
     doc["sequence"] = "recovered";
@@ -32,8 +16,6 @@ inline void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, c
         arr.add(fileList[i].c_str());
     }
 }
-
-#endif
 
 // --- Inline helper functions (shared) ---
 inline const char* createFolderName(const DateTime& now) {

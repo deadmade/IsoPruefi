@@ -6,13 +6,14 @@
 #include "storage.h"
 #include "secrets.h"
 
+#ifndef UNIT_TEST
+// Global hardware objects for real hardware only
 RTC_DS3231 rtc;
 Adafruit_ADT7410 tempsensor;   
 SdFat sd;
-
 static WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
-
+#endif
 // =============================================================================
 // SYSTEM CONFIGURATION CONSTANTS
 // =============================================================================
@@ -33,9 +34,10 @@ static const char* topic = "dhbw/ai/si2023/2/";
 static const unsigned long WIFI_CONNECT_TIMEOUT_MS = 15000;
 static const unsigned long LOOP_DELAY_MS = 1000;
 static const size_t CLIENT_ID_BUFFER_SIZE = 64;
+#ifndef UNIT_TEST
 static const uint8_t SD_SCK_FREQUENCY_MHZ = 25;
+#endif
 static const int RECONNECT_INTERVAL_MS = 2000;
-
 // =============================================================================
 // SYSTEM STATE VARIABLES
 // =============================================================================

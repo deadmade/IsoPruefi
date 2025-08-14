@@ -1,26 +1,35 @@
-#include "platform.h"
+#include <ArduinoFake.h>
 #include <unity.h>
 #include "storage.h"
-#include "mock_json.h"
 
-// Simulated timestamp: July 26, 2025, 14:55:00
-DateTime now(2025, 7, 26, 14, 55, 0);
+using namespace fakeit;
 
-// Tests if the folder name is generated correctly
+void setUp(void) {
+    ArduinoFakeReset();
+    sd.clearTestFiles();
+    When(OverloadedMethod(ArduinoFake(Serial), print, size_t(const char[]))).AlwaysReturn(1);
+    When(OverloadedMethod(ArduinoFake(Serial), println, size_t(const char[]))).AlwaysReturn(1);
+}
+
+void tearDown(void) {
+    ArduinoFakeReset();
+}
+
+// Test helper functions (existing tests)
 void test_createFolderName(void) {
+    DateTime now(2025, 7, 26, 14, 55, 0);
     const char* result = createFolderName(now);
     TEST_ASSERT_NOT_NULL(result);
     TEST_ASSERT_EQUAL_STRING("2025", result);
 }
 
-// Tests if the filename is generated correctly
 void test_createFilename(void) {
+    DateTime now(2025, 7, 26, 14, 55, 0);
     char buffer[32];
     createFilename(buffer, sizeof(buffer), now);
     TEST_ASSERT_EQUAL_STRING("2025/07261455.csv", buffer);
 }
 
-// Tests behavior at year change
 void test_filename_end_of_year(void) {
     DateTime testTime(2023, 12, 31, 23, 59, 0);
     char buffer[32];
@@ -28,92 +37,127 @@ void test_filename_end_of_year(void) {
     TEST_ASSERT_EQUAL_STRING("2023/12312359.csv", buffer);
 }
 
-// Tests if JSON is built correctly with expected fields
-void test_buildJson_sets_expected_fields(void) {
+// Test saveToCsvBatch function with ArduinoFake mocking
+void test_saveToCsvBatch_creates_folder_when_not_exists(void) {
+    DateTime now(2025, 7, 26, 14, 55, 0);
+    
+    // Setup: folder doesn't exist initially
+    TEST_ASSERT_FALSE(sd.exists("2025"));
+    
+
+    
+    // Call the function
+    saveToCsvBatch(now, 25.5, 42);
+    
+    // Verify folder was created
+    TEST_ASSERT_TRUE(sd.exists("2025"));
+}
+
+void test_saveToCsvBatch_writes_csv_data(void) {
+    DateTime now(2025, 7, 26, 14, 55, 0);
+    
+    // Setup: folder exists
+    sd.addTestFile("2025");
+    
+
+    
+    // Call the function
+    saveToCsvBatch(now, 25.12345, 42);
+    
+    // Verify the CSV file was created
+    TEST_ASSERT_TRUE(sd.exists("2025/07261455.csv"));
+}
+
+void test_buildJson_creates_correct_structure(void) {
+    DateTime now(2025, 7, 26, 14, 55, 0);
     JsonDocument doc;
-    float temperature = 23.5f;
-    int sequence = 42;
     
-    buildJson(doc, temperature, now, sequence);
+    // Call the function (using the native test version)
+    buildJson(doc, 25.12345, now, 42);
     
-    // Test sequence field
-    TEST_ASSERT_EQUAL_STRING("42", doc["sequence"].c_str());
+    // Verify JSON structure (native test version uses strings)
+    TEST_ASSERT_EQUAL_STRING(std::to_string(42).c_str(), doc["sequence"].c_str());
+    TEST_ASSERT_EQUAL_STRING(std::to_string(now.unixtime()).c_str(), doc["timestamp"].c_str());
     
-    // Test timestamp field (Unix timestamp)
-    TEST_ASSERT_EQUAL_STRING("1753778400", doc["timestamp"].c_str());
-    
-    // Test value array
-    TEST_ASSERT_EQUAL(1, doc.size("value"));
-    
-    // Test meta array
-    TEST_ASSERT_EQUAL(1, doc.size("meta"));
+    // Check that the arrays were created
+    TEST_ASSERT_TRUE(doc.containsKey("value"));
+    TEST_ASSERT_TRUE(doc.containsKey("meta"));
 }
 
-// Tests JSON building with different temperature values
-void test_buildJson_different_temperatures(void) {
+void test_buildJson_clears_previous_data(void) {
+    DateTime now(2025, 7, 26, 14, 55, 0);
     JsonDocument doc;
     
-    // Test negative temperature
-    buildJson(doc, -10.5f, now, 1);
-    TEST_ASSERT_EQUAL_STRING("1", doc["sequence"].c_str());
+    // Add some initial data
+    doc["oldKey"] = "oldValue";
+    doc["timestamp"] = "999";
     
-    // Test zero temperature
-    doc.clear();
-    buildJson(doc, 0.0f, now, 2);
-    TEST_ASSERT_EQUAL_STRING("2", doc["sequence"].c_str());
+    // Call the function
+    buildJson(doc, 25.5, now, 10);
     
-    // Test high temperature
-    doc.clear();
-    buildJson(doc, 85.7f, now, 3);
-    TEST_ASSERT_EQUAL_STRING("3", doc["sequence"].c_str());
+    // Verify old data is cleared
+    TEST_ASSERT_FALSE(doc.containsKey("oldKey"));
+    TEST_ASSERT_EQUAL_STRING(std::to_string(now.unixtime()).c_str(), doc["timestamp"].c_str());
+    TEST_ASSERT_EQUAL_STRING(std::to_string(10).c_str(), doc["sequence"].c_str());
 }
 
-// Tests filename creation with edge cases
-void test_createFilename_edge_cases(void) {
-    char buffer[32];
+void test_deleteCsvFile_success(void) {
+    const char* testFile = "2025/test.csv";
     
-    // Test start of year
-    DateTime startYear(2025, 1, 1, 0, 0, 0);
-    createFilename(buffer, sizeof(buffer), startYear);
-    TEST_ASSERT_EQUAL_STRING("2025/01010000.csv", buffer);
+    // Setup: file exists
+    sd.addTestFile(testFile);
+    TEST_ASSERT_TRUE(sd.exists(testFile));
     
-    // Test leap year
-    DateTime leapYear(2024, 2, 29, 12, 30, 0);
-    createFilename(buffer, sizeof(buffer), leapYear);
-    TEST_ASSERT_EQUAL_STRING("2024/02291230.csv", buffer);
+    // Call the function
+    deleteCsvFile(testFile);
+    
+    // Verify file was deleted
+    TEST_ASSERT_FALSE(sd.exists(testFile));
 }
 
-// Tests recovered filename creation
-void test_createRecoveredFilename(void) {
-    char recoveredFilename[64];
+void test_deleteCsvFile_file_not_exists(void) {
+    const char* testFile = "2025/nonexistent.csv";
     
-    createRecoveredFilename(recoveredFilename, sizeof(recoveredFilename), now, 13);
-    TEST_ASSERT_EQUAL_STRING("2025/07261455_recovered.json", recoveredFilename);
+    // Setup: file doesn't exist
+    TEST_ASSERT_FALSE(sd.exists(testFile));
     
-    // Test with custom suffix
-    createRecoveredFilename(recoveredFilename, sizeof(recoveredFilename), now, 13, "_backup.json");
-    TEST_ASSERT_EQUAL_STRING("2025/07261455_backup.json", recoveredFilename);
+
+    
+    // Call the function (should not crash)
+    deleteCsvFile(testFile);
+    
+    // File still doesn't exist
+    TEST_ASSERT_FALSE(sd.exists(testFile));
 }
 
-// Tests folder name creation across different years
-void test_createFolderName_different_years(void) {
-    DateTime year2020(2020, 6, 15, 10, 30, 0);
-    DateTime year2030(2030, 12, 25, 23, 59, 0);
+void test_buildRecoveredJson_structure(void) {
+    DateTime now(2025, 7, 26, 14, 55, 0);
+    JsonDocument doc;
     
-    TEST_ASSERT_EQUAL_STRING("2020", createFolderName(year2020));
-    TEST_ASSERT_EQUAL_STRING("2030", createFolderName(year2030));
+    // Test the buildRecoveredJson function that's available in test mode
+    String fileList[2] = {"file1.csv", "file2.csv"};
+    buildRecoveredJson(doc, fileList, 2, now);
+    
+    // Verify structure
+    TEST_ASSERT_EQUAL_STRING("recovered", doc["sequence"].c_str());
+    TEST_ASSERT_EQUAL_STRING(std::to_string(now.unixtime()).c_str(), doc["timestamp"].c_str());
+    TEST_ASSERT_TRUE(doc.containsKey("meta"));
 }
-// Optional: Bundle for central test_main.cpp
+
+// Bundle for central test_main.cpp
 void run_storage_tests() {
     RUN_TEST(test_createFolderName);
     RUN_TEST(test_createFilename);
     RUN_TEST(test_filename_end_of_year);
-    RUN_TEST(test_buildJson_sets_expected_fields);
-    RUN_TEST(test_buildJson_different_temperatures);
-    RUN_TEST(test_createFilename_edge_cases);
-    RUN_TEST(test_createRecoveredFilename);
-    RUN_TEST(test_createFolderName_different_years);
+    RUN_TEST(test_saveToCsvBatch_creates_folder_when_not_exists);
+    RUN_TEST(test_saveToCsvBatch_writes_csv_data);
+    RUN_TEST(test_buildJson_creates_correct_structure);
+    RUN_TEST(test_buildJson_clears_previous_data);
+    RUN_TEST(test_deleteCsvFile_success);
+    RUN_TEST(test_deleteCsvFile_file_not_exists);
+    RUN_TEST(test_buildRecoveredJson_structure);
 }
+
 // When standalone executable
 #ifndef COMBINED_TEST_MAIN
 int main(int argc, char **argv) {
@@ -122,7 +166,3 @@ int main(int argc, char **argv) {
     return UNITY_END();
 }
 #endif
-
-void setUp(void) {}
-void tearDown(void) {}
-

@@ -1383,9 +1383,6 @@
 <li><a href="../struct_mock_json_document/#struct_mock_json_document_1a89a2a652b12aea547d02b6440031912e">createNestedArray</a> Function</li>
 <li><a href="../struct_mock_json_document/#struct_mock_json_document_1a2ea6d36047f732b3a3cd2da86c9f91b0">containsKey</a> Function</li>
 <li><a href="../struct_mock_json_document/#struct_mock_json_document_1a176ae01e30f5fc396861b84f35733e7e">size</a> Function</li>
-<li><a href="../core_8h/#core_8h">core.h</a> File</li>
-<li><a href="../core_8h/#core_8h_1a9fb1675443ce002d3928dd3edf3b2a72">coreSetup</a> Function</li>
-<li><a href="../core_8h/#core_8h_1aa5603fdb8113111f87914938533d1ece">coreLoop</a> Function</li>
 <li><a href="../mock__datetime_8h/#mock__datetime_8h">mock_datetime.h</a> File</li>
 <li><a href="../mock__json_8h/#mock__json_8h">mock_json.h</a> File</li>
 <li><a href="../mock__json_8h/#mock__json_8h_1a54db1bfd55a2f11a001e5854071c899c">JsonDocument</a> Macro</li>
@@ -1395,6 +1392,9 @@
 <li><a href="../mqtt_8h/#mqtt_8h_1adb1262e589b7726a8dcf8c8c4b63d5fc">sendToMqtt</a> Function</li>
 <li><a href="../mqtt_8h/#mqtt_8h_1a2f6ba6fe36426e331cac4ec8f8ab4c9e">sendPendingData</a> Function</li>
 <li><a href="../mqtt_8h/#mqtt_8h_1aa9addf0d646507c6b47509cc143a9d46">createFullTopic</a> Function</li>
+<li><a href="../core_8h/#core_8h">core.h</a> File</li>
+<li><a href="../core_8h/#core_8h_1a9fb1675443ce002d3928dd3edf3b2a72">coreSetup</a> Function</li>
+<li><a href="../core_8h/#core_8h_1aa5603fdb8113111f87914938533d1ece">coreLoop</a> Function</li>
 <li><a href="../network_8h/#network_8h">network.h</a> File</li>
 <li><a href="../network_8h/#network_8h_1a0757debfda15f5757976bc2c53c955c7">connectWiFi</a> Function</li>
 <li><a href="../network_8h/#network_8h_1acc5736b55a4581c4020d736180e28306">connectMQTT</a> Function</li>
@@ -1412,6 +1412,9 @@
 <li><a href="../sensor_8h/#sensor_8h_1a07d1721651c2862c8c366b84a5424df3">initSensor</a> Function</li>
 <li><a href="../sensor_8h/#sensor_8h_1a417a800c5e7a16dba92107bea03bbb2f">readTemperatureCelsius</a> Function</li>
 <li><a href="../sensor_8h/#sensor_8h_1a800eabe870c45c5a4b574e2223f39916">formatTimestamp</a> Function</li>
+<li><a href="../main_8cpp/#main_8cpp">main.cpp</a> File</li>
+<li><a href="../main_8cpp/#main_8cpp_1a4fc01d736fe50cf5b977f755b675f11d">setup</a> Function</li>
+<li><a href="../main_8cpp/#main_8cpp_1afe461d27b9c48d5921c00d521181f12f">loop</a> Function</li>
 <li><a href="../storage_8h/#storage_8h">storage.h</a> File</li>
 <li><a href="../storage_8h/#storage_8h_1a576d7131c80320b3f5129de67ea60253">saveToCsvBatch</a> Function</li>
 <li><a href="../storage_8h/#storage_8h_1a712233a12d2ef3c7d797e0a06149ca73">deleteCsvFile</a> Function</li>
@@ -1420,9 +1423,6 @@
 <li><a href="../storage_8h/#storage_8h_1a5abff0f0bde3f6a3197f25893c1e0b8e">createFolderName</a> Function</li>
 <li><a href="../storage_8h/#storage_8h_1a99398dc180671d28434aa4982bfd36ca">createFilename</a> Function</li>
 <li><a href="../storage_8h/#storage_8h_1a6c1e7509576dad1d0d8c0b8e4b169f1b">createRecoveredFilename</a> Function</li>
-<li><a href="../main_8cpp/#main_8cpp">main.cpp</a> File</li>
-<li><a href="../main_8cpp/#main_8cpp_1a4fc01d736fe50cf5b977f755b675f11d">setup</a> Function</li>
-<li><a href="../main_8cpp/#main_8cpp_1afe461d27b9c48d5921c00d521181f12f">loop</a> Function</li>
 <li><a href="../core_8cpp/#core_8cpp">core.cpp</a> File</li>
 <li><a href="../core_8cpp/#core_8cpp_1afa042f998806fcdedab1794cebbeaad3">rtc</a> Variable</li>
 <li><a href="../core_8cpp/#core_8cpp_1af19292dee25d42580f9588b754ddbedc">tempsensor</a> Variable</li>
@@ -1524,7 +1524,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 14, 2025 07:14:39 UTC">August 14, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 14, 2025 12:47:11 UTC">August 14, 2025</span>
   </span>
 
     

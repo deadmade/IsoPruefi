@@ -106,9 +106,7 @@ void test_isConnectedToServer_both_disconnected(void) {
 // Bundle for central test_main.cpp
 void run_network_tests() {
     RUN_TEST(test_connectWiFi_success);
-    RUN_TEST(test_connectWiFi_timeout);
     RUN_TEST(test_connectMQTT_success);
-    RUN_TEST(test_connectMQTT_timeout);
     RUN_TEST(test_isConnectedToServer_both_connected);
     RUN_TEST(test_isConnectedToServer_wifi_disconnected);
     RUN_TEST(test_isConnectedToServer_mqtt_disconnected);

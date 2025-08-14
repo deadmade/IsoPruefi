@@ -90,7 +90,7 @@ public class TempSensorReadingTests
                        "sequence": 42,
                        "meta": 
                            {
-                               "t": "[1234567888]",
+                               "t": ["1234567888"],
                                "v": [24.0],
                                "s": [40]
                            }
@@ -202,7 +202,7 @@ public class TempSensorReadingTests
                    {
                        "timestamp": 1234567890,
                        "value": [25.5],
-                       "meta": [null, null]
+                       "meta": null
                    }
                    """;
 

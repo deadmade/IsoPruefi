@@ -1,50 +1,31 @@
-const API_VERSION = "v1";
-const BASE_URL = "http://localhost:5160";
+import { API_BASE } from "./config";
 
-export async function login(username: string, password: string) {
-    const response = await fetch(`${BASE_URL}/${API_VERSION}/Authentication/Login`, { 
+const API_VERSION  = (p: string) => `${API_BASE}/v1${p}`;
+const BASE_URL = (p: string) => `${API_BASE}/api/v1${p}`;
+
+export async function login(userName: string, password: string) {
+    const r = await fetch(API_VERSION("/Authentication/Login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userName: username, password })
+        body: JSON.stringify({ userName, password }),
     });
-
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Login failed");
-    }
-
-    return response.json();
+    if (!r.ok) throw new Error((await r.text()) || "Login failed");
+    return r.json();
 }
 
 export async function register(userName: string, password: string) {
-    const res = await fetch(
-        `${BASE_URL}/${API_VERSION}/Authentication/Register`,
-        {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userName, password }),
-        }
-    );
-    
-    if (!res.ok) {
-        const text = await res.text();
-        try {
-            const problem = text ? JSON.parse(text) : null;
-            const msg = problem?.detail || problem?.title || "Registration failed";
-            throw new Error(msg);
-        } catch {
-            throw new Error(text || "Registration failed");
-        }
+    const r = await fetch(API_VERSION("/Authentication/Register"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, password }),
+    });
+    if (!r.ok) {
+        const t = await r.text();
+        try { const p = t ? JSON.parse(t) : null; throw new Error(p?.detail || p?.title || "Registration failed"); }
+        catch { throw new Error(t || "Registration failed"); }
     }
-
-    const text = await res.text();
-    if (!text) return;
-
-    try {
-        return JSON.parse(text);
-    } catch {
-        return;
-    }
+    const t = await r.text();
+    return t ? JSON.parse(t) : undefined; // empty 200/204 is OK
 }
 
 export async function refreshToken(token: string, refreshToken: string) {

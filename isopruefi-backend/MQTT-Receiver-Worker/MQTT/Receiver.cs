@@ -56,7 +56,12 @@ public class Receiver : IReceiver
 
             foreach (var topic in topics)
             {
+#if DEBUG
+                var groupName = "cute-temp-dev-group2";
+#else
                 var groupName = "cute-temp-group2";
+#endif
+
                 var sharedTopic =
                     $"$share/{groupName}/{topic.DefaultTopicPath}/{topic.GroupId}/{topic.SensorType}/{topic.SensorName}";
 

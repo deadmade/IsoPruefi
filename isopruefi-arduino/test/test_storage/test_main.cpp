@@ -73,13 +73,13 @@ void test_buildJson_creates_correct_structure(void) {
     // Call the function (using the native test version)
     buildJson(doc, 25.12345, now, 42);
     
-    // Verify JSON structure (native test version uses strings)
-    TEST_ASSERT_EQUAL_STRING(std::to_string(42).c_str(), doc["sequence"].c_str());
-    TEST_ASSERT_EQUAL_STRING(std::to_string(now.unixtime()).c_str(), doc["timestamp"].c_str());
+    // Verify JSON structure (stores as native types)
+    TEST_ASSERT_EQUAL(42, doc["sequence"].as<int>());
+    TEST_ASSERT_EQUAL(now.unixtime(), doc["timestamp"].as<unsigned long>());
     
     // Check that the arrays were created
-    TEST_ASSERT_TRUE(doc.containsKey("value"));
-    TEST_ASSERT_TRUE(doc.containsKey("meta"));
+    TEST_ASSERT_TRUE(!doc["value"].isNull());
+    TEST_ASSERT_TRUE(!doc["meta"].isNull());
 }
 
 void test_buildJson_clears_previous_data(void) {
@@ -94,9 +94,9 @@ void test_buildJson_clears_previous_data(void) {
     buildJson(doc, 25.5, now, 10);
     
     // Verify old data is cleared
-    TEST_ASSERT_FALSE(doc.containsKey("oldKey"));
-    TEST_ASSERT_EQUAL_STRING(std::to_string(now.unixtime()).c_str(), doc["timestamp"].c_str());
-    TEST_ASSERT_EQUAL_STRING(std::to_string(10).c_str(), doc["sequence"].c_str());
+    TEST_ASSERT_TRUE(doc["oldKey"].isNull());
+    TEST_ASSERT_EQUAL(now.unixtime(), doc["timestamp"].as<unsigned long>());
+    TEST_ASSERT_EQUAL(10, doc["sequence"].as<int>());
 }
 
 void test_deleteCsvFile_success(void) {
@@ -138,17 +138,17 @@ void test_buildRecoveredJsonFromCsv_structure(void) {
     JsonDocument doc;
     buildRecoveredJsonFromCsv(doc, path, now);
 
-    TEST_ASSERT_EQUAL_STRING(std::to_string(now.unixtime()).c_str(), doc["timestamp"].c_str());
-    TEST_ASSERT_EQUAL_STRING("null", doc["sequence"].c_str());
+    TEST_ASSERT_EQUAL(now.unixtime(), doc["timestamp"].as<unsigned long>());
+    TEST_ASSERT_TRUE(doc["sequence"].isNull());
 
-    JsonArray& valueArr = doc["value"].to<JsonArray>();
+    JsonArray valueArr = doc["value"];
     TEST_ASSERT_EQUAL(1, (int)valueArr.size());
-    TEST_ASSERT_EQUAL_STRING("null", valueArr[0].c_str());
+    TEST_ASSERT_TRUE(valueArr[0].isNull());
 
-    JsonObject& meta = doc["meta"].to<JsonObject>();
-    JsonArray& t = meta["t"].to<JsonArray>();
-    JsonArray& v = meta["v"].to<JsonArray>();
-    JsonArray& s = meta["s"].to<JsonArray>();
+    JsonObject meta = doc["meta"];
+    JsonArray t = meta["t"];
+    JsonArray v = meta["v"];
+    JsonArray s = meta["s"];
     TEST_ASSERT_EQUAL(2, (int)t.size());
     TEST_ASSERT_EQUAL(2, (int)v.size());
     TEST_ASSERT_EQUAL(2, (int)s.size());

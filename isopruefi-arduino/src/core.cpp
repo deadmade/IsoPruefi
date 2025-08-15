@@ -4,7 +4,13 @@
 #include "mqtt.h"
 #include "sensor.h"
 #include "storage.h"
+
+#ifdef UNIT_TEST
+#include "secrets_example.h"
+#else
 #include "secrets.h"
+#endif
+
 
 #ifndef UNIT_TEST
 // Global hardware objects for real hardware only

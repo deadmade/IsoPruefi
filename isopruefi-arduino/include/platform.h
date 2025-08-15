@@ -2,7 +2,6 @@
 
 #ifdef UNIT_TEST
   #include <ArduinoFake.h>
-  #include "mock_json.h"  // Use custom JSON mock for better test control
   #include <string>
   #include <set>
   #include <cstdint>
@@ -10,7 +9,9 @@
   #include <cstdlib>
   #include <cstring>
   #include <cstdarg>
-  
+  #include <map>
+  #include <ArduinoJson.h>
+
   // ArduinoFake provides: Arduino.h, String, Serial, etc.
   // Only mock what ArduinoFake doesn't provide
   

@@ -15,7 +15,7 @@ void tearDown(void) {
     ArduinoFakeReset();
 }
 
-// Test helper functions (existing tests)
+// Test helper functions
 void test_createFolderName(void) {
     DateTime now(2025, 7, 26, 14, 55, 0);
     const char* result = createFolderName(now);
@@ -43,9 +43,7 @@ void test_saveToCsvBatch_creates_folder_when_not_exists(void) {
     
     // Setup: folder doesn't exist initially
     TEST_ASSERT_FALSE(sd.exists("2025"));
-    
-
-    
+        
     // Call the function
     saveToCsvBatch(now, 25.5, 42);
     
@@ -58,9 +56,7 @@ void test_saveToCsvBatch_writes_csv_data(void) {
     
     // Setup: folder exists
     sd.addTestFile("2025");
-    
-
-    
+        
     // Call the function
     saveToCsvBatch(now, 25.12345, 42);
     
@@ -120,9 +116,7 @@ void test_deleteCsvFile_file_not_exists(void) {
     
     // Setup: file doesn't exist
     TEST_ASSERT_FALSE(sd.exists(testFile));
-    
-
-    
+        
     // Call the function (should not crash)
     deleteCsvFile(testFile);
     
@@ -130,19 +124,36 @@ void test_deleteCsvFile_file_not_exists(void) {
     TEST_ASSERT_FALSE(sd.exists(testFile));
 }
 
-void test_buildRecoveredJson_structure(void) {
+void test_buildRecoveredJsonFromCsv_structure(void) {
     DateTime now(2025, 7, 26, 14, 55, 0);
+    
+    sd.addTestFile("2025");
+
+    const char* path = "2025/07261455.csv";
+
+    sd.addTestFile(path);
+
     JsonDocument doc;
-    
-    // Test the buildRecoveredJson function that's available in test mode
-    String fileList[2] = {"file1.csv", "file2.csv"};
-    buildRecoveredJson(doc, fileList, 2, now);
-    
-    // Verify structure
-    TEST_ASSERT_EQUAL_STRING("recovered", doc["sequence"].c_str());
+    buildRecoveredJsonFromCsv(doc, path, now);
+
     TEST_ASSERT_EQUAL_STRING(std::to_string(now.unixtime()).c_str(), doc["timestamp"].c_str());
-    TEST_ASSERT_TRUE(doc.containsKey("meta"));
+    TEST_ASSERT_EQUAL_STRING("null", doc["sequence"].c_str());
+
+    JsonArray& valueArr = doc["value"].to<JsonArray>();
+    TEST_ASSERT_EQUAL(1, (int)valueArr.size());
+    TEST_ASSERT_EQUAL_STRING("null", valueArr[0].c_str());
+
+    JsonObject& meta = doc["meta"].to<JsonObject>();
+    JsonArray& t = meta["t"].to<JsonArray>();
+    JsonArray& v = meta["v"].to<JsonArray>();
+    JsonArray& s = meta["s"].to<JsonArray>();
+    TEST_ASSERT_EQUAL(2, (int)t.size());
+    TEST_ASSERT_EQUAL(2, (int)v.size());
+    TEST_ASSERT_EQUAL(2, (int)s.size());
 }
+
+
+
 
 // Bundle for central test_main.cpp
 void run_storage_tests() {
@@ -155,7 +166,7 @@ void run_storage_tests() {
     RUN_TEST(test_buildJson_clears_previous_data);
     RUN_TEST(test_deleteCsvFile_success);
     RUN_TEST(test_deleteCsvFile_file_not_exists);
-    RUN_TEST(test_buildRecoveredJson_structure);
+    RUN_TEST(test_buildRecoveredJsonFromCsv_structure);
 }
 
 // When standalone executable

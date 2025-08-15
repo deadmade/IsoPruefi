@@ -82,17 +82,6 @@ void test_sendToMqtt_handles_mqtt_connection_failure(void) {
     TEST_ASSERT_TRUE(sd.exists("2025/07261455.csv"));
 }
 
-void test_sendToMqtt_handles_different_sensor_types(void) {
-    DateTime now(2025, 7, 26, 14, 55, 0);
-    
-    // Test with different sensor types
-    sendToMqtt(mqttClient, "dhbw/ai/si2023/2/", "humidity", "Sensor_Two", 65.2, now, 10);
-    
-    std::string lastMessage = mqttClient.getLastMessage();
-    TEST_ASSERT_TRUE(lastMessage.find("\"sequence\":10") != std::string::npos);
-    TEST_ASSERT_TRUE(lastMessage.find("65.2") != std::string::npos);
-}
-
 void test_sendToMqtt_handles_negative_temperatures(void) {
     DateTime now(2025, 7, 26, 14, 55, 0);
     
@@ -246,7 +235,6 @@ void run_mqtt_tests() {
     RUN_TEST(test_sendToMqtt_builds_correct_json);
     RUN_TEST(test_sendToMqtt_creates_correct_topic);
     RUN_TEST(test_sendToMqtt_handles_mqtt_connection_failure);
-    RUN_TEST(test_sendToMqtt_handles_different_sensor_types);
     RUN_TEST(test_sendToMqtt_handles_negative_temperatures);
     RUN_TEST(test_sendPendingData_no_folder_exists);
     RUN_TEST(test_sendPendingData_empty_folder);

@@ -8,14 +8,14 @@ void deleteCsvFile(const char* filepath);
 void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence);
 void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const DateTime& now);
 
-inline void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, const DateTime& now) {
-    doc["sequence"] = "recovered";
-    doc["timestamp"] = std::to_string(now.unixtime());
-    auto& arr = doc.createNestedArray("meta");
-    for (int i = 0; i < count; ++i) {
-        arr.add(fileList[i].c_str());
-    }
-}
+// inline void buildRecoveredJson(JsonDocument& doc, String* fileList, int count, const DateTime& now) {
+//     doc["sequence"] = "recovered";
+//     doc["timestamp"] = std::to_string(now.unixtime());
+//     auto& arr = doc.createNestedArray("meta");
+//     for (int i = 0; i < count; ++i) {
+//         arr.add(fileList[i].c_str());
+//     }
+// }
 
 // --- Inline helper functions (shared) ---
 inline const char* createFolderName(const DateTime& now) {

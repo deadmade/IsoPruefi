@@ -16,7 +16,7 @@
     
     
       
-        <title>Mock json 8h - IsoPrüfi</title>
+        <title>Mock globals 8cpp - IsoPrüfi</title>
       
     
     
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#file-mock_jsonh" class="md-skip">
+        <a href="#file-mock_globalscpp" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Mock  json 8h
+              Mock  globals 8cpp
             
           </span>
         </div>
@@ -1343,57 +1343,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#classes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Classes
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#includes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Includes
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#macros" class="md-nav__link">
-    <span class="md-ellipsis">
-      Macros
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Macros">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#macro-jsondocument" class="md-nav__link">
-    <span class="md-ellipsis">
-      Macro JsonDocument
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#macro-jsonarray" class="md-nav__link">
-    <span class="md-ellipsis">
-      Macro JsonArray
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#source" class="md-nav__link">
     <span class="md-ellipsis">
       Source
@@ -1418,109 +1367,23 @@
 
 
 
-<p><a id="mock__json_8h"></a></p>
-<h1 id="file-mock_jsonh">File mock_json.h</h1>
+<p><a id="mock__globals_8cpp"></a></p>
+<h1 id="file-mock_globalscpp">File mock_globals.cpp</h1>
 <p><img alt="" src="https://img.shields.io/badge/language-C%2B%2B-blue" title="C++" /></p>
-<p><strong>Location</strong>: <code>include/mock\_json.h</code></p>
-<h2 id="classes">Classes</h2>
-<ul>
-<li><a href="../struct_mock_json_array/#struct_mock_json_array">MockJsonArray</a></li>
-<li><a href="../struct_mock_json_document/#struct_mock_json_document">MockJsonDocument</a></li>
-</ul>
-<h2 id="includes">Includes</h2>
-<ul>
-<li><string></li>
-<li><vector></li>
-<li><map></li>
-</ul>
-<pre class="mermaid"><code>graph LR
-1["include/mock_json.h"]
-click 1 "mock__json_8h.md#mock__json_8h"
-1 --&gt; 2
-1 --&gt; 3
-1 --&gt; 4
-
-4["map"]
-
-2["string"]
-
-3["vector"]
-</code></pre>
-<h2 id="macros">Macros</h2>
-<p><a id="mock__json_8h_1a54db1bfd55a2f11a001e5854071c899c"></a></p>
-<h3 id="macro-jsondocument">Macro JsonDocument</h3>
-<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="cp">#define JsonDocument [MockJsonDocument](struct_mock_json_document.md#struct_mock_json_document)</span>
-</code></pre></div>
-<p><a id="mock__json_8h_1a23d227a500ab50420b35be152ef0a5e4"></a></p>
-<h3 id="macro-jsonarray">Macro JsonArray</h3>
-<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<div class="highlight"><pre><span></span><code><span class="cp">#define JsonArray [MockJsonArray](struct_mock_json_array.md#struct_mock_json_array)</span>
-</code></pre></div>
+<p><strong>Location</strong>: <code>src/mock\_globals.cpp</code></p>
 <h2 id="source">Source</h2>
-<div class="highlight"><pre><span></span><code><span class="cp">#pragma once</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;map&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#ifdef UNIT_TEST</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;platform.h&quot;</span>
 
-<span class="k">struct</span><span class="w"> </span><span class="nc">MockJsonArray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">values</span><span class="p">;</span>
+<span class="c1">// Global mock objects for testing</span>
+<span class="n">MockSdFat</span><span class="w"> </span><span class="n">sd</span><span class="p">;</span>
+<span class="n">MockRTC</span><span class="w"> </span><span class="n">rtc</span><span class="p">;</span>
+<span class="n">MockTempSensor</span><span class="w"> </span><span class="n">tempsensor</span><span class="p">;</span>
+<span class="n">MockWiFiClass</span><span class="w"> </span><span class="n">WiFi</span><span class="p">;</span>
+<span class="n">MockWiFiClient</span><span class="w"> </span><span class="n">wifiClient</span><span class="p">;</span>
+<span class="n">MockMqttClient</span><span class="w"> </span><span class="nf">mqttClient</span><span class="p">(</span><span class="n">wifiClient</span><span class="p">);</span>
 
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">values</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">values</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">value</span><span class="p">));</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="k">operator</span><span class="p">[](</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">values</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">clear</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">values</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">struct</span><span class="w"> </span><span class="nc">MockJsonDocument</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">primitives</span><span class="p">;</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">MockJsonArray</span><span class="o">&gt;</span><span class="w"> </span><span class="n">arrays</span><span class="p">;</span>
-
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">clear</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">primitives</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
-<span class="w">        </span><span class="n">arrays</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">primitives</span><span class="p">[</span><span class="n">key</span><span class="p">];</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">primitives</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="n">MockJsonArray</span><span class="o">&amp;</span><span class="w"> </span><span class="n">createNestedArray</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">arrays</span><span class="p">[</span><span class="n">key</span><span class="p">];</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">containsKey</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">primitives</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">arrays</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arrays</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">arrays</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-
-<span class="c1">// // Redefine JsonDocument to use the mock</span>
-<span class="cp">#define JsonDocument MockJsonDocument</span>
-<span class="cp">#define JsonArray MockJsonArray</span>
+<span class="cp">#endif</span>
 </code></pre></div>
 
 
@@ -1542,7 +1405,7 @@ click 1 "mock__json_8h.md#mock__json_8h"
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 14, 2025 12:47:11 UTC">August 14, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 15, 2025 13:07:54 UTC">August 15, 2025</span>
   </span>
 
     

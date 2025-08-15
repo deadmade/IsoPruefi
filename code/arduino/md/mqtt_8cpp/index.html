@@ -1362,15 +1362,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#variable-mqttclient" class="md-nav__link">
-    <span class="md-ellipsis">
-      Variable mqttClient
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#variable-small_buffer_size" class="md-nav__link">
     <span class="md-ellipsis">
       Variable SMALL_BUFFER_SIZE
@@ -1664,18 +1655,11 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 12["cstdio"]
 </code></pre>
 <h2 id="variables">Variables</h2>
-<p><a id="mqtt_8cpp_1aaf73b36dfdb5cafe8dbb8ca7563f7e56"></a></p>
-<h3 id="variable-mqttclient">Variable mqttClient</h3>
-<p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 4)</p>
-<div class="highlight"><pre><span></span><code><span class="n">MqttClient</span><span class="w"> </span><span class="n">mqttClient</span>
-</code></pre></div>
-<p><strong>Type</strong>: MqttClient</p>
 <p><a id="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f"></a></p>
 <h3 id="variable-small_buffer_size">Variable SMALL_BUFFER_SIZE</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 12)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 9)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">SMALL_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span>
 </code></pre></div>
 <p>Buffer size for small MQTT topics, payloads, and JSON documents.</p>
@@ -1684,7 +1668,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-large_buffer_size">Variable LARGE_BUFFER_SIZE</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 14)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 11)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">LARGE_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2048</span>
 </code></pre></div>
 <p>Buffer size for large MQTT payloads and JSON documents (recovery data)</p>
@@ -1693,7 +1677,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-file_name_buffer_size">Variable FILE_NAME_BUFFER_SIZE</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 15)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 12)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">FILE_NAME_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span>
 </code></pre></div>
 <p><strong>Type</strong>: const size_t</p>
@@ -1701,7 +1685,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-max_recovery_files_per_loop">Variable MAX_RECOVERY_FILES_PER_LOOP</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 16)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 13)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MAX_RECOVERY_FILES_PER_LOOP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
 </code></pre></div>
 <p><strong>Type</strong>: const int</p>
@@ -1709,7 +1693,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-folder_name_buffer_size">Variable FOLDER_NAME_BUFFER_SIZE</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 22)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 19)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">FOLDER_NAME_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
 </code></pre></div>
 <p><strong>Type</strong>: const size_t</p>
@@ -1717,7 +1701,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-full_path_buffer_size">Variable FULL_PATH_BUFFER_SIZE</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 23)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 20)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">FULL_PATH_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span>
 </code></pre></div>
 <p><strong>Type</strong>: const size_t</p>
@@ -1725,7 +1709,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-line_buffer_size">Variable LINE_BUFFER_SIZE</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 25)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 22)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">LINE_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span>
 </code></pre></div>
 <p>Buffer size for reading individual CSV lines.</p>
@@ -1734,7 +1718,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-seconds_in_24_hours">Variable SECONDS_IN_24_HOURS</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 26)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 23)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">SECONDS_IN_24_HOURS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">86400</span>
 </code></pre></div>
 <p><strong>Type</strong>: const uint32_t</p>
@@ -1742,7 +1726,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-recovery_timeout_ms">Variable RECOVERY_TIMEOUT_MS</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 28)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 25)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">RECOVERY_TIMEOUT_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60000</span>
 </code></pre></div>
 <p>Timeout for recovery operations in milliseconds (60 seconds)</p>
@@ -1751,7 +1735,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-ack_timeout_ms">Variable ACK_TIMEOUT_MS</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 29)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 26)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">ACK_TIMEOUT_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5000</span>
 </code></pre></div>
 <p><strong>Type</strong>: const unsigned long</p>
@@ -1759,7 +1743,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-recovery_ack_timeout_ms">Variable RECOVERY_ACK_TIMEOUT_MS</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 30)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 27)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">RECOVERY_ACK_TIMEOUT_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10000</span>
 </code></pre></div>
 <p><strong>Type</strong>: const unsigned long</p>
@@ -1767,7 +1751,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-delay_polling_loop_ms">Variable DELAY_POLLING_LOOP_MS</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 31)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 28)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">DELAY_POLLING_LOOP_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
 </code></pre></div>
 <p><strong>Type</strong>: const unsigned long</p>
@@ -1775,7 +1759,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-s_ackseen">Variable s_ackSeen</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 37)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 34)</p>
 <div class="highlight"><pre><span></span><code><span class="k">volatile</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">s_ackSeen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
 <p><strong>Type</strong>: volatile bool</p>
@@ -1783,7 +1767,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-s_ackseq">Variable s_ackSeq</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 38)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 35)</p>
 <div class="highlight"><pre><span></span><code><span class="k">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">s_ackSeq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span>
 </code></pre></div>
 <p><strong>Type</strong>: volatile long</p>
@@ -1791,7 +1775,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-s_pubtopic">Variable s_pubTopic</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 39)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 36)</p>
 <div class="highlight"><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">s_pubTopic</span>
 </code></pre></div>
 <p><strong>Type</strong>: String</p>
@@ -1799,7 +1783,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h3 id="variable-s_ackinit">Variable s_ackInit</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 40)</p>
+<p><strong>Definition</strong>: <code>src/mqtt.cpp</code> (line 37)</p>
 <div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="n">s_ackInit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
 <p><strong>Type</strong>: bool</p>
@@ -1917,9 +1901,6 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <h2 id="source">Source</h2>
 <div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;mqtt.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;storage.h&quot;</span>
-
-<span class="k">extern</span><span class="w"> </span><span class="n">MqttClient</span><span class="w"> </span><span class="n">mqttClient</span><span class="p">;</span>
-
 
 <span class="c1">// =============================================================================</span>
 <span class="c1">// BUFFER SIZE CONSTANTS</span>
@@ -2058,7 +2039,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <span class="w">        </span><span class="k">break</span><span class="p">;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">      </span><span class="n">delay</span><span class="p">(</span><span class="n">DELAY_POLLING_LOOP_MS</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span>
 
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ackOk</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;No Echo/PUBACK within timeout → saving to CSV.&quot;</span><span class="p">);</span>
@@ -2073,8 +2054,10 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;MQTT beginMessage() failed → saving to CSV.&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">saveToCsvBatch</span><span class="p">(</span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="n">celsius</span><span class="p">,</span><span class="w"> </span><span class="n">sequence</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="c1">// =============================================================================</span>
@@ -2233,7 +2216,7 @@ click 1 "mqtt_8cpp.md#mqtt_8cpp"
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 14, 2025 12:47:11 UTC">August 14, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 15, 2025 13:07:54 UTC">August 15, 2025</span>
   </span>
 
     

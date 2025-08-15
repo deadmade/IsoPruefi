@@ -84,7 +84,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/network.cpp" line="5" column="19" bodyfile="src/network.cpp" bodystart="5" bodyend="-1"/>
+        <location file="src/network.cpp" line="11" column="19" bodyfile="src/network.cpp" bodystart="11" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="network_8cpp_1a6c857fc5b1917d65a997274053f7dfd6" prot="public" static="yes" mutable="no">
         <type>const char</type>
@@ -98,7 +98,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/network.cpp" line="6" column="19" bodyfile="src/network.cpp" bodystart="6" bodyend="-1"/>
+        <location file="src/network.cpp" line="12" column="19" bodyfile="src/network.cpp" bodystart="12" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="network_8cpp_1abb3ec794643663d2561757adeef8622c" prot="public" static="yes" mutable="no">
         <type>const char *</type>
@@ -112,7 +112,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/network.cpp" line="7" column="19" bodyfile="src/network.cpp" bodystart="7" bodyend="-1"/>
+        <location file="src/network.cpp" line="13" column="19" bodyfile="src/network.cpp" bodystart="13" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="network_8cpp_1a0eb069d5f53d3e9269b0f321cfbcf108" prot="public" static="yes" mutable="no">
         <type>const int</type>
@@ -126,7 +126,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/network.cpp" line="8" column="18" bodyfile="src/network.cpp" bodystart="8" bodyend="-1"/>
+        <location file="src/network.cpp" line="14" column="18" bodyfile="src/network.cpp" bodystart="14" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="func">
@@ -159,7 +159,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/network.cpp" line="19" column="6" bodyfile="src/network.cpp" bodystart="19" bodyend="35"/>
+        <location file="src/network.cpp" line="25" column="6" bodyfile="src/network.cpp" bodystart="25" bodyend="41"/>
       </memberdef>
       <memberdef kind="function" id="network_8cpp_1a2585db85dfee612787923f923e4d9b6d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -202,7 +202,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/network.cpp" line="48" column="6" bodyfile="src/network.cpp" bodystart="48" bodyend="66"/>
+        <location file="src/network.cpp" line="54" column="6" bodyfile="src/network.cpp" bodystart="54" bodyend="72"/>
       </memberdef>
       <memberdef kind="function" id="network_8cpp_1aec8befb6e49b85d32ece0496dfca569b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -219,7 +219,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="src/network.cpp" line="68" column="6" bodyfile="src/network.cpp" bodystart="68" bodyend="70"/>
+        <location file="src/network.cpp" line="74" column="6" bodyfile="src/network.cpp" bodystart="74" bodyend="76"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -228,55 +228,61 @@
     </detaileddescription>
     <programlisting>
 <codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="network_8h" kindref="compound">network.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;secrets.h&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="mqtt_8h" kindref="compound">mqtt.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="4"><highlight class="normal"></highlight></codeline>
-<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1a2961a3ee6daab3612c6258629032802d" kindref="member">ssid</ref>[]<sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="secrets__example_8h_1af44aa8face3356c1566d19fcad3e5f8b" kindref="member">SECRET_SSID</ref>;</highlight></codeline>
-<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1a6c857fc5b1917d65a997274053f7dfd6" kindref="member">password</ref>[]<sp/>=<sp/><ref refid="secrets__example_8h_1af9af3945a9a7c95d2d047a2183832d35" kindref="member">SECRET_PASS</ref>;</highlight></codeline>
-<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="network_8cpp_1abb3ec794643663d2561757adeef8622c" kindref="member">broker</ref><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;aicon.dhbw-heidenheim.de&quot;</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1a0eb069d5f53d3e9269b0f321cfbcf108" kindref="member">port</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>1883;</highlight></codeline>
-<codeline lineno="9"><highlight class="normal"></highlight></codeline>
-<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1a7ceb85fc6879638e22b72beeafa4de5c" kindref="member">connectWiFi</ref>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>timeoutMs)<sp/>{</highlight></codeline>
-<codeline lineno="20"><highlight class="normal"><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Connecting<sp/>to<sp/>WiFi...&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/>WiFi.begin(<ref refid="network_8cpp_1a2961a3ee6daab3612c6258629032802d" kindref="member">ssid</ref>,<sp/><ref refid="network_8cpp_1a6c857fc5b1917d65a997274053f7dfd6" kindref="member">password</ref>);</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"></highlight></codeline>
-<codeline lineno="23"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>startAttemptTime<sp/>=<sp/>millis();</highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(WiFi.status()<sp/>!=<sp/>WL_CONNECTED)<sp/>{</highlight></codeline>
-<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(millis()<sp/>-<sp/>startAttemptTime<sp/>&gt;=<sp/>timeoutMs)<sp/>{</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;WiFi<sp/>connection<sp/>timed<sp/>out.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>delay(500);</highlight></codeline>
-<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="32"><highlight class="normal"></highlight></codeline>
-<codeline lineno="33"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;WiFi<sp/>connected.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="35"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"></highlight></codeline>
-<codeline lineno="48"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1a2585db85dfee612787923f923e4d9b6d" kindref="member">connectMQTT</ref>(MqttClient&amp;<sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>timeoutMs)<sp/>{</highlight></codeline>
-<codeline lineno="49"><highlight class="normal"><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Connecting<sp/>to<sp/>MQTT...&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/></highlight></codeline>
-<codeline lineno="51"><highlight class="normal"><sp/><sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.setUsernamePassword(<ref refid="secrets__example_8h_1a6097c00d8fc3e3e37995bd7e410db99d" kindref="member">SECRET_MQTT_USER</ref>,<sp/><ref refid="secrets__example_8h_1af4eaf35f12a6da3d6e6df6f1ca56b132" kindref="member">SECRET_MQTT_PASS</ref>);</highlight></codeline>
-<codeline lineno="52"><highlight class="normal"><sp/><sp/></highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>startAttemptTime<sp/>=<sp/>millis();</highlight></codeline>
-<codeline lineno="54"><highlight class="normal"></highlight></codeline>
-<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(!<ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.connect(<ref refid="network_8cpp_1abb3ec794643663d2561757adeef8622c" kindref="member">broker</ref>,<sp/><ref refid="network_8cpp_1a0eb069d5f53d3e9269b0f321cfbcf108" kindref="member">port</ref>))<sp/>{</highlight></codeline>
-<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(millis()<sp/>-<sp/>startAttemptTime<sp/>&gt;=<sp/>timeoutMs)<sp/>{</highlight></codeline>
-<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>connection<sp/>timed<sp/>out.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>delay(1000);</highlight></codeline>
-<codeline lineno="62"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="63"><highlight class="normal"></highlight></codeline>
-<codeline lineno="64"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;<sp/>connected.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="65"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="66"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="67"><highlight class="normal"></highlight></codeline>
-<codeline lineno="68"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1aec8befb6e49b85d32ece0496dfca569b" kindref="member">isConnectedToServer</ref>(MqttClient&amp;<sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="69"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>WiFi.status()<sp/>==<sp/>WL_CONNECTED<sp/>&amp;&amp;<sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.connected();</highlight></codeline>
-<codeline lineno="70"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>UNIT_TEST</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="secrets__example_8h" kindref="compound">secrets_example.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;secrets.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="mqtt_8h" kindref="compound">mqtt.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1a2961a3ee6daab3612c6258629032802d" kindref="member">ssid</ref>[]<sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="secrets__example_8h_1af44aa8face3356c1566d19fcad3e5f8b" kindref="member">SECRET_SSID</ref>;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1a6c857fc5b1917d65a997274053f7dfd6" kindref="member">password</ref>[]<sp/>=<sp/><ref refid="secrets__example_8h_1af9af3945a9a7c95d2d047a2183832d35" kindref="member">SECRET_PASS</ref>;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="network_8cpp_1abb3ec794643663d2561757adeef8622c" kindref="member">broker</ref><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;aicon.dhbw-heidenheim.de&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1a0eb069d5f53d3e9269b0f321cfbcf108" kindref="member">port</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>1883;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1a7ceb85fc6879638e22b72beeafa4de5c" kindref="member">connectWiFi</ref>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>timeoutMs)<sp/>{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Connecting<sp/>to<sp/>WiFi...&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/>WiFi.begin(<ref refid="network_8cpp_1a2961a3ee6daab3612c6258629032802d" kindref="member">ssid</ref>,<sp/><ref refid="network_8cpp_1a6c857fc5b1917d65a997274053f7dfd6" kindref="member">password</ref>);</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>startAttemptTime<sp/>=<sp/>millis();</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(WiFi.status()<sp/>!=<sp/>WL_CONNECTED)<sp/>{</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(millis()<sp/>-<sp/>startAttemptTime<sp/>&gt;=<sp/>timeoutMs)<sp/>{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;WiFi<sp/>connection<sp/>timed<sp/>out.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>delay(500);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;WiFi<sp/>connected.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1a2585db85dfee612787923f923e4d9b6d" kindref="member">connectMQTT</ref>(MqttClient&amp;<sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>timeoutMs)<sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Connecting<sp/>to<sp/>MQTT...&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.setUsernamePassword(<ref refid="secrets__example_8h_1a6097c00d8fc3e3e37995bd7e410db99d" kindref="member">SECRET_MQTT_USER</ref>,<sp/><ref refid="secrets__example_8h_1af4eaf35f12a6da3d6e6df6f1ca56b132" kindref="member">SECRET_MQTT_PASS</ref>);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>startAttemptTime<sp/>=<sp/>millis();</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(!<ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.connect(<ref refid="network_8cpp_1abb3ec794643663d2561757adeef8622c" kindref="member">broker</ref>,<sp/><ref refid="network_8cpp_1a0eb069d5f53d3e9269b0f321cfbcf108" kindref="member">port</ref>))<sp/>{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(millis()<sp/>-<sp/>startAttemptTime<sp/>&gt;=<sp/>timeoutMs)<sp/>{</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>connection<sp/>timed<sp/>out.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>delay(1000);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;<sp/>connected.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="network_8cpp_1aec8befb6e49b85d32ece0496dfca569b" kindref="member">isConnectedToServer</ref>(MqttClient&amp;<sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>WiFi.status()<sp/>==<sp/>WL_CONNECTED<sp/>&amp;&amp;<sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.connected();</highlight></codeline>
+<codeline lineno="76"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="src/network.cpp"/>
   </compounddef>

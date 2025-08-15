@@ -61,7 +61,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/core.h" line="3" column="6" bodyfile="src/core.cpp" bodystart="114" bodyend="152" declfile="include/core.h" declline="3" declcolumn="6"/>
+        <location file="include/core.h" line="3" column="6" bodyfile="src/core.cpp" bodystart="122" bodyend="160" declfile="include/core.h" declline="3" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="core_8h_1aa5603fdb8113111f87914938533d1ece" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -99,7 +99,78 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/core.h" line="4" column="6" bodyfile="src/core.cpp" bodystart="185" bodyend="253" declfile="include/core.h" declline="4" declcolumn="6"/>
+        <location file="include/core.h" line="4" column="6" bodyfile="src/core.cpp" bodystart="193" bodyend="261" declfile="include/core.h" declline="4" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="core_8h_1aecaef34a5b4c910faf41faad214950fd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isWifiConnected</definition>
+        <argsstring>()</argsstring>
+        <name>isWifiConnected</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/core.h" line="5" column="6" bodyfile="src/core.cpp" bodystart="61" bodyend="63" declfile="include/core.h" declline="5" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="core_8h_1a636ad73f43ed4a9e30c58de52e8030d0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isMqttConnected</definition>
+        <argsstring>()</argsstring>
+        <name>isMqttConnected</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/core.h" line="6" column="6" bodyfile="src/core.cpp" bodystart="65" bodyend="67" declfile="include/core.h" declline="6" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="core_8h_1a84b7ee25d4d43e3b6dd6b3193a2547f0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void dateTime</definition>
+        <argsstring>(uint16_t *date, uint16_t *time)</argsstring>
+        <name>dateTime</name>
+        <param>
+          <type>uint16_t *</type>
+          <declname>date</declname>
+        </param>
+        <param>
+          <type>uint16_t *</type>
+          <declname>time</declname>
+        </param>
+        <briefdescription>
+<para>Callback function for FAT file system timestamp generation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function is used by the SdFat library to obtain current date and time for file system operations. It retrieves the time from the RTC and converts it to the FAT file system format using the appropriate macros.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="out">date</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to store the encoded FAT date (year, month, day) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="out">time</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to store the encoded FAT time (hour, minute, second)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>This function is registered as a callback with SdFile::dateTimeCallback() </para>
+</simplesect>
+<simplesect kind="see"><para>FAT_DATE, FAT_TIME macros for encoding format details </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/core.h" line="7" column="6" bodyfile="src/core.cpp" bodystart="86" bodyend="90" declfile="include/core.h" declline="7" declcolumn="6"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -111,6 +182,9 @@
 <codeline lineno="2"><highlight class="normal"></highlight></codeline>
 <codeline lineno="3"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="core_8h_1a9fb1675443ce002d3928dd3edf3b2a72" kindref="member">coreSetup</ref>();</highlight></codeline>
 <codeline lineno="4"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="core_8h_1aa5603fdb8113111f87914938533d1ece" kindref="member">coreLoop</ref>();</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="core_8h_1aecaef34a5b4c910faf41faad214950fd" kindref="member">isWifiConnected</ref>();</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="core_8h_1a636ad73f43ed4a9e30c58de52e8030d0" kindref="member">isMqttConnected</ref>();</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="core_8h_1a84b7ee25d4d43e3b6dd6b3193a2547f0" kindref="member">dateTime</ref>(uint16_t*<sp/>date,<sp/>uint16_t*<sp/>time);</highlight></codeline>
     </programlisting>
     <location file="include/core.h"/>
   </compounddef>

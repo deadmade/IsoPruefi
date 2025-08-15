@@ -16,33 +16,14 @@
     <member refid="struct_mock_date_time_1ac5d382f73c5f5c3780ee6e5084ebf9fc" kind="function"><name>second</name></member>
     <member refid="struct_mock_date_time_1a61d7a971f8e11be7c022a98f711f0f83" kind="function"><name>unixtime</name></member>
   </compound>
-  <compound refid="struct_mock_json_array" kind="struct"><name>MockJsonArray</name>
-    <member refid="struct_mock_json_array_1abf917a8e07e4ad39db9c8b4846751c58" kind="variable"><name>values</name></member>
-    <member refid="struct_mock_json_array_1afbc04d4b35b6347ab7193ba9dcb65d4e" kind="function"><name>add</name></member>
-    <member refid="struct_mock_json_array_1aa9d88084e6cb19071e51695690e6cffe" kind="function"><name>add</name></member>
-    <member refid="struct_mock_json_array_1a78db22394b5aaae364e1512e83d5dfdc" kind="function"><name>operator[]</name></member>
-    <member refid="struct_mock_json_array_1afcc4a101a807a2f78d94f94fc47b0a8b" kind="function"><name>size</name></member>
-    <member refid="struct_mock_json_array_1aaf6c3a2f7c378baf7d8fab53ae7a46e4" kind="function"><name>clear</name></member>
-  </compound>
-  <compound refid="struct_mock_json_document" kind="struct"><name>MockJsonDocument</name>
-    <member refid="struct_mock_json_document_1a02d8a7c2d2b9ff56c08fbbbeb4bc4ad5" kind="variable"><name>primitives</name></member>
-    <member refid="struct_mock_json_document_1ac6132a268d826cd6fd7e3b84fd995bb3" kind="variable"><name>arrays</name></member>
-    <member refid="struct_mock_json_document_1a54ef1b4c26afbad9cf5c250eed062631" kind="function"><name>clear</name></member>
-    <member refid="struct_mock_json_document_1a0696fac92492fabb9af79ac44a2e5b21" kind="function"><name>operator[]</name></member>
-    <member refid="struct_mock_json_document_1a45b69917a5922afcd030de648201bc94" kind="function"><name>operator[]</name></member>
-    <member refid="struct_mock_json_document_1a89a2a652b12aea547d02b6440031912e" kind="function"><name>createNestedArray</name></member>
-    <member refid="struct_mock_json_document_1a2ea6d36047f732b3a3cd2da86c9f91b0" kind="function"><name>containsKey</name></member>
-    <member refid="struct_mock_json_document_1a176ae01e30f5fc396861b84f35733e7e" kind="function"><name>size</name></member>
-  </compound>
   <compound refid="core_8h" kind="file"><name>core.h</name>
     <member refid="core_8h_1a9fb1675443ce002d3928dd3edf3b2a72" kind="function"><name>coreSetup</name></member>
     <member refid="core_8h_1aa5603fdb8113111f87914938533d1ece" kind="function"><name>coreLoop</name></member>
+    <member refid="core_8h_1aecaef34a5b4c910faf41faad214950fd" kind="function"><name>isWifiConnected</name></member>
+    <member refid="core_8h_1a636ad73f43ed4a9e30c58de52e8030d0" kind="function"><name>isMqttConnected</name></member>
+    <member refid="core_8h_1a84b7ee25d4d43e3b6dd6b3193a2547f0" kind="function"><name>dateTime</name></member>
   </compound>
   <compound refid="mock__datetime_8h" kind="file"><name>mock_datetime.h</name>
-  </compound>
-  <compound refid="mock__json_8h" kind="file"><name>mock_json.h</name>
-    <member refid="mock__json_8h_1a54db1bfd55a2f11a001e5854071c899c" kind="define"><name>JsonDocument</name></member>
-    <member refid="mock__json_8h_1a23d227a500ab50420b35be152ef0a5e4" kind="define"><name>JsonArray</name></member>
   </compound>
   <compound refid="mqtt_8h" kind="file"><name>mqtt.h</name>
     <member refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kind="variable"><name>mqttClient</name></member>
@@ -111,8 +92,9 @@
     <member refid="main_8cpp_1a4fc01d736fe50cf5b977f755b675f11d" kind="function"><name>setup</name></member>
     <member refid="main_8cpp_1afe461d27b9c48d5921c00d521181f12f" kind="function"><name>loop</name></member>
   </compound>
+  <compound refid="mock__globals_8cpp" kind="file"><name>mock_globals.cpp</name>
+  </compound>
   <compound refid="mqtt_8cpp" kind="file"><name>mqtt.cpp</name>
-    <member refid="mqtt_8cpp_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kind="variable"><name>mqttClient</name></member>
     <member refid="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kind="variable"><name>SMALL_BUFFER_SIZE</name></member>
     <member refid="mqtt_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" kind="variable"><name>LARGE_BUFFER_SIZE</name></member>
     <member refid="mqtt_8cpp_1aa4d6a09459b76d7be490a8804e8bffe4" kind="variable"><name>FILE_NAME_BUFFER_SIZE</name></member>

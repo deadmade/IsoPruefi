@@ -90,6 +90,13 @@ Functions</h2></td></tr>
 <tr class="memitem:aa5603fdb8113111f87914938533d1ece" id="r_aa5603fdb8113111f87914938533d1ece"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8h.html#aa5603fdb8113111f87914938533d1ece">coreLoop</a> ()</td></tr>
 <tr class="memdesc:aa5603fdb8113111f87914938533d1ece"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main operational loop for continuous sensor monitoring, MQTT transmission, and robust data recovery.  <br /></td></tr>
 <tr class="separator:aa5603fdb8113111f87914938533d1ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecaef34a5b4c910faf41faad214950fd" id="r_aecaef34a5b4c910faf41faad214950fd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8h.html#aecaef34a5b4c910faf41faad214950fd">isWifiConnected</a> ()</td></tr>
+<tr class="separator:aecaef34a5b4c910faf41faad214950fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a636ad73f43ed4a9e30c58de52e8030d0" id="r_a636ad73f43ed4a9e30c58de52e8030d0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8h.html#a636ad73f43ed4a9e30c58de52e8030d0">isMqttConnected</a> ()</td></tr>
+<tr class="separator:a636ad73f43ed4a9e30c58de52e8030d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84b7ee25d4d43e3b6dd6b3193a2547f0" id="r_a84b7ee25d4d43e3b6dd6b3193a2547f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8h.html#a84b7ee25d4d43e3b6dd6b3193a2547f0">dateTime</a> (uint16_t *date, uint16_t *time)</td></tr>
+<tr class="memdesc:a84b7ee25d4d43e3b6dd6b3193a2547f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function for FAT file system timestamp generation.  <br /></td></tr>
+<tr class="separator:a84b7ee25d4d43e3b6dd6b3193a2547f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="aa5603fdb8113111f87914938533d1ece" name="aa5603fdb8113111f87914938533d1ece"></a>
@@ -165,6 +172,80 @@ Functions</h2></td></tr>
 <dl class="section warning"><dt>Warning</dt><dd>This function will halt program execution (infinite loop) if any critical component fails to initialize (RTC, SD card, or temperature sensor)</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The function uses compile-time constants for timeouts and configuration </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="core_8cpp.html#a9b7578cbf8a2ac9a8a2ccb3fc5431791">WIFI_CONNECT_TIMEOUT_MS</a>, <a class="el" href="core_8cpp.html#a4ae62406649dce01eb479e7a476a4305">CLIENT_ID_BUFFER_SIZE</a>, <a class="el" href="core_8cpp.html#a4f1edbd0b6c65e5e7843bbda20bb24e2">SD_SCK_FREQUENCY_MHZ</a> </dd></dl>
+
+</div>
+</div>
+<a id="a84b7ee25d4d43e3b6dd6b3193a2547f0" name="a84b7ee25d4d43e3b6dd6b3193a2547f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84b7ee25d4d43e3b6dd6b3193a2547f0">&#9670;&#160;</a></span>dateTime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dateTime </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t *&#160;</td>
+          <td class="paramname"><em>date</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t *&#160;</td>
+          <td class="paramname"><em>time</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Callback function for FAT file system timestamp generation. </p>
+<p>This function is used by the SdFat library to obtain current date and time for file system operations. It retrieves the time from the RTC and converts it to the FAT file system format using the appropriate macros.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">date</td><td>Pointer to store the encoded FAT date (year, month, day) </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">time</td><td>Pointer to store the encoded FAT time (hour, minute, second)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This function is registered as a callback with SdFile::dateTimeCallback() </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>FAT_DATE, FAT_TIME macros for encoding format details </dd></dl>
+
+</div>
+</div>
+<a id="a636ad73f43ed4a9e30c58de52e8030d0" name="a636ad73f43ed4a9e30c58de52e8030d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a636ad73f43ed4a9e30c58de52e8030d0">&#9670;&#160;</a></span>isMqttConnected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isMqttConnected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aecaef34a5b4c910faf41faad214950fd" name="aecaef34a5b4c910faf41faad214950fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecaef34a5b4c910faf41faad214950fd">&#9670;&#160;</a></span>isWifiConnected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isWifiConnected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

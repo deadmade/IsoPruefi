@@ -1708,21 +1708,21 @@ click 1 "core_8cpp.md#core_8cpp"
 <p><a id="core_8cpp_1afa042f998806fcdedab1794cebbeaad3"></a></p>
 <h3 id="variable-rtc">Variable rtc</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 9)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 17)</p>
 <div class="highlight"><pre><span></span><code><span class="n">RTC_DS3231</span><span class="w"> </span><span class="n">rtc</span>
 </code></pre></div>
 <p><strong>Type</strong>: RTC_DS3231</p>
 <p><a id="core_8cpp_1af19292dee25d42580f9588b754ddbedc"></a></p>
 <h3 id="variable-tempsensor">Variable tempsensor</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 10)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 18)</p>
 <div class="highlight"><pre><span></span><code><span class="n">Adafruit_ADT7410</span><span class="w"> </span><span class="n">tempsensor</span>
 </code></pre></div>
 <p><strong>Type</strong>: Adafruit_ADT7410</p>
 <p><a id="core_8cpp_1a15e6b7e1f0fb2d1e0fe1654721bb5302"></a></p>
 <h3 id="variable-sd">Variable sd</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 11)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 19)</p>
 <div class="highlight"><pre><span></span><code><span class="n">SdFat</span><span class="w"> </span><span class="n">sd</span>
 </code></pre></div>
 <p><strong>Type</strong>: SdFat</p>
@@ -1730,7 +1730,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-wificlient">Variable wifiClient</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 13)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 20)</p>
 <div class="highlight"><pre><span></span><code><span class="n">WiFiClient</span><span class="w"> </span><span class="n">wifiClient</span>
 </code></pre></div>
 <p><strong>Type</strong>: WiFiClient</p>
@@ -1738,7 +1738,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-chipselect">Variable chipSelect</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 21)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 28)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">chipSelect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
 </code></pre></div>
 <p>SD card chip select pin.</p>
@@ -1747,7 +1747,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-sensoridone">Variable sensorIdOne</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 22)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 29)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdOne</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sensor_One&quot;</span>
 </code></pre></div>
 <p><strong>Type</strong>: const char *</p>
@@ -1755,7 +1755,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-sensoridinuse">Variable sensorIdInUse</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 23)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 30)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorIdInUse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">sensorIdOne</span><span class="p">](</span><span class="n">core_8cpp</span><span class="p">.</span><span class="n">md</span><span class="err">#</span><span class="n">core_8cpp_1ad4bd75fd80e14bbf47bb21fa3524f6c8</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Type</strong>: const char *</p>
@@ -1763,7 +1763,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-sensortype">Variable sensorType</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 26)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 33)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">sensorType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;temp&quot;</span>
 </code></pre></div>
 <p><strong>Type</strong>: const char *</p>
@@ -1771,7 +1771,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-topic">Variable topic</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 27)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 34)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dhbw/ai/si2023/2/&quot;</span>
 </code></pre></div>
 <p><strong>Type</strong>: const char *</p>
@@ -1779,7 +1779,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-wifi_connect_timeout_ms">Variable WIFI_CONNECT_TIMEOUT_MS</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 33)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 40)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15000</span>
 </code></pre></div>
 <p><strong>Type</strong>: const unsigned long</p>
@@ -1787,7 +1787,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-loop_delay_ms">Variable LOOP_DELAY_MS</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 34)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 41)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">LOOP_DELAY_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span>
 </code></pre></div>
 <p><strong>Type</strong>: const unsigned long</p>
@@ -1795,7 +1795,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-client_id_buffer_size">Variable CLIENT_ID_BUFFER_SIZE</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 35)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 42)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">CLIENT_ID_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span>
 </code></pre></div>
 <p><strong>Type</strong>: const size_t</p>
@@ -1803,7 +1803,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-sd_sck_frequency_mhz">Variable SD_SCK_FREQUENCY_MHZ</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 36)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 44)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">SD_SCK_FREQUENCY_MHZ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span>
 </code></pre></div>
 <p><strong>Type</strong>: const uint8_t</p>
@@ -1811,7 +1811,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-reconnect_interval_ms">Variable RECONNECT_INTERVAL_MS</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 37)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 46)</p>
 <div class="highlight"><pre><span></span><code><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">RECONNECT_INTERVAL_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2000</span>
 </code></pre></div>
 <p><strong>Type</strong>: const int</p>
@@ -1819,7 +1819,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-lastloggedminute">Variable lastLoggedMinute</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 43)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 51)</p>
 <div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">lastLoggedMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span>
 </code></pre></div>
 <p><strong>Type</strong>: int</p>
@@ -1827,7 +1827,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-count">Variable count</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 44)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 52)</p>
 <div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 </code></pre></div>
 <p><strong>Type</strong>: int</p>
@@ -1835,7 +1835,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-wifiok">Variable wifiOk</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 45)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 53)</p>
 <div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="n">wifiOk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
 <p><strong>Type</strong>: bool</p>
@@ -1843,7 +1843,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-recoveredsent">Variable recoveredSent</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 46)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 54)</p>
 <div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="n">recoveredSent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
 <p><strong>Type</strong>: bool</p>
@@ -1851,7 +1851,7 @@ click 1 "core_8cpp.md#core_8cpp"
 <h3 id="variable-lastreconnectattempt">Variable lastReconnectAttempt</h3>
 <p><img alt="" src="https://img.shields.io/badge/-public-brightgreen" title="public" /><br />
 <img alt="" src="https://img.shields.io/badge/-static-lightgrey" title="static" /></p>
-<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 47)</p>
+<p><strong>Definition</strong>: <code>src/core.cpp</code> (line 55)</p>
 <div class="highlight"><pre><span></span><code><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">lastReconnectAttempt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 </code></pre></div>
 <p><strong>Type</strong>: unsigned long</p>
@@ -1981,15 +1981,22 @@ This function will halt program execution (infinite loop) if any critical compon
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;mqtt.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;sensor.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;storage.h&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;secrets.h&quot;</span>
 
+<span class="cp">#ifdef UNIT_TEST</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;secrets_example.h&quot;</span>
+<span class="cp">#else</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;secrets.h&quot;</span>
+<span class="cp">#endif</span>
+
+
+<span class="cp">#ifndef UNIT_TEST</span>
+<span class="c1">// Global hardware objects for real hardware only</span>
 <span class="n">RTC_DS3231</span><span class="w"> </span><span class="n">rtc</span><span class="p">;</span>
 <span class="n">Adafruit_ADT7410</span><span class="w"> </span><span class="n">tempsensor</span><span class="p">;</span><span class="w">   </span>
 <span class="n">SdFat</span><span class="w"> </span><span class="n">sd</span><span class="p">;</span>
-
 <span class="k">static</span><span class="w"> </span><span class="n">WiFiClient</span><span class="w"> </span><span class="n">wifiClient</span><span class="p">;</span>
 <span class="n">MqttClient</span><span class="w"> </span><span class="nf">mqttClient</span><span class="p">(</span><span class="n">wifiClient</span><span class="p">);</span>
-
+<span class="cp">#endif</span>
 <span class="c1">// =============================================================================</span>
 <span class="c1">// SYSTEM CONFIGURATION CONSTANTS</span>
 <span class="c1">// =============================================================================</span>
@@ -2009,9 +2016,10 @@ This function will halt program execution (infinite loop) if any critical compon
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">WIFI_CONNECT_TIMEOUT_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15000</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">LOOP_DELAY_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">CLIENT_ID_BUFFER_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">;</span>
+<span class="cp">#ifndef UNIT_TEST</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">SD_SCK_FREQUENCY_MHZ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span>
+<span class="cp">#endif</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">RECONNECT_INTERVAL_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2000</span><span class="p">;</span>
-
 <span class="c1">// =============================================================================</span>
 <span class="c1">// SYSTEM STATE VARIABLES</span>
 <span class="c1">// =============================================================================</span>
@@ -2182,7 +2190,7 @@ This function will halt program execution (infinite loop) if any critical compon
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 14, 2025 12:47:11 UTC">August 14, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 15, 2025 13:07:54 UTC">August 15, 2025</span>
   </span>
 
     

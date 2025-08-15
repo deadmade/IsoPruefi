@@ -87,10 +87,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a576d7131c80320b3f5129de67ea60253" id="r_a576d7131c80320b3f5129de67ea60253"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="storage_8cpp.html#a576d7131c80320b3f5129de67ea60253">saveToCsvBatch</a> (const DateTime &amp;now, float celsius, int sequence)</td></tr>
 <tr class="memdesc:a576d7131c80320b3f5129de67ea60253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves sensor data to CSV files in batch mode during network outages.  <br /></td></tr>
 <tr class="separator:a576d7131c80320b3f5129de67ea60253"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab16364c7bad54765d7deca604d19f172" id="r_ab16364c7bad54765d7deca604d19f172"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="storage_8cpp.html#ab16364c7bad54765d7deca604d19f172">buildJson</a> (<a class="el" href="mock__json_8h.html#a54db1bfd55a2f11a001e5854071c899c">JsonDocument</a> &amp;doc, float celsius, const DateTime &amp;now, int sequence)</td></tr>
+<tr class="memitem:ab16364c7bad54765d7deca604d19f172" id="r_ab16364c7bad54765d7deca604d19f172"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="storage_8cpp.html#ab16364c7bad54765d7deca604d19f172">buildJson</a> (JsonDocument &amp;doc, float celsius, const DateTime &amp;now, int sequence)</td></tr>
 <tr class="memdesc:ab16364c7bad54765d7deca604d19f172"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds a JSON document from live sensor data for real-time transmission.  <br /></td></tr>
 <tr class="separator:ab16364c7bad54765d7deca604d19f172"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e33188776964f5ea7504de34669407d" id="r_a7e33188776964f5ea7504de34669407d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="storage_8cpp.html#a7e33188776964f5ea7504de34669407d">buildRecoveredJsonFromCsv</a> (<a class="el" href="mock__json_8h.html#a54db1bfd55a2f11a001e5854071c899c">JsonDocument</a> &amp;doc, const char *filepath, const DateTime &amp;now)</td></tr>
+<tr class="memitem:a7e33188776964f5ea7504de34669407d" id="r_a7e33188776964f5ea7504de34669407d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="storage_8cpp.html#a7e33188776964f5ea7504de34669407d">buildRecoveredJsonFromCsv</a> (JsonDocument &amp;doc, const char *filepath, const DateTime &amp;now)</td></tr>
 <tr class="memdesc:a7e33188776964f5ea7504de34669407d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds a JSON document from CSV batch data for recovery transmission.  <br /></td></tr>
 <tr class="separator:a7e33188776964f5ea7504de34669407d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a712233a12d2ef3c7d797e0a06149ca73" id="r_a712233a12d2ef3c7d797e0a06149ca73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="storage_8cpp.html#a712233a12d2ef3c7d797e0a06149ca73">deleteCsvFile</a> (const char *filepath)</td></tr>
@@ -145,7 +145,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">void buildJson </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="mock__json_8h.html#a54db1bfd55a2f11a001e5854071c899c">JsonDocument</a> &amp;&#160;</td>
+          <td class="paramtype">JsonDocument &amp;&#160;</td>
           <td class="paramname"><em>doc</em>, </td>
         </tr>
         <tr>
@@ -213,7 +213,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">void buildRecoveredJsonFromCsv </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="mock__json_8h.html#a54db1bfd55a2f11a001e5854071c899c">JsonDocument</a> &amp;&#160;</td>
+          <td class="paramtype">JsonDocument &amp;&#160;</td>
           <td class="paramname"><em>doc</em>, </td>
         </tr>
         <tr>

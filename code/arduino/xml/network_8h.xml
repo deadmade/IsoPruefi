@@ -101,7 +101,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/network.h" line="5" column="6" bodyfile="src/network.cpp" bodystart="19" bodyend="35" declfile="include/network.h" declline="5" declcolumn="6"/>
+        <location file="include/network.h" line="5" column="6" bodyfile="src/network.cpp" bodystart="25" bodyend="41" declfile="include/network.h" declline="5" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="network_8h_1acc5736b55a4581c4020d736180e28306" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -145,7 +145,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/network.h" line="7" column="6" bodyfile="src/network.cpp" bodystart="48" bodyend="66" declfile="include/network.h" declline="7" declcolumn="6"/>
+        <location file="include/network.h" line="7" column="6" bodyfile="src/network.cpp" bodystart="54" bodyend="72" declfile="include/network.h" declline="7" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="network_8h_1aec8befb6e49b85d32ece0496dfca569b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -162,7 +162,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/network.h" line="9" column="6" bodyfile="src/network.cpp" bodystart="68" bodyend="70" declfile="include/network.h" declline="9" declcolumn="6"/>
+        <location file="include/network.h" line="9" column="6" bodyfile="src/network.cpp" bodystart="74" bodyend="76" declfile="include/network.h" declline="9" declcolumn="6"/>
       </memberdef>
     </sectiondef>
     <briefdescription>

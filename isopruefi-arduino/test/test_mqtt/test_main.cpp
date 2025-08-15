@@ -8,8 +8,18 @@ using namespace fakeit;
 void setUp(void) {
     ArduinoFakeReset();
     sd.clearTestFiles();
+
+    // Basic Arduino function stubs
     When(OverloadedMethod(ArduinoFake(Serial), print, size_t(const char[]))).AlwaysReturn(1);
     When(OverloadedMethod(ArduinoFake(Serial), println, size_t(const char[]))).AlwaysReturn(1);
+    When(Method(ArduinoFake(), delay)).Return();
+
+    // Add missing critical Arduino functions
+    When(Method(ArduinoFake(), millis)).Return(1000);
+    
+    // Add Serial overloads for String (in case needed elsewhere)
+    When(OverloadedMethod(ArduinoFake(Serial), println, size_t(const String&))).AlwaysReturn(1);
+    When(OverloadedMethod(ArduinoFake(Serial), print, size_t(const String&))).AlwaysReturn(1);
 }
 
 void tearDown(void) {

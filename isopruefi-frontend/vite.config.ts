@@ -1,16 +1,13 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
+    port: 5173,
     proxy: {
-      '/api': {
-        target: 'http://localhost:5160',
-        changeOrigin: true,
-        secure: false,
-      }
-    }
-  }
-})
+      "/v1":  { target: "https://aicon.dhbw-heidenheim.de:5001/backend", changeOrigin: true, secure: false },
+      "/api": { target: "https://aicon.dhbw-heidenheim.de:5001/backend", changeOrigin: true, secure: false },
+    },
+  },
+});

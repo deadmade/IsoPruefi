@@ -41,6 +41,17 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend", policy =>
+            {
+                policy
+                    .WithOrigins("http://localhost:5173")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
 
         // Add services to the container.
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -177,6 +188,7 @@ public class Program
 
         //app.UseHttpsRedirection();
 
+        app.UseCors("AllowFrontend");
         app.UseAuthentication();
         app.UseAuthorization();
 

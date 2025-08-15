@@ -23,6 +23,71 @@ static const size_t LINE_BUFFER_SIZE = 64;
 static const uint32_t SECONDS_IN_24_HOURS = 86400;
 /// Timeout for recovery operations in milliseconds (60 seconds)
 static const unsigned long RECOVERY_TIMEOUT_MS = 60000;
+static const unsigned long ACK_TIMEOUT_MS = 5000;
+static const unsigned long RECOVERY_ACK_TIMEOUT_MS  = 10000;
+static const unsigned long DELAY_POLLING_LOOP_MS = 10;
+
+// =============================================================================
+// ACK/ECHO-HANDLING (non-invasive ohne Lib-Patch)
+// =============================================================================
+
+static volatile bool  s_ackSeen   = false;
+static volatile long  s_ackSeq    = -1;
+static String         s_pubTopic;           // z. B. "<prefix>temp/Sensor_Two"
+static bool           s_ackInit   = false;
+
+// simple Sequence-Extraktion
+static bool extractSequence(const char* json, long& outSeq) {
+  const char* p = strstr(json, "\"sequence\":");
+  if (!p) return false;
+  p += 11; // length of "\"sequence\":"
+  // Skip whitespace
+  while (*p == ' ' || *p == '\t') ++p;
+  // Support null (Recovery may have sequence:null)
+  if (strncmp(p, "null", 4) == 0) return false;
+  outSeq = strtol(p, nullptr, 10);
+  return true;
+}
+
+static void onMqttEchoMessage(int messageSize) {
+  (void)messageSize;
+  // Only evaluate echoes from own publish topic, ignore retained
+  if (mqttClient.messageTopic() != s_pubTopic) return;
+  if (mqttClient.messageRetain()) return;
+
+  static char buf[SMALL_BUFFER_SIZE * 2]; // small buffer is sufficient for live JSON
+  int n = 0;
+  while (mqttClient.available() && n < (int)sizeof(buf) - 1) {
+    buf[n++] = mqttClient.read();
+  }
+  buf[n] = 0;
+
+  long seq;
+  if (extractSequence(buf, seq)) {
+    s_ackSeq  = seq;
+    s_ackSeen = true;
+  }
+}
+
+static void ensureAckInit(MqttClient& client, const char* topicPrefix, const char* sensorType, const char* sensorId) {
+  // create Publish-Topic
+  if (!s_ackInit) {
+    char fullTopic[SMALL_BUFFER_SIZE];
+    if (sensorType && sensorId) {
+      snprintf(fullTopic, sizeof(fullTopic), "%s%s/%s", topicPrefix, sensorType, sensorId);
+      s_pubTopic = fullTopic;
+      s_ackInit  = true;
+    } else {
+      return; 
+    }
+    client.onMessage(onMqttEchoMessage); // Callback register
+  }
+
+  // re-subscribe after each reconnect
+  if (client.connected()) {
+    client.subscribe(s_pubTopic.c_str());
+  }
+}
 
 // =============================================================================
 
@@ -40,33 +105,29 @@ void createFullTopic(char* buffer, size_t bufferSize, const char* topicPrefix,
 // =============================================================================
 
 /**
- * @brief Publishes real-time sensor data to MQTT broker
- * 
- * This function handles the complete process of publishing current sensor
- * readings to the MQTT broker, including JSON formatting and topic construction.
- * 
- * **Process Flow:**
- * 1. Polls MQTT client to maintain connection
- * 2. Constructs appropriate topic based on sensor information
- * 3. Builds JSON payload with sensor data
- * 4. Attempts to publish data to broker
- * 5. Provides status feedback via serial output
- * 
- * @param[in] mqttClient   Reference to the MQTT client instance
- * @param[in] topicPrefix  Base MQTT topic prefix
- * @param[in] sensorType   Type identifier for the sensor
- * @param[in] sensorId     Unique identifier for this sensor
- * @param[in] celsius      Temperature reading in Celsius
- * @param[in] now          Current timestamp for the reading
- * @param[in] sequence     Sequence number for the measurement
- * 
- * @note This function does not handle connection failures - the caller
- *       should verify MQTT connectivity before calling
- * @see buildJson() for JSON payload structure
- * @see createFullTopic() for topic construction details
+ * @brief Publishes real-time sensor data to the MQTT broker with QoS 1 delivery.
+ *
+ * This function builds a JSON payload from the provided sensor data and publishes it
+ * to the specified MQTT topic. After publishing, it waits briefly for a PUBACK
+ * handshake from the broker to confirm delivery. If no acknowledgment is received within
+ * the timeout window, the data is saved to a CSV file for later recovery.
+ *
+ * @param mqttClient Reference to the MQTT client instance
+ * @param topicPrefix Topic prefix for MQTT publishing (e.g., "dhbw/ai/si2023/2/")
+ * @param sensorType Sensor type string (e.g., "temp")
+ * @param sensorId Unique sensor identifier
+ * @param celsius Measured temperature value in Celsius
+ * @param now Current timestamp (DateTime)
+ * @param sequence Sequence number for the measurement
+ * @return true if published and acknowledged by broker, false if fallback to CSV
+ *
+ * @note Uses QoS 1 for reliable delivery. If broker does not echo/PUBACK within
+ *       the timeout, data is persisted for later transmission.
  */
-void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
+bool sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
                 const char* sensorId, float celsius, const DateTime& now, int sequence) {
+  ensureAckInit(mqttClient, topicPrefix, sensorType, sensorId);
+
   mqttClient.poll();
 
   char fullTopic[SMALL_BUFFER_SIZE];
@@ -78,15 +139,48 @@ void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
   char payload[SMALL_BUFFER_SIZE];
   serializeJson(jsonDoc, payload, sizeof(payload));
 
-  if (mqttClient.beginMessage(fullTopic)) {
+  // Reset ACK-Flags
+  s_ackSeen = false;
+  s_ackSeq  = -1;
+
+
+  if (mqttClient.beginMessage(fullTopic, false, 1)) {
     mqttClient.print(payload);
-    mqttClient.endMessage();
+    if (!mqttClient.endMessage()) {
+      Serial.println("MQTT endMessage() failed → saving to CSV.");
+      saveToCsvBatch(now, celsius, sequence);
+      return false;
+    }
+
+    // delay for a short window to allow poll() to process the PUBACK/echo
+    unsigned long startTime = millis();
+    bool ackOk = false;
+    while (millis() - startTime < ACK_TIMEOUT_MS) {
+      mqttClient.poll();
+      if (s_ackSeen && s_ackSeq == sequence) {
+        ackOk = true;
+        break;
+      }
+      delay(DELAY_POLLING_LOOP_MS);
+   }
+
+    if (!ackOk) {
+      Serial.println("No Echo/PUBACK within timeout → saving to CSV.");
+      saveToCsvBatch(now, celsius, sequence);
+      return false;
+    }
+
     Serial.print("Published to ");
     Serial.println(fullTopic);
     Serial.println(payload);
+    return true;
   } else {
-    Serial.println("MQTT publish failed.");
+    Serial.println("MQTT beginMessage() failed → saving to CSV.");
+    saveToCsvBatch(now, celsius, sequence);
+   return false;
   }
+
+  return false;
 }
 
 // =============================================================================
@@ -94,40 +188,22 @@ void sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
 // =============================================================================
 
 /**
- * @brief Processes and transmits pending CSV files from offline periods
- * 
- * This function implements the data recovery mechanism that ensures no sensor
- * data is lost during network outages. It scans for CSV files created during
- * offline periods, converts them to JSON format, and transmits them via MQTT.
- * 
- * **Recovery Process:**
- * 1. **File Discovery**: Scans the current date folder for CSV files
- * 2. **Age Filtering**: Skips files older than 24 hours to prevent stale data
- * 3. **Content Validation**: Checks for valid data before transmission
- * 4. **Size Management**: Handles large payloads that exceed buffer limits
- * 5. **Transmission**: Publishes data to recovery topic
- * 6. **Cleanup**: Deletes successfully transmitted files
- * 7. **Timeout Handling**: Prevents infinite processing loops
- * 
- * **Error Handling:**
- * - Skips empty or corrupted files
- * - Handles oversized payloads gracefully
- * - Preserves files if transmission fails
- * - Implements timeout protection
- * 
- * @param[in] mqttClient   Reference to the MQTT client instance
- * @param[in] topicPrefix  Base MQTT topic prefix
- * @param[in] sensorType   Type identifier for the sensor
- * @param[in] sensorId     Unique identifier for this sensor
- * @param[in] now          Current timestamp for filtering and processing
- * 
- * @return true if all pending files were successfully processed, false if
- *         timeout occurred or some files could not be transmitted
- * 
- * @note This function uses the "/recovered" topic suffix for transmitted data
- * @see buildRecoveredJsonFromCsv() for CSV to JSON conversion
- * @see deleteCsvFile() for file cleanup after successful transmission
- * @warning Files older than 24 hours are automatically skipped
+ * @brief Processes and transmits pending CSV files from offline periods to the MQTT broker.
+ *
+ * This function scans the SD card for CSV files containing unsent sensor data from previous offline periods.
+ * Each file is converted to a JSON payload and published to the MQTT topic <topic>/recovered with QoS 1.
+ * After publishing, it waits briefly for a PUBACK handshake from the broker to confirm delivery.
+ * If the PUBACK is not received within the timeout period, the file is saved for later transmission.
+ * Files are only deleted if the publish operation succeeds. Files older than 24 hours or with invalid data are skipped.
+ *
+ * @param mqttClient Reference to the MQTT client instance
+ * @param topicPrefix Topic prefix for MQTT publishing (e.g., "dhbw/ai/si2023/2/")
+ * @param sensorType Sensor type string (e.g., "temp")
+ * @param sensorId Unique sensor identifier
+ * @param now Current timestamp (DateTime)
+ * @return true if all valid files were published and deleted, false if any files remain or errors occurred
+ *
+ * @note Uses QoS 1 for reliable delivery. Skips files older than 24 hours or with invalid content. Aborts if recovery exceeds time limit.
  */
 bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
                      const char* sensorId, const DateTime& now) {
@@ -139,11 +215,11 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
 
   // Open the current date folder
   char folder[FOLDER_NAME_BUFFER_SIZE];
-  strncpy(folder, createFolderName(now), sizeof(folder)); 
+  strncpy(folder, createFolderName(now), sizeof(folder));
   File root = sd.open(folder);
   if (!root) {
     Serial.println("No folder found for pending data.");
-    return true; 
+    return true;
   }
 
   // Initialize processing counters
@@ -192,7 +268,7 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
     buildRecoveredJsonFromCsv(doc, fullPath, now);
 
     // Validate that the file contains usable data
-    if (!doc.containsKey("meta") || doc["meta"].size() == 0) {
+    if (!doc["meta"].is<JsonObject>() || doc["meta"].size() == 0) {
       Serial.println("No valid data in: " + nameStr);
       skippedEmptyFiles++;
       continue;
@@ -215,18 +291,30 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
     Serial.print("MQTT payload: ");
     Serial.println(payload);
 
-    if (mqttClient.beginMessage(fullTopic)) {
+    bool published = false;
+    if (mqttClient.beginMessage(fullTopic, false, 1)) {
       mqttClient.print(payload);
-      mqttClient.endMessage();
+      if (mqttClient.endMessage()) {
+        // wait for echo/PUBACK handshake
+        unsigned long startTime = millis();
+        while (millis() - startTime < RECOVERY_ACK_TIMEOUT_MS) {
+          mqttClient.poll();
+          delay(DELAY_POLLING_LOOP_MS);
+        }
+        published = true;
+      }
+    }
+
+    if (published) {
       Serial.println("Published and deleting file.");
-      deleteCsvFile(fullPath); // Uncomment to delete after successful publish
+      deleteCsvFile(fullPath);
       sentCount++;
     } else {
       Serial.println("Failed to publish. Keeping file: " + nameStr);
       allFilesSent = false;
     }
 
-    // Check for timeout to prevent blocking the main loop too long
+    // Check for overall timeout to prevent blocking too long
     if (millis() - startMillis > RECOVERY_TIMEOUT_MS) {
       Serial.println("Aborting recovery: 60s time limit exceeded.");
       allFilesSent = false;
@@ -248,5 +336,3 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
 
   return allFilesSent;
 }
-
-

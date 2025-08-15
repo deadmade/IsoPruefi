@@ -13,6 +13,6 @@ public static class HealthCheck
             .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty, "select 1",
                 name: "PostgreSQL", failureStatus: HealthStatus.Unhealthy, tags: new[] { "Database" })
             .AddCheck<MqttHealthCheck>("MQTT Connection", HealthStatus.Unhealthy, new[] { "MQTT" })
-            .AddCheck<InfluxHealthCheck>("InfluxDB", HealthStatus.Unhealthy, new[] { "Database" });
+            .AddCheck<CachedInfluxHealthCheck>("InfluxDB", HealthStatus.Unhealthy, new[] { "Database" });
     }
 }

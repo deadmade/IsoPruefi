@@ -11,7 +11,7 @@ Adafruit_ADT7410 tempsensor;
 SdFat sd;
 
 static WiFiClient wifiClient;
-static MqttClient mqttClient(wifiClient);
+MqttClient mqttClient(wifiClient);
 
 // =============================================================================
 // SYSTEM CONFIGURATION CONSTANTS
@@ -20,9 +20,9 @@ static MqttClient mqttClient(wifiClient);
 /// SD card chip select pin
 static const uint8_t chipSelect = 4;
 static const char* sensorIdOne = "Sensor_One";
-// static const char* sensorIdTwo = "Sensor_Two";
 static const char* sensorIdInUse = sensorIdOne; 
-//const char* sensorIdInUse = sensorIdTwo; // Uncomment to use the second
+// static const char* sensorIdTwo = "Sensor_Two";
+// static const char* sensorIdInUse = sensorIdTwo; // Uncomment to use the second
 static const char* sensorType = "temp";
 static const char* topic = "dhbw/ai/si2023/2/";
 
@@ -143,9 +143,10 @@ void coreSetup() {
     while (1);
   }
 
-  // Attempt to send any pending recovery data from previous sessions
   DateTime now = rtc.now();
-  sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now);
+  Serial.print("Current time: ");
+  Serial.println(now.timestamp(DateTime::TIMESTAMP_FULL));
+  Serial.print("Lost Power? "); Serial.println(rtc.lostPower() ? "YES" : "NO");
 
   Serial.println("Setup complete.");
 }
@@ -155,45 +156,31 @@ void coreSetup() {
 // =============================================================================
 
 /**
- * @brief Main operational loop for continuous sensor monitoring and data transmission
- * 
- * This function implements the core operational logic of the temperature monitoring
- * system with robust connectivity handling and data persistence features.
- * 
+ * @brief Main operational loop for continuous sensor monitoring, MQTT transmission, and robust data recovery.
+ *
+ * This function implements the primary logic for the temperature monitoring system, including:
+ * - Real-time sensor measurement and transmission via MQTT with QoS 1
+ * - Intelligent WiFi and MQTT connection management with automatic reconnection
+ * - Fallback to CSV batch storage during connectivity outages
+ * - Recovery and transmission of offline data after successful reconnection
+ * - Comprehensive error handling and status reporting
+ *
  * **Operational Flow:**
- * 
- * 1. **Time Management:**
- *    - Reads current time from RTC
- *    - Tracks minute changes to prevent duplicate measurements
- * 
- * 2. **WiFi Connection Management:**
- *    - Monitors WiFi status with intelligent reconnection timing
- *    - Falls back to CSV logging during WiFi outages
- *    - Implements reconnection throttling to prevent excessive attempts
- * 
- * 3. **MQTT Connection Management:**
- *    - Verifies MQTT broker connectivity
- *    - Handles automatic reconnection with status reporting
- *    - Falls back to CSV logging during MQTT outages
- * 
- * 4. **Data Recovery Processing:**
- *    - Sends pending CSV data after successful reconnection
- *    - Ensures recovery data is transmitted only once per reconnection cycle
- * 
- * 5. **Normal Operation:**
- *    - Performs temperature measurements once per minute
- *    - Transmits data via MQTT to configured topic
- *    - Maintains MQTT client polling for incoming messages
- * 
+ * 1. Time Management: Reads current time from RTC, tracks minute changes to avoid duplicate measurements.
+ * 2. WiFi Connection: Monitors status, attempts reconnection, falls back to CSV logging if offline.
+ * 3. MQTT Connection: Verifies broker connectivity, reconnects as needed, falls back to CSV logging if offline.
+ * 4. Data Recovery: Sends pending CSV data after reconnection, ensures recovery only once per cycle.
+ * 5. Normal Operation: Measures temperature, transmits via MQTT, polls for incoming messages.
+ *
  * **Error Handling:**
- * - Network failures trigger CSV fallback storage
- * - Connection attempts are rate-limited to prevent resource exhaustion
- * - All measurement data is preserved during connectivity issues
- * 
- * @note The function maintains a fixed loop delay for consistent timing
+ * - Network or broker failures trigger CSV fallback storage for all measurements.
+ * - Connection attempts are rate-limited to prevent resource exhaustion.
+ * - All measurement data is preserved and recovered after connectivity is restored.
+ *
+ * @note Maintains a fixed loop delay for consistent timing and system stability.
  * @see RECONNECT_INTERVAL_MS, LOOP_DELAY_MS for timing configuration
  * @see saveToCsvBatch() for offline data storage
- * @see sendPendingData() for data recovery mechanism
+ * @see sendPendingData() for data recovery and MQTT retransmission
  */
 void coreLoop() {
   DateTime now = rtc.now();
@@ -254,9 +241,10 @@ void coreLoop() {
   // Step 4: Normal measurement and MQTT transmission
   if (!alreadyLoggedThisMinute) {
     float c = readTemperatureCelsius();
-    sendToMqtt(mqttClient, topic, sensorType, sensorIdInUse, c, now, count);
-    alreadyLoggedThisMinute = true;
-    count++;
+    if (sendToMqtt(mqttClient, topic, sensorType, sensorIdInUse, c, now, count)) {
+      alreadyLoggedThisMinute = true;
+      count++;
+    }
   }
 
   // Step 5: MQTT loop and wait time

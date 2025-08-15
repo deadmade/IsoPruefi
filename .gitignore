@@ -3,3 +3,4 @@ node_modules
 secrets.env
 
 
+isopruefi-docker-live/secrets.env

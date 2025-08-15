@@ -1,67 +1,106 @@
-# .github/workflows/release-containers.yml
 name: Release Docker Containers
-
-permissions:
-  contents: read
 
 on:
   push:
     branches:
       - 'main'
       - 'sprint*'    # matches sprint0, sprint1, etc
+      - 'Sprint*'
+
+env:
+  REGISTRY: ghcr.io
 
 jobs:
-  build-and-push:
+  build-and-push-images:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Log in to GitHub Container Registry
+        
+      - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.CR_PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build & push Rest-API
-        uses: docker/build-push-action@v4
-        with:
-          working-directory: ./isopruefi-backend
-          file: Rest-API/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/Rest-API:${{ github.ref_name }}
-            ghcr.io/${{ github.repository_owner }}/Rest-API:latest
-
-      - name: Build & push MQTT-Receiver-Worker
-        uses: docker/build-push-action@v4
-        with:
-          working-directory: ./isopruefi-backend
-          file: MQTT-Receiver-Worker/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/MQTT-Receiver-Worker:${{ github.ref_name }}
-            ghcr.io/${{ github.repository_owner }}/MQTT-Receiver-Worker:latest
-
-      - name: Build & push Get Weather Worker 
-        uses: docker/build-push-action@v4
-        with:
-          working-directory: ./isopruefi-backend
-          file: Get-weatherData-worker/Dockerfile 
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/Get-weatherData-worker:${{ github.ref_name }}
-            ghcr.io/${{ github.repository_owner }}/Get-weatherData-worker:latest
-
+      # Build and push Frontend
       - name: Build & push Frontend
-        uses: docker/build-push-action@v4
+        id: push-frontend
+        uses: docker/build-push-action@v6
         with:
-          working-directory: ./isopruefi-frontend
-          file: Dockerfile
+          context: ./isopruefi-frontend
+          file: ./isopruefi-frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/frontend:${{ github.ref_name }}
-            ghcr.io/${{ github.repository_owner }}/frontend:latest
-            
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-frontend:${{ github.run_number }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-frontend:latest
+
+      # Build and push Rest-API
+      - name: Build & push Rest-API
+        id: push-api
+        uses: docker/build-push-action@v6
+        with:
+          context: ./isopruefi-backend
+          file: ./isopruefi-backend/Rest-API/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-rest-api:${{ github.run_number }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-rest-api:latest
+
+      # Build and push Weather Data Worker
+      - name: Build & push Weather Data Worker
+        id: push-weather
+        uses: docker/build-push-action@v6
+        with:
+          context: ./isopruefi-backend
+          file: ./isopruefi-backend/Get-weatherData-worker/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-weather-worker:${{ github.run_number }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-weather-worker:latest
+
+      # Build and push MQTT Receiver Worker
+      - name: Build & push MQTT Receiver Worker
+        id: push-mqtt
+        uses: docker/build-push-action@v6
+        with:
+          context: ./isopruefi-backend
+          file: ./isopruefi-backend/MQTT-Receiver-Worker/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-mqtt-worker:${{ github.run_number }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-mqtt-worker:latest
+
+      # Generate artifact attestations for all images
+      - name: Generate Frontend attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-frontend
+          subject-digest: ${{ steps.push-frontend.outputs.digest }}
+          push-to-registry: true
+
+      - name: Generate API attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-rest-api
+          subject-digest: ${{ steps.push-api.outputs.digest }}
+          push-to-registry: true
+
+      - name: Generate Weather Worker attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-weather-worker
+          subject-digest: ${{ steps.push-weather.outputs.digest }}
+          push-to-registry: true
+
+      - name: Generate MQTT Worker attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ github.repository_owner }}/isopruefi-mqtt-worker
+          subject-digest: ${{ steps.push-mqtt.outputs.digest }}

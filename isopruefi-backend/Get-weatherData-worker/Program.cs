@@ -37,19 +37,23 @@ public class Program
         // Only in Development do we wire up the secret store:
         if (builder.Environment.IsDevelopment())
             builder.Configuration.AddUserSecrets<Program>();
+        else if (builder.Environment.IsEnvironment("Docker")) builder.Configuration.AddEnvironmentVariables();
 
         builder.Services.AddHostedService<Worker>();
 
         var app = builder.Build();
 
+        using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
+        ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+
         // Configure health check endpoints
-        app.MapHealthChecks("/api/health", new HealthCheckOptions
+        app.MapHealthChecks("/health", new HealthCheckOptions
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
 
-        app.UseHealthChecksPrometheusExporter("/api/healthoka",
+        app.UseHealthChecksPrometheusExporter("/healthoka",
             options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
 
         app.Run();

@@ -12,12 +12,10 @@ void setUp(void) {
     // Basic Arduino function stubs
     When(OverloadedMethod(ArduinoFake(Serial), print, size_t(const char[]))).AlwaysReturn(1);
     When(OverloadedMethod(ArduinoFake(Serial), println, size_t(const char[]))).AlwaysReturn(1);
-    When(Method(ArduinoFake(), delay)).Return();
 
-    // Add missing critical Arduino functions
-    When(Method(ArduinoFake(), millis)).Return(1000);
-    
-    // Add Serial overloads for String (in case needed elsewhere)
+    When(Method(ArduinoFake(), delay)).Return();
+    When(Method(ArduinoFake(), millis)).Return(8000, 0);
+
     When(OverloadedMethod(ArduinoFake(Serial), println, size_t(const String&))).AlwaysReturn(1);
     When(OverloadedMethod(ArduinoFake(Serial), print, size_t(const String&))).AlwaysReturn(1);
 }

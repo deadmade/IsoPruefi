@@ -218,7 +218,61 @@ inline size_t serializeJson(const MockJsonDocument& doc, char* output, size_t ou
     // Add all values
     for (const auto& pair : doc.values) {
         if (!first) ss << ",";
-        ss << "\"" << pair.first << "\":\"" << pair.second->stringValue << "\"";
+        ss << "\"" << pair.first << "\":";
+        
+        // Check if this value has an array
+        if (pair.second->arrayPtr && !pair.second->arrayPtr->values.empty()) {
+            ss << "[";
+            bool arrayFirst = true;
+            for (const auto& arrayVal : pair.second->arrayPtr->values) {
+                if (!arrayFirst) ss << ",";
+                if (arrayVal == "null") {
+                    ss << "null";
+                } else {
+                    // Try to parse as number, otherwise treat as string
+                    char* endptr;
+                    double numVal = strtod(arrayVal.c_str(), &endptr);
+                    if (*endptr == '\0') {
+                        // It's a valid number
+                        ss << arrayVal;
+                    } else {
+                        // It's a string, add quotes
+                        ss << "\"" << arrayVal << "\"";
+                    }
+                }
+                arrayFirst = false;
+            }
+            ss << "]";
+        }
+        // Check if this value has an object
+        else if (pair.second->objectPtr) {
+            ss << "{";
+            bool objFirst = true;
+            for (const auto& objPair : pair.second->objectPtr->values) {
+                if (!objFirst) ss << ",";
+                ss << "\"" << objPair.first << "\":\"" << objPair.second->stringValue << "\"";
+                objFirst = false;
+            }
+            ss << "}";
+        }
+        // Regular string/number value
+        else {
+            if (pair.second->stringValue == "null") {
+                ss << "null";
+            } else {
+                // Try to parse as number, otherwise treat as string
+                char* endptr;
+                double numVal = strtod(pair.second->stringValue.c_str(), &endptr);
+                if (*endptr == '\0') {
+                    // It's a valid number
+                    ss << pair.second->stringValue;
+                } else {
+                    // It's a string, add quotes
+                    ss << "\"" << pair.second->stringValue << "\"";
+                }
+            }
+        }
+        
         first = false;
     }
     

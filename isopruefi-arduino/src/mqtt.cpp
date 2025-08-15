@@ -1,9 +1,6 @@
 #include "mqtt.h"
 #include "storage.h"
 
-extern MqttClient mqttClient;
-
-
 // =============================================================================
 // BUFFER SIZE CONSTANTS
 // =============================================================================
@@ -165,7 +162,7 @@ bool sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
         break;
       }
       delay(DELAY_POLLING_LOOP_MS);
-    }
+   }
 
     if (!ackOk) {
       Serial.println("No Echo/PUBACK within timeout → saving to CSV.");
@@ -180,8 +177,10 @@ bool sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
   } else {
     Serial.println("MQTT beginMessage() failed → saving to CSV.");
     saveToCsvBatch(now, celsius, sequence);
-    return false;
+   return false;
   }
+
+  return false;
 }
 
 // =============================================================================

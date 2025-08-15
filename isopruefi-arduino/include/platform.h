@@ -92,24 +92,38 @@
   // Mock SdFat class
   class MockSdFat {
     public:
-      bool exists(const char* path) { return _existingFiles.find(path) != _existingFiles.end(); }
-      bool mkdir(const char* path) { _existingFiles.insert(path); return true; }
+      bool exists(const char* path) { return _existingFiles.find(std::string(path)) != _existingFiles.end(); }
+      bool mkdir(const char* path) { _existingFiles.insert(std::string(path)); return true; }
       MockFile open(const char* path, int mode) { 
+        std::string pathStr(path);
         if (mode == 1) { // FILE_WRITE
-          _existingFiles.insert(path);
+          _existingFiles.insert(pathStr);
           return MockFile(true);
         }
         // FILE_READ
-        return MockFile(_existingFiles.find(path) != _existingFiles.end());
+        bool exists = _existingFiles.find(pathStr) != _existingFiles.end();
+        MockFile file(exists);
+        if (exists && _fileContents.find(pathStr) != _fileContents.end()) {
+          file.setTestData(_fileContents[pathStr]);
+        }
+        return file;
       }
       MockFile open(const char* path) { 
         // Default to read mode
-        return MockFile(_existingFiles.find(path) != _existingFiles.end());
+        std::string pathStr(path);
+        bool exists = _existingFiles.find(pathStr) != _existingFiles.end();
+        MockFile file(exists);
+        if (exists && _fileContents.find(pathStr) != _fileContents.end()) {
+          file.setTestData(_fileContents[pathStr]);
+        }
+        return file;
       }
       bool remove(const char* path) { 
-        auto it = _existingFiles.find(path);
+        std::string pathStr(path);
+        auto it = _existingFiles.find(pathStr);
         if (it != _existingFiles.end()) {
           _existingFiles.erase(it);
+          _fileContents.erase(pathStr);
           return true;
         }
         return false;
@@ -117,10 +131,18 @@
       bool begin(int chipSelect, int freq) { return true; }
       
       void addTestFile(const std::string& path) { _existingFiles.insert(path); }
-      void clearTestFiles() { _existingFiles.clear(); }
+      void addTestFile(const std::string& path, const std::string& content) { 
+        _existingFiles.insert(path); 
+        _fileContents[path] = content;
+      }
+      void clearTestFiles() { 
+        _existingFiles.clear(); 
+        _fileContents.clear();
+      }
       
     private:
       std::set<std::string> _existingFiles;
+      std::map<std::string, std::string> _fileContents;
   };
   
   // Global mock objects

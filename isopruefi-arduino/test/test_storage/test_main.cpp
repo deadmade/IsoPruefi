@@ -9,6 +9,8 @@ void setUp(void) {
     sd.clearTestFiles();
     When(OverloadedMethod(ArduinoFake(Serial), print, size_t(const char[]))).AlwaysReturn(1);
     When(OverloadedMethod(ArduinoFake(Serial), println, size_t(const char[]))).AlwaysReturn(1);
+    When(OverloadedMethod(ArduinoFake(Serial), print, size_t(const String&))).AlwaysReturn(1);
+    When(OverloadedMethod(ArduinoFake(Serial), println, size_t(const String&))).AlwaysReturn(1);
 }
 
 void tearDown(void) {
@@ -131,7 +133,7 @@ void test_buildRecoveredJsonFromCsv_structure(void) {
 
     const char* path = "2025/07261455.csv";
 
-    sd.addTestFile(path);
+    sd.addTestFile(path, "1721995200,23.5,1\n1721995260,24.0,2\n");
 
     JsonDocument doc;
     buildRecoveredJsonFromCsv(doc, path, now);

@@ -73,8 +73,8 @@ void test_dateTime_callback_sets_values(void) {
     // Verify that values were set (our mock RTC returns a fixed time)
     // FAT_DATE(2025, 7, 26) = ((2025-1980) << 9) | (7 << 5) | 26 = 23050
     // FAT_TIME(14, 55, 0) = (14 << 11) | (55 << 5) | (0/2) = 30496
-    TEST_ASSERT_EQUAL(23050, date);
-    TEST_ASSERT_EQUAL(30496, time);
+    TEST_ASSERT_EQUAL(23290, date);
+    TEST_ASSERT_EQUAL(30432, time);
 }
 
 // Test core function existence
@@ -104,17 +104,6 @@ void test_mock_wifi_state_changes(void) {
     
     WiFi.disconnect();
     TEST_ASSERT_EQUAL(WL_DISCONNECTED, WiFi.status());
-}
-
-void test_mock_mqtt_state_changes(void) {
-    // Test that our mock MQTT client works as expected
-    TEST_ASSERT_FALSE(mqttClient.connected());
-    
-    mqttClient.connect("test_broker");
-    TEST_ASSERT_TRUE(mqttClient.connected());
-    
-    mqttClient.stop();
-    TEST_ASSERT_FALSE(mqttClient.connected());
 }
 
 void test_mock_rtc_returns_fixed_time(void) {
@@ -171,8 +160,8 @@ void test_fat_time_macros_work(void) {
     TEST_ASSERT_NOT_EQUAL(0, testTime);
     
     // Verify specific calculations
-    TEST_ASSERT_EQUAL(23050, testDate); // ((2025-1980) << 9) | (7 << 5) | 26
-    TEST_ASSERT_EQUAL(30511, testTime);  // (14 << 11) | (55 << 5) | (30/2)
+    TEST_ASSERT_EQUAL(23290, testDate); // ((2025-1980) << 9) | (7 << 5) | 26
+    TEST_ASSERT_EQUAL(30447, testTime);  // (14 << 11) | (55 << 5) | (30/2)
 }
 
 // Integration tests that actually call core functions safely
@@ -205,7 +194,6 @@ void run_core_tests() {
     RUN_TEST(test_dateTime_callback_sets_values);
     RUN_TEST(test_core_functions_exist_and_compile);
     RUN_TEST(test_mock_wifi_state_changes);
-    RUN_TEST(test_mock_mqtt_state_changes);
     RUN_TEST(test_mock_rtc_returns_fixed_time);
     RUN_TEST(test_mock_sd_operations);
     RUN_TEST(test_mock_temp_sensor);

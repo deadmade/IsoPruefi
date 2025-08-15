@@ -219,46 +219,46 @@ void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const Da
     size_t len = file.fgets(line, sizeof(line));
     if (len == 0) continue;
 
-    // Parse CSV format: timestamp,temperature,sequence
-    char* p = strtok(line, ",");
-    if (!p) {
-      Serial.print("Malformed CSV line (no timestamp): ");
-      Serial.println(line);
-      continue;
-    }
-    uint32_t ts = atol(p);
+     // Parse CSV format: timestamp,temperature,sequence
+     char* p = strtok(line, ",");
+     if (!p) {
+       Serial.print("Malformed CSV line (no timestamp): ");
+       Serial.println(line);
+       continue;
+     }
+     uint32_t ts = atol(p);
 
-    p = strtok(nullptr, ",");
-    if (!p) {
-      Serial.print("Malformed CSV line (no temperature): ");
-      Serial.println(line);
-      continue;
-    }
-    float temp = atof(p);
+     p = strtok(nullptr, ",");
+     if (!p) {
+       Serial.print("Malformed CSV line (no temperature): ");
+       Serial.println(line);
+       continue;
+     }
+     float temp = atof(p);
 
-    p = strtok(nullptr, ",");
-    if (!p) {
-      Serial.print("Malformed CSV line (no sequence): ");
-      Serial.println(line);
-      continue;
-    }
-    int seq = atoi(p);
+     p = strtok(nullptr, ",");
+     if (!p) {
+       Serial.print("Malformed CSV line (no sequence): ");
+       Serial.println(line);
+       continue;
+     }
+     int seq = atoi(p);
 
-    tArr.add(ts);
-    vArr.add(temp);
-    sArr.add(seq);
+     tArr.add(ts);
+     vArr.add(temp);
+     sArr.add(seq);
 
-    added++;
-  }
+     added++;
+   }
 
-  file.close();
+   file.close();
 
   // Report recovery statistics
-  Serial.print("Recovered entries added from CSV: ");
-  Serial.print(added);
-  Serial.print(" (");
-  Serial.print(filepath);
-  Serial.println(")");
+   Serial.print("Recovered entries added from CSV: ");
+   Serial.print(String(added));
+   Serial.print(" (");
+   Serial.print(filepath);
+   Serial.println(")");
 }
 
 // =============================================================================

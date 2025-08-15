@@ -1,10 +1,10 @@
-import { API_BASE } from "./config";
+import { apiBase } from "./config";
 
-const API_VERSION  = (p: string) => `${API_BASE}/v1${p}`;
-// const BASE_URL = (p: string) => `${API_BASE}/api/v1${p}`;
+const v1 = (p: string) => `${apiBase()}/v1${p}`;       // e.g. https://aicon.../backend/v1/Authentication/...
+// const api = (p: string) => `${apiBase()}/api/v1${p}`;  // e.g. https://aicon.../backend/api/v1/...
 
 export async function login(userName: string, password: string) {
-    const r = await fetch(API_VERSION("/Authentication/Login"), {
+    const r = await fetch(v1("/Authentication/Login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userName, password }),
@@ -14,7 +14,7 @@ export async function login(userName: string, password: string) {
 }
 
 export async function register(userName: string, password: string) {
-    const r = await fetch(API_VERSION("/Authentication/Register"), {
+    const r = await fetch(v1("/Authentication/Register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userName, password }),
@@ -29,7 +29,7 @@ export async function register(userName: string, password: string) {
 }
 
 export async function refreshToken(token: string, refreshToken: string) {
-    const r = await fetch(API_VERSION("/Authentication/Refresh"), {
+    const r = await fetch(v1("/Authentication/Refresh"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, refreshToken }),

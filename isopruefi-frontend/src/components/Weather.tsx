@@ -4,7 +4,7 @@ import {
 } from 'recharts';
 import { TemperatureDataClient, ApiException } from '../api/api-client.ts';
 import { getToken } from "../utils/tokenHelpers.ts";
-import { API_BASE } from "../utils/config";
+import { apiBase } from "../utils/config";
 
 export type WeatherEntry = {
     timestamp: string;
@@ -16,7 +16,7 @@ export type WeatherEntry = {
 const style = { width: '100%', height: 400 };
 
 /* Build the client once, but read a FRESH token on every request */
-const temperatureClient = new TemperatureDataClient(API_BASE || undefined, {
+const temperatureClient = new TemperatureDataClient(apiBase() || undefined, {
     fetch: (input, init: RequestInit = {}) => {
         const token = getToken();                    // ← read token NOW (not at module load)
         if (!token) return Promise.reject(new Error("Not logged in"));

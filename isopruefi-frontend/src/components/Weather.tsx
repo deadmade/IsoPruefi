@@ -31,7 +31,7 @@ const temperatureClient = new TemperatureDataClient(API_BASE || undefined, {
 
 export function TempChart() {
     const [weatherData, setWeatherData] = useState<WeatherEntry[]>([]);
-    const [filter, setFilter] = useState<'all'|'hour'|'day'|'week'>('day'); // sensible default
+    const [filter, setFilter] = useState<'all'|'hour'|'day'|'week'>('all'); // sensible default
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

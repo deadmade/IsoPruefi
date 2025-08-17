@@ -28,16 +28,43 @@ static const unsigned long RECOVERY_ACK_TIMEOUT_MS  = 10000;
 static const unsigned long DELAY_POLLING_LOOP_MS = 10;
 
 // =============================================================================
-// ACK/ECHO-HANDLING (non-invasive ohne Lib-Patch)
+// ACK/ECHO-HANDLING 
 // =============================================================================
+
+/**
+ * @defgroup AckEchoHandling MQTT ACK/Echo Handling
+ * @brief Implements publish acknowledgment and echo logic for reliable MQTT delivery.
+ *
+ * This section manages the detection and processing of MQTT PUBACK or echo messages from the broker.
+ * It tracks acknowledgment state, extracts sequence numbers from echoed JSON payloads, and ensures
+ * that published messages are confirmed before considering them delivered. If no acknowledgment is
+ * received, data is saved for later recovery.
+ *
+ * - Uses MQTT_TOPIC-based filtering to only process echoes for the current publish MQTT_TOPIC
+ * - Handles retained messages and ignores them for acknowledgment
+ * - Extracts sequence numbers from JSON payloads for matching
+ * - Registers a callback for incoming MQTT messages to detect PUBACK/echo
+ * - Re-subscribes to the publish MQTT_TOPIC after each reconnect
+ *
+ * @note This logic is critical for QoS 1 delivery and robust offline recovery.
+ */
 
 static volatile bool  s_ackSeen   = false;
 static volatile long  s_ackSeq    = -1;
 static String         s_pubTopic;           // z. B. "<prefix>temp/Sensor_Two"
 static bool           s_ackInit   = false;
 
-// simple Sequence-Extraktion
-static bool extractSequence(const char* json, long& outSeq) {
+/**
+ * @brief Extracts the sequence number from a JSON string.
+ *
+ * Searches for the "sequence" field in the provided JSON and parses its value.
+ * Returns false if the field is missing or set to null.
+ *
+ * @param json The JSON string to search
+ * @param outSeq Reference to store the extracted sequence number
+ * @return true if a valid sequence number was found, false otherwise
+ */
+static bool ExtractSequence(const char* json, long& outSeq) {
   const char* p = strstr(json, "\"sequence\":");
   if (!p) return false;
   p += 11; // length of "\"sequence\":"
@@ -49,13 +76,21 @@ static bool extractSequence(const char* json, long& outSeq) {
   return true;
 }
 
-static void onMqttEchoMessage(int messageSize) {
+/**
+ * @brief MQTT message callback to detect PUBACK/echo for published messages.
+ *
+ * Processes incoming MQTT messages, filtering by MQTT_TOPIC and retain flag. If the message
+ * is an echo for the current publish MQTT_TOPIC and not retained, extracts the sequence number
+ * and sets acknowledgment flags.
+ *
+ * @param messageSize Size of the incoming message (needed because of the MQTT library's callback interface)
+ */
+static void OnMqttEchoMessage(int messageSize) {
   (void)messageSize;
-  // Only evaluate echoes from own publish topic, ignore retained
   if (mqttClient.messageTopic() != s_pubTopic) return;
   if (mqttClient.messageRetain()) return;
 
-  static char buf[SMALL_BUFFER_SIZE * 2]; // small buffer is sufficient for live JSON
+  static char buf[SMALL_BUFFER_SIZE * 2];
   int n = 0;
   while (mqttClient.available() && n < (int)sizeof(buf) - 1) {
     buf[n++] = mqttClient.read();
@@ -63,14 +98,24 @@ static void onMqttEchoMessage(int messageSize) {
   buf[n] = 0;
 
   long seq;
-  if (extractSequence(buf, seq)) {
+  if (ExtractSequence(buf, seq)) {
     s_ackSeq  = seq;
     s_ackSeen = true;
   }
 }
 
-static void ensureAckInit(MqttClient& client, const char* topicPrefix, const char* sensorType, const char* sensorId) {
-  // create Publish-Topic
+/**
+ * @brief Initializes ACK/Echo handling and subscribes to the publish MQTT_TOPIC.
+ *
+ * Sets up the publish MQTT_TOPIC and registers the MQTT message callback for echo detection.
+ * Ensures the callback is registered only once, and re-subscribes to the MQTT_TOPIC after each reconnect.
+ *
+ * @param client Reference to the MQTT client
+ * @param topicPrefix Topic prefix for MQTT publishing
+ * @param sensorType Sensor type string
+ * @param sensorId Unique sensor identifier
+ */
+static void EnsureAckInit(MqttClient& client, const char* topicPrefix, const char* sensorType, const char* sensorId) {
   if (!s_ackInit) {
     char fullTopic[SMALL_BUFFER_SIZE];
     if (sensorType && sensorId) {
@@ -80,10 +125,9 @@ static void ensureAckInit(MqttClient& client, const char* topicPrefix, const cha
     } else {
       return; 
     }
-    client.onMessage(onMqttEchoMessage); // Callback register
+    client.onMessage(OnMqttEchoMessage); // Callback register
   }
 
-  // re-subscribe after each reconnect
   if (client.connected()) {
     client.subscribe(s_pubTopic.c_str());
   }
@@ -91,7 +135,7 @@ static void ensureAckInit(MqttClient& client, const char* topicPrefix, const cha
 
 // =============================================================================
 
-void createFullTopic(char* buffer, size_t bufferSize, const char* topicPrefix,
+void CreateFullTopic(char* buffer, size_t bufferSize, const char* topicPrefix,
                      const char* sensorType, const char* sensorId, const char* suffix) {
   if (suffix && strlen(suffix) > 0) {
     snprintf(buffer, bufferSize, "%s%s/%s/%s", topicPrefix, sensorType, sensorId, suffix);
@@ -124,17 +168,17 @@ void createFullTopic(char* buffer, size_t bufferSize, const char* topicPrefix,
  * @note Uses QoS 1 for reliable delivery. If broker does not echo/PUBACK within
  *       the timeout, data is persisted for later transmission.
  */
-bool sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
+bool SendTempToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
                 const char* sensorId, float celsius, const DateTime& now, int sequence) {
-  ensureAckInit(mqttClient, topicPrefix, sensorType, sensorId);
+  EnsureAckInit(mqttClient, topicPrefix, sensorType, sensorId);
 
   mqttClient.poll();
 
   char fullTopic[SMALL_BUFFER_SIZE];
-  createFullTopic(fullTopic, sizeof(fullTopic), topicPrefix, sensorType, sensorId);
+  CreateFullTopic(fullTopic, sizeof(fullTopic), topicPrefix, sensorType, sensorId);
 
   StaticJsonDocument<SMALL_BUFFER_SIZE> jsonDoc;
-  buildJson(jsonDoc, celsius, now, sequence);
+  BuildJson(jsonDoc, celsius, now, sequence);
 
   char payload[SMALL_BUFFER_SIZE];
   serializeJson(jsonDoc, payload, sizeof(payload));
@@ -148,7 +192,7 @@ bool sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
     mqttClient.print(payload);
     if (!mqttClient.endMessage()) {
       Serial.println("MQTT endMessage() failed → saving to CSV.");
-      saveToCsvBatch(now, celsius, sequence);
+      SaveTempToBatchCsv(now, celsius, sequence);
       return false;
     }
 
@@ -162,11 +206,11 @@ bool sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
         break;
       }
       delay(DELAY_POLLING_LOOP_MS);
-   }
+    }
 
     if (!ackOk) {
       Serial.println("No Echo/PUBACK within timeout → saving to CSV.");
-      saveToCsvBatch(now, celsius, sequence);
+      SaveTempToBatchCsv(now, celsius, sequence);
       return false;
     }
 
@@ -176,11 +220,9 @@ bool sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
     return true;
   } else {
     Serial.println("MQTT beginMessage() failed → saving to CSV.");
-    saveToCsvBatch(now, celsius, sequence);
-   return false;
+    SaveTempToBatchCsv(now, celsius, sequence);
+    return false;
   }
-
-  return false;
 }
 
 // =============================================================================
@@ -205,7 +247,7 @@ bool sendToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sen
  *
  * @note Uses QoS 1 for reliable delivery. Skips files older than 24 hours or with invalid content. Aborts if recovery exceeds time limit.
  */
-bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
+bool SendPendingDataToMqtt(MqttClient& mqttClient, const char* topicPrefix, const char* sensorType,
                      const char* sensorId, const DateTime& now) {
   Serial.println("Looking for pending CSV files...");
 
@@ -215,7 +257,7 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
 
   // Open the current date folder
   char folder[FOLDER_NAME_BUFFER_SIZE];
-  strncpy(folder, createFolderName(now), sizeof(folder));
+  strncpy(folder, CreateFolderName(now), sizeof(folder));
   File root = sd.open(folder);
   if (!root) {
     Serial.println("No folder found for pending data.");
@@ -265,7 +307,7 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
 
     // Convert CSV content to JSON format
     StaticJsonDocument<LARGE_BUFFER_SIZE> doc;
-    buildRecoveredJsonFromCsv(doc, fullPath, now);
+    BuildRecoveryJsonFromBatchCsv(doc, fullPath, now);
 
     // Validate that the file contains usable data
     if (!doc["meta"].is<JsonObject>() || doc["meta"].size() == 0) {
@@ -284,7 +326,7 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
     }
 
     char fullTopic[SMALL_BUFFER_SIZE];
-    createFullTopic(fullTopic, sizeof(fullTopic), topicPrefix, sensorType, sensorId, "recovered");
+    CreateFullTopic(fullTopic, sizeof(fullTopic), topicPrefix, sensorType, sensorId, "recovered");
 
     Serial.print("Publishing recovered CSV: ");
     Serial.println(nameStr);
@@ -307,7 +349,7 @@ bool sendPendingData(MqttClient& mqttClient, const char* topicPrefix, const char
 
     if (published) {
       Serial.println("Published and deleting file.");
-      deleteCsvFile(fullPath);
+      DeleteCsvFile(fullPath);
       sentCount++;
     } else {
       Serial.println("Failed to publish. Keeping file: " + nameStr);

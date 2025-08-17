@@ -1,6 +1,36 @@
 #pragma once
 
 #ifdef UNIT_TEST
+/**
+ * @defgroup PlatformMocks Platform Mocks for Unit Testing
+ * @brief Mock classes and constants for hardware abstraction in unit tests.
+ *
+ * This section provides mock implementations of Arduino hardware classes and constants
+ * to enable unit testing of code that normally depends on hardware. These mocks allow
+ * tests to run in a native environment without requiring actual devices.
+ *
+ * **ArduinoFake provides:**
+ *   - Arduino.h core types and functions (String, Serial, millis, delay, etc.)
+ *   - Basic Arduino API compatibility for unit tests
+ *
+ * **Additionally mocked in platform.h:**
+ *   - DateTime (RTClib)
+ *   - RTC_DS3231 (RTClib)
+ *   - SdFat and File (SD card)
+ *   - Adafruit_ADT7410 (temperature sensor)
+ *   - WiFiClient, WiFi (network)
+ *   - MqttClient (MQTT)
+ *   - Constants for file operations, SD card, and FAT time/date macros
+ *   - All global objects (rtc, sd, tempsensor, wifiClient, mqttClient)
+ *
+ * - Type aliases for compatibility with production code
+ * - All mocks are designed to mimic the interfaces and behaviors of their real counterparts
+ *
+ * Usage:
+ *   - Include platform.h in your test files
+ *   - Use the provided mock objects and types in place of real hardware
+ *   - All global objects (rtc, sd, tempsensor, wifiClient, mqttClient) are available for tests
+ */
   #include <ArduinoFake.h>
   #include <string>
   #include <set>
@@ -11,9 +41,6 @@
   #include <cstdarg>
   #include <map>
   #include <ArduinoJson.h>
-
-  // ArduinoFake provides: Arduino.h, String, Serial, etc.
-  // Only mock what ArduinoFake doesn't provide
   
   // Mock DateTime class for RTClib
   class DateTime {
@@ -149,7 +176,7 @@
   // Global mock objects
   extern MockSdFat sd;
 
-  // Mock WiFi classes using ArduinoFake
+  // Mock WiFi classes
   class MockWiFiClient {
     public:
       MockWiFiClient() : _connected(false) {}
@@ -181,7 +208,7 @@
 
     using WiFiClient = MockWiFiClient;
   
-  // Mock MQTT Client - use ArduinoFake's Client class
+  // Mock MQTT Client
   class MockMqttClient {
     public:
       MockMqttClient(WiFiClient& client) : _connected(false) {}
@@ -193,8 +220,8 @@
       void stop() { _connected = false; }
       void poll() {}
       
-      int beginMessage(const char* topic, bool retain = false, int qos = 0) { 
-        _currentTopic = topic; 
+      int beginMessage(const char* MQTT_TOPIC, bool retain = false, int qos = 0) { 
+        _currentTopic = MQTT_TOPIC; 
         _messageBuffer = "";
         return 1; 
       }
@@ -209,13 +236,13 @@
       
       void setMessageCallback(void (*callback)(int)) { _callback = callback; }
       void onMessage(void (*callback)(int)) { _callback = callback; }
-      void subscribe(const char* topic) { _subscribedTopic = topic; }
-      void unsubscribe(const char* topic) {}
+      void subscribe(const char* MQTT_TOPIC) { _subscribedTopic = MQTT_TOPIC; }
+      void unsubscribe(const char* MQTT_TOPIC) {}
       
       // Test helpers
       std::string getLastMessage() { return _messageBuffer; }
-      void simulateMessage(const std::string& topic, const std::string& message) {
-        _currentTopic = topic;
+      void simulateMessage(const std::string& MQTT_TOPIC, const std::string& message) {
+        _currentTopic = MQTT_TOPIC;
         _messageBuffer = message;
         if (_callback) _callback(message.length());
       }
@@ -247,7 +274,9 @@
     public:
       float readTempC() { return 25.5; }
       bool begin() { return true; }
-      void setResolution(int resolution) {} // Mock resolution setting
+      int delayCalled() { return 250; }
+      void setResolution(int resolution) {} 
+      bool setResolutionCalled() { return true; }
   };
   
   // Type aliases for Arduino library classes - remove Client conflict
@@ -284,7 +313,7 @@
 
 #else
 
-  // --- ORIGINAL ARDUINO-INCLUDES ---
+  // --- PLATFORM ARDUINO-INCLUDES ---
   #include <Arduino.h> 
   #include <Wire.h>
   #include <SdFat.h>

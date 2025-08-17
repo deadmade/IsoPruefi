@@ -210,7 +210,7 @@ void Test_CreateFullTopic_null_parameters(void) {
     // Test with null parameters
     CreateFullTopic(buffer, sizeof(buffer), nullptr, "temp", "Sensor_One");
     
-    // Should handle null parameters gracefully (may result in malformed MQTT_TOPIC)
+    // Should handle null parameters gracefully (may result in malformed topic)
     TEST_ASSERT_NOT_NULL(buffer);
 }
 

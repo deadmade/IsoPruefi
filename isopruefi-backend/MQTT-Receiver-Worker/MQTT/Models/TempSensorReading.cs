@@ -35,6 +35,5 @@ public class TempSensorReading
     /// </summary>
     [JsonPropertyName("meta")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    [JsonConverter(typeof(NullMetaListConverter))]
-    public List<TempSensorReading>? Meta { get; set; }
+    public TempSensorMeta? Meta { get; set; }
 }

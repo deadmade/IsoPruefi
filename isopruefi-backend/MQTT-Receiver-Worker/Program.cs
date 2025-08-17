@@ -25,11 +25,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddScoped<IInfluxRepo, InfluxRepo>();
+        builder.Services.AddMemoryCache();
 
         // Register Repos
+        builder.Services.AddScoped<CachedInfluxRepo>();
+        builder.Services.AddScoped<IInfluxRepo>(provider => provider.GetRequiredService<CachedInfluxRepo>());
         builder.Services.AddScoped<ISettingsRepo, SettingsRepo>();
-
         // Register Database with proper DbContext
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
         {
@@ -47,17 +48,21 @@ public class Program
         else if (builder.Environment.IsEnvironment("Docker")) builder.Configuration.AddEnvironmentVariables();
 
         builder.Services.AddHostedService<Worker>();
+        builder.Services.AddHostedService<InfluxRetryService>();
 
         var app = builder.Build();
 
+        using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
+        ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+
         //HealthCheck Middleware
-        app.MapHealthChecks("/api/health", new HealthCheckOptions
+        app.MapHealthChecks("/health", new HealthCheckOptions
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
 
-        app.UseHealthChecksPrometheusExporter("/api/healthoka",
+        app.UseHealthChecksPrometheusExporter("/healthoka",
             options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
 
         app.Run();

@@ -94,7 +94,7 @@ namespace Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PostalCode"));
 
-                    b.Property<DateTime>("LastUsed")
+                    b.Property<DateTime?>("LastUsed")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("Latitude")
@@ -104,12 +104,24 @@ namespace Database.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("LockedUntil")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<double>("Longitude")
                         .HasColumnType("double precision");
 
                     b.HasKey("PostalCode");
 
                     b.ToTable("CoordinateMappings");
+
+                    b.HasData(
+                        new
+                        {
+                            PostalCode = 89518,
+                            Latitude = 48.685200000000002,
+                            Location = "Heidenheim an der Brenz",
+                            Longitude = 10.1287
+                        });
                 });
 
             modelBuilder.Entity("Database.EntityFramework.Models.TokenInfo", b =>

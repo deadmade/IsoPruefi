@@ -62,4 +62,26 @@ public class CoordinateRepo : ICoordinateRepo
 
         return result;
     }
+    
+    /// <inheritdoc />
+    public async Task<CoordinateMapping?> GetUnlockedLocation()
+    {
+        await using var transaction = _applicationDbContext.Database.BeginTransaction();
+        
+        var result = await _applicationDbContext.CoordinateMappings
+            .FromSqlRaw(
+                @"SELECT * FROM ""CoordinateMappings"" WHERE ""LockedUntil"" IS NULL OR ""LockedUntil"" < NOW() ORDER BY ""LastUsed"" ASC NULLS FIRST LIMIT 1 FOR UPDATE SKIP LOCKED")
+            .FirstOrDefaultAsync();
+        if (result != null)
+        {
+            result.LastUsed = DateTime.UtcNow;
+            result.LockedUntil = DateTime.UtcNow.AddMinutes(1);
+            await _applicationDbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+            return result;
+        }
+
+        await transaction.CommitAsync();
+        return null;
+    }
 }

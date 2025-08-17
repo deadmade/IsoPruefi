@@ -1,5 +1,11 @@
 #include "network.h"
+
+#ifdef UNIT_TEST
+#include "secrets_example.h"
+#else
 #include "secrets.h"
+#endif
+
 #include "mqtt.h"
 
 static const char ssid[]     = SECRET_SSID;

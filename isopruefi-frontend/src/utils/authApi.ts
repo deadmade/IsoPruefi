@@ -1,39 +1,23 @@
-import { apiBase } from "./config";
+import { authClient } from "../api/clients";
 
-const v1 = (p: string) => `${apiBase()}/v1${p}`;       // e.g. https://aicon.../backend/v1/Authentication/...
-// const api = (p: string) => `${apiBase()}/api/v1${p}`;  // e.g. https://aicon.../backend/api/v1/...
+type LoginArg    = Parameters<typeof authClient.login>[0];
+type RegisterArg = Parameters<typeof authClient.register>[0];
+type RefreshArg  = Parameters<typeof authClient.refresh>[0];
 
+/** Login and get tokens */
 export async function login(userName: string, password: string) {
-    const r = await fetch(v1("/Authentication/Login"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userName, password }),
-    });
-    if (!r.ok) throw new Error((await r.text()) || "Login failed");
-    return r.json();
+    const payload: LoginArg = { userName, password } as LoginArg;
+    return authClient.login(payload);
 }
 
+/** Register a new user */
 export async function register(userName: string, password: string) {
-    const r = await fetch(v1("/Authentication/Register"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userName, password }),
-    });
-    if (!r.ok) {
-        const t = await r.text();
-        try { const p = t ? JSON.parse(t) : null; throw new Error(p?.detail || p?.title || "Registration failed"); }
-        catch { throw new Error(t || "Registration failed"); }
-    }
-    const t = await r.text();
-    return t ? JSON.parse(t) : undefined; // empty 200/204 is OK
+    const payload: RegisterArg = { userName, password } as RegisterArg;
+    return authClient.register(payload);
 }
 
+/** Refresh tokens */
 export async function refreshToken(token: string, refreshToken: string) {
-    const r = await fetch(v1("/Authentication/Refresh"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, refreshToken }),
-    });
-    if (!r.ok) throw new Error((await r.text()) || "Token refresh failed");
-    return r.json();
+    const payload: RefreshArg = { token, refreshToken } as RefreshArg;
+    return authClient.refresh(payload);
 }

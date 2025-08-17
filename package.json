@@ -15,14 +15,16 @@
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@seaborg/cli": "0.6.2",
     "concurrently": "^9.2.0",
     "gitleaks-secret-scanner": "^1.2.2",
     "husky": "^9.0.0",
-    "@seaborg/cli": "0.6.2",
     "typedoc": "^0.28.8"
   },
   "dependencies": {
     "debug": "^4.3.6",
+    "react": "^19.1.1",
+    "react-router-dom": "^7.8.0",
     "run": "^1.5.0"
   }
 }

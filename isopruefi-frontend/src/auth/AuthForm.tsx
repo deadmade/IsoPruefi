@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { login, register } from "../utils/authApi.ts";
-import {decodeToken, saveToken} from "../utils/tokenHelpers";
+import {decodeToken, type JwtPayload, saveToken} from "../utils/tokenHelpers";
 import { useNavigate } from "react-router-dom";
 
 type Mode = "signin" | "signup";
@@ -28,7 +28,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 saveToken(tokenData.token, tokenData.refreshToken);
 
                 // decode and normalize roles
-                const decoded: any = decodeToken(tokenData.token) ?? {};
+                const decoded: JwtPayload = decodeToken(tokenData.token) ?? {};
                 const claim =
                     decoded.role ??
                     decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];

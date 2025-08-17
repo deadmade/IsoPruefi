@@ -42,16 +42,21 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         
-        builder.Services.AddCors(options =>
+        // CORS – only for local dev
+        if (builder.Environment.IsDevelopment())
         {
-            options.AddPolicy("AllowFrontend", policy =>
+            var allowedOrigins = builder.Configuration
+                .GetSection("Cors:AllowedOrigins")
+                .Get<string[]>() ?? new[] { "http://localhost:5173" };
+
+            builder.Services.AddCors(options =>
             {
-                policy
-                    .WithOrigins("http://localhost:5173")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
+                options.AddPolicy("DevCors", policy =>
+                    policy.WithOrigins(allowedOrigins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
             });
-        });
+        }
 
         // Add services to the container.
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -164,11 +169,11 @@ public class Program
 
             using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+            app.UseCors("DevCors");
         }
 
         app.UseHttpsRedirection();
 
-        app.UseCors("AllowFrontend");
         app.UseAuthentication();
         app.UseAuthorization();
 

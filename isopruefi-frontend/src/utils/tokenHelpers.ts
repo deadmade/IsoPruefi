@@ -2,6 +2,13 @@
     Saves the tokens
  */
 
+export interface JwtPayload {
+    sub?: string;
+    exp?: number;
+    iat?: number;
+    [key: string]: unknown; // Allow additional claims
+}
+
 export function saveToken(token: string, refreshToken: string) {
     localStorage.setItem("token", token);
     localStorage.setItem("refreshToken", refreshToken);
@@ -37,7 +44,7 @@ export function clearToken() {
     that contains the user’s role, ID, and expiry.
  */
 
-export function decodeToken(token: string): any | null {
+export function decodeToken(token: string): JwtPayload | null {
     try {
         const payload = token.split('.')[1];
         return JSON.parse(atob(payload));

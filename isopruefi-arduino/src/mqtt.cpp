@@ -44,7 +44,11 @@ static const unsigned long DELAY_POLLING_LOOP_MS = 10;
  * - Handles retained messages and ignores them for acknowledgment
  * - Extracts sequence numbers from JSON payloads for matching
  * - Registers a callback for incoming MQTT messages to detect PUBACK/echo
- * - Re-subscribes to the publish MQTT_TOPIC after each reconnect
+ * - Uses topic-based filtering to only process echoes for the current publish topic
+ * - Handles retained messages and ignores them for acknowledgment
+ * - Extracts sequence numbers from JSON payloads for matching
+ * - Registers a callback for incoming MQTT messages to detect PUBACK/echo
+ * - Re-subscribes to the publish topic after each reconnect
  *
  * @note This logic is critical for QoS 1 delivery and robust offline recovery.
  */

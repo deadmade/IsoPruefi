@@ -40,7 +40,7 @@ static const unsigned long DELAY_POLLING_LOOP_MS = 10;
  * that published messages are confirmed before considering them delivered. If no acknowledgment is
  * received, data is saved for later recovery.
  *
- * - Uses MQTT_TOPIC-based filtering to only process echoes for the current publish MQTT_TOPIC
+ * - Uses topic-based filtering to only process echoes for the current publish topic
  * - Handles retained messages and ignores them for acknowledgment
  * - Extracts sequence numbers from JSON payloads for matching
  * - Registers a callback for incoming MQTT messages to detect PUBACK/echo

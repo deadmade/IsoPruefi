@@ -57,7 +57,7 @@ discovery.relabel "logs_integrations_docker" {
 // Configure a loki.source.docker component to collect logs from Docker containers.
 loki.source.docker "default" {
   host       = "unix:///var/run/docker.sock"
-  targets    = discovery.docker.linux.targets
+  targets    = discovery.relabel.logs_integrations_docker.output
   labels     = {"platform" = "docker"}
   relabel_rules = discovery.relabel.logs_integrations_docker.rules
   forward_to = [loki.write.local.receiver]

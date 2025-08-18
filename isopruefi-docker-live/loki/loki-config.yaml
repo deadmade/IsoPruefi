@@ -21,7 +21,7 @@ common:
     kvstore:
       store: inmemory
   replication_factor: 1
-  path_prefix: /tmp/loki
+  path_prefix: /loki
 
 schema_config:
   configs:
@@ -35,10 +35,10 @@ schema_config:
 
 storage_config:
   tsdb_shipper:
-    active_index_directory: /tmp/loki/index
-    cache_location: /tmp/loki/index_cache
+    active_index_directory: /loki/index
+    cache_location: /loki/index_cache
   filesystem:
-    directory: /tmp/loki/chunks
+    directory: /loki/chunks
 
 pattern_ingester:
   enabled: true

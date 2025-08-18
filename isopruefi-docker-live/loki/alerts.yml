@@ -56,7 +56,17 @@ groups:
 
 - name: infrastructure
   rules:
-  # Database Connectivity
+  # Infrastructure Service Down Alerts
+  - alert: TraefikDown
+    expr: up{job="traefik"} == 0
+    for: 30s
+    labels:
+      severity: critical
+      service: loadbalancer
+    annotations:
+      summary: "Traefik load balancer is down"
+      description: "Traefik has been unreachable for more than 30 seconds"
+
   - alert: InfluxDBDown
     expr: up{job="influxdb"} == 0
     for: 30s
@@ -67,15 +77,25 @@ groups:
       summary: "InfluxDB is down"
       description: "InfluxDB has been unreachable for more than 30 seconds"
 
-  - alert: PostgreSQLDown
-    expr: up{job="postgres"} == 0
+  - alert: GrafanaDown
+    expr: up{job="grafana"} == 0
     for: 30s
     labels:
-      severity: critical
-      service: database
+      severity: warning
+      service: monitoring
     annotations:
-      summary: "PostgreSQL is down"
-      description: "PostgreSQL has been unreachable for more than 30 seconds"
+      summary: "Grafana is down"
+      description: "Grafana has been unreachable for more than 30 seconds"
+
+  - alert: AlloyDown
+    expr: up{job="alloy"} == 0
+    for: 30s
+    labels:
+      severity: warning
+      service: monitoring
+    annotations:
+      summary: "Alloy telemetry collector is down"
+      description: "Alloy has been unreachable for more than 30 seconds"
 
   # Prometheus Self-Monitoring
   - alert: PrometheusConfigReloadFailed
@@ -97,3 +117,36 @@ groups:
     annotations:
       summary: "Prometheus target down"
       description: "Target {{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute"
+
+- name: container-health
+  rules:
+  # Docker Container Health Alerts
+  - alert: ContainerHealthcheckFailing
+    expr: container_last_seen{container_label_logging_isopruefi_enabled="true"} < (time() - 60)
+    for: 2m
+    labels:
+      severity: warning
+      service: container
+    annotations:
+      summary: "Container health check failing"
+      description: "Container {{ $labels.name }} health check has been failing for more than 2 minutes"
+
+  - alert: HighContainerMemoryUsage
+    expr: (container_memory_usage_bytes{container_label_logging_isopruefi_enabled="true"} / container_spec_memory_limit_bytes) * 100 > 90
+    for: 5m
+    labels:
+      severity: warning
+      service: resources
+    annotations:
+      summary: "High container memory usage"
+      description: "Container {{ $labels.name }} memory usage is above 90% for more than 5 minutes"
+
+  - alert: HighContainerCPUUsage
+    expr: rate(container_cpu_usage_seconds_total{container_label_logging_isopruefi_enabled="true"}[5m]) * 100 > 80
+    for: 5m
+    labels:
+      severity: warning
+      service: resources
+    annotations:
+      summary: "High container CPU usage"
+      description: "Container {{ $labels.name }} CPU usage is above 80% for more than 5 minutes"

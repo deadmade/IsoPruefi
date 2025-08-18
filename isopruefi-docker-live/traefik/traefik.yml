@@ -1,6 +1,12 @@
       global:
         checkNewVersion: false
         sendAnonymousUsage: false
+      metrics:
+        prometheus:
+          addEntryPointsLabels: true
+          addServicesLabels: true
+          addRoutersLabels: true
+          entryPoint: metrics
       api:
           dashboard: true
           insecure: true
@@ -14,6 +20,8 @@
                   scheme: https
           websecure:
             address: ":443"
+          metrics:
+            address: :8082
       providers:
           docker:
             watch: true

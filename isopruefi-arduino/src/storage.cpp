@@ -97,7 +97,7 @@ void SaveTempToBatchCsv(const DateTime& now, float celsius, int sequence) {
  *   "timestamp": 1737024000,
  *   "value": [25.12345],
  *   "sequence": 42,
- *   "meta": [null]
+ *   "meta": {}
  * }
  * ```
  * 
@@ -127,8 +127,7 @@ void BuildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequen
   JsonArray val = doc["value"].to<JsonArray>();
   val.add(celsius);
   doc["sequence"] = sequence;
-  JsonArray meta = doc["meta"].to<JsonArray>();
-  meta.add(nullptr);
+  JsonObject meta = doc["meta"].to<JsonObject>();
 }
 
 /**

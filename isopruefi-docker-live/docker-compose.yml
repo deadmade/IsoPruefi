@@ -116,6 +116,7 @@ services:
     volumes:
       - ./loki/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./loki/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus:/prometheus
     networks:
       - isopruefi-monitoring
       - isopruefi-network
@@ -357,3 +358,4 @@ volumes:
   influxdb3:
   postgres:
   loki:
+  prometheus:

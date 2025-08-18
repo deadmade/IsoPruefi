@@ -171,6 +171,7 @@ public class Program
 
             using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+            app.UseCors("DevCors");
         }
 
         if (app.Environment.IsEnvironment("Docker"))
@@ -189,7 +190,6 @@ public class Program
 
             using var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
             ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
-            app.UseCors("DevCors");
         }
 
         //app.UseHttpsRedirection();

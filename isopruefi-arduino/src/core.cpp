@@ -125,6 +125,7 @@ void CoreSetup() {
   char clientId[CLIENT_ID_BUFFER_SIZE];
   snprintf(clientId, sizeof(clientId), "IsoPruefi_%s", SENSOR_ID_IN_USE);
   mqttClient.setId(clientId);
+
   if (IsWifiConnected()) {
     ConnectToMQTT(mqttClient);
   }
@@ -154,7 +155,8 @@ void CoreSetup() {
   DateTime now = rtc.now();
   Serial.print("Current time: ");
   Serial.println(now.timestamp(DateTime::TIMESTAMP_FULL));
-  Serial.print("Lost Power? "); Serial.println(rtc.lostPower() ? "YES" : "NO");
+  Serial.print("Lost Power? "); 
+  Serial.println(rtc.lostPower() ? "YES" : "NO");
 
   Serial.println("Setup complete.");
 }
@@ -249,10 +251,9 @@ void CoreLoop() {
   // Step 4: Normal measurement and MQTT transmission
   if (!alreadyLoggedThisMinute && IsConnectedToServer(mqttClient)) {
     float c = ReadTemperatureInCelsius();
-    if (SendTempToMqtt(mqttClient, MQTT_TOPIC, SENSOR_TYPE, SENSOR_ID_IN_USE, c, now, seqCount)) {
-      alreadyLoggedThisMinute = true;
-      seqCount++;
-    }
+    SendTempToMqtt(mqttClient, MQTT_TOPIC, SENSOR_TYPE, SENSOR_ID_IN_USE, c, now, seqCount);
+    alreadyLoggedThisMinute = true;
+    seqCount++;
   }
 
   // Step 5: MQTT loop and wait time

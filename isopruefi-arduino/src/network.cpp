@@ -36,7 +36,7 @@ bool ConnectToWiFi(unsigned long timeoutMs) {
     Serial.print(".");
   }
 
-  Serial.println("WiFi connected.");
+  Serial.println("WiFi is connected.");
   return true;
 }
 

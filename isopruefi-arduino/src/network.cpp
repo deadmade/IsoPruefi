@@ -8,9 +8,9 @@
 
 #include "mqtt.h"
 
-static const char ssid[]     = SECRET_SSID;
-static const char password[] = SECRET_PASS;
-static const char* broker    = "aicon.dhbw-heidenheim.de";
+static const char SSID[]     = SECRET_SSID;
+static const char PASSWORD[] = SECRET_PASS;
+static const char* BROKER    = "aicon.dhbw-heidenheim.de";
 static const int port        = 1883;
 
 /**
@@ -22,9 +22,9 @@ static const int port        = 1883;
  * @param timeoutMs Maximum time in milliseconds to wait for connection (default: 10000ms).
  * @return true if WiFi connection is successful, false if timeout occurs.
  */
-bool connectWiFi(unsigned long timeoutMs) {
+bool ConnectToWiFi(unsigned long timeoutMs) {
   Serial.print("Connecting to WiFi...");
-  WiFi.begin(ssid, password);
+  WiFi.begin(SSID, PASSWORD);
 
   unsigned long startAttemptTime = millis();
   while (WiFi.status() != WL_CONNECTED) {
@@ -36,7 +36,7 @@ bool connectWiFi(unsigned long timeoutMs) {
     Serial.print(".");
   }
 
-  Serial.println("WiFi connected.");
+  Serial.println("WiFi is connected.");
   return true;
 }
 
@@ -51,14 +51,14 @@ bool connectWiFi(unsigned long timeoutMs) {
  * @param timeoutMs Maximum time in milliseconds to wait for connection (default: 10000ms).
  * @return true if MQTT connection is successful, false if timeout occurs.
  */
-bool connectMQTT(MqttClient& mqttClient, unsigned long timeoutMs) {
+bool ConnectToMQTT(MqttClient& mqttClient, unsigned long timeoutMs) {
   Serial.print("Connecting to MQTT...");
   
   mqttClient.setUsernamePassword(SECRET_MQTT_USER, SECRET_MQTT_PASS);
   
   unsigned long startAttemptTime = millis();
 
-  while (!mqttClient.connect(broker, port)) {
+  while (!mqttClient.connect(BROKER, port)) {
     if (millis() - startAttemptTime >= timeoutMs) {
       Serial.println("MQTT connection timed out.");
       return false;
@@ -69,8 +69,4 @@ bool connectMQTT(MqttClient& mqttClient, unsigned long timeoutMs) {
 
   Serial.println(" connected.");
   return true;
-}
-
-bool isConnectedToServer(MqttClient& mqttClient) {
-  return WiFi.status() == WL_CONNECTED && mqttClient.connected();
 }

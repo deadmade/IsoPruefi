@@ -1,6 +1,6 @@
 #include "sensor.h"
 
-bool initSensor(Adafruit_ADT7410& sensor) {
+bool InitSensor(Adafruit_ADT7410& sensor) {
   if (!sensor.begin()) {
     Serial.println("ADT7410 not found!");
     return false;
@@ -10,6 +10,6 @@ bool initSensor(Adafruit_ADT7410& sensor) {
   return true;
 }
 
-float readTemperatureCelsius() {
+float ReadTemperatureInCelsius() {
   return tempsensor.readTempC();  
 }

@@ -1,28 +1,11 @@
 #include "storage.h"
 
 // =============================================================================
-// BUFFER SIZE CONSTANTS
-// =============================================================================
-
-/// Buffer size for small strings like filenames and base names
-static const size_t SMALL_BUFFER_SIZE = 32;
-/// Buffer size for small JSON documents and medium-sized strings
-static const size_t MEDIUM_BUFFER_SIZE = 128;
-/// Buffer size for JSON entries and general purpose buffers
-static const size_t LARGE_BUFFER_SIZE = 256;
-/// Buffer size for large JSON documents and complex data structures
-static const size_t XLARGE_BUFFER_SIZE = 1024;
-/// Buffer size for folder names (e.g., "2025")
-static const size_t FOLDER_NAME_BUFFER_SIZE = 8;
-/// Buffer size for recovered filenames with suffixes
-static const size_t RECOVERED_NAME_BUFFER_SIZE = 40;
-/// Buffer size for general filename storage
-static const size_t FILE_NAME_BUFFER_SIZE = 64;
-
-// =============================================================================
 // CSV PROCESSING CONSTANTS
 // =============================================================================
 
+/// Buffer size for folder names (e.g., "2025")
+static const size_t FOLDER_NAME_BUFFER_SIZE = 8;
 /// Buffer size for storing the current active CSV filename
 static const size_t CURRENT_FILENAME_BUFFER_SIZE = 32;
 /// Buffer size for reading individual CSV lines
@@ -68,9 +51,9 @@ static int linesInFile = 0;
  * @see createFolderName() for folder naming convention
  * @see createFilename() for CSV filename generation
  */
-void saveToCsvBatch(const DateTime& now, float celsius, int sequence) {
+void SaveTempToBatchCsv(const DateTime& now, float celsius, int sequence) {
   char folder[FOLDER_NAME_BUFFER_SIZE];
-  strncpy(folder, createFolderName(now), sizeof(folder));
+  strncpy(folder, CreateFolderName(now), sizeof(folder));
 
   if (!sd.exists(folder)) {
     sd.mkdir(folder);
@@ -78,7 +61,7 @@ void saveToCsvBatch(const DateTime& now, float celsius, int sequence) {
 
   // Create new file if needed
   if (strlen(currentFilename) == 0 || linesInFile >= MAX_LINES_PER_CSV_FILE) {
-    createFilename(currentFilename, sizeof(currentFilename), now);
+    CreateCsvFilename(currentFilename, sizeof(currentFilename), now);
     linesInFile = 0;
   }
 
@@ -114,7 +97,7 @@ void saveToCsvBatch(const DateTime& now, float celsius, int sequence) {
  *   "timestamp": 1737024000,
  *   "value": [25.12345],
  *   "sequence": 42,
- *   "meta": [null]
+ *   "meta": {}
  * }
  * ```
  * 
@@ -122,7 +105,7 @@ void saveToCsvBatch(const DateTime& now, float celsius, int sequence) {
  * - Temperature: 5 decimal places for high precision monitoring
  * - Timestamp: Unix timestamp (seconds since epoch)
  * - Sequence: Integer measurement counter
- * - Value array: Supports future multi-sensor expansion
+ * - Value array: Supports multiple sensor readings
  * 
  * **Performance Considerations:**
  * - Modifies existing JsonDocument for memory efficiency
@@ -138,14 +121,13 @@ void saveToCsvBatch(const DateTime& now, float celsius, int sequence) {
  * @see buildRecoveredJsonFromCsv() for batch recovery JSON format
  * @see saveToCsvBatch() for CSV fallback storage format
  */
-void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence) {
+void BuildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequence) {
   doc.clear();
   doc["timestamp"] = now.unixtime();
   JsonArray val = doc["value"].to<JsonArray>();
   val.add(celsius);
   doc["sequence"] = sequence;
-  JsonArray meta = doc["meta"].to<JsonArray>();
-  meta.add(nullptr);
+  JsonObject meta = doc["meta"].to<JsonObject>();
 }
 
 /**
@@ -192,7 +174,7 @@ void buildJson(JsonDocument& doc, float celsius, const DateTime& now, int sequen
  * @see saveToCsvBatch() for CSV storage format details
  * @see sendPendingData() in mqtt.cpp for recovery transmission
  */
-void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const DateTime& now) {
+void BuildRecoveryJsonFromBatchCsv(JsonDocument& doc, const char* filepath, const DateTime& now) {
   File file = sd.open(filepath, FILE_READ);
   if (!file) {
     Serial.print("CSV not found: ");
@@ -268,9 +250,9 @@ void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const Da
 /**
  * @brief Deletes a CSV file from the SD card storage system
  * 
- * This function provides safe file deletion with comprehensive error handling
- * and logging. It's primarily used during the data recovery process to clean
- * up CSV files after they have been successfully transmitted via MQTT.
+ * This function provides safe file deletion with error handling and logging. 
+ * It's primarily used during the data recovery process to clean up CSV files 
+ * after they have been successfully transmitted via MQTT.
  * 
  * **Safety Features:**
  * - Checks file existence before attempting deletion
@@ -294,7 +276,7 @@ void buildRecoveredJsonFromCsv(JsonDocument& doc, const char* filepath, const Da
  * @see buildRecoveredJsonFromCsv() for file processing before deletion
  * @see sendPendingData() in mqtt.cpp for recovery workflow integration
  */
-void deleteCsvFile(const char* filepath) {
+void DeleteCsvFile(const char* filepath) {
   if (sd.exists(filepath)) {
     if (sd.remove(filepath)) {
       Serial.print("Deleted CSV file: ");

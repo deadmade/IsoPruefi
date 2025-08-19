@@ -1,4 +1,10 @@
 site_name: IsoPrüfi
+docs_dir: docs
+site_url: https://github.com/deadmade/IsoPruefi
+repo_url: https://github.com/deadmade/IsoPruefi
+repo_name: "deadmade/IsoPruefi"
+
+
 nav:
   - Home: index.md
   - Build: build.md
@@ -40,10 +46,18 @@ nav:
     - 11 Technical Risks: documentation/11_technical_risks.md
     - 12 Glossary: documentation/12_glossary.md
   - License: license.md
+
 theme:
   name: material
+  language: "en"
   features:
-    - instant_navigation
+    - navigation.indexes
+    #- navigation.sections
+    #- navigation.footer
+    - navigation.top
+    - navigation.tabs
+    - navigation.instant
+    - navigation.tracking
     - content.code.copy
   palette:
     # Light mode
@@ -69,6 +83,8 @@ theme:
 
 plugins:
   - search
+  - minify:
+      minify_html: true
   - include_dir_to_nav
   - git-revision-date-localized
   - git-authors
@@ -86,3 +102,32 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - footnotes
+  - md_in_html
+  - meta
+  - toc:
+      permalink: true
+      toc_depth: 2
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.arithmatex:
+        generic: true
+  - pymdownx.betterem:
+        smart_enable: all
+  - pymdownx.highlight:
+        anchor_linenums: true
+        line_spans: __span
+        pygments_style: "default"
+  - pymdownx.superfences:
+        custom_fences:
+          - name: mermaid
+            class: mermaid
+            format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.inlinehilite
+  - pymdownx.mark
+  - pymdownx.tabbed:
+        alternate_style: true
+  - pymdownx.tasklist:
+        custom_checkbox: true
+  - pymdownx.tilde

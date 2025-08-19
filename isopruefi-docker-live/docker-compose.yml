@@ -34,6 +34,12 @@ services:
       - "./traefik/certs/:/var/traefik/certs/:rw"
     networks:
       - isopruefi-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   influxdb3:
     image: influxdb:3.2.1-core
@@ -51,6 +57,12 @@ services:
       - influxdb3:/var/lib/influxdb3
     networks:
       - isopruefi-network
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8181/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   postgres:
     image: postgres:17.5
@@ -66,23 +78,37 @@ services:
       - isopruefi-network
     env_file:
       - ./secrets.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   loki:
     image: grafana/loki:3.5.2
     container_name: isopruefi-loki
     command: -config.file=/etc/loki/local-config.yaml
     labels:
-      - "logging.enabled=true"
+      - "logging.isopruefi.enabled=true"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
+      - loki:/loki
     networks:
       - isopruefi-monitoring
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   prometheus:
     image: prom/prometheus:v3.4.2
     container_name: isopruefi-prometheus
     labels:
       - "logging.isopruefi.enabled=true"
+      - "web.enable-remote-write-receiver"
     ports:
       - 5004:9090
     command:
@@ -90,8 +116,16 @@ services:
     volumes:
       - ./loki/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./loki/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus:/prometheus
     networks:
       - isopruefi-monitoring
+      - isopruefi-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   alloy:
     image: grafana/alloy:v1.9.2
@@ -107,6 +141,12 @@ services:
     depends_on:
       - loki
       - prometheus
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:12345/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   grafana:
     image: grafana/grafana:12.0.2
@@ -117,6 +157,7 @@ services:
       - 5005:3000
     volumes:
       - "./grafana/grafana.ini:/etc/grafana/grafana.ini:ro"
+      - grafana:/var/lib/grafana
     env_file:
       - ./secrets.env
     networks:
@@ -124,6 +165,12 @@ services:
     depends_on:
       - loki
       - alloy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     entrypoint:
       - sh
       - -euc
@@ -155,6 +202,8 @@ services:
   isopruefi-frontend-1:
     image: ghcr.io/deadmade/isopruefi-frontend:latest
     container_name: isopruefi-frontend-1
+    ports:
+      - 5556:80
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=PathPrefix(`/frontend`)"
@@ -215,9 +264,12 @@ services:
     env_file:
       - ./secrets.env
     depends_on:
-      - influxdb3
-      - postgres
-      - loki
+      influxdb3:
+         condition: service_healthy
+      postgres:
+         condition: service_healthy
+      loki:
+         condition: service_healthy
 
   isopruefi-backend-api-2:
     image: ghcr.io/deadmade/isopruefi-rest-api:latest
@@ -238,9 +290,12 @@ services:
     env_file:
       - ./secrets.env
     depends_on:
-      - influxdb3
-      - postgres
-      - loki
+      influxdb3:
+         condition: service_healthy
+      postgres:
+         condition: service_healthy
+      loki:
+         condition: service_healthy
 
   isopruefi-mqtt-receiver-1:
     image: ghcr.io/deadmade/isopruefi-mqtt-worker:latest
@@ -254,9 +309,12 @@ services:
     env_file:
       - ./secrets.env
     depends_on:
-      - influxdb3
-      - postgres
-      - loki
+      influxdb3:
+         condition: service_healthy
+      postgres:
+         condition: service_healthy
+      loki:
+         condition: service_healthy
 
   isopruefi-mqtt-receiver-2:
     image: ghcr.io/deadmade/isopruefi-mqtt-worker:latest
@@ -270,9 +328,12 @@ services:
     env_file:
       - ./secrets.env
     depends_on:
-      - influxdb3
-      - postgres
-      - loki
+      influxdb3:
+         condition: service_healthy
+      postgres:
+         condition: service_healthy
+      loki:
+         condition: service_healthy
 
   isopruefi-get-weather-worker-1:
     image: ghcr.io/deadmade/isopruefi-weather-worker:latest
@@ -286,9 +347,12 @@ services:
     env_file:
       - ./secrets.env
     depends_on:
-      - influxdb3
-      - postgres
-      - loki
+      influxdb3:
+         condition: service_healthy
+      postgres:
+         condition: service_healthy
+      loki:
+         condition: service_healthy
 
   isopruefi-get-weather-worker-2:
     image: ghcr.io/deadmade/isopruefi-weather-worker:latest
@@ -302,10 +366,38 @@ services:
     env_file:
       - ./secrets.env
     depends_on:
-      - influxdb3
-      - postgres
-      - loki
+      influxdb3:
+         condition: service_healthy
+      postgres:
+         condition: service_healthy
+      loki:
+         condition: service_healthy
+
+  backup:
+    image: offen/docker-volume-backup:v2.44.0
+    container_name: isopruefi-backup
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - influxdb3:/backup/influxdb3:ro
+      - postgres:/backup/postgres:ro
+      - loki:/backup/loki:ro
+      - prometheus:/backup/prometheus:ro
+      - ./backups:/archive
+      - ./backup:/etc/dockervolumebackup/conf.d
+    depends_on:
+      influxdb3:
+         condition: service_healthy
+      postgres:
+         condition: service_healthy
+      loki:
+         condition: service_healthy
+      prometheus:
+         condition: service_healthy
 
 volumes:
   influxdb3:
   postgres:
+  loki:
+  prometheus:
+  grafana:

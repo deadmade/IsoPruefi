@@ -213,8 +213,8 @@ public class Connection : IConnection
                     sensorName);
                 break;
             case 1 when tempSensorReading.Value[0] != null 
-                        && (tempSensorReading.Meta is null || tempSensorReading.Meta.Value is null || 
-                            tempSensorReading.Meta.Timestamp is null || tempSensorReading.Meta.Sequence is null):
+                        && (tempSensorReading.Meta is null || (tempSensorReading.Meta.Value is null && 
+                            tempSensorReading.Meta.Timestamp is null && tempSensorReading.Meta.Sequence is null)):
                 await influxRepo.WriteSensorData(
                     tempSensorReading.Value[0] ?? 0,
                     sensorName,

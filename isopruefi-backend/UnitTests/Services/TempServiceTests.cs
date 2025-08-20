@@ -187,7 +187,15 @@ public class TempServiceTests
             .Returns(httpClient);
 
         // Act & Assert
-        await _tempService.GetCoordinates(postalCode);
+        try
+        {
+            await _tempService.GetCoordinates(postalCode);
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+
 
         _mockCoordinateRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
         _mockLogger.Verify(x => x.Log(

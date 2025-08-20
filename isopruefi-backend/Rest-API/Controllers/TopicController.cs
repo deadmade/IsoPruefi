@@ -152,9 +152,60 @@ public class TopicController : ControllerBase
             var topicId = await _settingsRepo.AddTopicSettingAsync(topicSetting);
 
             return CreatedAtAction(
-                nameof(GetAllTopics),
-                new { id = topicId },
-                new { id = topicId, message = "Topic created successfully" });
+                nameof(CreateTopic), null);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                new { message = "An error occurred while creating the topic", error = ex.Message });
+        }
+    }
+
+
+    [HttpPut]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<ActionResult> UpdateTopic([FromBody] TopicSetting topicSetting)
+    {
+        try
+        {
+            if (topicSetting == null) return BadRequest(new { message = "Topic setting is required" });
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            await _settingsRepo.UpdateTopicSettingAsync(topicSetting);
+
+             return StatusCode(StatusCodes.Status200OK);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                new { message = "An error occurred while creating the topic", error = ex.Message });
+        }
+    }
+
+    [HttpDelete]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<ActionResult> DeleteTopic([FromBody] TopicSetting topicSetting)
+    {
+        try
+        {
+            if (topicSetting == null) return BadRequest(new { message = "Topic setting is required" });
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            await _settingsRepo.RemoveTopicSettingAsync(topicSetting);
+
+            return StatusCode(StatusCodes.Status200OK);
         }
         catch (Exception ex)
         {

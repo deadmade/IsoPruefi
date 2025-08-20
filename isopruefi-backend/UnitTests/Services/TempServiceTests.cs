@@ -33,8 +33,8 @@ public class TempServiceTests
         _mockConfiguration = new Mock<IConfiguration>();
 
         _mockConfiguration.Setup(c =>
-            c["Weather:NominatimApiUrl"])
-                .Returns("https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=");
+                c["Weather:NominatimApiUrl"])
+            .Returns("https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=");
 
         _tempService = new TempService(
             _mockLogger.Object,

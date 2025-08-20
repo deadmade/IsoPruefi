@@ -148,6 +148,7 @@ public class TopicController : ControllerBase
             if (topicSetting == null) return BadRequest(new { message = "Topic setting is required" });
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
+            topicSetting.TopicSettingId = 0;
 
             var topicId = await _settingsRepo.AddTopicSettingAsync(topicSetting);
 
@@ -179,7 +180,7 @@ public class TopicController : ControllerBase
 
             await _settingsRepo.UpdateTopicSettingAsync(topicSetting);
 
-             return StatusCode(StatusCodes.Status200OK);
+            return StatusCode(StatusCodes.Status200OK);
         }
         catch (Exception ex)
         {

@@ -98,7 +98,7 @@ public class CachedInfluxRepo : IInfluxRepo
     /// <param name="point">The PointData to write</param>
     /// <param name="dataType">Type of data for logging purposes (sensor/weather)</param>
     /// <param name="writeToCache"></param>
-    private async Task WritePointWithCache(PointData point, string dataType )
+    private async Task WritePointWithCache(PointData point, string dataType)
     {
         try
         {
@@ -106,10 +106,10 @@ public class CachedInfluxRepo : IInfluxRepo
         }
         catch (Exception ex)
         {
-                var cacheKey = $"{CACHE_KEY_PREFIX}{dataType}:{Guid.NewGuid()}";
-                var cacheExpiry = TimeSpan.FromHours(24);
+            var cacheKey = $"{CACHE_KEY_PREFIX}{dataType}:{Guid.NewGuid()}";
+            var cacheExpiry = TimeSpan.FromHours(24);
 
-                _memoryCache.Set(cacheKey, point, cacheExpiry);
+            _memoryCache.Set(cacheKey, point, cacheExpiry);
         }
     }
 
@@ -124,10 +124,7 @@ public class CachedInfluxRepo : IInfluxRepo
 
         if (_memoryCache is not MemoryCache memCache) return cachedPoints;
 
-        foreach (var key in memCache.Keys)
-        {
-            cachedPoints.Add(key, _memoryCache.Get<PointData>(key));
-        }
+        foreach (var key in memCache.Keys) cachedPoints.Add(key, _memoryCache.Get<PointData>(key));
 
         return cachedPoints;
     }

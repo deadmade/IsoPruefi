@@ -290,20 +290,18 @@
         ],
         "summary": "Checks for existence of location and if necessary inserts new location.",
         "operationId": "Temp_InsertLocation",
-        "requestBody": {
-          "x-name": "postalcode",
-          "description": "Defines the location.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
+        "parameters": [
+          {
+            "name": "postalcode",
+            "in": "query",
+            "description": "Defines the location.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
         "responses": {
           "200": {
             "description": "Ok if successful; otherwise, an error response.",
@@ -315,6 +313,35 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/Temp/RemovePostalcode": {
+      "delete": {
+        "tags": [
+          "Temp"
+        ],
+        "operationId": "Temp_RemovePostalcode",
+        "parameters": [
+          {
+            "name": "postalCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         },
         "security": [

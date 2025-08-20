@@ -334,20 +334,20 @@ export class TempClient {
 
     /**
      * Checks for existence of location and if necessary inserts new location.
-     * @param postalcode Defines the location.
+     * @param postalcode (optional) Defines the location.
      * @return Ok if successful; otherwise, an error response.
      */
-    insertLocation(postalcode: number): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/v1/Temp/InsertLocation";
+    insertLocation(postalcode?: number | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/v1/Temp/InsertLocation?";
+        if (postalcode === null)
+            throw new globalThis.Error("The parameter 'postalcode' cannot be null.");
+        else if (postalcode !== undefined)
+            url_ += "postalcode=" + encodeURIComponent("" + postalcode) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(postalcode);
-
         let options_: RequestInit = {
-            body: content_,
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
                 "Accept": "application/octet-stream"
             }
         };
@@ -377,6 +377,40 @@ export class TempClient {
             });
         }
         return Promise.resolve<FileResponse>(null as any);
+    }
+
+    removePostalcode(postalCode?: number | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/v1/Temp/RemovePostalcode?";
+        if (postalCode === null)
+            throw new globalThis.Error("The parameter 'postalCode' cannot be null.");
+        else if (postalCode !== undefined)
+            url_ += "postalCode=" + encodeURIComponent("" + postalCode) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processRemovePostalcode(_response);
+        });
+    }
+
+    protected processRemovePostalcode(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
     }
 }
 

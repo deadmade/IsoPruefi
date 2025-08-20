@@ -212,7 +212,9 @@ public class Connection : IConnection
                 _logger.LogWarning("Received empty sensor reading from {SensorName}. Skipping processing",
                     sensorName);
                 break;
-            case 1 when tempSensorReading.Value[0] != null && tempSensorReading.Meta is null:
+            case 1 when tempSensorReading.Value[0] != null 
+                        && (tempSensorReading.Meta is null || tempSensorReading.Meta.Value is null || 
+                            tempSensorReading.Meta.Timestamp is null || tempSensorReading.Meta.Sequence is null):
                 await influxRepo.WriteSensorData(
                     tempSensorReading.Value[0] ?? 0,
                     sensorName,

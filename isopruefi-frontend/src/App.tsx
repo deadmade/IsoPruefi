@@ -8,7 +8,7 @@ import AdminPage from "./pages/AdminPage.tsx";
 // import {WeatherChartTitle} from "./components/Weather.tsx"
 // import {TempChart} from "./components/Weather.tsx";
 
-// entry point of the website. shows WeatherChartTitle and TempChart
+// entry point of the website
 
 export default function App() {
 

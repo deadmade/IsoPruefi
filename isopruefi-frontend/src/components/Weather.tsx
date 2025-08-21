@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { tempClient, ApiException } from '../api/clients';  // ← use the shared client
+import { tempClient, ApiException } from '../api/clients';
 
+export type Unit = "C" | "F";
 export type WeatherEntry = {
     timestamp: string;
     tempSouth: number;

@@ -54,7 +54,7 @@ services:
       - --object-store=file
       - --data-dir=/var/lib/influxdb3
     volumes:
-      - influxdb3:/var/lib/influxdb3
+      - influxdb3-two:/var/lib/influxdb3
     networks:
       - isopruefi-network
     healthcheck:
@@ -73,7 +73,7 @@ services:
     labels:
       - "logging.isopruefi.enabled=true"
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres-two:/var/lib/postgresql/data
     networks:
       - isopruefi-network
     env_file:
@@ -93,7 +93,7 @@ services:
       - "logging.isopruefi.enabled=true"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
-      - loki:/loki
+      - loki-two:/loki
     networks:
       - isopruefi-monitoring
     healthcheck:
@@ -116,7 +116,7 @@ services:
     volumes:
       - ./loki/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./loki/alerts.yml:/etc/prometheus/alerts.yml:ro
-      - prometheus:/prometheus
+      - prometheus-two:/prometheus
     networks:
       - isopruefi-monitoring
       - isopruefi-network
@@ -157,7 +157,7 @@ services:
       - 5005:3000
     volumes:
       - "./grafana/grafana.ini:/etc/grafana/grafana.ini:ro"
-      - grafana:/var/lib/grafana
+      - grafana-two:/var/lib/grafana
     env_file:
       - ./secrets.env
     networks:
@@ -379,10 +379,10 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - influxdb3:/backup/influxdb3:ro
-      - postgres:/backup/postgres:ro
-      - loki:/backup/loki:ro
-      - prometheus:/backup/prometheus:ro
+      - influxdb3-two:/backup/influxdb3:ro
+      - postgres-two:/backup/postgres:ro
+      - loki-two:/backup/loki:ro
+      - prometheus-two:/backup/prometheus:ro
       - ./backups:/archive
       - ./backup:/etc/dockervolumebackup/conf.d
     depends_on:
@@ -396,8 +396,8 @@ services:
          condition: service_healthy
 
 volumes:
-  influxdb3:
-  postgres:
-  loki:
-  prometheus:
-  grafana:
+  influxdb3-two:
+  postgres-two:
+  loki-two:
+  prometheus-two:
+  grafana-two:

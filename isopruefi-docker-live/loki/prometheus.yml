@@ -29,6 +29,13 @@ scrape_configs:
         labels:
           app: "prometheus"
           
+  - job_name: 'isopruefi-frontend'
+    static_configs:
+      - targets: ['isopruefi-frontend-1:80']
+      - targets: ['isopruefi-frontend-2:80']
+    metrics_path: '/health'
+    scrape_interval: 30s
+          
   - job_name: 'isopruefi-backend-api'
     static_configs:
       - targets: ['isopruefi-backend-api-1:8080']
@@ -66,3 +73,4 @@ scrape_configs:
       - targets: ['isopruefi-alloy:12345']
     metrics_path: '/metrics'
     scrape_interval: 30s
+

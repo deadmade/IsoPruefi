@@ -38,10 +38,10 @@ public class Worker : BackgroundService
             using var scope = _serviceProvider.CreateScope();
             var coordinateRepo = scope.ServiceProvider.GetRequiredService<ICoordinateRepo>();
             var influxRepo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
-            
+
             // Getting the location information for the next unlocked entry.
             var availableLocations = await GetAvailableCoordinateMapping(coordinateRepo);
-            
+
             if (availableLocations == null)
             {
                 _logger.LogInformation("All locations have up to date weather data.");
@@ -49,13 +49,13 @@ public class Worker : BackgroundService
                 continue;
             }
 
-            var lat = availableLocations.Latitude; 
+            var lat = availableLocations.Latitude;
             var lon = availableLocations.Longitude;
             var location = availableLocations.Location;
-                
+
             // Sending GET-Request to Meteo.
             var response = await CallMeteoApi(lat, lon);
-                
+
             if (response != null)
             {
                 // Saving the temperature in the database.
@@ -75,22 +75,19 @@ public class Worker : BackgroundService
                 var alternativeResponse = await CallBrightSkyApi(lat, lon);
 
                 if (alternativeResponse != null)
-                {
                     // Saving the temperature in the database.
                     try
                     {
                         await influxRepo.WriteOutsideWeatherData(location, "Bright Sky",
-                            alternativeResponse.Temperature, alternativeResponse.Timestamp, availableLocations.PostalCode);
+                            alternativeResponse.Temperature, alternativeResponse.Timestamp,
+                            availableLocations.PostalCode);
                     }
                     catch (Exception e)
                     {
                         _logger.LogError(e, "Outside Weather data could not be saved in the database.");
                     }
-                }
                 else
-                {
                     _logger.LogError("Failed to retrieve data from both sources.");
-                }
             }
 
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
@@ -151,18 +148,18 @@ public class Worker : BackgroundService
         {
             _logger.LogWarning("HTTP Request to Meteo failed with status code: " + response.StatusCode);
         }
-        
+
         return null;
     }
 
     private async Task<WeatherData?> CallBrightSkyApi(double lat, double lon)
     {
         var httpClient = _httpClientFactory.CreateClient();
-        
+
         var weatherDataApi = _alternativeWeatherDataApi
             .Replace("{lat}", lat.ToString())
             .Replace("{lon}", lon.ToString());
-        
+
         var response = await httpClient.GetAsync(weatherDataApi);
 
         if (response.IsSuccessStatusCode)
@@ -194,7 +191,7 @@ public class Worker : BackgroundService
         {
             _logger.LogWarning("HTTP Request to Bright Sky failed with status code: " + response.StatusCode);
         }
-        
+
         return null;
     }
 }

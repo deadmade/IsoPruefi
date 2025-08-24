@@ -60,7 +60,7 @@ public class InfluxRetryService : BackgroundService
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var cachedInfluxRepo = scope.ServiceProvider.GetService<CachedInfluxRepo>();
-        
+
         if (cachedInfluxRepo == null)
         {
             _logger.LogWarning("CachedInfluxRepo not available for retry operation");
@@ -68,7 +68,7 @@ public class InfluxRetryService : BackgroundService
         }
 
         var cachedPoints = cachedInfluxRepo.GetCachedPoints();
-        
+
         if (cachedPoints.Count == 0)
         {
             _logger.LogDebug("No cached points to retry");
@@ -77,11 +77,10 @@ public class InfluxRetryService : BackgroundService
 
         _logger.LogInformation("Attempting to retry {Count} cached InfluxDB writes", cachedPoints.Count);
 
-        int successCount = 0;
-        int failureCount = 0;
+        var successCount = 0;
+        var failureCount = 0;
 
         foreach (var kvp in cachedPoints)
-        {
             try
             {
                 await RetryPointWrite(cachedInfluxRepo, kvp.Key, kvp.Value);
@@ -92,10 +91,9 @@ public class InfluxRetryService : BackgroundService
                 _logger.LogWarning(ex, "Failed to retry cached point {CacheKey}", kvp.Key);
                 failureCount++;
             }
-        }
 
         _logger.LogInformation(
-            "Retry operation completed. Success: {SuccessCount}, Failed: {FailureCount}", 
+            "Retry operation completed. Success: {SuccessCount}, Failed: {FailureCount}",
             successCount, failureCount);
     }
 
@@ -110,14 +108,14 @@ public class InfluxRetryService : BackgroundService
         try
         {
             // Use reflection to access the private _client field
-            var clientField = typeof(CachedInfluxRepo).GetField("_client", 
+            var clientField = typeof(CachedInfluxRepo).GetField("_client",
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            
+
             if (clientField?.GetValue(cachedRepo) is InfluxDB3.Client.InfluxDBClient client)
             {
                 await client.WritePointAsync(point);
                 cachedRepo.RemoveCachedPoint(cacheKey);
-                
+
                 _logger.LogDebug("Successfully retried cached point {CacheKey}", cacheKey);
             }
             else

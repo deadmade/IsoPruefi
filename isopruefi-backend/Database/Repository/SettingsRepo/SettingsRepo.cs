@@ -36,4 +36,26 @@ public class SettingsRepo : ISettingsRepo
         _applicationDbContext.TopicSettings.Add(topicSetting);
         return await _applicationDbContext.SaveChangesAsync();
     }
+
+
+    /// <inheritdoc />
+    public async Task<int> RemoveTopicSettingAsync(TopicSetting topicSetting)
+    {
+        if (topicSetting == null)
+            throw new ArgumentNullException(nameof(topicSetting));
+
+        _applicationDbContext.TopicSettings.Remove(topicSetting);
+        return await _applicationDbContext.SaveChangesAsync();
+    }
+
+
+    /// <inheritdoc />
+    public async Task<int> UpdateTopicSettingAsync(TopicSetting topicSetting)
+    {
+        if (topicSetting == null)
+            throw new ArgumentNullException(nameof(topicSetting));
+
+        _applicationDbContext.TopicSettings.Update(topicSetting);
+        return await _applicationDbContext.SaveChangesAsync();
+    }
 }

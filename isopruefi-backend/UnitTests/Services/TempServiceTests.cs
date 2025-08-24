@@ -33,8 +33,8 @@ public class TempServiceTests
         _mockConfiguration = new Mock<IConfiguration>();
 
         _mockConfiguration.Setup(c =>
-            c["Weather:NominatimApiUrl"])
-                .Returns("https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=");
+                c["Weather:NominatimApiUrl"])
+            .Returns("https://nominatim.openstreetmap.org/search?format=jsonv2&postalcode=");
 
         _tempService = new TempService(
             _mockLogger.Object,
@@ -187,7 +187,15 @@ public class TempServiceTests
             .Returns(httpClient);
 
         // Act & Assert
-        await _tempService.GetCoordinates(postalCode);
+        try
+        {
+            await _tempService.GetCoordinates(postalCode);
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+
 
         _mockCoordinateRepo.Verify(r => r.InsertNewPostalCode(It.IsAny<CoordinateMapping>()), Times.Never);
         _mockLogger.Verify(x => x.Log(

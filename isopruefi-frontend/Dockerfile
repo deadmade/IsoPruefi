@@ -19,7 +19,7 @@ COPY package*.json package-lock.json ./
 RUN npm ci
 
 # Copy the project files into the working directory
-COPY ./ ./
+COPY ..
 
 # Build the React app for production
 RUN npm run build

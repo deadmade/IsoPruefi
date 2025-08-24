@@ -58,7 +58,7 @@ public class CachedInfluxHealthCheck : IHealthCheck
                 _logger.LogWarning("InfluxDB is connected but {CachedCount} points are still cached", cachedCount);
 
                 return HealthCheckResult.Degraded(
-                    $"InfluxDB connected but {cachedCount} cached writes pending", 
+                    $"InfluxDB connected but {cachedCount} cached writes pending",
                     data: data);
             }
 

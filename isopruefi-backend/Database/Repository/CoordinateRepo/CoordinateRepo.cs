@@ -19,21 +19,21 @@ public class CoordinateRepo : ICoordinateRepo
     {
         _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
     }
-    
+
     /// <inheritdoc />
     public async Task InsertNewPostalCode(CoordinateMapping postalcodeLocation)
     {
         _applicationDbContext.CoordinateMappings.Add(postalcodeLocation);
         await _applicationDbContext.SaveChangesAsync();
     }
-    
+
     /// <inheritdoc />
     public async Task<bool> ExistsPostalCode(int postalcode)
     {
         var entry = await _applicationDbContext.CoordinateMappings.AnyAsync(c => c.PostalCode == postalcode);
         return entry;
     }
-    
+
     /// <inheritdoc />
     public async Task UpdateTime(int postalCode, DateTime newTime)
     {
@@ -42,14 +42,14 @@ public class CoordinateRepo : ICoordinateRepo
 
         await _applicationDbContext.SaveChangesAsync();
     }
-    
+
     /// <inheritdoc />
     public async Task<CoordinateMapping?> GetLocation()
     {
         var result = await _applicationDbContext.CoordinateMappings
             .OrderByDescending(c => c.LastUsed)
             .FirstOrDefaultAsync();
-        
+
         return result;
     }
 
@@ -62,12 +62,12 @@ public class CoordinateRepo : ICoordinateRepo
 
         return result;
     }
-    
+
     /// <inheritdoc />
     public async Task<CoordinateMapping?> GetUnlockedLocation()
     {
         await using var transaction = _applicationDbContext.Database.BeginTransaction();
-        
+
         var result = await _applicationDbContext.CoordinateMappings
             .FromSqlRaw(
                 @"SELECT * FROM ""CoordinateMappings"" WHERE ""LockedUntil"" IS NULL OR ""LockedUntil"" < NOW() ORDER BY ""LastUsed"" ASC NULLS FIRST LIMIT 1 FOR UPDATE SKIP LOCKED")
@@ -83,5 +83,12 @@ public class CoordinateRepo : ICoordinateRepo
 
         await transaction.CommitAsync();
         return null;
+    }
+
+
+    /// <inheritdoc />
+    public async Task DeletePostalCode(int postalcode)
+    {
+        await _applicationDbContext.CoordinateMappings.Where(c => c.PostalCode == postalcode).ExecuteDeleteAsync();
     }
 }

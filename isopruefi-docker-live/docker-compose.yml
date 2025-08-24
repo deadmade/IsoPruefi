@@ -384,6 +384,8 @@ services:
     image: offen/docker-volume-backup:v2.44.0
     container_name: isopruefi-backup
     restart: always
+    labels:
+      - "logging.isopruefi.enabled=true"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - influxdb3:/backup/influxdb3:ro

@@ -45,6 +45,9 @@ services:
     image: influxdb:3.2.1-core
     container_name: isopruefi-influxdb
     restart: unless-stopped
+    user: root
+    ports:
+      - 5006:8181
     labels:
       - logging.isopruefi.enabled=true
     command:
@@ -68,6 +71,7 @@ services:
     image: postgres:17.5
     container_name: isopruefi-postgres
     restart: unless-stopped
+    user: root
     ports:
       - 5003:5432
     labels:
@@ -89,6 +93,7 @@ services:
     image: grafana/loki:3.5.2
     container_name: isopruefi-loki
     command: -config.file=/etc/loki/local-config.yaml
+    user: root
     labels:
       - "logging.isopruefi.enabled=true"
     volumes:
@@ -106,6 +111,7 @@ services:
   prometheus:
     image: prom/prometheus:v3.4.2
     container_name: isopruefi-prometheus
+    user: root
     labels:
       - "logging.isopruefi.enabled=true"
       - "web.enable-remote-write-receiver"
@@ -151,6 +157,7 @@ services:
   grafana:
     image: grafana/grafana:12.0.2
     container_name: isopruefi-grafana
+    user: root
     labels:
       - logging.isopruefi.enabled=true
     ports:

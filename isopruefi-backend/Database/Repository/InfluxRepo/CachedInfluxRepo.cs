@@ -117,7 +117,18 @@ public class CachedInfluxRepo : IInfluxRepo
     /// <inheritdoc />
     public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var query =
+                $"SELECT sensor, time FROM uptime_timestamp WHERE sensor = '{sensor}'";
+
+            return _client.QueryPoints(query);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving uptime from InfluxDB");
+            throw;
+        }
     }
 
     /// <summary>

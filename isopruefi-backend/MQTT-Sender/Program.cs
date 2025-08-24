@@ -16,7 +16,15 @@ internal class Program
 
         while (true)
         {
-            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var randHour1 = rnd.Next(0,24);
+            var timestamp = new DateTimeOffset(
+                DateTime.Today.Year,
+                DateTime.Today.Month,
+                DateTime.Today.Day,
+                randHour1,
+                DateTime.Now.Minute,
+                DateTime.Now.Second,
+                DateTimeOffset.Now.Offset).ToUnixTimeSeconds();
             double?[]? value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             var tempGen = new TempSensorReading { Timestamp = timestamp, Value = value, Sequence = sequenceOne++ };
@@ -50,7 +58,15 @@ internal class Program
 
             await client.PublishAsync(applicationMessage, CancellationToken.None);
 
-            timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var randHour2 = rnd.Next(0,24);
+            timestamp = new DateTimeOffset(
+                DateTime.Today.Year,
+                DateTime.Today.Month,
+                DateTime.Today.Day,
+                randHour2,
+                DateTime.Now.Minute,
+                DateTime.Now.Second,
+                DateTimeOffset.Now.Offset).ToUnixTimeSeconds();
             value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             tempGen = new TempSensorReading { Timestamp = timestamp, Value = value, Sequence = sequenceTwo++, Meta = null };

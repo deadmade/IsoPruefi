@@ -81,14 +81,14 @@ public class CachedInfluxRepo : IInfluxRepo
     }
 
     /// <inheritdoc />
-    public IAsyncEnumerable<PointDataValues> GetOutsideWeatherData(DateTime start, DateTime end, string place)
+    public IAsyncEnumerable<object?[]> GetOutsideWeatherData(DateTime start, DateTime end, string place)
     {
         try
         {
             var query =
                 $"SELECT place, time, value FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
 
-            return _client.QueryPoints(query);
+            return _client.Query(query);
         }
         catch (Exception e)
         {
@@ -99,14 +99,14 @@ public class CachedInfluxRepo : IInfluxRepo
     }
 
     /// <inheritdoc />
-    public IAsyncEnumerable<PointDataValues> GetSensorWeatherData(DateTime start, DateTime end)
+    public IAsyncEnumerable<object?[]> GetSensorWeatherData(DateTime start, DateTime end)
     {
         try
         {
             var query =
                 $"SELECT sensor, time, value FROM temperature WHERE time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
 
-            return _client.QueryPoints(query);
+            return _client.Query(query);
         }
         catch (Exception e)
         {

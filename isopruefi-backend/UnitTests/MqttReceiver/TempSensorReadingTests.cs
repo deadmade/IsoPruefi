@@ -39,7 +39,7 @@ public class TempSensorReadingTests
             Sequence = 42,
             Meta = new TempSensorMeta
             {
-                Timestamp = [1234567888], 
+                Timestamp = [1234567888],
                 Value = [24.0],
                 Sequence = [40]
             }

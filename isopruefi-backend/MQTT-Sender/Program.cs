@@ -27,7 +27,8 @@ internal class Program
                 DateTimeOffset.Now.Offset).ToUnixTimeSeconds();
             double?[]? value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
-            var tempGen = new TempSensorReading { Timestamp = timestamp, Value = value, Sequence = sequenceOne++ };
+            var tempGen = new TempSensorReading
+                { Timestamp = timestamp, Value = value, Sequence = sequenceOne++, Meta = { } };
             var json = JsonSerializer.Serialize(tempGen);
 
 
@@ -69,7 +70,8 @@ internal class Program
                 DateTimeOffset.Now.Offset).ToUnixTimeSeconds();
             value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
-            tempGen = new TempSensorReading { Timestamp = timestamp, Value = value, Sequence = sequenceTwo++, Meta = null };
+            tempGen = new TempSensorReading
+                { Timestamp = timestamp, Value = value, Sequence = sequenceTwo++, Meta = { } };
             json = JsonSerializer.Serialize(tempGen);
 
             applicationMessage = new MqttApplicationMessageBuilder()

@@ -127,21 +127,6 @@ services:
       - isopruefi-monitoring
       - isopruefi-network
 
-  alertmanager:
-    image: prom/alertmanager:v0.27.0
-    container_name: alertmanager
-    command:
-      - --config.file=/etc/alertmanager/alertmanager.yml
-      - --storage.path=/alertmanager
-    ports:
-      - "9093:9093"
-    volumes:
-      - ./isopruefi-docker/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
-    networks:
-      - isopruefi-monitoring
-      - isopruefi-network
-    depends_on:
-      - prometheus
   alloy:
     image: grafana/alloy:v1.9.2
     container_name: alloy
@@ -219,30 +204,6 @@ services:
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.services.frontend.loadbalancer.server.port=5173"
-    volumes:
-      - ./isopruefi-frontend:/app
-      - /app/node_modules
-    networks:
-      - isopruefi-network
-    environment:
-      - NODE_ENV=development
-    stdin_open: true
-    tty: true
-
-  isopruefi-frontend-2:
-    build:
-      context: ./isopruefi-frontend
-      dockerfile: Dockerfile-Dev
-    container_name: isopruefi-frontend-2
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
-    volumes:
-      - ./isopruefi-frontend:/app
-      - /app/node_modules
     networks:
       - isopruefi-network
     environment:
@@ -264,28 +225,7 @@ services:
     networks:
       - isopruefi-network
     environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
-    env_file:
-      - ./secrets.env
-    depends_on:
-      - influxdb3
-      - postgres
-
-  isopruefi-backend-api-2:
-    build:
-      context: ./isopruefi-backend
-      dockerfile: Rest-API/Dockerfile-Dev
-    container_name: isopruefi-backend-api-2
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls=true"
-      - "traefik.http.services.backend.loadbalancer.server.port=8080"
-    networks:
-      - isopruefi-network
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_ENVIRONMENT=Development
     env_file:
       - ./secrets.env
     depends_on:
@@ -300,22 +240,7 @@ services:
     networks:
       - isopruefi-network
     environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
-    env_file:
-      - ./secrets.env
-    depends_on:
-      - influxdb3
-      - postgres
-
-  isopruefi-mqtt-receiver-2:
-    build:
-      context: ./isopruefi-backend
-      dockerfile: MQTT-Receiver-Worker/Dockerfile-Dev
-    container_name: isopruefi-mqtt-receiver-2
-    networks:
-      - isopruefi-network
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_ENVIRONMENT=Development
     env_file:
       - ./secrets.env
     depends_on:
@@ -333,33 +258,9 @@ services:
     networks:
       - isopruefi-network
     environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_ENVIRONMENT=Development
     env_file:
       - ./secrets.env
     depends_on:
       - influxdb3
       - postgres
-
-  # isopruefi-get-weather-worker-2:
-  #   build:
-  #     context: ./isopruefi-backend
-  #     dockerfile: Get-weatherData-worker/Dockerfile-Dev
-  #   container_name: isopruefi-get-weather-worker-2
-  #   labels:
-  #     - "prometheus.service=weather-worker"
-  #     - "prometheus.instance=2"
-  #   networks:
-  #     - isopruefi-network
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Docker
-  #   env_file:
-  #     - ./secrets.env
-  #   depends_on:
-  #     - influxdb3
-  #     - postgres
-  #   healthcheck:
-  #     test: ["CMD", "dotnet", "--info"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #     start_period: 40s

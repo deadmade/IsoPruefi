@@ -212,7 +212,9 @@ public class Connection : IConnection
                 _logger.LogWarning("Received empty sensor reading from {SensorName}. Skipping processing",
                     sensorName);
                 break;
-            case 1 when tempSensorReading.Value[0] != null && tempSensorReading.Meta is null:
+            case 1 when tempSensorReading.Value[0] != null 
+                        && (tempSensorReading.Meta is null || (tempSensorReading.Meta.Value is null && 
+                            tempSensorReading.Meta.Timestamp is null && tempSensorReading.Meta.Sequence is null)):
                 await influxRepo.WriteSensorData(
                     tempSensorReading.Value[0] ?? 0,
                     sensorName,
@@ -244,18 +246,25 @@ public class Connection : IConnection
             return Task.FromResult(Task.CompletedTask);
         }
 
-        if (tempSensorReading.Meta != null && tempSensorReading.Meta.Sequence.Length != 0 
-                                           && tempSensorReading.Meta.Sequence.Length ==
-                                           tempSensorReading.Meta.Timestamp.Length
-                                           && tempSensorReading.Meta.Sequence.Length ==
-                                           tempSensorReading.Meta.Value.Length)
+        if (tempSensorReading.Meta is { Timestamp: null, Sequence: null, Value: null })
+        {
+            _logger.LogWarning(
+                "Received sensor reading with unexpected format in meta from {SensorName}. Skipping processing",
+                sensorName);
+            return Task.FromResult(Task.CompletedTask);
+        }
+
+        if (tempSensorReading.Meta.Sequence.Length != 0
+            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Timestamp.Length
+            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Value.Length)
         {
             var tempDataMeta = tempSensorReading.Meta;
-            await Parallel.ForEachAsync(Enumerable.Range(0, tempDataMeta.Sequence.Length - 1), 
+            await Parallel.ForEachAsync(Enumerable.Range(0, tempDataMeta.Sequence.Length - 1),
                 async (value, cancellationToken) =>
                 {
                     double?[]? values = { tempDataMeta.Value[value] };
-                    var tempData = new TempSensorReading{
+                    var tempData = new TempSensorReading
+                    {
                         Timestamp = tempDataMeta.Timestamp[value],
                         Value = values,
                         Sequence = tempDataMeta.Sequence[value],

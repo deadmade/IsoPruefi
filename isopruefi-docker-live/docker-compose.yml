@@ -45,6 +45,9 @@ services:
     image: influxdb:3.2.1-core
     container_name: isopruefi-influxdb
     restart: unless-stopped
+    user: root
+    ports:
+      - 5006:8181
     labels:
       - logging.isopruefi.enabled=true
     command:
@@ -54,7 +57,7 @@ services:
       - --object-store=file
       - --data-dir=/var/lib/influxdb3
     volumes:
-      - influxdb3-two:/var/lib/influxdb3
+      - influxdb3:/var/lib/influxdb3
     networks:
       - isopruefi-network
     healthcheck:
@@ -68,12 +71,13 @@ services:
     image: postgres:17.5
     container_name: isopruefi-postgres
     restart: unless-stopped
+    user: root
     ports:
       - 5003:5432
     labels:
       - "logging.isopruefi.enabled=true"
     volumes:
-      - postgres-two:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     networks:
       - isopruefi-network
     env_file:
@@ -89,11 +93,12 @@ services:
     image: grafana/loki:3.5.2
     container_name: isopruefi-loki
     command: -config.file=/etc/loki/local-config.yaml
+    user: root
     labels:
       - "logging.isopruefi.enabled=true"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
-      - loki-two:/loki
+      - loki:/loki
     networks:
       - isopruefi-monitoring
     healthcheck:
@@ -106,6 +111,7 @@ services:
   prometheus:
     image: prom/prometheus:v3.4.2
     container_name: isopruefi-prometheus
+    user: root
     labels:
       - "logging.isopruefi.enabled=true"
       - "web.enable-remote-write-receiver"
@@ -116,7 +122,7 @@ services:
     volumes:
       - ./loki/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./loki/alerts.yml:/etc/prometheus/alerts.yml:ro
-      - prometheus-two:/prometheus
+      - prometheus:/prometheus
     networks:
       - isopruefi-monitoring
       - isopruefi-network
@@ -151,13 +157,14 @@ services:
   grafana:
     image: grafana/grafana:12.0.2
     container_name: isopruefi-grafana
+    user: root
     labels:
       - logging.isopruefi.enabled=true
     ports:
       - 5005:3000
     volumes:
       - "./grafana/grafana.ini:/etc/grafana/grafana.ini:ro"
-      - grafana-two:/var/lib/grafana
+      - grafana:/var/lib/grafana
     env_file:
       - ./secrets.env
     networks:
@@ -379,10 +386,10 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - influxdb3-two:/backup/influxdb3:ro
-      - postgres-two:/backup/postgres:ro
-      - loki-two:/backup/loki:ro
-      - prometheus-two:/backup/prometheus:ro
+      - influxdb3:/backup/influxdb3:ro
+      - postgres:/backup/postgres:ro
+      - loki:/backup/loki:ro
+      - prometheus:/backup/prometheus:ro
       - ./backups:/archive
       - ./backup:/etc/dockervolumebackup/conf.d
     depends_on:
@@ -396,8 +403,8 @@ services:
          condition: service_healthy
 
 volumes:
-  influxdb3-two:
-  postgres-two:
-  loki-two:
-  prometheus-two:
-  grafana-two:
+  influxdb3:
+  postgres:
+  loki:
+  prometheus:
+  grafana:

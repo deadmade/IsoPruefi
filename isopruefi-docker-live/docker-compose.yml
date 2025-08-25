@@ -26,6 +26,8 @@ services:
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme = https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https"
 
+      - "traefik.http.middlewares.autodetect.contenttype=true"
+
       - "logging.isopruefi.enabled=true"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"

@@ -73,7 +73,7 @@ public class InfluxRepo : IInfluxRepo
     }
 
     /// <inheritdoc />
-    public async Task WriteUptime(string sensor, long timestamp)
+    public async Task WriteUptime(string sensor, long timestamp, int? sequence)
     {
         try
         {
@@ -83,8 +83,9 @@ public class InfluxRepo : IInfluxRepo
 
             var point = PointData.Measurement("uptime_timestamp")
                 .SetTag("sensor", sensor)
+                .SetField("sequence", sequence.ToString())
                 .SetTimestamp(dateTimeUtc);
-
+            
             await _client.WritePointAsync(point);
         }
         catch (Exception e)

@@ -16,13 +16,10 @@
 	pkgs.python313Packages.pip
         pkgs.docker
         pkgs.lazydocker
-        pkgs.python313Packages.weasyprint
-
-        pkgs.arduino-ide
-        pkgs.mqtt-explorer
 
         pkgs.act
-        pkgs.doxygen
+
+        pkgs.lazygit
       ];
 
       shellHook = ''

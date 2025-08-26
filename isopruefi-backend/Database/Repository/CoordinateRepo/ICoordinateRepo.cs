@@ -14,6 +14,12 @@ public interface ICoordinateRepo
     Task InsertNewPostalCode(CoordinateMapping postalCodeLocation);
 
     /// <summary>
+    /// Deletes postalcode from the database.
+    /// </summary>
+    /// <param name="postalCode">postalcode</param>
+    Task DeletePostalCode(int postalCode);
+
+    /// <summary>
     /// Retrieves the coordinates of the postalcode that was inserted last.
     /// </summary>
     /// <returns>Returns coordinates of the location that was last chosen by the User.</returns>
@@ -38,7 +44,7 @@ public interface ICoordinateRepo
     /// </summary>
     /// <returns>List with all postalcodes.</returns>
     Task<List<Tuple<int, string>>> GetAllLocations();
-    
+
     /// <summary>
     /// Gets the next unlocked entry in CoordinateMappings and locks it for the next minute.
     /// </summary>

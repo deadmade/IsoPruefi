@@ -254,7 +254,8 @@ public class Connection : IConnection
 
         if (tempSensorReading.Meta is { Timestamp: null, Sequence: null, Value: null })
         {
-            _logger.LogWarning("Received sensor reading with unexpected format in meta from {SensorName}. Skipping processing",
+            _logger.LogWarning(
+                "Received sensor reading with unexpected format in meta from {SensorName}. Skipping processing",
                 sensorName);
             return Task.FromResult(Task.CompletedTask);
         }
@@ -264,11 +265,12 @@ public class Connection : IConnection
             && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Value.Length)
         {
             var tempDataMeta = tempSensorReading.Meta;
-            await Parallel.ForEachAsync(Enumerable.Range(0, tempDataMeta.Sequence.Length - 1), 
+            await Parallel.ForEachAsync(Enumerable.Range(0, tempDataMeta.Sequence.Length - 1),
                 async (value, cancellationToken) =>
                 {
                     double?[]? values = { tempDataMeta.Value[value] };
-                    var tempData = new TempSensorReading{
+                    var tempData = new TempSensorReading
+                    {
                         Timestamp = tempDataMeta.Timestamp[value],
                         Value = values,
                         Sequence = tempDataMeta.Sequence[value],

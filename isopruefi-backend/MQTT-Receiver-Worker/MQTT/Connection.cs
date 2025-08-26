@@ -183,8 +183,7 @@ public class Connection : IConnection
             {
                 await influxRepo.WriteUptime(
                     sensorName,
-                    tempSensorReading.Timestamp,
-                    tempSensorReading.Sequence);
+                    tempSensorReading.Timestamp);
                 return await ProcessSensorReading(tempSensorReading, sensorName, influxRepo);
             }
             var recoveredSensorName = topics.ElementAtOrDefault(topics.Length - 2);

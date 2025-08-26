@@ -81,7 +81,7 @@ public class CachedInfluxRepo : IInfluxRepo
     }
 
     /// <inheritdoc />
-    public async Task WriteUptime(string sensor, long timestamp, int? sequence)
+    public async Task WriteUptime(string sensor, long timestamp)
     {
         try
         {
@@ -89,9 +89,8 @@ public class CachedInfluxRepo : IInfluxRepo
                 .FromUnixTimeSeconds(timestamp)
                 .UtcDateTime;
 
-            var point = PointData.Measurement("uptime_timestamp")
-                .SetTag("sensor", sensor)
-                .SetField("sequence", sequence.ToString())
+            var point = PointData.Measurement("uptime")
+                .SetField("sensor", sensor)
                 .SetTimestamp(dateTimeUtc);
 
             await WritePointWithCache(point, "uptime");
@@ -121,7 +120,7 @@ public class CachedInfluxRepo : IInfluxRepo
         try
         {
             var query =
-                $"SELECT sensor, time FROM uptime_timestamp WHERE sensor = '{sensor}'";
+                $"SELECT sensor, time FROM uptime WHERE sensor = '{sensor}'";
 
             return _client.QueryPoints(query);
         }

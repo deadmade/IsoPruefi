@@ -35,7 +35,7 @@ public interface IInfluxRepo
     /// <param name="timestamp">Unix Timestamp</param>
     /// <param name="sequence"></param>
     /// <returns></returns>
-    Task WriteUptime(string sensor, long timestamp, int? sequence);
+    Task WriteUptime(string sensor, long timestamp);
 
     /// <summary>
     /// Retrieves outside weather data for a given place and time range.

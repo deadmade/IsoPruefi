@@ -81,6 +81,28 @@ public class CachedInfluxRepo : IInfluxRepo
     }
 
     /// <inheritdoc />
+    public async Task WriteUptime(string sensor, long timestamp)
+    {
+        try
+        {
+            var dateTimeUtc = DateTimeOffset
+                .FromUnixTimeSeconds(timestamp)
+                .UtcDateTime;
+
+            var point = PointData.Measurement("uptime")
+                .SetField("sensor", sensor)
+                .SetTimestamp(dateTimeUtc);
+
+            await WritePointWithCache(point, "uptime");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error creating uptime data point");
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
     public IAsyncEnumerable<PointDataValues> GetOutsideWeatherData(DateTime start, DateTime end, string place)
     {
         try
@@ -114,6 +136,23 @@ public class CachedInfluxRepo : IInfluxRepo
             throw;
         }
 
+    }
+
+    /// <inheritdoc />
+    public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
+    {
+        try
+        {
+            var query =
+                $"SELECT sensor, time FROM uptime WHERE sensor = '{sensor}'";
+
+            return _client.QueryPoints(query);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving uptime from InfluxDB");
+            throw;
+        }
     }
 
     /// <summary>

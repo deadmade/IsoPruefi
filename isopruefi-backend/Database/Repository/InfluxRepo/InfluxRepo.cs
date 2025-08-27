@@ -68,6 +68,29 @@ public class InfluxRepo : IInfluxRepo
         catch (Exception e)
         {
             _logger.LogError(e, "Error writing outside weather data to InfluxDB");
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task WriteUptime(string sensor, long timestamp)
+    {
+        try
+        {
+            var dateTimeUtc = DateTimeOffset
+                .FromUnixTimeSeconds(timestamp)
+                .UtcDateTime;
+
+            var point = PointData.Measurement("uptime")
+                .SetField("sensor", sensor)
+                .SetTimestamp(dateTimeUtc);
+            
+            await _client.WritePointAsync(point);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error writing uptime into InfluxDB");
+            throw;
         }
     }
 
@@ -96,6 +119,23 @@ public class InfluxRepo : IInfluxRepo
         {
             var query =
                 $"SELECT sensor, time, value FROM temperature WHERE time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
+
+            return _client.QueryPoints(query);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
+    public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
+    {
+        try
+        {
+            var query =
+                $"SELECT sensor, time FROM uptime WHERE sensor = '{sensor}'";
 
             return _client.QueryPoints(query);
         }

@@ -225,7 +225,9 @@ services:
     networks:
       - isopruefi-network
     environment:
-      - NODE_ENV=development
+      VITE_DEV_PROXY_TARGET: https://aicon.dhbw-heidenheim.de:5001/backend
+    ports:
+      - "5173:5173"
     stdin_open: true
     tty: true
 
@@ -246,7 +248,9 @@ services:
     networks:
       - isopruefi-network
     environment:
-      - NODE_ENV=development
+      VITE_DEV_PROXY_TARGET: https://aicon.dhbw-heidenheim.de:5001/backend
+    ports:
+      - "5173:5173"
     stdin_open: true
     tty: true
 

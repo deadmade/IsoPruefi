@@ -113,21 +113,22 @@ public class TemperatureDataController : ControllerBase
         bool isFahrenheit)
     {
         var outsideWeatherData = await GetOutsideTemperatureDataAsync(start, end, place);
-        var sensorWeatherData = await GetSensorTemperatureDataAsync(start, end);
         var settings = await _settingsRepo.GetTopicSettingsAsync();
         var sensorNord = settings.FirstOrDefault(x => x.SensorLocation == "North");
         var sensorSouth = settings.FirstOrDefault(x => x.SensorLocation == "South");
+        var sensorNordWeatherData = await GetSensorTemperatureDataAsync(start, end, sensorNord.SensorName);
+        var sensorSouthWeatherData = await GetSensorTemperatureDataAsync(start, end, sensorSouth.SensorName);
 
         var tempConverter = isFahrenheit ? ConvertToFahrenheit : (Func<double, double>)(c => c);
 
         var temperatureData = new TemperatureDataOverview
         {
-            TemperatureNord = sensorWeatherData.Where(x => x.Item3 == sensorNord?.SensorName)
+            TemperatureNord = sensorNordWeatherData.Where(x => x.Item3 == sensorNord?.SensorName)
                 .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) })
                 .OrderBy(d => d.Timestamp)
                 .ToList(),
 
-            TemperatureSouth = sensorWeatherData.Where(x => x.Item3 == sensorSouth?.SensorName)
+            TemperatureSouth = sensorSouthWeatherData.Where(x => x.Item3 == sensorSouth?.SensorName)
                 .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) })
                 .OrderBy(d => d.Timestamp)
                 .ToList(),
@@ -184,8 +185,8 @@ public class TemperatureDataController : ControllerBase
         {
             await foreach (var row in _influxRepo.GetOutsideWeatherData(start, end, place))
             {
-                var temperature = row.GetDoubleField("value");
-                var timestamp = row.GetTimestamp();
+                var temperature = Convert.ToDouble(row[2]);
+                var timestamp = (DateTime)row[1];
 
                 if (timestamp == null || temperature == null || place == null)
                 {
@@ -204,7 +205,7 @@ public class TemperatureDataController : ControllerBase
                 timestampLong /= 1000000000;
 
                 var datetime = DateTimeOffset.FromUnixTimeSeconds(timestampLong).UtcDateTime;
-                temperatureData.Add(new Tuple<double, DateTime>(temperature ?? 0, datetime));
+                temperatureData.Add(new Tuple<double, DateTime>(temperature, datetime));
 
                 _logger.LogInformation(
                     "Fetched outside temperature data: Place: {Place}, Website: {Website}, Temperature: {Temperature}",
@@ -224,6 +225,7 @@ public class TemperatureDataController : ControllerBase
     /// </summary>
     /// <param name="start">Start date and time for the data range.</param>
     /// <param name="end">End date and time for the data range.</param>
+    /// <param name="sensor">Name of the sensor.</param>
     /// <returns>List of temperature and timestamp tuples.</returns>
     private async Task<List<Tuple<double, DateTime, string>>> GetSensorTemperatureDataAsync(DateTime start,
         DateTime end, string sensor)
@@ -233,9 +235,8 @@ public class TemperatureDataController : ControllerBase
         {
             await foreach (var row in _influxRepo.GetSensorWeatherData(start, end, sensor))
             {
-                var temperature = row.GetDoubleField("value");
-                var sensor = row.GetTag("sensor");
-                var timestamp = row.GetTimestamp();
+                var temperature = Convert.ToDouble(row[2]);
+                var timestamp = (DateTime)row[1];
 
                 if (timestamp == null || temperature == null || sensor == null)
                 {
@@ -254,7 +255,7 @@ public class TemperatureDataController : ControllerBase
                 timestampLong /= 1000000000;
 
                 var datetime = DateTimeOffset.FromUnixTimeSeconds(timestampLong).UtcDateTime;
-                temperatureData.Add(new Tuple<double, DateTime, string>(temperature ?? 0, datetime, sensor));
+                temperatureData.Add(new Tuple<double, DateTime, string>(temperature, datetime, sensor));
 
                 _logger.LogInformation(
                     "Fetched outside temperature Timestamp: {Timestamp}, Temperature: {Temperature}",

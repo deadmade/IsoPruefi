@@ -1,4 +1,5 @@
 using InfluxDB3.Client;
+using InfluxDB3.Client.Query;
 using InfluxDB3.Client.Write;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -88,22 +89,22 @@ public class CachedInfluxRepo : IInfluxRepo
 
         if (timespan.Hours < 24)
         {
-            query = $"SELECT value FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
+            query = $"SELECT MEAN(value) FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
         }
         else if (timespan.Days < 30)
         {
             query =
-                $"SELECT MEAN(value) FROM outside_temperature WHERE place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h)";
+                $"SELECT MEAN(value) FROM outside_temperature WHERE place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h) fill(none)";
         }
         else
         {
             query =
-                $"SELECT MEAN(value) FROM outside_temperature WHERE place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d)";
+                $"SELECT MEAN(value) FROM outside_temperature WHERE place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d) fill(none)";
         }
         
         try
         {
-            return _client.Query(query);
+            return _client.Query(query, QueryType.InfluxQL);
         }
         catch (Exception e)
         {
@@ -118,24 +119,27 @@ public class CachedInfluxRepo : IInfluxRepo
         var timespan = end - start;
         string query;
 
-        if (timespan.Hours < 24)
+        if (timespan.TotalHours < 24)
         {
-            query = $"SELECT value FROM temperature where sensor='{sensor}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
+            Console.WriteLine("Case1");
+            query = $"SELECT MEAN(value) FROM temperature where sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
         }
-        else if (timespan.Days < 30)
+        else if (timespan.TotalDays < 30)
         {
+            Console.WriteLine("Case2");
             query =
-                $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h)";
+                $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h) fill(none)";
         }
         else
         {
+            Console.WriteLine("Case3");
             query =
-                $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d)";
+                $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d) fill(none)";
         }
         
         try
         {
-            return _client.Query(query);
+            return _client.Query(query, QueryType.InfluxQL);
         }
         catch (Exception e)
         {

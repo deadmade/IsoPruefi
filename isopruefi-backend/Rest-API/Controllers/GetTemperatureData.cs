@@ -226,12 +226,12 @@ public class TemperatureDataController : ControllerBase
     /// <param name="end">End date and time for the data range.</param>
     /// <returns>List of temperature and timestamp tuples.</returns>
     private async Task<List<Tuple<double, DateTime, string>>> GetSensorTemperatureDataAsync(DateTime start,
-        DateTime end)
+        DateTime end, string sensor)
     {
         var temperatureData = new List<Tuple<double, DateTime, string>>();
         try
         {
-            await foreach (var row in _influxRepo.GetSensorWeatherData(start, end))
+            await foreach (var row in _influxRepo.GetSensorWeatherData(start, end, sensor))
             {
                 var temperature = row.GetDoubleField("value");
                 var sensor = row.GetTag("sensor");

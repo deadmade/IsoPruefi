@@ -79,7 +79,7 @@ public class InfluxRepo : IInfluxRepo
 
         if (timespan.Hours < 24)
         {
-            query = $"SELECT place, time, value FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
+            query = $"SELECT value FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
         }
         else if (timespan.Days < 30)
         {
@@ -105,24 +105,24 @@ public class InfluxRepo : IInfluxRepo
 
 
     /// <inheritdoc />
-    public IAsyncEnumerable<object?[]> GetSensorWeatherData(DateTime start, DateTime end)
+    public IAsyncEnumerable<object?[]> GetSensorWeatherData(DateTime start, DateTime end, string sensor)
     {
         var timespan = end - start;
         string query;
 
         if (timespan.Hours < 24)
         {
-            query = $"SELECT place, time, value FROM outside_temperature where time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
+            query = $"SELECT value FROM temperature where sensor='{sensor}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
         }
         else if (timespan.Days < 30)
         {
             query =
-                $"SELECT MEAN(value) AS mean FROM outside_temperature WHERE time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h)";
+                $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h)";
         }
         else
         {
             query =
-                $"SELECT MEAN(value) FROM outside_temperature WHERE time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d)";
+                $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d)";
         }
         
         try

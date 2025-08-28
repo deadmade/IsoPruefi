@@ -126,7 +126,7 @@ public class TemperatureDataControllerTests
         _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync()).ReturnsAsync(topicSettings);
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
             .Returns(CreateEmptyAsyncEnumerable());
-        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end))
+        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[0].SensorName))
             .Returns(CreateEmptyAsyncEnumerable());
 
         // Act
@@ -164,7 +164,7 @@ public class TemperatureDataControllerTests
         _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync()).ReturnsAsync(topicSettings);
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
             .Returns(CreateEmptyAsyncEnumerable());
-        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end))
+        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[0].SensorName))
             .Returns(CreateEmptyAsyncEnumerable());
 
         // Act

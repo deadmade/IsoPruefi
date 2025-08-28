@@ -179,7 +179,13 @@ public class Connection : IConnection
                 return Task.FromResult(Task.CompletedTask);
             }
 
-            if (sensorName != "recovered") return await ProcessSensorReading(tempSensorReading, sensorName, influxRepo);
+            if (sensorName != "recovered")
+            {
+                await influxRepo.WriteUptime(
+                    sensorName,
+                    tempSensorReading.Timestamp);
+                return await ProcessSensorReading(tempSensorReading, sensorName, influxRepo);
+            }
             var recoveredSensorName = topics.ElementAtOrDefault(topics.Length - 2);
 
             if (recoveredSensorName != null)

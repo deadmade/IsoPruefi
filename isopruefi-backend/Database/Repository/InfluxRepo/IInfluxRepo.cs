@@ -20,13 +20,22 @@ public interface IInfluxRepo
     /// <summary>
     /// Generates a point in the InfluxDB database with the given outside weather data.
     /// </summary>
-    /// <param name="place"></param>
-    /// <param name="website"></param>
-    /// <param name="temperature"></param>
-    /// <param name="timestamp"></param>
-    /// <param name="postalcode"></param>
+    /// <param name="place">Name of the location</param>
+    /// <param name="website">Name of the API</param>
+    /// <param name="temperature">Temperature Value</param>
+    /// <param name="timestamp">Timestamp</param>
+    /// <param name="postalcode">Postalcode of the location</param>
     /// <returns></returns>
     Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp, int postalcode);
+
+    /// <summary>
+    /// Saves all timestamps where the sensor was available.
+    /// </summary>
+    /// <param name="sensor">SensorId</param>
+    /// <param name="timestamp">Unix Timestamp</param>
+    /// <param name="sequence"></param>
+    /// <returns></returns>
+    Task WriteUptime(string sensor, long timestamp);
 
     /// <summary>
     /// Retrieves outside weather data for a given place and time range.
@@ -44,4 +53,11 @@ public interface IInfluxRepo
     /// <param name="end">The end of the time range.</param>
     /// <returns>An async enumerable of sensor weather data points.</returns>
     IAsyncEnumerable<PointDataValues> GetSensorWeatherData(DateTime start, DateTime end);
+
+    /// <summary>
+    /// Returns all timestamps for which the sensor was available.
+    /// </summary>
+    /// <param name="sensor">SensorId</param>
+    /// <returns></returns>
+    IAsyncEnumerable<PointDataValues> GetUptime(string sensor);
 }

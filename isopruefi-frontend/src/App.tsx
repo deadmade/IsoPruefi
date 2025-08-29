@@ -1,4 +1,3 @@
-import './App.css';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Welcome from "./pages/Welcome.tsx";
 import SignIn from "./auth/SignIn.tsx";

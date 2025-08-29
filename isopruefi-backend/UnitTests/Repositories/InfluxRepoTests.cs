@@ -187,11 +187,12 @@ public class InfluxRepoTests
         var influxRepo = new InfluxRepo(_mockConfiguration.Object, _mockLogger.Object);
         var start = new DateTime(2022, 1, 1, 0, 0, 0);
         var end = new DateTime(2022, 1, 2, 0, 0, 0);
+        var sensor = "TestSensor";
 
         // Act & Assert
         var act = async () =>
         {
-            await foreach (var item in influxRepo.GetSensorWeatherData(start, end))
+            await foreach (var item in influxRepo.GetSensorWeatherData(start, end, sensor))
             {
                 // This will trigger the exception when enumerated
             }
@@ -217,11 +218,12 @@ public class InfluxRepoTests
         var influxRepo = new InfluxRepo(_mockConfiguration.Object, _mockLogger.Object);
         var start = DateTime.UtcNow.AddDays(-1);
         var end = DateTime.UtcNow;
+        var sensor = "TestSensor";
 
         // Act & Assert
         var act = async () =>
         {
-            await foreach (var item in influxRepo.GetSensorWeatherData(start, end))
+            await foreach (var item in influxRepo.GetSensorWeatherData(start, end, sensor))
             {
                 // This will trigger the exception when enumerated
             }

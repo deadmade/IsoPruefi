@@ -4,6 +4,7 @@ import {
     AuthenticationClient,
     TemperatureDataClient,
     ApiException,
+    TempClient
 } from "./api-client.ts";
 
 // Read the base URL from config
@@ -23,6 +24,36 @@ function authFetch(input: RequestInfo, init: RequestInit = {}) {
 // Export ready-to-use, typed clients
 export const authClient = new AuthenticationClient(BASE, { fetch: authFetch });
 export const tempClient = new TemperatureDataClient(BASE, { fetch: authFetch });
+export const postClient = new TempClient(BASE, {fetch: authFetch})
+
+export type PostalLocation = { postalCode: string; locationName: string };
+
+export async function fetchPostalLocations(): Promise<PostalLocation[]> {
+    // The generated client returns a Blob wrapped in FileResponse
+    const resp = await postClient.getAllPostalcodes(); // FileResponse
+    const text = await resp.data.text();               // Blob -> string
+    const json = JSON.parse(text);
+
+    // Accept both shapes just in case: string[] or array of objects
+    if (Array.isArray(json)) {
+        if (json.length === 0) return [];
+
+        // 1) string[]: ["Heidenheim", "Ulm", ...]
+        if (typeof json[0] === "string") {
+            return (json as string[]).map(p => ({ postalCode: p, locationName: p }));
+        }
+
+        // 2) objects: { postalCode, locationName } (or similar casing)
+        return (json as any[]).map(o => ({
+            postalCode: o.postalCode ?? o.postalcode ?? o.code ?? o.name ?? "",
+            locationName:
+                o.locationName ?? o.location ?? o.city ?? o.town ?? o.name ?? o.postalCode ?? "",
+        }));
+    }
+
+    // Fallback: unexpected shape
+    return [];
+}
 
 // Re-export ApiException so callers can do instanceof checks if needed
 export { ApiException };

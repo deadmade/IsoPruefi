@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TempChart, type Unit } from "../components/Weather";
-import { PlacePicker } from "../components/PlacePicker";
+import PlacePicker from "../components/PlacePicker";
 import {UnitToggle} from "../components/UnitToggle"; 
 import { clearToken } from "../utils/tokenHelpers";
 export default function AdminPage() {

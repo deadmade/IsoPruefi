@@ -18,8 +18,7 @@ public class Worker : BackgroundService
     /// MQTT receiver component that handles topic subscriptions.
     /// </summary>
     private readonly IReceiver _receiver;
-
-
+    
     /// <summary>
     /// MQTT connection component that handles broker connectivity.
     /// </summary>

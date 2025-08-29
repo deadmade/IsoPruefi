@@ -2,10 +2,12 @@ using System.Text.Json;
 using Database.EntityFramework.Models;
 using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
-using Database.Repository.SettingsRepo;
 
 namespace Get_weatherData_worker;
 
+/// <summary>
+/// Background worker service for handling retrieval of outside weather data.
+/// </summary>
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
@@ -16,6 +18,14 @@ public class Worker : BackgroundService
     private readonly string _weatherDataApi;
     private readonly string _alternativeWeatherDataApi;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Worker"/> class.
+    /// </summary>
+    /// <param name="logger">Logger for recording service events.</param>
+    /// <param name="httpClientFactory">Http Client Factory for handling connections for API calls.</param>
+    /// <param name="configuration">Configuration for retrieving parameters.</param>
+    /// <param name="serviceProvider">Service Provider for including required services.</param>
+    /// <exception cref="InvalidOperationException"></exception>
     public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory,
         IConfiguration configuration, IServiceProvider serviceProvider)
     {
@@ -31,6 +41,12 @@ public class Worker : BackgroundService
             "Weather:BrightSkyApiUrl configuration is missing");
     }
 
+    /// <summary>
+    /// Executes the worker process, maintaining up-to-date weather data for all possible locations.
+    /// This is the entry point for the background service execution.
+    /// </summary>
+    /// <param name="stoppingToken">Token that can be used to request cancellation of the operation.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
@@ -94,6 +110,11 @@ public class Worker : BackgroundService
         }
     }
 
+    /// <summary>
+    /// Checks for locations that  don't have up-to-date weather data.
+    /// </summary>
+    /// <param name="coordinateRepo">Coordinate Repo</param>
+    /// <returns>An instance of the CoordinateMapping class with a location that needs updated weather data.</returns>
     private async Task<CoordinateMapping?> GetAvailableCoordinateMapping(ICoordinateRepo coordinateRepo)
     {
         try
@@ -109,6 +130,12 @@ public class Worker : BackgroundService
         return null;
     }
 
+    /// <summary>
+    /// Calling the Meteo API for data.
+    /// </summary>
+    /// <param name="lat">Latidute coordinate</param>
+    /// <param name="lon">Longitude coordinate</param>
+    /// <returns>An instance of the Weather Data class containing the data.</returns>
     private async Task<WeatherData?> CallMeteoApi(double lat, double lon)
     {
         var httpClient = _httpClientFactory.CreateClient();
@@ -152,6 +179,12 @@ public class Worker : BackgroundService
         return null;
     }
 
+    /// <summary>
+    /// Calling the Bright Sky API for data.
+    /// </summary>
+    /// <param name="lat">Latidute coordinate</param>
+    /// <param name="lon">Longitude coordinate</param>
+    /// <returns>An instance of the Weather Data class containing the data.</returns>
     private async Task<WeatherData?> CallBrightSkyApi(double lat, double lon)
     {
         var httpClient = _httpClientFactory.CreateClient();

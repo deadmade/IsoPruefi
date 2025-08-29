@@ -117,8 +117,12 @@ public class TemperatureDataController : ControllerBase
         var settings = await _settingsRepo.GetTopicSettingsAsync();
         var sensorNord = settings.FirstOrDefault(x => x.SensorLocation == "North");
         var sensorSouth = settings.FirstOrDefault(x => x.SensorLocation == "South");
-        var sensorNordWeatherData = await GetSensorTemperatureDataAsync(start, end, sensorNord.SensorName);
-        var sensorSouthWeatherData = await GetSensorTemperatureDataAsync(start, end, sensorSouth.SensorName);
+        var sensorNordWeatherData = sensorNord != null 
+            ? await GetSensorTemperatureDataAsync(start, end, sensorNord.SensorName)
+            : new List<Tuple<double, DateTime, string>>();
+        var sensorSouthWeatherData = sensorSouth != null
+            ? await GetSensorTemperatureDataAsync(start, end, sensorSouth.SensorName)
+            : new List<Tuple<double, DateTime, string>>();
 
         var tempConverter = isFahrenheit ? ConvertToFahrenheit : (Func<double, double>)(c => c);
 

@@ -202,12 +202,9 @@ public class TemperatureDataControllerTests
         var start = DateTime.UtcNow.AddDays(-1);
         var end = DateTime.UtcNow;
         var place = "TestCity";
-        var sensor = "TestSensor";
 
         _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync()).ReturnsAsync(new List<TopicSetting>());
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
-            .Returns(_influxReturnData);
-        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, sensor))
             .Returns(_influxReturnData);
 
         // Act
@@ -220,6 +217,7 @@ public class TemperatureDataControllerTests
 
         temperatureData.TemperatureNord.Should().BeEmpty();
         temperatureData.TemperatureSouth.Should().BeEmpty();
+        temperatureData.TemperatureOutside.Should().BeEmpty();
     }
 
     #endregion

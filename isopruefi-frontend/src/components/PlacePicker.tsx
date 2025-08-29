@@ -1,18 +1,18 @@
-export function PlacePicker({
-                                value,
-                                onChange,
-                                options = ["Heidenheim", "Berlin", "Munich", "Stuttgart"],
-                            }: {
+import React from "react";
+
+export type PlacePickerProps = {
     value: string;
-    onChange: (next: string) => void;
-    options?: string[];
-}) {
+    onChange: (place: string) => void;
+};
+
+const PLACES = ["Heidenheim", "Berlin", "Stuttgart", "Ulm"];
+
+export const PlacePicker: React.FC<PlacePickerProps> = ({ value, onChange }) => {
     return (
-        <label style={{ display: "inline-flex", gap: 8, alignItems: "center" }}>
-            Place:
-            <select value={value} onChange={e => onChange(e.target.value)}>
-                {options.map(p => <option key={p} value={p}>{p}</option>)}
-            </select>
-        </label>
+        <select value={value} onChange={(e) => onChange(e.target.value)}>
+            {PLACES.map((p) => (
+                <option key={p} value={p}>{p}</option>
+            ))}
+        </select>
     );
-}
+};

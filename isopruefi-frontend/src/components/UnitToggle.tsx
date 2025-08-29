@@ -1,16 +1,20 @@
-export type Unit = "C" | "F";
+import React from "react";
 
-export function UnitToggle({
-                               value,
-                               onChange,
-                           }: { value: Unit; onChange: (next: Unit) => void }) {
+export type UnitToggleProps = {
+    /** true → Fahrenheit, false → Celsius */
+    value: boolean;
+    onChange: (isF: boolean) => void;
+};
+
+export const UnitToggle: React.FC<UnitToggleProps> = ({ value, onChange }) => {
     return (
-        <label style={{ display: "inline-flex", gap: 8, alignItems: "center" }}>
-            Show in:
-            <select value={value} onChange={e => onChange(e.target.value as Unit)}>
-                <option value="C">°C</option>
-                <option value="F">°F</option>
-            </select>
+        <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <input
+                type="checkbox"
+                checked={value}
+                onChange={(e) => onChange(e.target.checked)}
+            />
+            <span>{value ? "Fahrenheit" : "Celsius"}</span>
         </label>
     );
-}
+};

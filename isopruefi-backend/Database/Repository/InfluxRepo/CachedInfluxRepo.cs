@@ -80,6 +80,28 @@ public class CachedInfluxRepo : IInfluxRepo
             throw;
         }
     }
+    
+    /// <inheritdoc />
+    public async Task WriteUptime(string sensor, long timestamp)
+    {
+        try
+        {
+            var dateTimeUtc = DateTimeOffset
+                .FromUnixTimeSeconds(timestamp)
+                .UtcDateTime;
+
+            var point = PointData.Measurement("uptime")
+                .SetField("sensor", sensor)
+                .SetTimestamp(dateTimeUtc);
+
+            await _client.WritePointAsync(point);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error writing uptime into InfluxDB");
+            throw;
+        }
+    }
 
     /// <inheritdoc />
     public IAsyncEnumerable<object?[]> GetOutsideWeatherData(DateTime start, DateTime end, string place)
@@ -143,6 +165,23 @@ public class CachedInfluxRepo : IInfluxRepo
             throw;
         }
     }
+    
+    /// <inheritdoc />
+    public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
+    {
+        try
+        {
+            var query =
+                $"SELECT sensor, time FROM uptime WHERE sensor = '{sensor}'";
+
+            return _client.QueryPoints(query);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
+            throw;
+        }
+    }
 
     /// <summary>
     /// Attempts to write a point to InfluxDB, caching it if the write fails.
@@ -189,26 +228,5 @@ public class CachedInfluxRepo : IInfluxRepo
     {
         _memoryCache.Remove(cacheKey);
         _logger.LogDebug("Removed cached point: {CacheKey}", cacheKey);
-    }
-
-    public async Task WriteUptime(string sensor, long timestamp)
-    {
-        try
-        {
-            var dateTimeUtc = DateTimeOffset
-                .FromUnixTimeSeconds(timestamp)
-                .UtcDateTime;
-
-            var point = PointData.Measurement("uptime")
-                .SetField("sensor", sensor)
-                .SetTimestamp(dateTimeUtc);
-
-            await _client.WritePointAsync(point);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error writing uptime into InfluxDB");
-            throw;
-        }
     }
 }

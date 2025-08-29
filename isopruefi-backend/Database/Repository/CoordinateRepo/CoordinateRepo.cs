@@ -14,7 +14,7 @@ public class CoordinateRepo : ICoordinateRepo
     /// <summary>
     /// Initializes a new instance of the <see cref="CoordinateRepo"/> class.
     /// </summary>
-    /// <param name="applicationDbContext"></param>
+    /// <param name="applicationDbContext">The database context for settings.</param>
     public CoordinateRepo(ApplicationDbContext applicationDbContext)
     {
         _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
@@ -32,25 +32,6 @@ public class CoordinateRepo : ICoordinateRepo
     {
         var entry = await _applicationDbContext.CoordinateMappings.AnyAsync(c => c.PostalCode == postalcode);
         return entry;
-    }
-
-    /// <inheritdoc />
-    public async Task UpdateTime(int postalCode, DateTime newTime)
-    {
-        var entry = await _applicationDbContext.CoordinateMappings.FirstAsync(c => c.PostalCode == postalCode);
-        entry.LastUsed = newTime;
-
-        await _applicationDbContext.SaveChangesAsync();
-    }
-
-    /// <inheritdoc />
-    public async Task<CoordinateMapping?> GetLocation()
-    {
-        var result = await _applicationDbContext.CoordinateMappings
-            .OrderByDescending(c => c.LastUsed)
-            .FirstOrDefaultAsync();
-
-        return result;
     }
 
     /// <inheritdoc />

@@ -43,8 +43,7 @@ public class TemperatureDataControllerTests
 
         async IAsyncEnumerable<object?[]> GetData()
         {
-            yield return Array.Empty<object?>();
-            yield return Array.Empty<object?>();
+            yield break;
         }
     }
 

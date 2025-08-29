@@ -58,7 +58,6 @@ export default function ManageLocations({ onChanged }: Props) {
                 </div>
             )}
             <div style={{ marginTop: 6, fontSize: 12, opacity: 0.7 }}>
-                Note: backend is currently returning 500 for these endpoints; you’ll still see the error here so you can test the flow.
             </div>
         </div>
     );

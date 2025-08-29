@@ -1,64 +1,78 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchPostalLocations, type PostalLocation } from "../api/clients";
 
-export default function PlacePicker({
-                                        value,
-                                        onChange,
-                                    }: {
-    value: string;
-    onChange: (next: string) => void;
-}) {
+type Props = {
+    value?: string;
+    onChange: (place: string) => void;
+    placeholder?: string;
+    refreshKey?: number;              // <-- add this
+};
+
+const DEFAULT_PLACE = "Heidenheim an der Brenz";
+
+export const PlacePicker: React.FC<Props> = ({
+                                                 value,
+                                                 onChange,
+                                                 placeholder = "Pick the location",
+                                                 refreshKey,                       // <-- accept it
+                                             }) => {
     const [opts, setOpts] = useState<PostalLocation[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         let alive = true;
         (async () => {
+            setLoading(true);
             try {
                 const rows = await fetchPostalLocations();
                 if (!alive) return;
 
-                // Defensive: ensure at least one option
-                const safe = rows.length
-                    ? rows
-                    : [{ postalCode: "Heidenheim", locationName: "Heidenheim" }];
+                setOpts(rows);
 
-                setOpts(safe);
-
-                // If current value is empty or no longer present, select first
-                if (!value || !safe.some(o => o.locationName === value || o.postalCode === value)) {
-                    onChange(safe[0].locationName || safe[0].postalCode);
+                const current = (value ?? "").trim();
+                if (!current) {
+                    const preferred = rows.find(r => /heidenheim/i.test(r.locationName)) ?? rows[0];
+                    if (preferred?.locationName) onChange(preferred.locationName);
                 }
-            } catch {
-                if (!alive) return;
-                // Fallback so UI stays usable
-                const fallback = [{ postalCode: "Heidenheim", locationName: "Heidenheim" }];
-                setOpts(fallback);
-                if (!value) onChange(fallback[0].locationName);
             } finally {
                 if (alive) setLoading(false);
             }
         })();
-        return () => {
-            alive = false;
-        };
-    }, [onChange, value]);
+
+        return () => { alive = false; };
+    }, [refreshKey]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const next = e.target.value;
+        if (next) onChange(next); // never propagate ""
+    };
+
+    const current = (value ?? "").trim();
 
     return (
         <select
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            disabled={loading || !opts.length}
-            title="Pick the location"
+            value={current}
+            onChange={handleChange}
+            disabled={loading || opts.length === 0}
         >
-            {opts.map((o) => {
-                const label = o.locationName || o.postalCode;
-                return (
-                    <option key={`${o.postalCode}|${o.locationName}`} value={label}>
-                        {label}
-                    </option>
-                );
-            })}
+            {current === "" && (
+                <option value="" disabled>
+                    {placeholder}
+                </option>
+            )}
+
+            {opts.map(o => (
+                <option
+                    key={`${o.postalCode}-${o.locationName}`}
+                    value={o.locationName}
+                >
+                    {o.locationName}
+                </option>
+            ))}
+            
+            {!opts.some(o => o.locationName === DEFAULT_PLACE) && (
+                <option value={DEFAULT_PLACE}>{DEFAULT_PLACE}</option>
+            )}
         </select>
     );
-}
+};

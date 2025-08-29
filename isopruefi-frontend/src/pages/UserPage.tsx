@@ -1,18 +1,16 @@
 import { useState } from "react";
+import { TempChart } from "../components/Weather";
+import { PlacePicker } from "../components/PlacePicker";
+import { UnitToggle } from "../components/UnitToggle";
 import { useNavigate } from "react-router-dom";
-import { TempChart, type Unit } from "../components/Weather";
-import PlacePicker from "../components/PlacePicker";
-import {UnitToggle} from "../components/UnitToggle";
 import { clearToken } from "../utils/tokenHelpers";
 
 export default function UserPage() {
     const style = { padding: 20 };
     const navigate = useNavigate();
 
-    // UI state
-    const [place, setPlace] = useState<string>("Heidenheim");
-    const [unit, setUnit] = useState<Unit>("C"); // "C" | "F"
-    const isF = unit === "F";
+    const [place, setPlace] = useState("Heidenheim an der Brenz");
+    const [isF, setIsF] = useState(false);
 
     const handleLogout = () => {
         clearToken();
@@ -23,30 +21,25 @@ export default function UserPage() {
         <div style={style}>
             <h1>User Page</h1>
 
-            <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 12 }}>
+            <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
                 <div>
-                    <label style={{ display: "block", fontWeight: 600, marginBottom: 4 }}>Place</label>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <PlacePicker value={place} onChange={setPlace} />
-                        <small style={{ opacity: 0.7 }}>Pick the location</small>
-                    </div>
+                    <div style={{ fontWeight: 600 }}>Place</div>
+                    <PlacePicker value={place} onChange={setPlace} />
+                    <small style={{ marginLeft: 8, opacity: 0.7 }}>Pick the location</small>
                 </div>
 
                 <div>
-                    <label style={{ display: "block", fontWeight: 600, marginBottom: 4 }}>Units</label>
-                    <UnitToggle
-                        value={isF}
-                        onChange={(nextIsF: boolean) => setUnit(nextIsF ? "F" : "C")}
-                    />
+                    <div style={{ fontWeight: 600 }}>Units</div>
+                    <UnitToggle value={isF} onChange={setIsF} />
                 </div>
             </div>
 
-            <section>
+            <section style={{ marginTop: 16 }}>
                 <TempChart place={place} isFahrenheit={isF} />
             </section>
-
-            <br />
-            <button style={{ marginTop: 16, padding: 12 }} onClick={handleLogout}>
+            
+            <br/><br/>
+            <button style={{ marginTop: 24 }} onClick={handleLogout}>
                 Logout
             </button>
         </div>

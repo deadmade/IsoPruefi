@@ -21,7 +21,7 @@ type Props = {
 
 const style = { width: '100%', height: 400 };
 
-export function TempChart({ place = "Heidenheim", isFahrenheit = false }: Props) {
+export function TempChart({ place = "Heidenheim an der Brenz", isFahrenheit = false }: Props) {
     const [weatherData, setWeatherData] = useState<WeatherEntry[]>([]);
     const [filter, setFilter] = useState<"all" | "hour" | "day" | "week">("all");
     const [loading, setLoading] = useState(false);

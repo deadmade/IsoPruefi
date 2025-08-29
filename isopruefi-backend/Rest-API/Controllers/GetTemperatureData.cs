@@ -1,3 +1,4 @@
+using System.Numerics;
 using Asp.Versioning;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
@@ -113,21 +114,26 @@ public class TemperatureDataController : ControllerBase
         bool isFahrenheit)
     {
         var outsideWeatherData = await GetOutsideTemperatureDataAsync(start, end, place);
-        var sensorWeatherData = await GetSensorTemperatureDataAsync(start, end);
         var settings = await _settingsRepo.GetTopicSettingsAsync();
         var sensorNord = settings.FirstOrDefault(x => x.SensorLocation == "North");
         var sensorSouth = settings.FirstOrDefault(x => x.SensorLocation == "South");
+        var sensorNordWeatherData = sensorNord != null
+            ? await GetSensorTemperatureDataAsync(start, end, sensorNord.SensorName)
+            : new List<Tuple<double, DateTime, string>>();
+        var sensorSouthWeatherData = sensorSouth != null
+            ? await GetSensorTemperatureDataAsync(start, end, sensorSouth.SensorName)
+            : new List<Tuple<double, DateTime, string>>();
 
         var tempConverter = isFahrenheit ? ConvertToFahrenheit : (Func<double, double>)(c => c);
 
         var temperatureData = new TemperatureDataOverview
         {
-            TemperatureNord = sensorWeatherData.Where(x => x.Item3 == sensorNord?.SensorName)
+            TemperatureNord = sensorNordWeatherData.Where(x => x.Item3 == sensorNord?.SensorName)
                 .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) })
                 .OrderBy(d => d.Timestamp)
                 .ToList(),
 
-            TemperatureSouth = sensorWeatherData.Where(x => x.Item3 == sensorSouth?.SensorName)
+            TemperatureSouth = sensorSouthWeatherData.Where(x => x.Item3 == sensorSouth?.SensorName)
                 .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) })
                 .OrderBy(d => d.Timestamp)
                 .ToList(),
@@ -184,8 +190,10 @@ public class TemperatureDataController : ControllerBase
         {
             await foreach (var row in _influxRepo.GetOutsideWeatherData(start, end, place))
             {
-                var temperature = row.GetDoubleField("value");
-                var timestamp = row.GetTimestamp();
+                var temperature = Convert.ToDouble(row[2]);
+                var bigInt = (BigInteger)row[1];
+                var nanoSec = (long)bigInt;
+                var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(nanoSec / 1_000_000).UtcDateTime;
 
                 if (timestamp == null || temperature == null || place == null)
                 {
@@ -200,15 +208,11 @@ public class TemperatureDataController : ControllerBase
                     _logger.LogWarning(
                         "Outside temperature may be corrupted, the temperature has exceeded boundary values.");
 
-                long.TryParse(timestamp.ToString(), out var timestampLong);
-                timestampLong /= 1000000000;
-
-                var datetime = DateTimeOffset.FromUnixTimeSeconds(timestampLong).UtcDateTime;
-                temperatureData.Add(new Tuple<double, DateTime>(temperature ?? 0, datetime));
+                temperatureData.Add(new Tuple<double, DateTime>(temperature, timestamp));
 
                 _logger.LogInformation(
                     "Fetched outside temperature data: Place: {Place}, Website: {Website}, Temperature: {Temperature}",
-                    place, datetime, temperature);
+                    place, timestamp, temperature);
             }
         }
         catch (Exception e)
@@ -224,18 +228,20 @@ public class TemperatureDataController : ControllerBase
     /// </summary>
     /// <param name="start">Start date and time for the data range.</param>
     /// <param name="end">End date and time for the data range.</param>
+    /// <param name="sensor">Name of the sensor.</param>
     /// <returns>List of temperature and timestamp tuples.</returns>
     private async Task<List<Tuple<double, DateTime, string>>> GetSensorTemperatureDataAsync(DateTime start,
-        DateTime end)
+        DateTime end, string sensor)
     {
         var temperatureData = new List<Tuple<double, DateTime, string>>();
         try
         {
-            await foreach (var row in _influxRepo.GetSensorWeatherData(start, end))
+            await foreach (var row in _influxRepo.GetSensorWeatherData(start, end, sensor))
             {
-                var temperature = row.GetDoubleField("value");
-                var sensor = row.GetTag("sensor");
-                var timestamp = row.GetTimestamp();
+                var temperature = Convert.ToDouble(row[2]);
+                var bigInt = (BigInteger)row[1];
+                var nanoSec = (long)bigInt;
+                var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(nanoSec / 1_000_000).UtcDateTime;
 
                 if (timestamp == null || temperature == null || sensor == null)
                 {
@@ -250,15 +256,11 @@ public class TemperatureDataController : ControllerBase
                     _logger.LogWarning(
                         "Inside temperature may be corrupted, the temperature has exceeded boundary values.");
 
-                long.TryParse(timestamp.ToString(), out var timestampLong);
-                timestampLong /= 1000000000;
-
-                var datetime = DateTimeOffset.FromUnixTimeSeconds(timestampLong).UtcDateTime;
-                temperatureData.Add(new Tuple<double, DateTime, string>(temperature ?? 0, datetime, sensor));
+                temperatureData.Add(new Tuple<double, DateTime, string>(temperature, timestamp, sensor));
 
                 _logger.LogInformation(
                     "Fetched outside temperature Timestamp: {Timestamp}, Temperature: {Temperature}",
-                    datetime, temperature);
+                    timestamp, temperature);
             }
         }
         catch (Exception e)

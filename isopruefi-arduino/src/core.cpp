@@ -20,18 +20,19 @@ SdFat sd;
 static WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 #endif
+
 // =============================================================================
 // SYSTEM CONFIGURATION CONSTANTS
 // =============================================================================
 
 /// SD card chip select pin
-static const uint8_t chipSelect = 4;
-static const char* sensorIdOne = "Sensor_One";
-static const char* sensorIdInUse = sensorIdOne; 
-// static const char* sensorIdTwo = "Sensor_Two";
-// static const char* sensorIdInUse = sensorIdTwo; // Uncomment to use the second
-static const char* sensorType = "temp";
-static const char* topic = "dhbw/ai/si2023/2/";
+static const uint8_t CHIP_SELECT = 4;
+static const char* SENSOR_ID_ONE = "Sensor_One";
+static const char* SENSOR_ID_IN_USE = SENSOR_ID_ONE; 
+// static const char* SENSOR_ID_TWO = "Sensor_Two";
+// static const char* SENSOR_ID_IN_USE = SENSOR_ID_TWO; // Uncomment to use the second
+static const char* SENSOR_TYPE = "temp";
+static const char* MQTT_TOPIC = "dhbw/ai/si2023/2/";
 
 // =============================================================================
 // TIMING AND CONNECTION CONSTANTS
@@ -44,25 +45,25 @@ static const size_t CLIENT_ID_BUFFER_SIZE = 64;
 static const uint8_t SD_SCK_FREQUENCY_MHZ = 25;
 #endif
 static const int RECONNECT_INTERVAL_MS = 2000;
+
 // =============================================================================
 // SYSTEM STATE VARIABLES
 // =============================================================================
 
 static int lastLoggedMinute = -1;
-static int count = 0;
-static bool wifiOk = false;
-static bool recoveredSent = false;
+static int seqCount = 0;
+static bool recoverySent = false;
 static unsigned long lastReconnectAttempt = 0;
 
 // =============================================================================
 // CONNECTION STATUS FUNCTIONS
 // =============================================================================
 
-bool isWifiConnected() {
+bool IsWifiConnected() {
   return WiFi.status() == WL_CONNECTED;
 }
 
-bool isMqttConnected() {
+bool IsMqttConnected() {
   return mqttClient.connected();
 }
 
@@ -83,7 +84,7 @@ bool isMqttConnected() {
  * @note This function is registered as a callback with SdFile::dateTimeCallback()
  * @see FAT_DATE, FAT_TIME macros for encoding format details
  */
-void dateTime(uint16_t* date, uint16_t* time) {
+void FatDateTime(uint16_t* date, uint16_t* time) {
   DateTime now = rtc.now();
   *date = FAT_DATE(now.year(), now.month(), now.day());
   *time = FAT_TIME(now.hour(), now.minute(), now.second());
@@ -111,7 +112,6 @@ void dateTime(uint16_t* date, uint16_t* time) {
  * 
  * **Data Recovery:**
  * - Registers FAT file system timestamp callback
- * - Attempts to send any pending/recovered data from previous sessions
  * 
  * @warning This function will halt program execution (infinite loop) if any
  *          critical component fails to initialize (RTC, SD card, or temperature sensor)
@@ -119,14 +119,15 @@ void dateTime(uint16_t* date, uint16_t* time) {
  * @note The function uses compile-time constants for timeouts and configuration
  * @see WIFI_CONNECT_TIMEOUT_MS, CLIENT_ID_BUFFER_SIZE, SD_SCK_FREQUENCY_MHZ
  */
-void coreSetup() {
-  wifiOk = connectWiFi(WIFI_CONNECT_TIMEOUT_MS);
+void CoreSetup() {
+  ConnectToWiFi(WIFI_CONNECT_TIMEOUT_MS);
 
   char clientId[CLIENT_ID_BUFFER_SIZE];
-  snprintf(clientId, sizeof(clientId), "IsoPruefi_%s", sensorIdInUse);
+  snprintf(clientId, sizeof(clientId), "IsoPruefi_%s", SENSOR_ID_IN_USE);
   mqttClient.setId(clientId);
-  if (wifiOk) {
-    connectMQTT(mqttClient);
+
+  if (IsWifiConnected()) {
+    ConnectToMQTT(mqttClient);
   }
 
   if (!rtc.begin()) {
@@ -140,13 +141,13 @@ void coreSetup() {
   }
 
   // Register callback for SD file timestamps and initialize SD card
-  SdFile::dateTimeCallback(dateTime);
-  if (!sd.begin(chipSelect, SD_SCK_MHZ(SD_SCK_FREQUENCY_MHZ))) {
+  SdFile::dateTimeCallback(FatDateTime);
+  if (!sd.begin(CHIP_SELECT, SD_SCK_MHZ(SD_SCK_FREQUENCY_MHZ))) {
     Serial.println("SD card failed.");
     while (1);
   }
 
-  if (!initSensor(tempsensor)) {
+  if (!InitSensor(tempsensor)) {
     Serial.println("ADT7410 init failed!");
     while (1);
   }
@@ -154,7 +155,8 @@ void coreSetup() {
   DateTime now = rtc.now();
   Serial.print("Current time: ");
   Serial.println(now.timestamp(DateTime::TIMESTAMP_FULL));
-  Serial.print("Lost Power? "); Serial.println(rtc.lostPower() ? "YES" : "NO");
+  Serial.print("Lost Power? "); 
+  Serial.println(rtc.lostPower() ? "YES" : "NO");
 
   Serial.println("Setup complete.");
 }
@@ -190,7 +192,7 @@ void coreSetup() {
  * @see saveToCsvBatch() for offline data storage
  * @see sendPendingData() for data recovery and MQTT retransmission
  */
-void coreLoop() {
+void CoreLoop() {
   DateTime now = rtc.now();
   static bool alreadyLoggedThisMinute = false;
 
@@ -200,20 +202,20 @@ void coreLoop() {
   }
 
   // Step 1: Check WiFi connection
-  if (!isWifiConnected()) {
+  if (!IsWifiConnected()) {
     if (millis() - lastReconnectAttempt > RECONNECT_INTERVAL_MS) {
       lastReconnectAttempt = millis();
       Serial.println("WiFi not connected. Trying to reconnect...");
-      wifiOk = connectWiFi(WIFI_CONNECT_TIMEOUT_MS);
+      ConnectToWiFi(WIFI_CONNECT_TIMEOUT_MS);
     }
 
-    if (!wifiOk) {
+    if (!IsWifiConnected()) {
       Serial.println("WiFi reconnect failed. Skipping loop.");
       if (!alreadyLoggedThisMinute) {
-        float c = readTemperatureCelsius();
-        saveToCsvBatch(now, c, count);
+        float c = ReadTemperatureInCelsius();
+        SaveTempToBatchCsv(now, c, seqCount);
         alreadyLoggedThisMinute = true;
-        count++;
+        seqCount++;
       }
       delay(LOOP_DELAY_MS);
       return;
@@ -221,38 +223,37 @@ void coreLoop() {
   }
 
   // Step 2: Check MQTT connection
-  if (!isMqttConnected()) {
+  if (!IsMqttConnected()) {
     Serial.println("MQTT not connected. Trying to reconnect...");
-    if (!connectMQTT(mqttClient)) {
+    if (!ConnectToMQTT(mqttClient)) {
       Serial.println("MQTT reconnect failed. Skipping loop.");
       if (!alreadyLoggedThisMinute) {
-        float c = readTemperatureCelsius();
-        saveToCsvBatch(now, c, count);
+        float c = ReadTemperatureInCelsius();
+        SaveTempToBatchCsv(now, c, seqCount);
         alreadyLoggedThisMinute = true;
-        count++;
+        seqCount++;
       }
       delay(LOOP_DELAY_MS);
       return;
     }
 
     Serial.println("MQTT reconnected successfully.");
-    recoveredSent = false; // Allow recovery again
+    recoverySent = false; // Allow recovery again
   }
 
   // Step 3: After successful MQTT reconnect → send old CSVs
-  if (!recoveredSent && mqttClient.connected()) {
-    if (sendPendingData(mqttClient, topic, sensorType, sensorIdInUse, now)) {
-      recoveredSent = true;
+  if (!recoverySent && IsConnectedToServer(mqttClient)) {
+    if (SendPendingDataToMqtt(mqttClient, MQTT_TOPIC, SENSOR_TYPE, SENSOR_ID_IN_USE, now)) {
+      recoverySent = true;
     }
   }
 
   // Step 4: Normal measurement and MQTT transmission
-  if (!alreadyLoggedThisMinute) {
-    float c = readTemperatureCelsius();
-    if (sendToMqtt(mqttClient, topic, sensorType, sensorIdInUse, c, now, count)) {
-      alreadyLoggedThisMinute = true;
-      count++;
-    }
+  if (!alreadyLoggedThisMinute && IsConnectedToServer(mqttClient)) {
+    float c = ReadTemperatureInCelsius();
+    SendTempToMqtt(mqttClient, MQTT_TOPIC, SENSOR_TYPE, SENSOR_ID_IN_USE, c, now, seqCount);
+    alreadyLoggedThisMinute = true;
+    seqCount++;
   }
 
   // Step 5: MQTT loop and wait time

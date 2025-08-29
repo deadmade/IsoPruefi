@@ -41,8 +41,9 @@ public class CachedInfluxHealthCheck : IHealthCheck
             // Perform a simple query to check InfluxDB connectivity
             var testStart = DateTime.UtcNow.AddMinutes(-1);
             var testEnd = DateTime.UtcNow;
+            var testSensor = "Sensor_One";
 
-            var query = _cachedInfluxRepo.GetSensorWeatherData(testStart, testEnd);
+            var query = _cachedInfluxRepo.GetSensorWeatherData(testStart, testEnd, testSensor);
             await using var enumerator = query.GetAsyncEnumerator(cancellationToken);
             var hasData = await enumerator.MoveNextAsync();
 
@@ -58,7 +59,7 @@ public class CachedInfluxHealthCheck : IHealthCheck
                 _logger.LogWarning("InfluxDB is connected but {CachedCount} points are still cached", cachedCount);
 
                 return HealthCheckResult.Degraded(
-                    $"InfluxDB connected but {cachedCount} cached writes pending", 
+                    $"InfluxDB connected but {cachedCount} cached writes pending",
                     data: data);
             }
 

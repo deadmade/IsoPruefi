@@ -5,11 +5,11 @@ global:
   # scrape_timeout is set to the global default (10s).
 
 # Alertmanager configuration
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-          - alertmanager:9093
+#alerting:
+#  alertmanagers:
+#    - static_configs:
+#        - targets:
+#          - alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
@@ -28,6 +28,13 @@ scrape_configs:
        # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
         labels:
           app: "prometheus"
+          
+  - job_name: 'isopruefi-frontend'
+    static_configs:
+      - targets: ['isopruefi-frontend-1:80']
+      - targets: ['isopruefi-frontend-2:80']
+    metrics_path: '/health'
+    scrape_interval: 30s
           
   - job_name: 'isopruefi-backend-api'
     static_configs:
@@ -49,3 +56,21 @@ scrape_configs:
       - targets: ['isopruefi-get-weather-worker-2:8080']
     metrics_path: '/healthoka'
     scrape_interval: 30s
+
+  - job_name: 'traefik'
+    static_configs:
+      - targets: ['isopruefi-loadbalancer:8082']
+    scrape_interval: 30s
+
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['isopruefi-grafana:3000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'alloy'
+    static_configs:
+      - targets: ['isopruefi-alloy:12345']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+

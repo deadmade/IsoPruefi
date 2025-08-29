@@ -15,7 +15,7 @@ void tearDown(void) {
     ArduinoFakeReset();
 }
 
-void test_connectWiFi_success(void) {
+void Test_ConnectToWiFi_success(void) {
     // Set up WiFi mock to succeed
     WiFi.begin("test", "test"); // Initialize mock WiFi
     
@@ -23,13 +23,13 @@ void test_connectWiFi_success(void) {
     When(Method(ArduinoFake(), millis)).Return(0, 1000, 2000);
     
     // Call the function
-    bool result = connectWiFi(10000);
+    bool result = ConnectToWiFi(10000);
     
     // Verify successful connection
     TEST_ASSERT_TRUE(result);
 }
 
-void test_connectMQTT_success(void) {
+void Test_ConnectToMQTT_success(void) {
     // Use the global mock MQTT client
     MqttClient& mqttClient = ::mqttClient;
     
@@ -37,13 +37,13 @@ void test_connectMQTT_success(void) {
     When(Method(ArduinoFake(), millis)).Return(0, 1000);
     
     // Call the function
-    bool result = connectMQTT(mqttClient, 10000);
+    bool result = ConnectToMQTT(mqttClient, 10000);
     
     // Verify successful connection
     TEST_ASSERT_TRUE(result);
 }
 
-void test_isConnectedToServer_both_connected(void) {
+void Test_IsConnectedToServer_both_connected(void) {
     // Set WiFi to connected
     WiFi.begin("test", "test");
     
@@ -52,13 +52,13 @@ void test_isConnectedToServer_both_connected(void) {
     mqttClient.connect("test");
     
     // Call the function
-    bool result = isConnectedToServer(mqttClient);
+    bool result = IsConnectedToServer(mqttClient);
     
     // Verify both connections result in true
     TEST_ASSERT_TRUE(result);
 }
 
-void test_isConnectedToServer_wifi_disconnected(void) {
+void Test_IsConnectedToServer_wifi_disconnected(void) {
     // Set WiFi to disconnected
     WiFi.disconnect();
     
@@ -67,13 +67,13 @@ void test_isConnectedToServer_wifi_disconnected(void) {
     mqttClient.connect("test");
     
     // Call the function
-    bool result = isConnectedToServer(mqttClient);
+    bool result = IsConnectedToServer(mqttClient);
     
     // Verify result is false due to WiFi disconnection
     TEST_ASSERT_FALSE(result);
 }
 
-void test_isConnectedToServer_mqtt_disconnected(void) {
+void Test_IsConnectedToServer_mqtt_disconnected(void) {
     // Set WiFi to connected
     WiFi.begin("test", "test");
     
@@ -82,13 +82,13 @@ void test_isConnectedToServer_mqtt_disconnected(void) {
     mqttClient.stop();
     
     // Call the function
-    bool result = isConnectedToServer(mqttClient);
+    bool result = IsConnectedToServer(mqttClient);
     
     // Verify result is false due to MQTT disconnection
     TEST_ASSERT_FALSE(result);
 }
 
-void test_isConnectedToServer_both_disconnected(void) {
+void Test_IsConnectedToServer_both_disconnected(void) {
     // Set WiFi to disconnected
     WiFi.disconnect();
     
@@ -97,27 +97,27 @@ void test_isConnectedToServer_both_disconnected(void) {
     mqttClient.stop();
     
     // Call the function
-    bool result = isConnectedToServer(mqttClient);
+    bool result = IsConnectedToServer(mqttClient);
     
     // Verify result is false
     TEST_ASSERT_FALSE(result);
 }
 
 // Bundle for central test_main.cpp
-void run_network_tests() {
-    RUN_TEST(test_connectWiFi_success);
-    RUN_TEST(test_connectMQTT_success);
-    RUN_TEST(test_isConnectedToServer_both_connected);
-    RUN_TEST(test_isConnectedToServer_wifi_disconnected);
-    RUN_TEST(test_isConnectedToServer_mqtt_disconnected);
-    RUN_TEST(test_isConnectedToServer_both_disconnected);
+void Run_network_tests() {
+    RUN_TEST(Test_ConnectToWiFi_success);
+    RUN_TEST(Test_ConnectToMQTT_success);
+    RUN_TEST(Test_IsConnectedToServer_both_connected);
+    RUN_TEST(Test_IsConnectedToServer_wifi_disconnected);
+    RUN_TEST(Test_IsConnectedToServer_mqtt_disconnected);
+    RUN_TEST(Test_IsConnectedToServer_both_disconnected);
 }
 
 // When standalone executable
 #ifndef COMBINED_TEST_MAIN
 int main(int argc, char **argv) {
     UNITY_BEGIN();
-    run_network_tests();
+    Run_network_tests();
     return UNITY_END();
 }
 #endif

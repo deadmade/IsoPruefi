@@ -36,9 +36,10 @@ public class InfluxHealthCheck : IHealthCheck
             // Perform a simple query to check connectivity
             var testStart = DateTime.UtcNow.AddMinutes(-1);
             var testEnd = DateTime.UtcNow;
+            var testSensor = "Sensor_One";
 
             // Use a simple query that should work regardless of data presence
-            var query = _influxRepo.GetSensorWeatherData(testStart, testEnd);
+            var query = _influxRepo.GetSensorWeatherData(testStart, testEnd, testSensor);
 
             // Try to get the first result or complete if empty
             await using var enumerator = query.GetAsyncEnumerator(cancellationToken);

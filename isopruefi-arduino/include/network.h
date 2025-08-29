@@ -2,8 +2,9 @@
 
 #include "platform.h"
 
-bool connectWiFi(unsigned long timeoutMs = 10000);
+bool ConnectToWiFi(unsigned long timeoutMs = 10000);
+bool ConnectToMQTT(MqttClient& mqttClient, unsigned long timeoutMs = 10000);
 
-bool connectMQTT(MqttClient& mqttClient, unsigned long timeoutMs = 10000);
-
-bool isConnectedToServer(MqttClient& mqttClient);
+inline bool IsConnectedToServer(MqttClient& mqttClient) {
+  return WiFi.status() == WL_CONNECTED && mqttClient.connected();
+}

@@ -117,7 +117,7 @@ public class TemperatureDataController : ControllerBase
         var settings = await _settingsRepo.GetTopicSettingsAsync();
         var sensorNord = settings.FirstOrDefault(x => x.SensorLocation == "North");
         var sensorSouth = settings.FirstOrDefault(x => x.SensorLocation == "South");
-        var sensorNordWeatherData = sensorNord != null 
+        var sensorNordWeatherData = sensorNord != null
             ? await GetSensorTemperatureDataAsync(start, end, sensorNord.SensorName)
             : new List<Tuple<double, DateTime, string>>();
         var sensorSouthWeatherData = sensorSouth != null
@@ -207,7 +207,7 @@ public class TemperatureDataController : ControllerBase
                 if (temperature > 45.0 || temperature < -30.0)
                     _logger.LogWarning(
                         "Outside temperature may be corrupted, the temperature has exceeded boundary values.");
-                
+
                 temperatureData.Add(new Tuple<double, DateTime>(temperature, timestamp));
 
                 _logger.LogInformation(
@@ -255,7 +255,7 @@ public class TemperatureDataController : ControllerBase
                 if (temperature > 35.0 || temperature < -10.0)
                     _logger.LogWarning(
                         "Inside temperature may be corrupted, the temperature has exceeded boundary values.");
-                
+
                 temperatureData.Add(new Tuple<double, DateTime, string>(temperature, timestamp, sensor));
 
                 _logger.LogInformation(

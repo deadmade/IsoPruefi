@@ -38,7 +38,7 @@ public class TemperatureDataControllerTests
             _mockLogger.Object,
             _mockSettingsRepo.Object,
             _mockInfluxRepo.Object);
-        
+
         _influxReturnData = GetData();
 
         async IAsyncEnumerable<object?[]> GetData()

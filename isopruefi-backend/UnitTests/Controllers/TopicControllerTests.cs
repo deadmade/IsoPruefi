@@ -154,9 +154,9 @@ public class TopicControllerTests
 
         // Assert
         result.Should().BeOfType<CreatedAtActionResult>();
-        
-        _mockSettingsRepo.Verify(x => x.AddTopicSettingAsync(It.Is<TopicSetting>(t => 
-            t.SensorName == topicSetting.SensorName && 
+
+        _mockSettingsRepo.Verify(x => x.AddTopicSettingAsync(It.Is<TopicSetting>(t =>
+            t.SensorName == topicSetting.SensorName &&
             t.SensorLocation == topicSetting.SensorLocation &&
             t.TopicSettingId == 0)), Times.Once);
     }
@@ -173,7 +173,7 @@ public class TopicControllerTests
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
         var badRequestResult = (BadRequestObjectResult)result;
-        
+
         var errorResponse = badRequestResult.Value;
         errorResponse.Should().NotBeNull();
 

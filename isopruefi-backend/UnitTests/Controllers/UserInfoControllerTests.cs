@@ -220,7 +220,8 @@ public class UserInfoControllerTests
 
         _mockUserService.Setup(x => x.GetUserById(changePasswordInput.UserId))
             .ReturnsAsync(user);
-        _mockUserService.Setup(x => x.ChangePassword(user, changePasswordInput.CurrentPassword, changePasswordInput.NewPassword))
+        _mockUserService.Setup(x =>
+                x.ChangePassword(user, changePasswordInput.CurrentPassword, changePasswordInput.NewPassword))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -228,9 +229,11 @@ public class UserInfoControllerTests
 
         // Assert
         result.Should().BeOfType<OkResult>();
-        
+
         _mockUserService.Verify(x => x.GetUserById(changePasswordInput.UserId), Times.Once);
-        _mockUserService.Verify(x => x.ChangePassword(user, changePasswordInput.CurrentPassword, changePasswordInput.NewPassword), Times.Once);
+        _mockUserService.Verify(
+            x => x.ChangePassword(user, changePasswordInput.CurrentPassword, changePasswordInput.NewPassword),
+            Times.Once);
     }
 
     /// <summary>
@@ -255,9 +258,10 @@ public class UserInfoControllerTests
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
-        
+
         _mockUserService.Verify(x => x.GetUserById(changePasswordInput.UserId), Times.Once);
-        _mockUserService.Verify(x => x.ChangePassword(It.IsAny<ApiUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _mockUserService.Verify(x => x.ChangePassword(It.IsAny<ApiUser>(), It.IsAny<string>(), It.IsAny<string>()),
+            Times.Never);
     }
 
     /// <summary>
@@ -285,7 +289,8 @@ public class UserInfoControllerTests
         badRequestResult.Value.Should().BeOfType<ValidationProblemDetails>();
 
         _mockUserService.Verify(x => x.GetUserById(It.IsAny<string>()), Times.Never);
-        _mockUserService.Verify(x => x.ChangePassword(It.IsAny<ApiUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _mockUserService.Verify(x => x.ChangePassword(It.IsAny<ApiUser>(), It.IsAny<string>(), It.IsAny<string>()),
+            Times.Never);
     }
 
     /// <summary>
@@ -307,7 +312,8 @@ public class UserInfoControllerTests
 
         _mockUserService.Setup(x => x.GetUserById(changePasswordInput.UserId))
             .ReturnsAsync(user);
-        _mockUserService.Setup(x => x.ChangePassword(user, changePasswordInput.CurrentPassword, changePasswordInput.NewPassword))
+        _mockUserService.Setup(x =>
+                x.ChangePassword(user, changePasswordInput.CurrentPassword, changePasswordInput.NewPassword))
             .ThrowsAsync(exception);
 
         // Act
@@ -418,7 +424,7 @@ public class UserInfoControllerTests
 
         // Assert
         result.Should().BeOfType<OkResult>();
-        
+
         _mockUserService.Verify(x => x.GetUserById(userId), Times.Once);
         _mockUserService.Verify(x => x.DeleteUser(user), Times.Once);
     }
@@ -439,7 +445,7 @@ public class UserInfoControllerTests
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
-        
+
         _mockUserService.Verify(x => x.GetUserById(userId), Times.Once);
         _mockUserService.Verify(x => x.DeleteUser(It.IsAny<ApiUser>()), Times.Never);
     }

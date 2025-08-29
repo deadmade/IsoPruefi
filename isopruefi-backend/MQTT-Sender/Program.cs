@@ -50,7 +50,7 @@ internal class Program
                 .Build();
 
             await client.PublishAsync(applicationMessage, CancellationToken.None);
-            
+
             timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             value = [Math.Round(rnd.NextDouble() * 100, 1)];
 

@@ -186,6 +186,7 @@ public class Connection : IConnection
                     tempSensorReading.Timestamp);
                 return await ProcessSensorReading(tempSensorReading, sensorName, influxRepo);
             }
+
             var recoveredSensorName = topics.ElementAtOrDefault(topics.Length - 2);
 
             if (recoveredSensorName != null)
@@ -218,9 +219,10 @@ public class Connection : IConnection
                 _logger.LogWarning("Received empty sensor reading from {SensorName}. Skipping processing",
                     sensorName);
                 break;
-            case 1 when tempSensorReading.Value[0] != null 
-                        && (tempSensorReading.Meta is null || (tempSensorReading.Meta.Value is null && 
-                            tempSensorReading.Meta.Timestamp is null && tempSensorReading.Meta.Sequence is null)):
+            case 1 when tempSensorReading.Value[0] != null
+                        && (tempSensorReading.Meta is null || (tempSensorReading.Meta.Value is null &&
+                                                               tempSensorReading.Meta.Timestamp is null &&
+                                                               tempSensorReading.Meta.Sequence is null)):
                 await influxRepo.WriteSensorData(
                     tempSensorReading.Value[0] ?? 0,
                     sensorName,

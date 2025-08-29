@@ -259,7 +259,8 @@ public class TempServiceTests
             x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Error while fetching postalcodes from the database")),
+                It.Is<It.IsAnyType>((v, t) =>
+                    v.ToString()!.Contains("Error while fetching postalcodes from the database")),
                 It.Is<Exception>(ex => ex == exception),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
@@ -306,7 +307,7 @@ public class TempServiceTests
         );
 
         act.Should().Throw<InvalidOperationException>()
-           .WithMessage("Weather:NominatimApiUrl configuration is missing");
+            .WithMessage("Weather:NominatimApiUrl configuration is missing");
     }
 
     #endregion
@@ -383,7 +384,7 @@ public class TempServiceTests
         var act = async () => await _tempService.GetCoordinates(postalCode);
 
         await act.Should().ThrowAsync<InvalidOperationException>()
-                 .WithMessage("The plz does not exist or is invalid.");
+            .WithMessage("The plz does not exist or is invalid.");
     }
 
     #endregion

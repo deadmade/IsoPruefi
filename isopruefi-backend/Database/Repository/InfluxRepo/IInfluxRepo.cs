@@ -44,4 +44,6 @@ public interface IInfluxRepo
     /// <param name="end">The end of the time range.</param>
     /// <returns>An async enumerable of sensor weather data points.</returns>
     IAsyncEnumerable<object?[]> GetSensorWeatherData(DateTime start, DateTime end, string sensor);
+
+    public Task WriteUptime(string sensor, long timestamp);
 }

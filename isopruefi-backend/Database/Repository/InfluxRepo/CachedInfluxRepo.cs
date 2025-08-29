@@ -88,20 +88,15 @@ public class CachedInfluxRepo : IInfluxRepo
         string query;
 
         if (timespan.Hours < 24)
-        {
-            query = $"SELECT MEAN(value) FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
-        }
+            query =
+                $"SELECT MEAN(value) FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
         else if (timespan.Days < 30)
-        {
             query =
                 $"SELECT MEAN(value) FROM outside_temperature WHERE place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h) fill(none)";
-        }
         else
-        {
             query =
                 $"SELECT MEAN(value) FROM outside_temperature WHERE place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d) fill(none)";
-        }
-        
+
         try
         {
             return _client.Query(query, QueryType.InfluxQL);
@@ -122,7 +117,8 @@ public class CachedInfluxRepo : IInfluxRepo
         if (timespan.TotalHours < 24)
         {
             Console.WriteLine("Case1");
-            query = $"SELECT MEAN(value) FROM temperature where sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
+            query =
+                $"SELECT MEAN(value) FROM temperature where sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
         }
         else if (timespan.TotalDays < 30)
         {
@@ -136,7 +132,7 @@ public class CachedInfluxRepo : IInfluxRepo
             query =
                 $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d) fill(none)";
         }
-        
+
         try
         {
             return _client.Query(query, QueryType.InfluxQL);
@@ -193,5 +189,26 @@ public class CachedInfluxRepo : IInfluxRepo
     {
         _memoryCache.Remove(cacheKey);
         _logger.LogDebug("Removed cached point: {CacheKey}", cacheKey);
+    }
+
+    public async Task WriteUptime(string sensor, long timestamp)
+    {
+        try
+        {
+            var dateTimeUtc = DateTimeOffset
+                .FromUnixTimeSeconds(timestamp)
+                .UtcDateTime;
+
+            var point = PointData.Measurement("uptime")
+                .SetField("sensor", sensor)
+                .SetTimestamp(dateTimeUtc);
+
+            await _client.WritePointAsync(point);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error writing uptime into InfluxDB");
+            throw;
+        }
     }
 }

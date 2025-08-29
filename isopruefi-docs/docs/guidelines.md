@@ -21,14 +21,14 @@
 - Variables and Fields: Use camelCase.
 - Constants: Use SCREAMING_SNAKE_CASE.
 
-## Comments
+## Documentation Comments
 If not obvious, or the method is more than 5 lines, it should be commented.
 
 - Single-line Comments: Use // for single-line comments
 - Multi-line Comments: Use /* ... */ for multi-line comments.
 - Documentation Comments: Use /// for documentation comments.
 
-### Documentation Comments
+### Documentation Comments (C#)
 We use the <a href="https://learn.microsoft.com/de-de/dotnet/csharp/language-reference/xmldoc/">xml documentation convention by Microsoft</a>
 
 In short: You can use the following tags structures in your documentation comment to specify properties of the following code:
@@ -40,6 +40,31 @@ In short: You can use the following tags structures in your documentation commen
 
 There are plenty more tags. You can even reference other doc segments. 
 If you need other tags, take a look <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/recommended-tags">here</a>
+
+#### Doxygen (C/C++)
+
+For Arduino and C++ code, we use [Doxygen](https://www.doxygen.nl/manual/docblocks.html) style comments:
+
+- `/// Brief description`
+- `/** Detailed description */`
+- `@param name Description of parameter`
+- `@return Description of return value`
+- `@code ... @endcode` for code blocks
+- `@example ...` for examples
+
+More tags: [Doxygen documentation](https://www.doxygen.nl/manual/commands.html)
+
+#### TypeDoc (TypeScript)
+
+For TypeScript, we use [TypeDoc](https://typedoc.org/guides/doccomments/) style comments:
+
+- `/** Summary of the function or class */`
+- `@param name Description of parameter`
+- `@returns Description of return value`
+- `@example Example usage`
+- `@see Reference to related code or docs`
+
+More tags: [TypeDoc tags](https://typedoc.org/guides/doccomments/#supported-tags)
 
 ## Usings and Namespaces
 

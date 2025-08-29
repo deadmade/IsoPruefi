@@ -4,7 +4,7 @@ This documentation provides an overview of the Docker containers used, as well a
 
 ---
 
-## Overview of the containers
+## Overview of the Docker containers
 
 | Container                 | Image                           | Description                                                                                        | Adress                                                                                    |
 | ------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |

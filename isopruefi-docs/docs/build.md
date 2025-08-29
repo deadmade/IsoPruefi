@@ -65,6 +65,8 @@ To get the development environment up and running, follow these steps:
 
 7. Restart the Containers
 
+---
+
 ## Arduino Set Up
 
 ### Hardware
@@ -85,7 +87,7 @@ To work on the Arduino/PlatformIO part of the project:
 
 2. Open the folder code/arduino/ (or wherever the firmware is located)
 
-3. Build and upload the firmware using the PlatformIO toolbar (✓ and →) or command palette
+3. Build and upload the firmware using the PlatformIO toolbar or PlatformIO terminal
 
 4. Make sure your board is connected and properly selected in platformio.ini
 
@@ -105,11 +107,17 @@ lib_deps =
 ```
 Tips:
 
-- PlatformIO installs the required libraries automatically on first build. If something fails, run `pio run` manually in the PlatformIO terminal
+- PlatformIO installs the required libraries automatically on first build
+
+- To run the programm run `pio run -e mkrwifi1010` in the PlatformIO terminal
+
+- To flash the Arudion with new code run `pio run -e mkrwifi1010 --target upload` in the PlatformIO terminal
 
 - The main firmware entry point is located at src/main.cpp
 
 - Use the Serial Monitor (🔌) to debug via USB
+
+- To run the all unit tests run `pio test -e native` in the PlatformIO terminal
 
 ---
 

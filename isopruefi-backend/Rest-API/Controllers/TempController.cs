@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using Database.Migrations;
 using Database.Repository.CoordinateRepo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -83,6 +82,11 @@ public class TempController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Deletes location from the database.
+    /// </summary>
+    /// <param name="postalCode">Postalcode</param>
+    /// <returns>Ok if successful; otherwise, an error response.</returns>
     [HttpDelete]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]

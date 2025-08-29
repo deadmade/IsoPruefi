@@ -121,6 +121,11 @@ public class TempService : ITempService
         }
     }
 
+    /// <summary>
+    /// Calls an API to retrieve coordinates for a location.
+    /// </summary>
+    /// <param name="postalCode">Postalcode.</param>
+    /// <returns>The API response message.</returns>
     private async Task<HttpResponseMessage?> GetCoordinatesApi(int postalCode)
     {
         // If there is no entry an API will be used to get the coordinates.

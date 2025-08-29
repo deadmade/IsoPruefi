@@ -153,7 +153,8 @@ public class AuthenticationController(
             {
                 _logger.LogInformation("Register attempt for user: {InputUserName}", input.UserName.SanitizeString());
                 await _authenticationService.Register(input);
-                _logger.LogInformation("Registration successful for user: {InputUserName}", input.UserName.SanitizeString());
+                _logger.LogInformation("Registration successful for user: {InputUserName}",
+                    input.UserName.SanitizeString());
                 return Ok();
             }
             else
@@ -169,7 +170,8 @@ public class AuthenticationController(
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Exception during registration for user: {InputUserName}", input.UserName.SanitizeString());
+            _logger.LogError(e, "Exception during registration for user: {InputUserName}",
+                input.UserName.SanitizeString());
             var exceptionDetails = new ProblemDetails
             {
                 Detail = e.Message,

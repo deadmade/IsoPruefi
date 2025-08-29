@@ -26,6 +26,8 @@ services:
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme = https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https"
 
+      - "traefik.http.middlewares.autodetect.contenttype=true"
+
       - "logging.isopruefi.enabled=true"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -45,6 +47,9 @@ services:
     image: influxdb:3.2.1-core
     container_name: isopruefi-influxdb
     restart: unless-stopped
+    user: root
+    ports:
+      - 5006:8181
     labels:
       - logging.isopruefi.enabled=true
     command:
@@ -68,6 +73,7 @@ services:
     image: postgres:17.5
     container_name: isopruefi-postgres
     restart: unless-stopped
+    user: root
     ports:
       - 5003:5432
     labels:
@@ -89,6 +95,7 @@ services:
     image: grafana/loki:3.5.2
     container_name: isopruefi-loki
     command: -config.file=/etc/loki/local-config.yaml
+    user: root
     labels:
       - "logging.isopruefi.enabled=true"
     volumes:
@@ -106,6 +113,7 @@ services:
   prometheus:
     image: prom/prometheus:v3.4.2
     container_name: isopruefi-prometheus
+    user: root
     labels:
       - "logging.isopruefi.enabled=true"
       - "web.enable-remote-write-receiver"
@@ -151,6 +159,7 @@ services:
   grafana:
     image: grafana/grafana:12.0.2
     container_name: isopruefi-grafana
+    user: root
     labels:
       - logging.isopruefi.enabled=true
     ports:
@@ -377,6 +386,8 @@ services:
     image: offen/docker-volume-backup:v2.44.0
     container_name: isopruefi-backup
     restart: always
+    labels:
+      - "logging.isopruefi.enabled=true"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - influxdb3:/backup/influxdb3:ro

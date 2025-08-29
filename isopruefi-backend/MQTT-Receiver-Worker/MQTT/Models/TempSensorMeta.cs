@@ -13,13 +13,13 @@ public class TempSensorMeta
     [JsonPropertyName("t")]
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     public long[]? Timestamp { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the temperature values from the Sensor.
     /// </summary>
     [JsonPropertyName("v")]
     public double[]? Value { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the sequence number of the reading.
     /// </summary>

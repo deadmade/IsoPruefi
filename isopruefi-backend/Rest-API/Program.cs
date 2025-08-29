@@ -41,7 +41,7 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
+
         // CORS – only for local dev
         if (builder.Environment.IsDevelopment())
         {
@@ -134,7 +134,7 @@ public class Program
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITempService, TempService>();
-        
+
         // Register HttpFactory
         builder.Services.AddHttpClient();
 

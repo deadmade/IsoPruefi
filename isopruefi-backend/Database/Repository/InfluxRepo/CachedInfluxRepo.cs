@@ -81,15 +81,78 @@ public class CachedInfluxRepo : IInfluxRepo
     }
 
     /// <inheritdoc />
+    public async Task WriteUptime(string sensor, long timestamp)
+    {
+        try
+        {
+            var dateTimeUtc = DateTimeOffset
+                .FromUnixTimeSeconds(timestamp)
+                .UtcDateTime;
+
+            var point = PointData.Measurement("uptime")
+                .SetField("sensor", sensor)
+                .SetTimestamp(dateTimeUtc);
+
+            await WritePointWithCache(point, "uptime");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error creating uptime data point");
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
     public IAsyncEnumerable<PointDataValues> GetOutsideWeatherData(DateTime start, DateTime end, string place)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var query =
+                $"SELECT place, time, value FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
+
+            return _client.QueryPoints(query);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
+            throw;
+        }
+
     }
 
     /// <inheritdoc />
     public IAsyncEnumerable<PointDataValues> GetSensorWeatherData(DateTime start, DateTime end)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var query =
+                $"SELECT sensor, time, value FROM temperature WHERE time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
+
+            return _client.QueryPoints(query);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
+            throw;
+        }
+
+    }
+
+    /// <inheritdoc />
+    public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
+    {
+        try
+        {
+            var query =
+                $"SELECT sensor, time FROM uptime WHERE sensor = '{sensor}'";
+
+            return _client.QueryPoints(query);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving uptime from InfluxDB");
+            throw;
+        }
     }
 
     /// <summary>
@@ -98,7 +161,7 @@ public class CachedInfluxRepo : IInfluxRepo
     /// <param name="point">The PointData to write</param>
     /// <param name="dataType">Type of data for logging purposes (sensor/weather)</param>
     /// <param name="writeToCache"></param>
-    private async Task WritePointWithCache(PointData point, string dataType )
+    private async Task WritePointWithCache(PointData point, string dataType)
     {
         try
         {
@@ -106,10 +169,10 @@ public class CachedInfluxRepo : IInfluxRepo
         }
         catch (Exception ex)
         {
-                var cacheKey = $"{CACHE_KEY_PREFIX}{dataType}:{Guid.NewGuid()}";
-                var cacheExpiry = TimeSpan.FromHours(24);
+            var cacheKey = $"{CACHE_KEY_PREFIX}{dataType}:{Guid.NewGuid()}";
+            var cacheExpiry = TimeSpan.FromHours(24);
 
-                _memoryCache.Set(cacheKey, point, cacheExpiry);
+            _memoryCache.Set(cacheKey, point, cacheExpiry);
         }
     }
 
@@ -124,10 +187,7 @@ public class CachedInfluxRepo : IInfluxRepo
 
         if (_memoryCache is not MemoryCache memCache) return cachedPoints;
 
-        foreach (var key in memCache.Keys)
-        {
-            cachedPoints.Add(key, _memoryCache.Get<PointData>(key));
-        }
+        foreach (var key in memCache.Keys) cachedPoints.Add(key, _memoryCache.Get<PointData>(key));
 
         return cachedPoints;
     }

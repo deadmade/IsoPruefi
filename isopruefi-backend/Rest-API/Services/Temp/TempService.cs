@@ -101,6 +101,10 @@ public class TempService : ITempService
                             _logger.LogError("Coordinates and city name could not be retrieved");
                         }
                     }
+                    else
+                    {
+                        throw new InvalidOperationException("The plz does not exist or is invalid.");
+                    }
                 }
                 else
                 {
@@ -112,6 +116,7 @@ public class TempService : ITempService
             catch (Exception e)
             {
                 _logger.LogError(e, "Error while calling geocoding API");
+                throw;
             }
         }
     }

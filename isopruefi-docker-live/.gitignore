@@ -3,3 +3,4 @@ influx/influxdb3/data
 influx/explorer/config
 influx/explorer/db
 secrets.env
+backups/

@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { clearToken } from "../utils/tokenHelpers";
 import { TempChart, type Unit } from "../components/Weather";
 import PlacePicker from "../components/PlacePicker";
-import {UnitToggle} from "../components/UnitToggle"; 
-import { clearToken } from "../utils/tokenHelpers";
-export default function AdminPage() {
+import {UnitToggle} from "../components/UnitToggle";
+import ManageLocations from "../components/ManageLocations";
 
-    const style = {padding: 20};
+export default function AdminPage() {
+    const style = { padding: 20 };
     const navigate = useNavigate();
 
-    // UI state
-    const [place, setPlace] = useState<string>("Heidenheim");
-    const [unit, setUnit] = useState<Unit>("C"); // "C" | "F"
-    const isF = unit === "F";
+    const [place, setPlace] = useState("Heidenheim");
+    const [unit, setUnit] = useState<Unit>("C");
+    const [pickerKey, setPickerKey] = useState(0); // to re-mount the picker after changes
 
     const handleLogout = () => {
         clearToken();
@@ -21,35 +21,28 @@ export default function AdminPage() {
 
     return (
         <div style={style}>
-            <h1>Admin Page</h1>
-
-            {/* Controls */}
-            <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 12 }}>
+            <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
                 <div>
                     <label style={{ display: "block", fontWeight: 600, marginBottom: 4 }}>Place</label>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <PlacePicker value={place} onChange={setPlace} />
+                        <PlacePicker key={pickerKey} value={place} onChange={setPlace} />
                         <small style={{ opacity: 0.7 }}>Pick the location</small>
                     </div>
                 </div>
 
                 <div>
                     <label style={{ display: "block", fontWeight: 600, marginBottom: 4 }}>Units</label>
-                    <UnitToggle
-                        value={isF}
-                        onChange={(nextIsF: boolean) => setUnit(nextIsF ? "F" : "C")}
-                    />
+                    <UnitToggle value={unit === "F"} onChange={(f) => setUnit(f ? "F" : "C")} />
                 </div>
             </div>
 
-            <section>
-                <TempChart place={place} isFahrenheit={isF} />
-            </section>
+            <h2 style={{ marginTop: 20 }}>Weather Chart on Admin page</h2>
+            <TempChart place={place} isFahrenheit={unit === "F"} />
+            
+            <ManageLocations onChanged={() => setPickerKey((k) => k + 1)} />
 
-            <br />
-            <button style={{ marginTop: 16, padding: 12 }} onClick={handleLogout}>
-                Logout
-            </button>
+            <br /><br />
+            <button style={style} onClick={handleLogout}>Logout</button>
         </div>
     );
 }

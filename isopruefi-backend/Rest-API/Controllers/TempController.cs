@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Database.Migrations;
+using Database.Repository.CoordinateRepo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rest_API.Services.Temp;
@@ -18,15 +19,17 @@ public class TempController : ControllerBase
 {
     private readonly ITempService _tempService;
     private readonly ILogger<TempController> _logger;
+    private readonly ICoordinateRepo _coordinateRepo;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TempController"/> class.
     /// </summary>
     /// <param name="tempService">The temp service to handle temperature operations.</param>
     /// <param name="logger">The logger instance for logging actions and errors.</param>
-    public TempController(ITempService tempService, ILogger<TempController> logger)
+    public TempController(ITempService tempService, ICoordinateRepo coordinateRepo, ILogger<TempController> logger)
     {
         _tempService = tempService;
+        _coordinateRepo = coordinateRepo;
         _logger = logger;
     }
 
@@ -61,7 +64,7 @@ public class TempController : ControllerBase
     [Produces("application/json")]
     [Consumes("application/json")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<ActionResult> InsertLocation([FromBody] int postalcode)
+    public async Task<ActionResult> InsertLocation(int postalcode)
     {
         try
         {
@@ -76,6 +79,24 @@ public class TempController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error while inserting a location");
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = e.Message });
+        }
+    }
+
+    [HttpDelete]
+    [Consumes("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [Authorize(Policy = "UserOrAdmin")]
+    public async Task<IActionResult> RemovePostalcode(int postalCode)
+    {
+        try
+        {
+            await _coordinateRepo.DeletePostalCode(postalCode);
+            return StatusCode(StatusCodes.Status200OK);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error fetching all postalcodes");
             return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = e.Message });
         }
     }

@@ -1,3 +1,4 @@
+using System.Numerics;
 using Asp.Versioning;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
@@ -186,7 +187,9 @@ public class TemperatureDataController : ControllerBase
             await foreach (var row in _influxRepo.GetOutsideWeatherData(start, end, place))
             {
                 var temperature = Convert.ToDouble(row[2]);
-                var timestamp = (DateTime)row[1];
+                var bigInt = (BigInteger)row[1];
+                var nanoSec = (long)bigInt;
+                var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(nanoSec / 1_000_000).UtcDateTime;
 
                 if (timestamp == null || temperature == null || place == null)
                 {
@@ -200,16 +203,12 @@ public class TemperatureDataController : ControllerBase
                 if (temperature > 45.0 || temperature < -30.0)
                     _logger.LogWarning(
                         "Outside temperature may be corrupted, the temperature has exceeded boundary values.");
-
-                long.TryParse(timestamp.ToString(), out var timestampLong);
-                timestampLong /= 1000000000;
-
-                var datetime = DateTimeOffset.FromUnixTimeSeconds(timestampLong).UtcDateTime;
-                temperatureData.Add(new Tuple<double, DateTime>(temperature, datetime));
+                
+                temperatureData.Add(new Tuple<double, DateTime>(temperature, timestamp));
 
                 _logger.LogInformation(
                     "Fetched outside temperature data: Place: {Place}, Website: {Website}, Temperature: {Temperature}",
-                    place, datetime, temperature);
+                    place, timestamp, temperature);
             }
         }
         catch (Exception e)
@@ -236,7 +235,9 @@ public class TemperatureDataController : ControllerBase
             await foreach (var row in _influxRepo.GetSensorWeatherData(start, end, sensor))
             {
                 var temperature = Convert.ToDouble(row[2]);
-                var timestamp = (DateTime)row[1];
+                var bigInt = (BigInteger)row[1];
+                var nanoSec = (long)bigInt;
+                var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(nanoSec / 1_000_000).UtcDateTime;
 
                 if (timestamp == null || temperature == null || sensor == null)
                 {
@@ -250,16 +251,12 @@ public class TemperatureDataController : ControllerBase
                 if (temperature > 35.0 || temperature < -10.0)
                     _logger.LogWarning(
                         "Inside temperature may be corrupted, the temperature has exceeded boundary values.");
-
-                long.TryParse(timestamp.ToString(), out var timestampLong);
-                timestampLong /= 1000000000;
-
-                var datetime = DateTimeOffset.FromUnixTimeSeconds(timestampLong).UtcDateTime;
-                temperatureData.Add(new Tuple<double, DateTime, string>(temperature, datetime, sensor));
+                
+                temperatureData.Add(new Tuple<double, DateTime, string>(temperature, timestamp, sensor));
 
                 _logger.LogInformation(
                     "Fetched outside temperature Timestamp: {Timestamp}, Temperature: {Temperature}",
-                    datetime, temperature);
+                    timestamp, temperature);
             }
         }
         catch (Exception e)

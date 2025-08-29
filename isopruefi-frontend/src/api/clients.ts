@@ -55,5 +55,17 @@ export async function fetchPostalLocations(): Promise<PostalLocation[]> {
     return [];
 }
 
+export async function addPostalLocation(postalCode: number): Promise<void> {
+    const resp = await postClient.insertLocation(postalCode); // name from NSwag
+    const body = await resp.data.text();                      // may be empty
+    if (resp.status >= 400) throw new Error(body || `Server error (${resp.status})`);
+}
+
+export async function removePostalLocation(postalCode: number): Promise<void> {
+    const resp = await postClient.removePostalcode(postalCode); // name from NSwag
+    const body = await resp.data.text();
+    if (resp.status >= 400) throw new Error(body || `Server error (${resp.status})`);
+}
+
 // Re-export ApiException so callers can do instanceof checks if needed
 export { ApiException };

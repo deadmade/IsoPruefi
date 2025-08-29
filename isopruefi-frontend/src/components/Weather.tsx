@@ -4,8 +4,8 @@ import {
 } from "recharts";
 import { tempClient, ApiException } from "../api/clients";
 
-type WeatherEntry = {
-    timestamp: string;  
+type Row = {
+    ts: number;                // epoch ms (numeric X axis)
     tempSouth?: number;
     tempNorth?: number;
     tempOutside?: number;
@@ -22,9 +22,8 @@ export function TempChart({
                               place = "Heidenheim an der Brenz",
                               isFahrenheit = false,
                           }: Props) {
-    const [data, setData] = useState<WeatherEntry[]>([]);
-    const [filter, setFilter] =
-        useState<"all" | "hour" | "day" | "week">("all");
+    const [data, setData] = useState<Row[]>([]);
+    const [filter, setFilter] = useState<"all" | "hour" | "day" | "week">("all");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -36,7 +35,7 @@ export function TempChart({
             filter === "hour" ? 1 * 60 * 60 * 1000 :
                 filter === "day"  ? 24 * 60 * 60 * 1000 :
                     filter === "week" ? 7  * 24 * 60 * 60 * 1000 :
-                        30 * 24 * 60 * 60 * 1000; // "all" = last 30 days
+                        30 * 24 * 60 * 60 * 1000; // all = last 30 days
         const start = new Date(end.getTime() - rangeMs);
 
         const toMs = (v: unknown): number | null => {
@@ -59,6 +58,17 @@ export function TempChart({
             return m;
         };
 
+        const decimate = (rows: Row[], max: number) => {
+            if (rows.length <= max) return rows;
+            const step = Math.ceil(rows.length / max);
+            const out: Row[] = [];
+            for (let i = 0; i < rows.length; i += step) out.push(rows[i]);
+            // include the very last point
+            const last = rows[rows.length - 1];
+            if (out[out.length - 1]?.ts !== last.ts) out.push(last);
+            return out;
+        };
+
         (async () => {
             setLoading(true);
             setError(null);
@@ -66,25 +76,29 @@ export function TempChart({
                 const res = await tempClient.getTemperature(start, end, place, isFahrenheit);
                 if (cancelled) return;
 
-                if (!res) { setData([]); return; }
+                const southM   = indexByTs(res?.temperatureSouth);
+                const northM   = indexByTs(res?.temperatureNord);
+                const outsideM = indexByTs(res?.temperatureOutside);
 
-                const southM   = indexByTs(res.temperatureSouth);
-                const northM   = indexByTs(res.temperatureNord);
-                const outsideM = indexByTs(res.temperatureOutside);
+                const keys = new Set<number>();
+                southM.forEach((_, k) => keys.add(k));
+                northM.forEach((_, k) => keys.add(k));
+                outsideM.forEach((_, k) => keys.add(k));
 
-                const allTs = new Set<number>();
-                southM.forEach((_, k) => allTs.add(k));
-                northM.forEach((_, k) => allTs.add(k));
-                outsideM.forEach((_, k) => allTs.add(k));
-
-                const merged: WeatherEntry[] = Array.from(allTs)
+                let merged: Row[] = Array.from(keys)
                     .sort((a, b) => a - b)
                     .map(ts => ({
-                        timestamp: new Date(ts).toISOString(),
+                        ts,
                         tempSouth:   southM.get(ts),
                         tempNorth:   northM.get(ts),
                         tempOutside: outsideM.get(ts),
                     }));
+
+                // Downsample only for large ranges to keep rendering smooth
+                const MAX_POINTS =
+                    filter === "week" ? 2500 :
+                        filter === "all"  ? 3000 : 4000;
+                merged = decimate(merged, MAX_POINTS);
 
                 setData(merged);
             } catch (err) {
@@ -109,12 +123,31 @@ export function TempChart({
         );
     }
 
-    const safeTick = (v: any) => {
+    const tickFmt = (v: number) => {
         const d = new Date(v);
-        return Number.isNaN(d.getTime())
-            ? ""
-            : d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        return d.toLocaleString([], {
+            month: "short", day: "2-digit",
+            hour: "2-digit", minute: "2-digit"
+        });
     };
+
+    if (!data.length) {
+        return (
+            <div style={style}>
+                <label style={{ marginBottom: 8, display: "block" }}>
+                    Show:{" "}
+                    <select value={filter} onChange={(e) => setFilter(e.target.value as any)}>
+                        <option value="all">All</option>
+                        <option value="hour">Last Hour</option>
+                        <option value="day">Today</option>
+                        <option value="week">This Week</option>
+                    </select>
+                    {" "}<small>({isFahrenheit ? "°F" : "°C"}, {place})</small>
+                </label>
+                <div style={{opacity:.7}}>No data for this range.</div>
+            </div>
+        );
+    }
 
     return (
         <div style={style}>
@@ -132,12 +165,18 @@ export function TempChart({
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="timestamp" tickFormatter={safeTick} />
+                    <XAxis
+                        type="number"
+                        dataKey="ts"
+                        domain={["dataMin", "dataMax"]}
+                        scale="time"
+                        tickFormatter={tickFmt}
+                    />
                     <YAxis />
-                    <Tooltip />
+                    <Tooltip labelFormatter={(v) => new Date(v as number).toLocaleString()} />
                     <Legend />
-                    <Line type="monotone" dataKey="tempSouth"   name="South"   stroke="#8884d8" activeDot={{ r: 6 }} connectNulls />
-                    <Line type="monotone" dataKey="tempNorth"   name="North"   stroke="#84d8d2" activeDot={{ r: 6 }} connectNulls />
+                    <Line type="monotone" dataKey="tempSouth"   name="South"   stroke="#8884d8" activeDot={{ r: 5 }} connectNulls />
+                    <Line type="monotone" dataKey="tempNorth"   name="North"   stroke="#84d8d2" activeDot={{ r: 5 }} connectNulls />
                     <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#82ca9d" activeDot={{ r: 4 }} connectNulls />
                 </LineChart>
             </ResponsiveContainer>

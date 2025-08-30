@@ -25,50 +25,96 @@ function authFetch(input: RequestInfo, init: RequestInit = {}) {
 // Export ready-to-use, typed clients
 export const authClient = new AuthenticationClient(BASE, { fetch: authFetch });
 export const tempClient = new TemperatureDataClient(BASE, { fetch: authFetch });
-export const postClient = new TempClient(BASE, {fetch: authFetch})
+export const postClient = new TempClient(BASE, {fetch: authFetch});
+export type PostalLocation = { postalCode: number; locationName: string };
 
-// types the picker will use
-export type PostalLocation = { postalCode: string; locationName: string };
-
+// READ /Temp/GetAllPostalcodes
 export async function fetchPostalLocations(): Promise<PostalLocation[]> {
-    const resp = await postClient.getAllPostalcodes();   // FileResponse
-    const text = await resp.data.text();                 // Blob -> string
-    const json = text ? JSON.parse(text) : [];
+    const resp = await postClient.getAllPostalcodes(); 
+    const text = await resp.data.text();
 
-    // Accept both shapes just in case: ["Ulm","Heidenheim"] OR [{ postalCode, locationName }]
-    if (Array.isArray(json)) {
-        if (json.length === 0) return [];
-        if (typeof json[0] === "string") {
-            return (json as string[]).map(p => ({ postalCode: p, locationName: p }));
-        }
-        return (json as any[]).map(o => ({
-            postalCode: String(o.postalCode ?? o.postalcode ?? o.code ?? o.name ?? ""),
-            locationName:
-                String(
-                    o.locationName ?? o.location ?? o.city ?? o.town ?? o.name ?? o.postalCode ?? ""
-                ),
-        }));
-    }
-    return [];
-}
-
-export async function addPostalLocation(postalCode: number): Promise<void> {
-    const resp = await postClient.insertLocation(postalCode);
-    // Some endpoints return empty body; surface server errors if any
-    if (resp.status >= 400) {
-        const body = await resp.data.text();
-        throw new Error(body || `Server error (${resp.status})`);
-    }
-}
-
-// DELETE /Temp/RemovePostalcode?postalCode={int}
-export async function removePostalLocation(postalCode: number): Promise<void> {
+    let json: unknown = [];
     try {
-        await postClient.removePostalcode(postalCode);
-        // success => nothing to return
+        json = text ? JSON.parse(text) : [];
+    } catch {
+        json = [];
+    }
+
+    const rows: PostalLocation[] = [];
+
+    if (Array.isArray(json)) {
+        for (const raw of json) {
+            let code: number | undefined;
+            let name = "";
+
+            if (typeof raw === "object" && raw !== null) {
+                const any = raw as any;
+                const rawCode =
+                    any.item1 ?? any.postalCode ?? any.postalcode ?? any.code ?? any.id;
+                const rawName =
+                    any.item2 ??
+                    any.locationName ??
+                    any.location ??
+                    any.city ??
+                    any.town ??
+                    any.name ??
+                    "";
+
+                if (rawCode != null && !Number.isNaN(Number(rawCode))) {
+                    code = Number(rawCode);
+                }
+                name = String(rawName ?? "").trim();
+            } else if (typeof raw === "string" || typeof raw === "number") {
+                const s = String(raw).trim();
+                if (/^\d+$/.test(s)) code = Number(s);
+                else name = s;
+            }
+            if (!name) continue;
+
+            rows.push({ postalCode: code ?? 0, locationName: name });
+        }
+    }
+    
+    const seen = new Set<string>();
+    const clean: PostalLocation[] = [];
+    for (const r of rows) {
+        const nm = r.locationName.trim();
+        if (!nm) continue;
+        
+        const key = `${r.postalCode}-${nm.toLowerCase()}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+
+        clean.push({ postalCode: r.postalCode, locationName: nm });
+    }
+
+    clean.sort((a, b) => a.locationName.localeCompare(b.locationName));
+    return clean;
+}
+export async function addPostalLocation(postalCode: number | string): Promise<void> {
+    const pcStr = String(postalCode).trim();
+    if (!/^\d+$/.test(pcStr)) {
+        throw new Error("Postal code must contain digits only.");
+    }
+
+    try {
+        await postClient.insertLocation(Number(pcStr));
     } catch (err: any) {
-        // surface a nice message
-        if (ApiException.isApiException?.(err)) {
+        if (ApiException?.isApiException?.(err)) {
+            throw new Error(`API Error (${err.status}): ${err.message}`);
+        }
+        throw err;
+    }
+}
+export async function removePostalLocation(postalCode: number | string): Promise<void> {
+    const pcStr = String(postalCode).trim();
+    if (!/^\d+$/.test(pcStr)) {
+        throw new Error("Postal code must contain digits only.");
+    }
+    try {
+        await postClient.removePostalcode(Number(pcStr));
+    } catch (err: any) {
+        if (ApiException?.isApiException?.(err)) {
             throw new Error(`API Error (${err.status}): ${err.message}`);
         }
         throw err;

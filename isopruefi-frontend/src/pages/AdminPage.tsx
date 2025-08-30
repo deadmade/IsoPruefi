@@ -49,6 +49,7 @@ export default function AdminPage() {
             <ManageLocations onChanged={() => setLocVersion(v => v + 1)}/>
             <br/><br/>
             <ManageTopics/>
+            <br/><br/>
 
             <div className="flex justify-end">
                 <button

@@ -41,7 +41,8 @@ export default function UserPage() {
         </h2>
         <TempChart place={place} isFahrenheit={isF} />
       </section>
-
+        
+        <br/><br/>
       <div className="flex justify-end">
         <button
           onClick={handleLogout}

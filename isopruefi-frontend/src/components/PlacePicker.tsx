@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { fetchPostalLocations, type PostalLocation } from "../api/clients";
+import React, {useEffect, useState} from "react";
+import {fetchPostalLocations, type PostalLocation} from "../api/clients";
 
 type Props = {
     value?: string;
@@ -39,7 +39,9 @@ export const PlacePicker: React.FC<Props> = ({
             }
         })();
 
-        return () => { alive = false; };
+        return () => {
+            alive = false;
+        };
     }, [refreshKey]);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -70,7 +72,7 @@ export const PlacePicker: React.FC<Props> = ({
                     {o.locationName}
                 </option>
             ))}
-            
+
             {!opts.some(o => o.locationName === DEFAULT_PLACE) && (
                 <option value={DEFAULT_PLACE}>{DEFAULT_PLACE}</option>
             )}

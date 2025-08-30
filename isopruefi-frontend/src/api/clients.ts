@@ -1,11 +1,11 @@
-import { apiBase } from "../utils/config";
-import { getToken } from "../utils/tokenHelpers";
+import {apiBase} from "../utils/config";
+import {getToken} from "../utils/tokenHelpers";
 import {
-    AuthenticationClient,
-    TemperatureDataClient,
-    TempClient,
-    TopicClient,
     ApiException,
+    AuthenticationClient,
+    TempClient,
+    TemperatureDataClient,
+    TopicClient,
     TopicSetting,
 } from "./api-client.ts";
 
@@ -17,17 +17,17 @@ function authFetch(input: RequestInfo, init: RequestInit = {}) {
     const token = getToken();
     init.headers = {
         ...(init.headers || {}),
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(token ? {Authorization: `Bearer ${token}`} : {}),
         Accept: "application/json",
     };
     return window.fetch(input as any, init);
 }
 
 // Export ready-to-use, typed clients
-export const authClient = new AuthenticationClient(BASE, { fetch: authFetch });
-export const tempClient = new TemperatureDataClient(BASE, { fetch: authFetch });
-export const locationClient = new TempClient(BASE, { fetch: authFetch });
-export const topicClient = new TopicClient(BASE, { fetch: authFetch });
+export const authClient = new AuthenticationClient(BASE, {fetch: authFetch});
+export const tempClient = new TemperatureDataClient(BASE, {fetch: authFetch});
+export const locationClient = new TempClient(BASE, {fetch: authFetch});
+export const topicClient = new TopicClient(BASE, {fetch: authFetch});
 
 // Export helper functions for managing locations
 // Store the mapping between display names and stored location names
@@ -39,13 +39,13 @@ export const fetchPostalLocations = async () => {
         // Parse the blob response - the API returns JSON as a blob
         const text = await response.data.text();
         console.log('Raw API response:', text);
-        
+
         const data = JSON.parse(text);
         console.log('Parsed data:', data);
-        
+
         // Handle different possible response formats
         let rawLocations: any[] = [];
-        
+
         if (Array.isArray(data)) {
             rawLocations = data;
         } else if (data && Array.isArray(data.locations)) {
@@ -56,16 +56,16 @@ export const fetchPostalLocations = async () => {
             console.warn('Unexpected API response format:', data);
             return [];
         }
-        
+
         // Clear the existing mapping
         locationMapping = {};
-        
+
         // Map the raw data to PostalLocation format
         return rawLocations.map((item: any) => {
             let postalCode: number;
             let displayLocationName: string;
             let storedLocationName: string;
-            
+
             // Handle case where API returns objects with item1/item2 properties
             if (item.item1 !== undefined && item.item2 !== undefined) {
                 postalCode = typeof item.item1 === 'number' ? item.item1 : parseInt(item.item1);
@@ -84,10 +84,10 @@ export const fetchPostalLocations = async () => {
                 storedLocationName = item.LocationName || item.name || item.location || item.city || 'Unknown Location';
                 displayLocationName = storedLocationName;
             }
-            
+
             // Store the mapping for later use in temperature API calls
             locationMapping[displayLocationName] = storedLocationName;
-            
+
             return {
                 postalCode,
                 locationName: displayLocationName
@@ -136,4 +136,4 @@ export type PostalLocation = {
 };
 
 // Re-export ApiException and types so callers can do instanceof checks if needed
-export { ApiException, TopicSetting };
+export {ApiException, TopicSetting};

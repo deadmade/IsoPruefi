@@ -6,7 +6,7 @@ export type UnitToggleProps = {
     onChange: (isF: boolean) => void;
 };
 
-export const UnitToggle: React.FC<UnitToggleProps> = ({ value, onChange }) => {
+export const UnitToggle: React.FC<UnitToggleProps> = ({value, onChange}) => {
     return (
         <label className="inline-flex items-center gap-2 cursor-pointer">
             <input

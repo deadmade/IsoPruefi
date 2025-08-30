@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { TempChart } from "../components/Weather.tsx";
-import { PlacePicker } from "../components/PlacePicker.tsx";
-import { UnitToggle } from "../components/UnitToggle.tsx";
-import { useNavigate } from "react-router-dom";
-import { clearToken } from "../utils/tokenHelpers.ts";
+import {useState} from "react";
+import {TempChart} from "../components/Weather.tsx";
+import {PlacePicker} from "../components/PlacePicker.tsx";
+import {UnitToggle} from "../components/UnitToggle.tsx";
+import {useNavigate} from "react-router-dom";
+import {clearToken} from "../utils/tokenHelpers.ts";
 import ManageLocations from "../components/ManageLocations.tsx";
 import ManageTopics from "../components/ManageTopics.tsx";
 
@@ -26,16 +26,17 @@ export default function AdminPage() {
             </h1>
 
             {/* Controls Section */}
-            <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center mb-6 bg-white rounded-xl shadow p-4 max-w-6xl mx-auto">
+            <div
+                className="flex flex-col sm:flex-row gap-6 items-start sm:items-center mb-6 bg-white rounded-xl shadow p-4 max-w-6xl mx-auto">
                 <div className="w-full sm:w-80">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Location</label>
-                    <PlacePicker value={place} onChange={setPlace} refreshKey={locVersion} />
+                    <PlacePicker value={place} onChange={setPlace} refreshKey={locVersion}/>
                     <p className="text-xs text-gray-500 mt-1">Select the monitoring location</p>
                 </div>
 
                 <div className="w-full sm:w-auto">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Temperature Units</label>
-                    <UnitToggle value={isF} onChange={setIsF} />
+                    <UnitToggle value={isF} onChange={setIsF}/>
                 </div>
             </div>
 
@@ -44,17 +45,17 @@ export default function AdminPage() {
                 <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
                     Weather Chart
                 </h2>
-                <TempChart place={place} isFahrenheit={isF} />
+                <TempChart place={place} isFahrenheit={isF}/>
             </section>
 
             {/* Admin Management Sections */}
             <div className="max-w-6xl mx-auto space-y-6">
                 <div className="bg-white rounded-xl shadow p-6">
-                    <ManageLocations onChanged={() => setLocVersion(v => v + 1)} />
+                    <ManageLocations onChanged={() => setLocVersion(v => v + 1)}/>
                 </div>
-                
+
                 <div className="bg-white rounded-xl shadow p-6">
-                    <ManageTopics />
+                    <ManageTopics/>
                 </div>
             </div>
 

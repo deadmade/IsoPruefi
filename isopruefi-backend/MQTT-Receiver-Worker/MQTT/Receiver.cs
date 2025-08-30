@@ -63,7 +63,7 @@ public class Receiver : IReceiver
 #endif
 
                 var sharedTopic =
-                    $"$share/{groupName}/{topic.DefaultTopicPath}/{topic.GroupId}/{topic.SensorType}/{topic.SensorName}";
+                    $"$share/{groupName}/{topic.DefaultTopicPath}/{topic.GroupId}/{topic.SensorTypeEnum}/{topic.SensorName}";
 
                 if (Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") == "Development")
                     sharedTopic = sharedTopic + "_Dev";

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250731081331_Recovery")]
-    partial class Recovery
+    [Migration("20250830191858_RefactorMigrations")]
+    partial class RefactorMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,6 +89,44 @@ namespace Database.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Database.EntityFramework.Models.CoordinateMapping", b =>
+                {
+                    b.Property<int>("PostalCode")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PostalCode"));
+
+                    b.Property<DateTime?>("LastUsed")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("LockedUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("PostalCode");
+
+                    b.ToTable("CoordinateMappings");
+
+                    b.HasData(
+                        new
+                        {
+                            PostalCode = 89518,
+                            Latitude = 48.685200000000002,
+                            Location = "Heidenheim an der Brenz",
+                            Longitude = 10.1287
+                        });
+                });
+
             modelBuilder.Entity("Database.EntityFramework.Models.TokenInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -123,6 +161,9 @@ namespace Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TopicSettingId"));
 
+                    b.Property<int>("CoordinateMappingId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("DefaultTopicPath")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -142,12 +183,12 @@ namespace Database.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("SensorType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("SensorTypeEnum")
+                        .HasColumnType("integer");
 
                     b.HasKey("TopicSettingId");
+
+                    b.HasIndex("CoordinateMappingId");
 
                     b.ToTable("TopicSettings");
 
@@ -155,22 +196,24 @@ namespace Database.Migrations
                         new
                         {
                             TopicSettingId = 1,
+                            CoordinateMappingId = 89518,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
-                            HasRecovery = false,
+                            HasRecovery = true,
                             SensorLocation = "North",
                             SensorName = "Sensor_One",
-                            SensorType = "temp"
+                            SensorTypeEnum = 0
                         },
                         new
                         {
                             TopicSettingId = 2,
+                            CoordinateMappingId = 89518,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
-                            HasRecovery = false,
+                            HasRecovery = true,
                             SensorLocation = "South",
                             SensorName = "Sensor_Two",
-                            SensorType = "temp"
+                            SensorTypeEnum = 0
                         });
                 });
 
@@ -304,6 +347,17 @@ namespace Database.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Database.EntityFramework.Models.TopicSetting", b =>
+                {
+                    b.HasOne("Database.EntityFramework.Models.CoordinateMapping", "CoordinateMapping")
+                        .WithMany()
+                        .HasForeignKey("CoordinateMappingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CoordinateMapping");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

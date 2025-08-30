@@ -31,7 +31,7 @@ public class SettingsRepo : ISettingsRepo
     public Task<List<TopicSetting>> GetTopicSettingsAsync(int placeId, SensorType sensorType)
     {
         return _applicationDbContext.TopicSettings
-            .Where(x => x.CoordinateMappingId == placeId && x.SensorType == sensorType).ToListAsync();
+            .Where(x => x.CoordinateMappingId == placeId && x.SensorTypeEnum == sensorType).ToListAsync();
     }
 
     /// <inheritdoc />

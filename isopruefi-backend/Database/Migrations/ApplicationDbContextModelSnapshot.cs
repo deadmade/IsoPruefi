@@ -180,11 +180,12 @@ namespace Database.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("SensorType")
-                        .HasMaxLength(50)
+                    b.Property<int>("SensorTypeEnum")
                         .HasColumnType("integer");
 
                     b.HasKey("TopicSettingId");
+
+                    b.HasIndex("CoordinateMappingId");
 
                     b.ToTable("TopicSettings");
 
@@ -192,24 +193,24 @@ namespace Database.Migrations
                         new
                         {
                             TopicSettingId = 1,
-                            CoordinateMappingId = 0,
+                            CoordinateMappingId = 89518,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
                             HasRecovery = true,
                             SensorLocation = "North",
                             SensorName = "Sensor_One",
-                            SensorType = 0
+                            SensorTypeEnum = 0
                         },
                         new
                         {
                             TopicSettingId = 2,
-                            CoordinateMappingId = 0,
+                            CoordinateMappingId = 89518,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
                             HasRecovery = true,
                             SensorLocation = "South",
                             SensorName = "Sensor_Two",
-                            SensorType = 0
+                            SensorTypeEnum = 0
                         });
                 });
 
@@ -343,6 +344,17 @@ namespace Database.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Database.EntityFramework.Models.TopicSetting", b =>
+                {
+                    b.HasOne("Database.EntityFramework.Models.CoordinateMapping", "CoordinateMapping")
+                        .WithMany()
+                        .HasForeignKey("CoordinateMappingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CoordinateMapping");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

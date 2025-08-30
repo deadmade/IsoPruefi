@@ -44,13 +44,13 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
             b.HasData(
                 new TopicSetting
                 {
-                    TopicSettingId = 1, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = SensorType.temp,
-                    SensorName = "Sensor_One", SensorLocation = "North", HasRecovery = true
+                    TopicSettingId = 1, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorTypeEnum = SensorType.temp,
+                    SensorName = "Sensor_One", SensorLocation = "North", HasRecovery = true, CoordinateMappingId = 89518
                 },
                 new TopicSetting
                 {
-                    TopicSettingId = 2, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = SensorType.temp,
-                    SensorName = "Sensor_Two", SensorLocation = "South", HasRecovery = true
+                    TopicSettingId = 2, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorTypeEnum = SensorType.temp,
+                    SensorName = "Sensor_Two", SensorLocation = "South", HasRecovery = true, CoordinateMappingId = 89518
                 }
             );
         });

@@ -135,7 +135,7 @@ public class TemperatureDataController : ControllerBase
         var settings = await _settingsRepo.GetTopicSettingsAsync(location.PostalCode, SensorType.temp);
 
         var temperatureData = new TemperatureDataOverview();
-        
+
         var sensorDataBag = new ConcurrentBag<SensorData>();
 
         await Parallel.ForEachAsync(settings, async (sensor, cancelationToken) =>
@@ -154,7 +154,7 @@ public class TemperatureDataController : ControllerBase
 
             sensorDataBag.Add(sensorData);
         });
-        
+
         temperatureData.SensorData = sensorDataBag.ToList();
 
         temperatureData.TemperatureOutside = outsideWeatherData
@@ -163,7 +163,7 @@ public class TemperatureDataController : ControllerBase
 
         temperatureData.TemperatureOutside =
             CheckPlausibility(temperatureData.TemperatureOutside, "Outside", "Outside", isFahrenheit);
-        
+
         return temperatureData;
     }
 

@@ -10,6 +10,8 @@ namespace Database.EntityFramework.Models;
 // Represents the settings for a specific topic, including default path, group, and sensor information.
 public class TopicSetting
 {
+
+    
     /// <summary>
     ///     Gets or sets the unique identifier for the TopicSetting entity.
     /// </summary>
@@ -17,9 +19,10 @@ public class TopicSetting
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int TopicSettingId { get; set; }
 
-    [Key]
-    [ForeignKey("CoordinateMapping")]
-    public int CoordinateMappingId { get; set; }
+    public int CoordinateMappingId { get; set; }  
+    
+    [ForeignKey(nameof(CoordinateMappingId))]
+    public virtual CoordinateMapping? CoordinateMapping { get; set; }
 
     /// <summary>
     ///     Gets or sets the default MQTT topic path for this setting.
@@ -35,8 +38,7 @@ public class TopicSetting
     /// <summary>
     ///     Gets or sets the type of sensor (e.g., temperature, humidity).
     /// </summary>
-    [MaxLength(50)]
-    public SensorType SensorType { get; set; } = SensorType.temp;
+    public SensorType SensorTypeEnum { get; set; } = SensorType.temp;
 
     /// <summary>
     ///     Gets or sets the name of the sensor.

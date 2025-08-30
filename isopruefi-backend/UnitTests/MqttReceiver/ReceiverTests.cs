@@ -53,7 +53,7 @@ public class ReceiverTests
                 TopicSettingId = 1,
                 DefaultTopicPath = "sensors",
                 GroupId = 1,
-                SensorType = SensorType.temp,
+                SensorTypeEnum = SensorType.temp,
                 SensorName = "sensor1",
                 HasRecovery = true
             },
@@ -62,7 +62,7 @@ public class ReceiverTests
                 TopicSettingId = 2,
                 DefaultTopicPath = "sensors",
                 GroupId = 2,
-                SensorType = SensorType.hum,
+                SensorTypeEnum = SensorType.hum,
                 SensorName = "sensor2",
                 HasRecovery = false
             }

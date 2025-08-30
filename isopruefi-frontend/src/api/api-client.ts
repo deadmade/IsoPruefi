@@ -1305,6 +1305,7 @@ export class TopicSetting implements ITopicSetting {
              */
     topicSettingId?: number;
     coordinateMappingId?: number;
+    coordinateMapping?: CoordinateMapping | undefined;
     /** Gets or sets the default MQTT topic path for this setting.
              */
     defaultTopicPath?: string;
@@ -1313,7 +1314,7 @@ export class TopicSetting implements ITopicSetting {
     groupId?: number;
     /** Gets or sets the type of sensor (e.g., temperature, humidity).
              */
-    sensorType?: SensorType;
+    sensorTypeEnum?: SensorType;
     /** Gets or sets the name of the sensor.
              */
     sensorName?: string | undefined;
@@ -1337,9 +1338,10 @@ export class TopicSetting implements ITopicSetting {
         if (_data) {
             this.topicSettingId = _data["topicSettingId"];
             this.coordinateMappingId = _data["coordinateMappingId"];
+            this.coordinateMapping = _data["coordinateMapping"] ? CoordinateMapping.fromJS(_data["coordinateMapping"]) : <any>undefined;
             this.defaultTopicPath = _data["defaultTopicPath"];
             this.groupId = _data["groupId"];
-            this.sensorType = _data["sensorType"];
+            this.sensorTypeEnum = _data["sensorTypeEnum"];
             this.sensorName = _data["sensorName"];
             this.sensorLocation = _data["sensorLocation"];
             this.hasRecovery = _data["hasRecovery"];
@@ -1357,9 +1359,10 @@ export class TopicSetting implements ITopicSetting {
         data = typeof data === 'object' ? data : {};
         data["topicSettingId"] = this.topicSettingId;
         data["coordinateMappingId"] = this.coordinateMappingId;
+        data["coordinateMapping"] = this.coordinateMapping ? this.coordinateMapping.toJSON() : <any>undefined;
         data["defaultTopicPath"] = this.defaultTopicPath;
         data["groupId"] = this.groupId;
-        data["sensorType"] = this.sensorType;
+        data["sensorTypeEnum"] = this.sensorTypeEnum;
         data["sensorName"] = this.sensorName;
         data["sensorLocation"] = this.sensorLocation;
         data["hasRecovery"] = this.hasRecovery;
@@ -1373,6 +1376,7 @@ export interface ITopicSetting {
              */
     topicSettingId?: number;
     coordinateMappingId?: number;
+    coordinateMapping?: CoordinateMapping | undefined;
     /** Gets or sets the default MQTT topic path for this setting.
              */
     defaultTopicPath?: string;
@@ -1381,7 +1385,7 @@ export interface ITopicSetting {
     groupId?: number;
     /** Gets or sets the type of sensor (e.g., temperature, humidity).
              */
-    sensorType?: SensorType;
+    sensorTypeEnum?: SensorType;
     /** Gets or sets the name of the sensor.
              */
     sensorName?: string | undefined;
@@ -1391,6 +1395,88 @@ export interface ITopicSetting {
     /** Gets or sets a value indicating whether this topic setting has recovery enabled.
              */
     hasRecovery?: boolean;
+}
+
+/** Stores geographic coordinates associated with postalcodes, including the time the mapping was used. */
+export class CoordinateMapping implements ICoordinateMapping {
+    /** Gets or sets the postalcode which is also the uniqe identifier.
+             */
+    postalCode?: number;
+    /** Gets or sets the name of the location.
+             */
+    location?: string;
+    /** Gets or sets the latitude for the location.
+             */
+    latitude?: number;
+    /** Gets or sets the longitude of the location.
+             */
+    longitude?: number;
+    /** Gets or sets the time the postalcode was last entered by the user.
+             */
+    lastUsed?: Date | undefined;
+    /** Gets or sets the time until which the entry is locked.
+             */
+    lockedUntil?: Date | undefined;
+
+    constructor(data?: ICoordinateMapping) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.postalCode = _data["postalCode"];
+            this.location = _data["location"];
+            this.latitude = _data["latitude"];
+            this.longitude = _data["longitude"];
+            this.lastUsed = _data["lastUsed"] ? new Date(_data["lastUsed"].toString()) : <any>undefined;
+            this.lockedUntil = _data["lockedUntil"] ? new Date(_data["lockedUntil"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CoordinateMapping {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoordinateMapping();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["postalCode"] = this.postalCode;
+        data["location"] = this.location;
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        data["lastUsed"] = this.lastUsed ? this.lastUsed.toISOString() : <any>undefined;
+        data["lockedUntil"] = this.lockedUntil ? this.lockedUntil.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+/** Stores geographic coordinates associated with postalcodes, including the time the mapping was used. */
+export interface ICoordinateMapping {
+    /** Gets or sets the postalcode which is also the uniqe identifier.
+             */
+    postalCode?: number;
+    /** Gets or sets the name of the location.
+             */
+    location?: string;
+    /** Gets or sets the latitude for the location.
+             */
+    latitude?: number;
+    /** Gets or sets the longitude of the location.
+             */
+    longitude?: number;
+    /** Gets or sets the time the postalcode was last entered by the user.
+             */
+    lastUsed?: Date | undefined;
+    /** Gets or sets the time until which the entry is locked.
+             */
+    lockedUntil?: Date | undefined;
 }
 
 export enum SensorType {

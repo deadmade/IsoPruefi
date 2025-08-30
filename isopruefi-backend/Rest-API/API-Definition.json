@@ -941,6 +941,14 @@
             "type": "integer",
             "format": "int32"
           },
+          "coordinateMapping": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CoordinateMapping"
+              }
+            ]
+          },
           "defaultTopicPath": {
             "type": "string",
             "description": "Gets or sets the default MQTT topic path for this setting.\n            ",
@@ -951,7 +959,7 @@
             "description": "Gets or sets the group identifier associated with this topic setting.\n            ",
             "format": "int32"
           },
-          "sensorType": {
+          "sensorTypeEnum": {
             "description": "Gets or sets the type of sensor (e.g., temperature, humidity).\n            ",
             "oneOf": [
               {
@@ -974,6 +982,44 @@
           "hasRecovery": {
             "type": "boolean",
             "description": "Gets or sets a value indicating whether this topic setting has recovery enabled.\n            "
+          }
+        }
+      },
+      "CoordinateMapping": {
+        "type": "object",
+        "description": "Stores geographic coordinates associated with postalcodes, including the time the mapping was used.\n            ",
+        "additionalProperties": false,
+        "properties": {
+          "postalCode": {
+            "type": "integer",
+            "description": "Gets or sets the postalcode which is also the uniqe identifier.\n            ",
+            "format": "int32"
+          },
+          "location": {
+            "type": "string",
+            "description": "Gets or sets the name of the location.\n            "
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Gets or sets the latitude for the location.\n            ",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Gets or sets the longitude of the location.\n            ",
+            "format": "double"
+          },
+          "lastUsed": {
+            "type": "string",
+            "description": "Gets or sets the time the postalcode was last entered by the user.\n            ",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lockedUntil": {
+            "type": "string",
+            "description": "Gets or sets the time until which the entry is locked.\n            ",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },

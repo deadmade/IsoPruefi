@@ -13,7 +13,7 @@ namespace UnitTests.Controllers;
 ///     Unit tests for the TempController class, verifying temperature operations and location management functionality.
 /// </summary>
 [TestFixture]
-public class TempControllerTests
+public class LocationControllerTests
 {
     /// <summary>
     ///     Sets up test fixtures and initializes mocks before each test execution.
@@ -23,15 +23,15 @@ public class TempControllerTests
     {
         _mockTempService = new Mock<ITempService>();
         _mockCoordinateRepo = new Mock<ICoordinateRepo>();
-        _mockLogger = new Mock<ILogger<TempController>>();
+        _mockLogger = new Mock<ILogger<LocationController>>();
 
-        _controller = new TempController(_mockTempService.Object, _mockCoordinateRepo.Object, _mockLogger.Object);
+        _controller = new LocationController(_mockTempService.Object, _mockCoordinateRepo.Object, _mockLogger.Object);
     }
 
     private Mock<ITempService> _mockTempService;
     private Mock<ICoordinateRepo> _mockCoordinateRepo;
-    private Mock<ILogger<TempController>> _mockLogger;
-    private TempController _controller;
+    private Mock<ILogger<LocationController>> _mockLogger;
+    private LocationController _controller;
 
     /// <summary>
     ///     Tests that the constructor creates a valid instance when provided with valid parameters.
@@ -40,7 +40,7 @@ public class TempControllerTests
     public void Constructor_WithValidParameters_ShouldCreateInstance()
     {
         // Act
-        Action act = () => new TempController(
+        Action act = () => new LocationController(
             _mockTempService.Object,
             _mockCoordinateRepo.Object,
             _mockLogger.Object);

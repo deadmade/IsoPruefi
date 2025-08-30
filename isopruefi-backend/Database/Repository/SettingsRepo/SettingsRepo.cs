@@ -1,4 +1,5 @@
 using Database.EntityFramework;
+using Database.EntityFramework.Enums;
 using Database.EntityFramework.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,11 +21,17 @@ public class SettingsRepo : ISettingsRepo
         _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
     }
 
-
     /// <inheritdoc />
     public Task<List<TopicSetting>> GetTopicSettingsAsync()
     {
         return _applicationDbContext.TopicSettings.ToListAsync();
+    }
+
+    /// <inheritdoc />
+    public Task<List<TopicSetting>> GetTopicSettingsAsync(int placeId, SensorType sensorType)
+    {
+        return _applicationDbContext.TopicSettings
+            .Where(x => x.CoordinateMappingId == placeId && x.SensorType == sensorType).ToListAsync();
     }
 
     /// <inheritdoc />
@@ -37,7 +44,6 @@ public class SettingsRepo : ISettingsRepo
         return await _applicationDbContext.SaveChangesAsync();
     }
 
-
     /// <inheritdoc />
     public async Task<int> RemoveTopicSettingAsync(TopicSetting topicSetting)
     {
@@ -47,7 +53,6 @@ public class SettingsRepo : ISettingsRepo
         _applicationDbContext.TopicSettings.Remove(topicSetting);
         return await _applicationDbContext.SaveChangesAsync();
     }
-
 
     /// <inheritdoc />
     public async Task<int> UpdateTopicSettingAsync(TopicSetting topicSetting)

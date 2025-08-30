@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 
-namespace Database.Repository.InfluxRepo;
+namespace Database.Repository.InfluxRepo.Influx;
 
 /// <summary>
 ///     Health check for InfluxDB connectivity.

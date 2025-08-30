@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Database.EntityFramework.Enums;
 
 namespace Database.EntityFramework.Models;
 
@@ -16,6 +17,10 @@ public class TopicSetting
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int TopicSettingId { get; set; }
 
+    [Key]
+    [ForeignKey("CoordinateMapping")]
+    public int CoordinateMappingId { get; set; }
+
     /// <summary>
     ///     Gets or sets the default MQTT topic path for this setting.
     /// </summary>
@@ -31,7 +36,7 @@ public class TopicSetting
     ///     Gets or sets the type of sensor (e.g., temperature, humidity).
     /// </summary>
     [MaxLength(50)]
-    public string SensorType { get; set; } = "temp";
+    public SensorType SensorType { get; set; } = SensorType.temp;
 
     /// <summary>
     ///     Gets or sets the name of the sensor.

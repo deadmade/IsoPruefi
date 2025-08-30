@@ -1,3 +1,4 @@
+using Database.EntityFramework.Enums;
 using Database.EntityFramework.Models;
 
 namespace Database.Repository.SettingsRepo;
@@ -15,6 +16,8 @@ public interface ISettingsRepo
     ///     <see cref="TopicSetting" /> objects.
     /// </returns>
     Task<List<TopicSetting>> GetTopicSettingsAsync();
+
+    Task<List<TopicSetting>> GetTopicSettingsAsync(int placeId, SensorType sensorType);
 
     /// <summary>
     ///     Asynchronously adds a new topic setting to the repository.

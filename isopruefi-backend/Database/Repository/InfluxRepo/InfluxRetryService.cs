@@ -1,4 +1,5 @@
 using System.Reflection;
+using Database.Repository.InfluxRepo.InfluxCache;
 using InfluxDB3.Client;
 using InfluxDB3.Client.Write;
 using Microsoft.Extensions.DependencyInjection;

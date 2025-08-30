@@ -25,6 +25,8 @@ public interface ICoordinateRepo
     /// <returns>Returns coordinates of the location that was last chosen by the User.</returns>
     Task<CoordinateMapping?> GetLocation();
 
+    Task<CoordinateMapping?> GetLocation(string place);
+
     /// <summary>
     ///     Checks if there is an entry for that opstal code in the database.
     /// </summary>

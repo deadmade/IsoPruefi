@@ -43,7 +43,7 @@ public static class Connection
             }
         };
 
-        var response = await mqttClient.ConnectAsync(options, CancellationToken.None);
+        await mqttClient.ConnectAsync(options, CancellationToken.None);
         return mqttClient;
     }
 }

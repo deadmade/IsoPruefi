@@ -1,4 +1,4 @@
-using Database.Repository.InfluxRepo;
+using Database.Repository.InfluxRepo.Influx;
 using FluentAssertions;
 using InfluxDB3.Client;
 using Microsoft.Extensions.Configuration;

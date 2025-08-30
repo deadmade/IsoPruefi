@@ -158,6 +158,9 @@ namespace Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TopicSettingId"));
 
+                    b.Property<int>("CoordinateMappingId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("DefaultTopicPath")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -177,10 +180,9 @@ namespace Database.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("SensorType")
-                        .IsRequired()
+                    b.Property<int>("SensorType")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("integer");
 
                     b.HasKey("TopicSettingId");
 
@@ -190,22 +192,24 @@ namespace Database.Migrations
                         new
                         {
                             TopicSettingId = 1,
+                            CoordinateMappingId = 0,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
                             HasRecovery = true,
                             SensorLocation = "North",
                             SensorName = "Sensor_One",
-                            SensorType = "temp"
+                            SensorType = 0
                         },
                         new
                         {
                             TopicSettingId = 2,
+                            CoordinateMappingId = 0,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
                             HasRecovery = true,
                             SensorLocation = "South",
                             SensorName = "Sensor_Two",
-                            SensorType = "temp"
+                            SensorType = 0
                         });
                 });
 

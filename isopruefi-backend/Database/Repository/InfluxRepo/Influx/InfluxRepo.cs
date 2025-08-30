@@ -1,34 +1,27 @@
 using InfluxDB3.Client;
 using InfluxDB3.Client.Query;
 using InfluxDB3.Client.Write;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Database.Repository.InfluxRepo;
+namespace Database.Repository.InfluxRepo.Influx;
 
-/// <summary>
-///     Cached implementation of InfluxDB repository that buffers writes when InfluxDB is unavailable.
-///     Decorates the base InfluxRepo with write-through caching for data resilience.
-/// </summary>
-public class CachedInfluxRepo : IInfluxRepo
+/// <inheritdoc />
+public class InfluxRepo : IInfluxRepo
 {
-    private const string CACHE_KEY_PREFIX = "failed_influx_point:";
     private readonly InfluxDBClient _client;
-    private readonly ILogger<CachedInfluxRepo> _logger;
-    private readonly IMemoryCache _memoryCache;
+    private readonly ILogger<InfluxRepo> _logger;
+
 
     /// <summary>
-    ///     Constructor for the CachedInfluxRepo class.
+    ///     Constructor for the InfluxRepo class.
     /// </summary>
-    /// <param name="configuration">Configuration for InfluxDB connection</param>
-    /// <param name="memoryCache">Memory cache for buffering failed writes</param>
-    /// <param name="logger">Logger instance</param>
-    /// <exception cref="ArgumentException">Thrown when InfluxDB configuration is missing</exception>
-    public CachedInfluxRepo(IConfiguration configuration, IMemoryCache memoryCache, ILogger<CachedInfluxRepo> logger)
+    /// <param name="configuration"></param>
+    /// <param name="logger"></param>
+    /// <exception cref="ArgumentException"></exception>
+    public InfluxRepo(IConfiguration configuration, ILogger<InfluxRepo> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
 
         var database = configuration["Influx:InfluxDBDatabase"] ?? "IsoPruefi";
 
@@ -54,8 +47,7 @@ public class CachedInfluxRepo : IInfluxRepo
             .SetTag("sequence", sequence.ToString())
             .SetField("value", measurement)
             .SetTimestamp(dateTimeUtc);
-
-        await WritePointWithCache(point, "sensor");
+        await _client.WritePointAsync(point);
     }
 
     /// <inheritdoc />
@@ -72,11 +64,33 @@ public class CachedInfluxRepo : IInfluxRepo
                 .SetIntegerField("postalcode", postalcode)
                 .SetTimestamp(timestamp);
 
-            await WritePointWithCache(point, "weather");
+            await _client.WritePointAsync(point);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error creating outside weather data point");
+            _logger.LogError(e, "Error writing outside weather data to InfluxDB");
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task WriteUptime(string sensor, long timestamp)
+    {
+        try
+        {
+            var dateTimeUtc = DateTimeOffset
+                .FromUnixTimeSeconds(timestamp)
+                .UtcDateTime;
+
+            var point = PointData.Measurement("uptime")
+                .SetField("sensor", sensor)
+                .SetTimestamp(dateTimeUtc);
+
+            await _client.WritePointAsync(point);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error writing uptime into InfluxDB");
             throw;
         }
     }
@@ -119,6 +133,7 @@ public class CachedInfluxRepo : IInfluxRepo
         }
     }
 
+
     /// <inheritdoc />
     public async IAsyncEnumerable<object?[]> GetSensorWeatherData(DateTime start, DateTime end, string sensor)
     {
@@ -157,71 +172,20 @@ public class CachedInfluxRepo : IInfluxRepo
         }
     }
 
-    public async Task WriteUptime(string sensor, long timestamp)
+    /// <inheritdoc />
+    public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
     {
         try
         {
-            var dateTimeUtc = DateTimeOffset
-                .FromUnixTimeSeconds(timestamp)
-                .UtcDateTime;
+            var query =
+                $"SELECT sensor, time FROM uptime WHERE sensor = '{sensor}'";
 
-            var point = PointData.Measurement("uptime")
-                .SetField("sensor", sensor)
-                .SetTimestamp(dateTimeUtc);
-
-            await _client.WritePointAsync(point);
+            return _client.QueryPoints(query);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error writing uptime into InfluxDB");
+            _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
             throw;
         }
-    }
-
-    /// <summary>
-    ///     Attempts to write a point to InfluxDB, caching it if the write fails.
-    /// </summary>
-    /// <param name="point">The PointData to write</param>
-    /// <param name="dataType">Type of data for logging purposes (sensor/weather)</param>
-    /// <param name="writeToCache"></param>
-    private async Task WritePointWithCache(PointData point, string dataType)
-    {
-        try
-        {
-            await _client.WritePointAsync(point);
-        }
-        catch (Exception ex)
-        {
-            var cacheKey = $"{CACHE_KEY_PREFIX}{dataType}:{Guid.NewGuid()}";
-            var cacheExpiry = TimeSpan.FromHours(24);
-
-            _memoryCache.Set(cacheKey, point, cacheExpiry);
-        }
-    }
-
-    /// <summary>
-    ///     Gets all cached PointData objects that failed to write to InfluxDB.
-    ///     Used by background service for retry operations.
-    /// </summary>
-    /// <returns>Dictionary of cache keys and their corresponding PointData objects</returns>
-    public Dictionary<object, PointData> GetCachedPoints()
-    {
-        var cachedPoints = new Dictionary<object, PointData>();
-
-        if (_memoryCache is not MemoryCache memCache) return cachedPoints;
-
-        foreach (var key in memCache.Keys) cachedPoints.Add(key, _memoryCache.Get<PointData>(key));
-
-        return cachedPoints;
-    }
-
-    /// <summary>
-    ///     Removes a cached point after successful retry.
-    /// </summary>
-    /// <param name="cacheKey">The cache key to remove</param>
-    public void RemoveCachedPoint(object cacheKey)
-    {
-        _memoryCache.Remove(cacheKey);
-        _logger.LogDebug("Removed cached point: {CacheKey}", cacheKey);
     }
 }

@@ -136,7 +136,6 @@ public class AuthenticationController(
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    // [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> Register(Register input)
     {
         try

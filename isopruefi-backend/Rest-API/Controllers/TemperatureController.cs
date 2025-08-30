@@ -1,8 +1,10 @@
+using System.Collections.Concurrent;
 using System.Numerics;
 using Asp.Versioning;
+using Database.EntityFramework.Enums;
+using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rest_API.Models;
 
@@ -19,6 +21,7 @@ namespace Rest_API.Controllers;
 [Consumes("application/json")]
 public class TemperatureDataController : ControllerBase
 {
+    private readonly ICoordinateRepo _coordinateRepo;
     private readonly IInfluxRepo _influxRepo;
     private readonly ILogger<TemperatureDataController> _logger;
     private readonly ISettingsRepo _settingsRepo;
@@ -32,11 +35,12 @@ public class TemperatureDataController : ControllerBase
     /// <param name="influxRepo">The repository for accessing temperature data from InfluxDB.</param>
     /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
     public TemperatureDataController(ILogger<TemperatureDataController> logger, ISettingsRepo settingsRepo,
-        IInfluxRepo influxRepo)
+        IInfluxRepo influxRepo, ICoordinateRepo coordinateRepo)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _settingsRepo = settingsRepo ?? throw new ArgumentNullException(nameof(settingsRepo));
         _influxRepo = influxRepo ?? throw new ArgumentNullException(nameof(influxRepo));
+        _coordinateRepo = coordinateRepo ?? throw new ArgumentNullException(nameof(coordinateRepo));
     }
 
     /// <summary>
@@ -90,12 +94,26 @@ public class TemperatureDataController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Policy = "UserOrAdmin")]
+    //[Authorize(Policy = "UserOrAdmin")]
     public async Task<IActionResult> GetTemperature([FromQuery] DateTime start, [FromQuery] DateTime end,
         [FromQuery] string place, [FromQuery] bool isFahrenheit = false)
     {
-        var temperatureData = await CombineTempData(start, end, place, isFahrenheit);
-        return Ok(temperatureData);
+        try
+        {
+            var temperatureData = await CombineTempData(start, end, place, isFahrenheit);
+            return Ok(temperatureData);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Exception during GetTemperature");
+            var exceptionDetails = new ProblemDetails
+            {
+                Detail = e.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
+            };
+            return StatusCode(StatusCodes.Status500InternalServerError, exceptionDetails);
+        }
     }
 
     /// <summary>
@@ -109,66 +127,69 @@ public class TemperatureDataController : ControllerBase
     private async Task<TemperatureDataOverview> CombineTempData(DateTime start, DateTime end, string place,
         bool isFahrenheit)
     {
-        var outsideWeatherData = await GetOutsideTemperatureDataAsync(start, end, place);
-        var settings = await _settingsRepo.GetTopicSettingsAsync();
-        var sensorNord = settings.FirstOrDefault(x => x.SensorLocation == "North");
-        var sensorSouth = settings.FirstOrDefault(x => x.SensorLocation == "South");
-        var sensorNordWeatherData = sensorNord != null
-            ? await GetSensorTemperatureDataAsync(start, end, sensorNord.SensorName)
-            : new List<Tuple<double, DateTime, string>>();
-        var sensorSouthWeatherData = sensorSouth != null
-            ? await GetSensorTemperatureDataAsync(start, end, sensorSouth.SensorName)
-            : new List<Tuple<double, DateTime, string>>();
+        var location = await _coordinateRepo.GetLocation(place);
 
+        if (location == null) throw new ArgumentException("Location not found");
+
+        var outsideWeatherData = await GetOutsideTemperatureDataAsync(start, end, place);
+        var settings = await _settingsRepo.GetTopicSettingsAsync(location.PostalCode, SensorType.temp);
+
+        var temperatureData = new TemperatureDataOverview();
+        
+        var sensorDataBag = new ConcurrentBag<SensorData>();
+
+        await Parallel.ForEachAsync(settings, async (sensor, cancelationToken) =>
+        {
+            if (string.IsNullOrEmpty(sensor.SensorName) && string.IsNullOrEmpty(sensor.SensorLocation)) return;
+
+            var sensorTempData = await GetSensorTemperatureDataAsync(start, end, sensor.SensorName);
+
+            sensorTempData = CheckPlausibility(sensorTempData, sensor.SensorName, sensor.SensorLocation, isFahrenheit);
+
+            var sensorData = new SensorData
+            {
+                SensorName = sensor.SensorName, Location = sensor.SensorLocation,
+                TemperatureDatas = sensorTempData.OrderBy(x => x.Temperature).ToList()
+            };
+
+            sensorDataBag.Add(sensorData);
+        });
+        
+        temperatureData.SensorData = sensorDataBag.ToList();
+
+        temperatureData.TemperatureOutside = outsideWeatherData
+            .OrderBy(d => d.Timestamp)
+            .ToList();
+
+        temperatureData.TemperatureOutside =
+            CheckPlausibility(temperatureData.TemperatureOutside, "Outside", "Outside", isFahrenheit);
+        
+        return temperatureData;
+    }
+
+    private List<TemperatureData> CheckPlausibility(List<TemperatureData> sensorData, string sensorName,
+        string sensorLocation, bool isFahrenheit)
+    {
         var tempConverter = isFahrenheit ? ConvertToFahrenheit : (Func<double, double>)(c => c);
 
-        var temperatureData = new TemperatureDataOverview
-        {
-            TemperatureNord = sensorNordWeatherData.Where(x => x.Item3 == sensorNord?.SensorName)
-                .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) })
-                .OrderBy(d => d.Timestamp)
-                .ToList(),
-
-            TemperatureSouth = sensorSouthWeatherData.Where(x => x.Item3 == sensorSouth?.SensorName)
-                .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) })
-                .OrderBy(d => d.Timestamp)
-                .ToList(),
-
-            TemperatureOutside = outsideWeatherData
-                .Select(x => new TemperatureData { Timestamp = x.Item2, Temperature = tempConverter(x.Item1) })
-                .OrderBy(d => d.Timestamp)
-                .ToList()
-        };
-
         // Testing plausibility of the deviation between consecutive temperature data.
-        for (var i = 0; i < temperatureData.TemperatureNord.Count - 1; i++)
+        for (var i = 0; i < sensorData.Count - 1; i++)
         {
-            var northDeviation = temperatureData.TemperatureNord[i].Temperature -
-                                 temperatureData.TemperatureNord[i + 1].Temperature;
-            if (northDeviation > 10.0)
-                _logger.LogWarning(
-                    "Inside(North) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
+            var deviation = sensorData[i].Temperature -
+                            sensorData[i + 1].Temperature;
+            if (deviation > 10.0)
+            {
+                var warning =
+                    $"Inside({sensorName}-{sensorLocation}) temperature data may be corrupted, the temperature deviation has exceeded boundary values.";
+
+                _logger.LogWarning(warning);
+
+                sensorData[i].Plausibility += "\n" + warning;
+                sensorData[i].Temperature = tempConverter(sensorData[i].Temperature);
+            }
         }
 
-        for (var i = 0; i < temperatureData.TemperatureSouth.Count - 1; i++)
-        {
-            var southDeviation = temperatureData.TemperatureSouth[i].Temperature -
-                                 temperatureData.TemperatureSouth[i + 1].Temperature;
-            if (southDeviation > 10.0)
-                _logger.LogWarning(
-                    "Inside(south) temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
-        }
-
-        for (var i = 0; i < temperatureData.TemperatureOutside.Count - 1; i++)
-        {
-            var outsideDeviation = temperatureData.TemperatureOutside[i].Temperature -
-                                   temperatureData.TemperatureOutside[i + 1].Temperature;
-            if (outsideDeviation > 10.0)
-                _logger.LogWarning(
-                    "Outside temperature data may be corrupted, the temperature deviation has exceeded boundary values.");
-        }
-
-        return temperatureData;
+        return sensorData;
     }
 
     /// <summary>
@@ -178,10 +199,11 @@ public class TemperatureDataController : ControllerBase
     /// <param name="end">End date and time for the data range.</param>
     /// <param name="place">Location for outside temperature data.</param>
     /// <returns>List of temperature and timestamp tuples.</returns>
-    private async Task<List<Tuple<double, DateTime>>> GetOutsideTemperatureDataAsync(DateTime start, DateTime end,
+    private async Task<List<TemperatureData>> GetOutsideTemperatureDataAsync(DateTime start, DateTime end,
         string place)
     {
-        var temperatureData = new List<Tuple<double, DateTime>>();
+        var temperatureData = new List<TemperatureData>();
+
         try
         {
             await foreach (var row in _influxRepo.GetOutsideWeatherData(start, end, place))
@@ -199,17 +221,22 @@ public class TemperatureDataController : ControllerBase
                     continue;
                 }
 
+                var warning = string.Empty;
+
                 // Testing for plausibility of the temperature with boundary values.
-                if (temperature > 45.0 || temperature < -30.0)
-                    _logger.LogWarning(
-                        "Outside temperature may be corrupted, the temperature has exceeded boundary values.");
+                if (temperature > 35.0 || temperature < -10.0)
+                {
+                    warning =
+                        "Inside temperature may be corrupted, the temperature has exceeded boundary values.";
+                    _logger.LogWarning(warning);
+                }
 
-                temperatureData.Add(new Tuple<double, DateTime>(temperature, timestamp));
-
-                _logger.LogInformation(
-                    "Fetched outside temperature data: Place: {Place}, Website: {Website}, Temperature: {Temperature}",
-                    place, timestamp, temperature);
+                temperatureData.Add(new TemperatureData
+                    { Timestamp = timestamp, Temperature = temperature, Plausibility = warning });
             }
+
+            _logger.LogInformation(
+                "Fetched outside temperature data");
         }
         catch (Exception e)
         {
@@ -226,10 +253,11 @@ public class TemperatureDataController : ControllerBase
     /// <param name="end">End date and time for the data range.</param>
     /// <param name="sensor">Name of the sensor.</param>
     /// <returns>List of temperature and timestamp tuples.</returns>
-    private async Task<List<Tuple<double, DateTime, string>>> GetSensorTemperatureDataAsync(DateTime start,
+    private async Task<List<TemperatureData>> GetSensorTemperatureDataAsync(DateTime start,
         DateTime end, string sensor)
     {
-        var temperatureData = new List<Tuple<double, DateTime, string>>();
+        var temperatureData = new List<TemperatureData>();
+
         try
         {
             await foreach (var row in _influxRepo.GetSensorWeatherData(start, end, sensor))
@@ -247,17 +275,22 @@ public class TemperatureDataController : ControllerBase
                     continue;
                 }
 
+                var warning = string.Empty;
+
                 // Testing for plausibility of the temperature with boundary values.
                 if (temperature > 35.0 || temperature < -10.0)
-                    _logger.LogWarning(
-                        "Inside temperature may be corrupted, the temperature has exceeded boundary values.");
+                {
+                    warning =
+                        "Inside temperature may be corrupted, the temperature has exceeded boundary values.";
+                    _logger.LogWarning(warning);
+                }
 
-                temperatureData.Add(new Tuple<double, DateTime, string>(temperature, timestamp, sensor));
-
-                _logger.LogInformation(
-                    "Fetched outside temperature Timestamp: {Timestamp}, Temperature: {Temperature}",
-                    timestamp, temperature);
+                temperatureData.Add(new TemperatureData
+                    { Timestamp = timestamp, Temperature = temperature, Plausibility = warning });
             }
+
+            _logger.LogInformation(
+                "Fetched sensor data Sensor: {Sensor}", sensor);
         }
         catch (Exception e)
         {

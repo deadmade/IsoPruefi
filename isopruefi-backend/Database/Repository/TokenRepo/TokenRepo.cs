@@ -15,7 +15,6 @@ public class TokenRepo : ITokenRepo
     ///     Initializes a new instance of the TokenRepo class.
     /// </summary>
     /// <param name="context">The database context.</param>
-    /// <exception cref="ArgumentNullException">Thrown when context is null.</exception>
     public TokenRepo(ApplicationDbContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));

@@ -1,3 +1,4 @@
+using Database.EntityFramework.Enums;
 using Database.EntityFramework.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,6 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
-    //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
 
     /// <summary>
     ///     Represents the collection of TopicSetting entities in the database.
@@ -44,12 +44,12 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
             b.HasData(
                 new TopicSetting
                 {
-                    TopicSettingId = 1, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
+                    TopicSettingId = 1, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = SensorType.temp,
                     SensorName = "Sensor_One", SensorLocation = "North", HasRecovery = true
                 },
                 new TopicSetting
                 {
-                    TopicSettingId = 2, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = "temp",
+                    TopicSettingId = 2, DefaultTopicPath = "dhbw/ai/si2023", GroupId = 2, SensorType = SensorType.temp,
                     SensorName = "Sensor_Two", SensorLocation = "South", HasRecovery = true
                 }
             );

@@ -1,6 +1,7 @@
 using System.Net;
 using Database.EntityFramework;
 using Database.Repository.InfluxRepo;
+using Database.Repository.InfluxRepo.InfluxCache;
 using Database.Repository.SettingsRepo;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;

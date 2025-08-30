@@ -26,14 +26,14 @@ export default function AdminPage() {
             </h1>
 
             {/* Controls Section */}
-            <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center mb-6 bg-white rounded-xl shadow p-4 max-w-4xl mx-auto">
-                <div className="flex-1">
+            <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center mb-6 bg-white rounded-xl shadow p-4 max-w-6xl mx-auto">
+                <div className="w-full sm:w-80">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Location</label>
                     <PlacePicker value={place} onChange={setPlace} refreshKey={locVersion} />
                     <p className="text-xs text-gray-500 mt-1">Select the monitoring location</p>
                 </div>
 
-                <div>
+                <div className="w-full sm:w-auto">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Temperature Units</label>
                     <UnitToggle value={isF} onChange={setIsF} />
                 </div>

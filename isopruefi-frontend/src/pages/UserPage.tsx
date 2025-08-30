@@ -17,8 +17,8 @@ export default function UserPage() {
   };
 
   return (
-    <div className="h-full w-full bg-[#f5cacd] p-6">
-      <h1 className="text-4xl font-extrabold text-[#d3546c] mb-8 text-center">
+    <div /*className="h-full w-full bg-[#f5cacd] p-6"*/>
+      <h1 /*className="text-4xl font-extrabold text-[#d3546c] mb-8 text-center"*/>
         User Page
       </h1>
 
@@ -35,8 +35,8 @@ export default function UserPage() {
         </div>
       </div>
 
-      <section className="bg-white rounded-xl shadow p-6 max-w-[1200px] mx-auto mt-4">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+      <section /*className="bg-white rounded-xl shadow p-6 max-w-[1200px] mx-auto mt-4"*/>
+        <h2 /*className="text-2xl font-bold text-gray-800 mb-4 text-center"*/>
           Weather Chart
         </h2>
         <TempChart place={place} isFahrenheit={isF} />
@@ -45,7 +45,7 @@ export default function UserPage() {
       <div className="flex justify-end">
         <button
           onClick={handleLogout}
-          className="mt-6 px-6 py-2 rounded-lg bg-pink-600 text-white font-semibold hover:bg-pink-800"
+          /*className="mt-6 px-6 py-2 rounded-lg bg-pink-600 text-white font-semibold hover:bg-pink-800"*/
         >
           Logout
         </button>

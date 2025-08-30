@@ -138,127 +138,232 @@ export default function ManageTopics() {
     }
 
     return (
-        <section style={{ marginTop: 24 }}>
-            <h3 style={{ marginBottom: 8 }}>Manage MQTT Topics (admin)</h3>
+        <section className="mt-6">
+            <h3 className="mb-2 text-lg font-semibold text-gray-800">Manage MQTT Topics (admin)</h3>
 
-            {/* Create */}
-            <div style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr 1.5fr 0.6fr auto",
-                gap: 8,
-                alignItems: "center",
-                maxWidth: 1200,
-                marginBottom: 12
-            }}>
-                <input placeholder="Sensor name"
-                       value={sensorName} onChange={e => setSensorName(e.target.value)}
-                       disabled={busy} style={{ padding: 6 }} />
-                <input placeholder="Location (North/South/...)"
-                       value={sensorLocation} onChange={e => setSensorLocation(e.target.value)}
-                       disabled={busy} style={{ padding: 6 }} />
-                <input placeholder="Sensor type (optional)"
-                       value={sensorType} onChange={e => setSensorType(e.target.value)}
-                       disabled={busy} style={{ padding: 6 }} />
-                <input placeholder="Default topic path (optional)"
-                       value={defaultTopicPath} onChange={e => setDefaultTopicPath(e.target.value)}
-                       disabled={busy} style={{ padding: 6 }} />
-                <input placeholder="Group ID (optional)" inputMode="numeric"
-                       value={groupId} onChange={e => setGroupId(e.target.value)}
-                       disabled={busy} style={{ padding: 6 }} />
-                <label style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                    <input type="checkbox" checked={hasRecovery}
-                           onChange={e => setHasRecovery(e.target.checked)} disabled={busy} />
-                    Recovery
-                </label>
-                <button onClick={onCreate} disabled={busy || !canCreate}>Add</button>
+            {/* Create Form */}
+            <div className="grid grid-cols-1 lg:grid-cols-6 gap-2 items-end max-w-full mb-3 p-4 bg-gray-50 rounded-lg">
+                <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Sensor Name</label>
+                    <input
+                        placeholder="Sensor name"
+                        value={sensorName}
+                        onChange={e => setSensorName(e.target.value)}
+                        disabled={busy}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
+                    />
+                </div>
+                <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Location</label>
+                    <input
+                        placeholder="Location (North/South/...)"
+                        value={sensorLocation}
+                        onChange={e => setSensorLocation(e.target.value)}
+                        disabled={busy}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
+                    />
+                </div>
+                <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Sensor Type</label>
+                    <input
+                        placeholder="Sensor type (optional)"
+                        value={sensorType}
+                        onChange={e => setSensorType(e.target.value)}
+                        disabled={busy}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
+                    />
+                </div>
+                <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Topic Path</label>
+                    <input
+                        placeholder="Default topic path (optional)"
+                        value={defaultTopicPath}
+                        onChange={e => setDefaultTopicPath(e.target.value)}
+                        disabled={busy}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
+                    />
+                </div>
+                <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Group ID</label>
+                    <input
+                        placeholder="Group ID (optional)"
+                        inputMode="numeric"
+                        value={groupId}
+                        onChange={e => setGroupId(e.target.value)}
+                        disabled={busy}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            checked={hasRecovery}
+                            onChange={e => setHasRecovery(e.target.checked)}
+                            disabled={busy}
+                            className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                        />
+                        <span className="text-xs font-medium text-gray-700">Recovery</span>
+                    </label>
+                    <button
+                        onClick={onCreate}
+                        disabled={busy || !canCreate}
+                        className="px-4 py-2 bg-pink-600 text-white text-sm font-medium rounded-md hover:bg-pink-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    >
+                        Add
+                    </button>
+                </div>
             </div>
 
-            {/* List */}
-            <div style={{ overflowX: "auto" }}>
-                <table style={{ borderCollapse: "collapse", width: "100%", maxWidth: 1200 }}>
-                    <thead>
-                    <tr>
-                        <th style={{ textAlign: "left", borderBottom: "1px solid #ddd", padding: 6 }}>ID</th>
-                        <th style={{ textAlign: "left", borderBottom: "1px solid #ddd", padding: 6 }}>Sensor</th>
-                        <th style={{ textAlign: "left", borderBottom: "1px solid #ddd", padding: 6 }}>Location</th>
-                        <th style={{ textAlign: "left", borderBottom: "1px solid #ddd", padding: 6 }}>Type</th>
-                        <th style={{ textAlign: "left", borderBottom: "1px solid #ddd", padding: 6 }}>Default Topic Path</th>
-                        <th style={{ textAlign: "left", borderBottom: "1px solid #ddd", padding: 6 }}>Group</th>
-                        <th style={{ textAlign: "left", borderBottom: "1px solid #ddd", padding: 6 }}>Recovery</th>
-                        <th style={{ borderBottom: "1px solid #ddd", padding: 6 }} />
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {rows.map((r, i) => (
-                        <tr key={r.topicSettingId ?? i}>
-                            <td style={{ padding: 6 }}>{r.topicSettingId ?? "—"}</td>
-
-                            <td style={{ padding: 6 }}>
-                                {r._editing ? (
-                                    <input value={r.sensorName ?? ""} onChange={e => patch(i, { sensorName: e.target.value })}
-                                           style={{ padding: 4, width: "100%" }} />
-                                ) : (r.sensorName ?? "—")}
-                            </td>
-
-                            <td style={{ padding: 6 }}>
-                                {r._editing ? (
-                                    <input value={r.sensorLocation ?? ""} onChange={e => patch(i, { sensorLocation: e.target.value })}
-                                           style={{ padding: 4, width: "100%" }} />
-                                ) : (r.sensorLocation ?? "—")}
-                            </td>
-
-                            <td style={{ padding: 6 }}>
-                                {r._editing ? (
-                                    <input value={r.sensorType ?? ""} onChange={e => patch(i, { sensorType: e.target.value })}
-                                           style={{ padding: 4, width: "100%" }} />
-                                ) : (r.sensorType ?? "—")}
-                            </td>
-
-                            <td style={{ padding: 6 }}>
-                                {r._editing ? (
-                                    <input value={r.defaultTopicPath ?? ""} onChange={e => patch(i, { defaultTopicPath: e.target.value })}
-                                           style={{ padding: 4, width: "100%" }} />
-                                ) : (r.defaultTopicPath ?? "—")}
-                            </td>
-
-                            <td style={{ padding: 6, minWidth: 70 }}>
-                                {r._editing ? (
-                                    <input inputMode="numeric" value={r.groupId?.toString() ?? ""}
-                                           onChange={e => patch(i, { groupId: e.target.value ? Number(e.target.value) : undefined })}
-                                           style={{ padding: 4, width: "100%" }} />
-                                ) : (r.groupId ?? "—")}
-                            </td>
-
-                            <td style={{ padding: 6 }}>
-                                {r._editing ? (
-                                    <input type="checkbox" checked={!!r.hasRecovery}
-                                           onChange={e => patch(i, { hasRecovery: e.target.checked })} />
-                                ) : (r.hasRecovery ? "Yes" : "No")}
-                            </td>
-
-                            <td style={{ padding: 6, whiteSpace: "nowrap" }}>
-                                {!r._editing ? (
-                                    <>
-                                        <button onClick={() => beginEdit(i)} disabled={busy}>Edit</button>{" "}
-                                        <button onClick={() => onDelete(i)} disabled={busy}>Delete</button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button onClick={() => onSave(i)} disabled={busy}>Save</button>{" "}
-                                        <button onClick={() => cancelEdit(i)} disabled={busy}>Cancel</button>
-                                    </>
-                                )}
-                            </td>
+            {/* Table */}
+            <div className="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
+                <table className="min-w-full table-auto">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">ID</th>
+                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Sensor</th>
+                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Location</th>
+                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Type</th>
+                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Default Topic Path</th>
+                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Group</th>
+                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Recovery</th>
+                            <th className="px-3 py-2 border-b border-gray-200">Actions</th>
                         </tr>
-                    ))}
-                    {rows.length === 0 && (
-                        <tr><td colSpan={8} style={{ padding: 8, opacity: 0.7 }}>No topics configured.</td></tr>
-                    )}
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                        {rows.map((r, i) => (
+                            <tr key={r.topicSettingId ?? i} className="hover:bg-gray-50">
+                                <td className="px-3 py-2 text-sm text-gray-900">{r.topicSettingId ?? "—"}</td>
+
+                                <td className="px-3 py-2">
+                                    {r._editing ? (
+                                        <input
+                                            value={r.sensorName ?? ""}
+                                            onChange={e => patch(i, { sensorName: e.target.value })}
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-pink-300"
+                                        />
+                                    ) : (
+                                        <span className="text-sm text-gray-900">{r.sensorName ?? "—"}</span>
+                                    )}
+                                </td>
+
+                                <td className="px-3 py-2">
+                                    {r._editing ? (
+                                        <input
+                                            value={r.sensorLocation ?? ""}
+                                            onChange={e => patch(i, { sensorLocation: e.target.value })}
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-pink-300"
+                                        />
+                                    ) : (
+                                        <span className="text-sm text-gray-900">{r.sensorLocation ?? "—"}</span>
+                                    )}
+                                </td>
+
+                                <td className="px-3 py-2">
+                                    {r._editing ? (
+                                        <input
+                                            value={r.sensorType ?? ""}
+                                            onChange={e => patch(i, { sensorType: e.target.value })}
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-pink-300"
+                                        />
+                                    ) : (
+                                        <span className="text-sm text-gray-900">{r.sensorType ?? "—"}</span>
+                                    )}
+                                </td>
+
+                                <td className="px-3 py-2">
+                                    {r._editing ? (
+                                        <input
+                                            value={r.defaultTopicPath ?? ""}
+                                            onChange={e => patch(i, { defaultTopicPath: e.target.value })}
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-pink-300"
+                                        />
+                                    ) : (
+                                        <span className="text-sm text-gray-900">{r.defaultTopicPath ?? "—"}</span>
+                                    )}
+                                </td>
+
+                                <td className="px-3 py-2">
+                                    {r._editing ? (
+                                        <input
+                                            inputMode="numeric"
+                                            value={r.groupId?.toString() ?? ""}
+                                            onChange={e => patch(i, { groupId: e.target.value ? Number(e.target.value) : undefined })}
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-pink-300"
+                                        />
+                                    ) : (
+                                        <span className="text-sm text-gray-900">{r.groupId ?? "—"}</span>
+                                    )}
+                                </td>
+
+                                <td className="px-3 py-2">
+                                    {r._editing ? (
+                                        <input
+                                            type="checkbox"
+                                            checked={!!r.hasRecovery}
+                                            onChange={e => patch(i, { hasRecovery: e.target.checked })}
+                                            className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                                        />
+                                    ) : (
+                                        <span className="text-sm text-gray-900">{r.hasRecovery ? "Yes" : "No"}</span>
+                                    )}
+                                </td>
+
+                                <td className="px-3 py-2 whitespace-nowrap">
+                                    {!r._editing ? (
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => beginEdit(i)}
+                                                disabled={busy}
+                                                className="px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => onDelete(i)}
+                                                disabled={busy}
+                                                className="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => onSave(i)}
+                                                disabled={busy}
+                                                className="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                            >
+                                                Save
+                                            </button>
+                                            <button
+                                                onClick={() => cancelEdit(i)}
+                                                disabled={busy}
+                                                className="px-3 py-1 bg-gray-600 text-white text-xs font-medium rounded hover:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                        {rows.length === 0 && (
+                            <tr>
+                                <td colSpan={8} className="px-3 py-4 text-center text-sm text-gray-500">
+                                    No topics configured.
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
 
-            {msg && <p style={{ marginTop: 8, color: /fail|error/i.test(msg) ? "crimson" : "green" }}>{msg}</p>}
+            {msg && (
+                <p className={`mt-3 text-sm font-medium ${/fail|error/i.test(msg) ? "text-red-600" : "text-green-600"}`}>
+                    {msg}
+                </p>
+            )}
         </section>
     );
 }

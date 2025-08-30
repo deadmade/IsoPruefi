@@ -1,15 +1,9 @@
-import { useState } from "react";
-import { TempChart } from "../components/Weather";
-import { PlacePicker } from "../components/PlacePicker";
-import { UnitToggle } from "../components/UnitToggle";
-import { useNavigate } from "react-router-dom";
-import { clearToken } from "../utils/tokenHelpers";
+import {TempChart} from "../components/Weather.tsx";
+import {useNavigate} from "react-router-dom";
+import {clearToken} from "../utils/tokenHelpers.ts";
 
 export default function UserPage() {
   const navigate = useNavigate();
-
-  const [place, setPlace] = useState("Heidenheim an der Brenz");
-  const [isF, setIsF] = useState(false);
 
   const handleLogout = () => {
     clearToken();
@@ -17,38 +11,25 @@ export default function UserPage() {
   };
 
   return (
-    <div /*className="h-full w-full bg-[#f5cacd] p-6"*/>
-      <h1 /*className="text-4xl font-extrabold text-[#d3546c] mb-8 text-center"*/>
+    <div className="h-full w-full bg-[#f5cacd] p-6">
+      <h1 className="text-4xl font-extrabold text-[#d3546c] mb-8 text-center">
         User Page
       </h1>
 
-      <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-        <div>
-          <div style={{ fontWeight: 600 }}>Place</div>
-          <PlacePicker value={place} onChange={setPlace} />
-          <small style={{ marginLeft: 8, opacity: 0.7 }}>Pick the location</small>
-        </div>
-
-        <div>
-          <div style={{ fontWeight: 600 }}>Units</div>
-          <UnitToggle value={isF} onChange={setIsF} />
-        </div>
-      </div>
-
-      <section /*className="bg-white rounded-xl shadow p-6 max-w-[1200px] mx-auto mt-4"*/>
-        <h2 /*className="text-2xl font-bold text-gray-800 mb-4 text-center"*/>
+      <div className="bg-white rounded-xl shadow p-6 max-w-300 mx-auto">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
           Weather Chart
         </h2>
-        <TempChart place={place} isFahrenheit={isF} />
-      </section>
+        <TempChart />
 
-      <div className="flex justify-end">
-        <button
-          onClick={handleLogout}
-          /*className="mt-6 px-6 py-2 rounded-lg bg-pink-600 text-white font-semibold hover:bg-pink-800"*/
-        >
-          Logout
-        </button>
+        <div className="flex justify-end">
+          <button
+            onClick={handleLogout}
+            className="px-6 py-2 rounded-lg bg-pink-600 text-white font-semibold hover:bg-pink-800"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

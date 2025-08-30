@@ -1,178 +1,173 @@
 import { useEffect, useState } from "react";
 import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from "recharts";
 import { tempClient, ApiException } from "../api/clients";
 
-type Row = {
-    ts: number;
-    tempSouth?: number;
-    tempNorth?: number;
-    tempOutside?: number;
+export type WeatherEntry = {
+    timestamp: string;
+    tempSouth: number;
+    tempNorth: number;
+    tempOutside: number;
 };
 
-type Props = {
+type TempChartProps = {
     place?: string;
     isFahrenheit?: boolean;
 };
 
-const style = { width: "100%", height: 400 };
-
-const ALL_DAYS = 30;
-
-export function TempChart({
-                              place = "Heidenheim an der Brenz",
-                              isFahrenheit = false,
-                          }: Props) {
-    const [data, setData] = useState<Row[]>([]);
+export function TempChart({ place = "Heidenheim", isFahrenheit = false }: TempChartProps = {}) {
+    const [weatherData, setWeatherData] = useState<WeatherEntry[]>([]);
     const [filter, setFilter] = useState<"all" | "hour" | "day" | "week">("all");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        let cancelled = false;
-
-        const now = new Date();
-        let start = new Date(now);
-        let end = new Date(now);
-        let bucketMs: number;
-        
-        if (filter === "hour") {
-            bucketMs = 60000;
-            start = new Date(end.getTime() - 60 * 60 * 1000);
-        } else if (filter === "day") {
-            bucketMs = 60 * 60 * 1000; // 1 hour
-            start = new Date(end);
-            start.setHours(0, 0, 0, 0); // local midnight
-        } else if (filter === "week") {
-            bucketMs = 12 * 60 * 60 * 1000; // 12 hours
-            start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
-            const hours = start.getHours();
-            start.setHours(hours < 12 ? 0: 12, 0, 0, 0); // start to 12h boundary for stable 14 buckets
-        } else {
-            bucketMs = 24 * 60 * 60 * 1000; // 1 day
-            start = new Date (end.getTime() - ALL_DAYS * 24 * 60 * 60 * 1000);
-            start.setHours(0, 0, 0, 0);
-            end.setHours(23, 59, 59, 999);
-        }
-        
-        const toMs = (v: unknown): number | null => {
-            if (!v) return null;
-            const t = new Date(v as any).getTime();
-            return Number.isNaN(t) ? null : t;
-        }
-        
-        type TD = {timestamp?: any; temperature?: number};
-
-        // Average readings into buckets anchored at "start"
-        const bucketSeries = (arr?: TD[]) => {
-            const sums = new Map<number, {s: number; n: number }>();
-            const startMs = start.getTime();
-            for (const it of arr ?? []) {
-                const ts = toMs(it?.timestamp);
-                const v = it?.temperature;
-                if(ts == null || typeof v!== "number" || Number.isNaN(v)) continue;
-                const b = startMs + Math.floor((ts - startMs) / bucketMs) * bucketMs;
-                const cur = sums.get(b) ?? {s: 0, n: 0};
-                cur.s += v; cur.n += 1;
-                sums.set(b, cur);
-            }
-            const out = new Map<number, number>();
-            for (const [b, {s, n}] of sums) out.set(b, s/n);
-            return out;
-        };
-        
-        const buildTimeline = () => {
-            const t: number[] = [];
-            const startMs = start.getTime();
-            const endMs = end.getTime();
-            for (let ms = startMs; ms <= endMs; ms += bucketMs) t.push(ms);
-            if (t.length === 0 || t[t.length - 1] < endMs) t.push(startMs + 
-                Math.floor((endMs - startMs) / bucketMs) * bucketMs); 
-            return t;
-        }
-
-        (async () => {
+        const fetchData = async () => {
             setLoading(true);
             setError(null);
+
+            const end = new Date();
+            const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
+
             try {
-                const res = await tempClient.getTemperature(start, end, place, isFahrenheit);
-                if (cancelled) return;
+                const data = await tempClient.getTemperature(start, end, place, isFahrenheit);
+                if (!data) { setError("No data received from server"); return; }
 
-                const southM   = bucketSeries(res?.temperatureSouth);
-                const northM   = bucketSeries(res?.temperatureNord);
-                const outsideM = bucketSeries(res?.temperatureOutside);
+                const south = data.temperatureSouth || [];
+                const north = data.temperatureNord || [];
+                const outside = data.temperatureOutside || [];
+                const maxLen = Math.max(south.length, north.length, outside.length);
 
-                const timeline = buildTimeline();
+                const toIso = (t: unknown) =>
+                    t ? (t instanceof Date ? t.toISOString() : new Date(t as any).toISOString()) : "";
 
-                const merged: Row[] = timeline.map(ts => ({
-                    ts,
-                    tempSouth:   southM.get(ts),
-                    tempNorth:   northM.get(ts),
-                    tempOutside: outsideM.get(ts),
-                }));
+                const formatted: WeatherEntry[] = Array.from({ length: maxLen }, (_, i) => {
+                    const anyTs = north[i]?.timestamp ?? south[i]?.timestamp ?? outside[i]?.timestamp ?? null;
+                    return {
+                        timestamp: toIso(anyTs),
+                        tempSouth: south[i]?.temperature ?? 0,
+                        tempNorth: north[i]?.temperature ?? 0,
+                        tempOutside: outside[i]?.temperature ?? 0,
+                    };
+                });
 
-                setData(merged);
+                setWeatherData(formatted);
             } catch (err) {
-                if (cancelled) return;
+                console.error("Failed to fetch temperature data", err);
                 if (ApiException.isApiException(err)) setError(`API Error (${err.status}): ${err.message}`);
-                else setError(err instanceof Error ? err.message : "Unexpected error");
+                else if (err instanceof Error) setError(err.message);
+                else setError("An unexpected error occurred");
             } finally {
-                if (!cancelled) setLoading(false);
+                setLoading(false);
             }
-        })();
+        };
 
-        return () => { cancelled = true; };
-    }, [place, isFahrenheit, filter]);
+        fetchData();
+    }, [place, isFahrenheit]);
 
-    const tickFmt = (v: number) => {
-        const d = new Date(v);
-        if (filter === "hour") return d.toLocaleTimeString([], { minute: "2-digit", second: "2-digit" });
-        if (filter === "day")  return d.toLocaleTimeString([], { hour: "2-digit" });
-        if (filter === "week") return d.toLocaleString([], { month: "short", day: "2-digit", hour: "2-digit" });
-        return d.toLocaleDateString([], { month: "short", day: "2-digit" }); // all
-    };
-    if (loading) return <div style={style}>Loading temperature data…</div>;
-    if (error) {
-        return (
-            <div style={style}>
-                <p style={{ color: "red" }}>Error loading temperature data: {error}</p>
-                <button onClick={() => location.reload()}>Retry</button>
-            </div>
-        );
+    const now = new Date().getTime();
+    let cutoff = 0;
+    switch (filter) {
+        case "hour": cutoff = now - 60 * 60 * 1000; break;
+        case "day": cutoff = now - 24 * 60 * 60 * 1000; break;
+        case "week": cutoff = now - 7 * 24 * 60 * 60 * 1000; break;
+        default: cutoff = 0;
     }
-    
-    return (
-        <div style={style}>
-            <label style={{ marginBottom: 8, display: "block" }}>
-                Show:{" "}
-                <select value={filter} onChange={(e) => setFilter(e.target.value as any)}>
-                    <option value="all">All</option>
-                    <option value="hour">Last Hour</option>
-                    <option value="day">Today</option>
-                    <option value="week">This Week</option>
-                </select>
-                {" "}<small>({isFahrenheit ? "°F" : "°C"}, {place})</small>
-            </label>
 
-            <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                        type="number"
-                        dataKey="ts"
-                        domain={["dataMin", "dataMax"]}
-                        scale="time"
-                        tickFormatter={tickFmt}
-                    />
-                    <YAxis />
-                    <Tooltip labelFormatter={(v) => new Date(v as number).toLocaleString()} />
-                    <Legend />
-                    <Line type="monotone" dataKey="tempSouth"   name="South"   stroke="#8884d8" activeDot={{ r: 5 }} connectNulls />
-                    <Line type="monotone" dataKey="tempNorth"   name="North"   stroke="#84d8d2" activeDot={{ r: 5 }} connectNulls />
-                    <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#82ca9d" activeDot={{ r: 4 }} connectNulls />
-                </LineChart>
-            </ResponsiveContainer>
+    const filteredData = filter === "all"
+        ? weatherData
+        : weatherData.filter(e => {
+            const t = new Date(e.timestamp).getTime();
+            return !Number.isNaN(t) && t >= cutoff;
+        });
+
+    if (loading) return (
+        <div className="w-full h-[400px] rounded-xl bg-white boder-black-100 shadow flex items-center justify-center">
+            <span className="text-gray-600">Loading temperature data…</span>
         </div>
     );
+
+    if (error) return (
+        <div className="w-full h-[400px] rounded-xl bg-white boder-black-100 shadow p-4 flex flex-col items-center justify-center gap-3">
+            <p className="text-red-600 text-sm">Error loading temperature data: {error}</p>
+            <button
+                onClick={() => window.location.reload()}
+                className="px-4 py-2 rounded-lg bg-pink-600 text-white hover:bg-pink-700"
+            >
+                Retry
+            </button>
+        </div>
+    );
+
+    const lastVal = (arr: WeatherEntry[], key: "tempSouth" | "tempNorth" | "tempOutside") => {
+        for (let i = arr.length - 1; i >= 0; i--) {
+            const v = arr[i][key];
+            if (typeof v === "number" && !Number.isNaN(v)) return v;
+        }
+        return null;
+    };
+
+    const vSouth = lastVal(weatherData, "tempSouth");
+    const vNorth = lastVal(weatherData, "tempNorth");
+    const vOut = lastVal(weatherData, "tempOutside");
+    const fmt = (v: number | null) => (v == null ? "—" : `${v.toFixed(1)}°C`);
+
+    return (
+        <div className="flex w-full gap-6">
+            {/* LEFT: chart card */}
+            <div className="flex-1 rounded-xl bg-white shadow p-4 h-[400px] border border-gray-300 text-center">
+                <label className="mb-3 block text-sm text-gray-700">
+                    Show:{" "}
+                    <select
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value as any)}
+                        className="ml-2 rounded-md border border-pink-200 bg-white 
+                     px-3 py-1 text-sm shadow-sm text-center
+                     focus:outline-none focus:ring-2 focus:ring-pink-100 focus:border-pink-200"
+                    >
+                        <option value="all">All</option>
+                        <option value="hour">Last Hour</option>
+                        <option value="day">Today</option>
+                        <option value="week">This Week</option>
+                    </select>
+                </label>
+
+                <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={filteredData} margin={{ top: 8, right: 16, left: 8, bottom: 32 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                            dataKey="timestamp"
+                            tickFormatter={(v) =>
+                                new Date(v).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                            }
+                        />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: 8 }} />
+                        <Line type="monotone" dataKey="tempSouth" name="South" stroke="#d3546c" activeDot={{ r: 1 }} />
+                        <Line type="monotone" dataKey="tempNorth" name="North" stroke="#84d8d2" activeDot={{ r: 1 }} />
+                        <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#82ca9d" activeDot={{ r: 1 }} />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+
+            {/* RIGHT: tiles */}
+            <div className="w-64 flex flex-col gap-4">
+                <div className="rounded-xl bg-white shadow px-5 py-4 border border-gray-300">
+                    <div className="text-sm text-gray-500">South</div>
+                    <div className="mt-1 text-3xl font-bold text-[#d3546c]">{fmt(vSouth)}</div>
+                </div>
+                <div className="rounded-xl bg-white shadow px-5 py-4 border border-gray-300">
+                    <div className="text-sm text-gray-500">North</div>
+                    <div className="mt-1 text-3xl font-bold text-[#3bbfba]">{fmt(vNorth)}</div>
+                </div>
+                <div className="rounded-xl bg-white shadow px-5 py-4 border border-gray-300">
+                    <div className="text-sm text-gray-500">Outside</div>
+                    <div className="mt-1 text-3xl font-bold text-[#3fbf86]">{fmt(vOut)}</div>
+                </div>
+            </div>
+        </div>
+    );
+
 }

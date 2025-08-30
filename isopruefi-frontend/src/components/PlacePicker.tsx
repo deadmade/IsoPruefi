@@ -31,7 +31,7 @@ export const PlacePicker: React.FC<Props> = ({
 
                 const current = (value ?? "").trim();
                 if (!current) {
-                    const preferred = rows.find(r => /heidenheim/i.test(r.locationName)) ?? rows[0];
+                    const preferred = rows.find((r: PostalLocation) => /heidenheim/i.test(r.locationName)) ?? rows[0];
                     if (preferred?.locationName) onChange(preferred.locationName);
                 }
             } finally {
@@ -54,6 +54,7 @@ export const PlacePicker: React.FC<Props> = ({
             value={current}
             onChange={handleChange}
             disabled={loading || opts.length === 0}
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100 disabled:text-gray-400"
         >
             {current === "" && (
                 <option value="" disabled>

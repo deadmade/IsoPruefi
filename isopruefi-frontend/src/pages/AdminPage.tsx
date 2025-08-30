@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { TempChart } from "../components/Weather";
-import { PlacePicker } from "../components/PlacePicker";
-import { UnitToggle } from "../components/UnitToggle";
+import { TempChart } from "../components/Weather.tsx";
+import { PlacePicker } from "../components/PlacePicker.tsx";
+import { UnitToggle } from "../components/UnitToggle.tsx";
 import { useNavigate } from "react-router-dom";
-import { clearToken } from "../utils/tokenHelpers";
-import ManageLocations from "../components/ManageLocations";
-import ManageTopics from "../components/ManageTopics";
+import { clearToken } from "../utils/tokenHelpers.ts";
+import ManageLocations from "../components/ManageLocations.tsx";
+import ManageTopics from "../components/ManageTopics.tsx";
 
 export default function AdminPage() {
     const navigate = useNavigate();
@@ -20,40 +20,49 @@ export default function AdminPage() {
     };
 
     return (
-        <div /*className="h-full w-full bg-[#f5cacd] p-6"*/>
-            <h1 /*className="text-4xl font-extrabold text-[#d3546c] mb-8 text-center"*/>
+        <div className="min-h-screen w-full bg-[#f5cacd] p-6">
+            <h1 className="text-4xl font-extrabold text-[#d3546c] mb-8 text-center">
                 Admin Page
             </h1>
 
-            <div style={{display: "flex", gap: 24, alignItems: "center"}}>
-                <div>
-                    <div style={{fontWeight: 600}}>Place</div>
-                    <PlacePicker value={place} onChange={setPlace} refreshKey={locVersion}/>
-                    <small style={{marginLeft: 8, opacity: 0.7}}>Pick the location</small>
+            {/* Controls Section */}
+            <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center mb-6 bg-white rounded-xl shadow p-4 max-w-4xl mx-auto">
+                <div className="flex-1">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Location</label>
+                    <PlacePicker value={place} onChange={setPlace} refreshKey={locVersion} />
+                    <p className="text-xs text-gray-500 mt-1">Select the monitoring location</p>
                 </div>
 
                 <div>
-                    <div style={{fontWeight: 600}}>Units</div>
-                    <UnitToggle value={isF} onChange={setIsF}/>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Temperature Units</label>
+                    <UnitToggle value={isF} onChange={setIsF} />
                 </div>
             </div>
 
-            <section /* className="bg-white rounded-xl shadow p-6 max-w-[1200px] mx-auto mt-4"*/>
-                <h2/* className="text-2xl font-bold text-gray-800 mb-4 text-center"*/>
+            {/* Weather Chart Section */}
+            <section className="bg-white rounded-xl shadow p-6 max-w-6xl mx-auto mb-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
                     Weather Chart
                 </h2>
-                <TempChart place={place} isFahrenheit={isF}/>
+                <TempChart place={place} isFahrenheit={isF} />
             </section>
 
-            <br/><br/>
-            <ManageLocations onChanged={() => setLocVersion(v => v + 1)}/>
-            <br/><br/>
-            <ManageTopics/>
+            {/* Admin Management Sections */}
+            <div className="max-w-6xl mx-auto space-y-6">
+                <div className="bg-white rounded-xl shadow p-6">
+                    <ManageLocations onChanged={() => setLocVersion(v => v + 1)} />
+                </div>
+                
+                <div className="bg-white rounded-xl shadow p-6">
+                    <ManageTopics />
+                </div>
+            </div>
 
-            <div className="flex justify-end">
+            {/* Logout Button */}
+            <div className="flex justify-center mt-8">
                 <button
                     onClick={handleLogout}
-                    /*className="mt-6 px-6 py-2 rounded-lg bg-pink-600 text-white font-semibold hover:bg-pink-800"*/
+                    className="px-8 py-3 rounded-lg bg-pink-600 text-white font-semibold hover:bg-pink-800 shadow-md transition-colors"
                 >
                     Logout
                 </button>

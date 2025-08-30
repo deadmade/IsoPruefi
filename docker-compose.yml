@@ -204,10 +204,15 @@ services:
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+    volumes:
+      - ./isopruefi-frontend:/app
+      - /app/node_modules
     networks:
       - isopruefi-network
     environment:
-      - NODE_ENV=development
+      VITE_DEV_PROXY_TARGET: https://aicon.dhbw-heidenheim.de:5001/backend
+    ports:
+      - "5173:5173"
     stdin_open: true
     tty: true
 

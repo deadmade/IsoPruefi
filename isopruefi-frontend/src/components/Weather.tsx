@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from "recharts";
-import { tempClient, ApiException } from "../api/clients";
+import { tempClient, ApiException, getStoredLocationName } from "../api/clients";
 
 export type WeatherEntry = {
     timestamp: string;
@@ -11,7 +11,12 @@ export type WeatherEntry = {
     tempOutside: number;
 };
 
-export function TempChart() {
+type TempChartProps = {
+    place?: string;
+    isFahrenheit?: boolean;
+};
+
+export function TempChart({ place = "Heidenheim an der Brenz", isFahrenheit = false }: TempChartProps = {}) {
     const [weatherData, setWeatherData] = useState<WeatherEntry[]>([]);
     const [filter, setFilter] = useState<"all" | "hour" | "day" | "week">("all");
     const [loading, setLoading] = useState(false);
@@ -24,16 +29,28 @@ export function TempChart() {
 
             const end = new Date();
             const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
-            const place = "Heidenheim";
-            const isFahrenheit = false;
 
             try {
-                const data = await tempClient.getTemperature(start, end, place, isFahrenheit);
+                // Convert the display location name to the stored location name for the API call
+                const storedLocationName = getStoredLocationName(place);
+                console.log('Display location:', place, 'Stored location:', storedLocationName);
+                
+                const data = await tempClient.getTemperature(start, end, storedLocationName, isFahrenheit);
+                console.log('Temperature API Response:', data);
+                console.log('Place parameter (stored):', storedLocationName);
+                console.log('Start:', start, 'End:', end);
+                
                 if (!data) { setError("No data received from server"); return; }
 
                 const south = data.temperatureSouth || [];
                 const north = data.temperatureNord || [];
                 const outside = data.temperatureOutside || [];
+                
+                console.log('South data length:', south.length);
+                console.log('North data length:', north.length);
+                console.log('Outside data length:', outside.length);
+                console.log('Outside data sample:', outside.slice(0, 3));
+                
                 const maxLen = Math.max(south.length, north.length, outside.length);
 
                 const toIso = (t: unknown) =>
@@ -41,11 +58,13 @@ export function TempChart() {
 
                 const formatted: WeatherEntry[] = Array.from({ length: maxLen }, (_, i) => {
                     const anyTs = north[i]?.timestamp ?? south[i]?.timestamp ?? outside[i]?.timestamp ?? null;
+                    const outsideTemp = outside[i]?.temperature ?? 0;
+                    console.log(`Data point ${i}: outside temp = ${outsideTemp}, timestamp = ${anyTs}`);
                     return {
                         timestamp: toIso(anyTs),
                         tempSouth: south[i]?.temperature ?? 0,
                         tempNorth: north[i]?.temperature ?? 0,
-                        tempOutside: outside[i]?.temperature ?? 0,
+                        tempOutside: outsideTemp,
                     };
                 });
 
@@ -61,7 +80,7 @@ export function TempChart() {
         };
 
         fetchData();
-    }, []);
+    }, [place, isFahrenheit]);
 
     const now = new Date().getTime();
     let cutoff = 0;

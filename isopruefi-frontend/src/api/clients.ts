@@ -11,6 +11,15 @@ import {
 // Read the base URL from config
 const BASE = apiBase();
 
+export type SensorMeta = {
+    id: number;
+    name: string;
+    location: string;
+    type: "north" | "south" | "other";
+};
+
+export type LocationStatus = { online: boolean; lastSeenMs?: number };
+
 // fetch wrapper that injects the bearer token at CALL time.
 function authFetch(input: RequestInfo, init: RequestInit = {}) {
     const token = getToken();
@@ -120,6 +129,7 @@ export async function removePostalLocation(postalCode: number | string): Promise
         throw err;
     }
 }
+
 export const topicClient = new TopicClient(BASE, { fetch: authFetch });
 export async function getAllTopics(): Promise<TopicSetting[]> {
     return topicClient.getAllTopics();
@@ -127,14 +137,98 @@ export async function getAllTopics(): Promise<TopicSetting[]> {
 
 export async function createTopic(setting: TopicSetting): Promise<void> {
     await topicClient.createTopic(setting);
+    notifyTopicsChanged();
 }
 
 export async function updateTopic(setting: TopicSetting): Promise<void> {
     await topicClient.updateTopic(setting);
+    notifyTopicsChanged();
 }
 
 export async function deleteTopic(setting: TopicSetting): Promise<void> {
     await topicClient.deleteTopic(setting);
+    notifyTopicsChanged();
+}
+
+export async function fetchSensorsNormalized(): Promise<SensorMeta[]> {
+    const list = await topicClient.getAllTopics(); // TopicSetting[]
+    const rows: SensorMeta[] = [];
+
+    for (const t of list ?? []) {
+        const any = t as any; // tolerate generator field name changes
+        const id = Number(
+            any.topicSettingId ?? any.id ?? any.topicId ?? Date.now() + Math.random()
+        );
+
+        const rawType = String(any.sensorType ?? any.type ?? "").toLowerCase();
+        let type: "north" | "south" | "other" = "other";
+        if (rawType.includes("north") || rawType.includes("nord")) type = "north";
+        else if (rawType.includes("south") || rawType.includes("sued") || rawType.includes("süd")) type = "south";
+
+        const name =
+            (String(any.sensorName ?? any.name ?? "").trim() ||
+                (type === "north" ? "North" : type === "south" ? "South" : "Unnamed"));
+
+        const location =
+            (String(any.sensorLocation ?? any.location ?? "").trim() ||
+                (type === "north" ? "north" : type === "south" ? "south" : "Unspecified"));
+
+        rows.push({ id, name, location, type });
+    }
+    rows.sort((a, b) => {
+        const rank = (x: SensorMeta) => (x.type === "north" ? 0 : x.type === "south" ? 1 : 2);
+        const ra = rank(a), rb = rank(b);
+        return ra !== rb ? ra - rb : a.name.localeCompare(b.name);
+    });
+
+    return rows;
+}
+
+export async function fetchRecentStatus(
+    place: string,
+    isFahrenheit: boolean,
+    windowMinutes = 15
+): Promise<{ north: LocationStatus; south: LocationStatus }> {
+    const end = new Date();
+    const start = new Date(end.getTime() - windowMinutes * 60 * 1000);
+
+    const res = await tempClient.getTemperature(
+        start,
+        end,
+        place || "Heidenheim an der Brenz",
+        isFahrenheit
+    );
+
+    const toLastSeen = (arr?: Array<{ timestamp?: any }>): number | undefined => {
+        let max = -1;
+        for (const it of arr ?? []) {
+            const ms = new Date((it as any).timestamp).getTime();
+            if (!Number.isNaN(ms) && ms > max) max = ms;
+        }
+        return max >= 0 ? max : undefined;
+    };
+
+    // note: API field is "temperatureNord" (per your code/screens)
+    const northSeen = toLastSeen((res as any)?.temperatureNord);
+    const southSeen = toLastSeen((res as any)?.temperatureSouth);
+
+    return {
+        north: { online: northSeen !== undefined, lastSeenMs: northSeen },
+        south: { online: southSeen !== undefined, lastSeenMs: southSeen },
+    };
+}
+
+function notifyTopicsChanged() {
+    try {
+        // storage event (cross-tab)
+        localStorage.setItem("topicsVersion", String(Date.now()));
+        // BroadcastChannel if available
+        if ("BroadcastChannel" in window) {
+            const bc = new BroadcastChannel("topics");
+            bc.postMessage({ type: "topics-changed", ts: Date.now() });
+            bc.close();
+        }
+    } catch { /* ignore */ }
 }
 
 // Re-export ApiException so callers can do instanceof checks if needed

@@ -5,7 +5,7 @@ import {
     updateTopic,
     deleteTopic,
 } from "../api/clients";
-import { TopicSetting } from "../api/api-client.ts";
+import { TopicSetting } from "../api/api-client";
 
 // Keep table state as a plain shape
 type Row = {

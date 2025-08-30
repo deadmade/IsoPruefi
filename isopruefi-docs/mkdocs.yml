@@ -16,7 +16,13 @@ nav:
     - Database: code/Database/index.md
     - UnitTests: code/UnitTests/index.md
     - Arduino: code/arduino/md/index.md
-    - Frontend: code/frontend/README.md
+    - Frontend: 
+      - Overview: code/frontend/README.md
+      - Api: code/frontend/api
+      - Authentication: code/frontend/auth
+      - Components: code/frontend/components
+      - Pages: code/frontend/pages
+      - Utils: code/frontend/utils
   - Docker: 
     - Docker Dev Environment: docker-dev.md
   - IsoPrüfi Documentation: 

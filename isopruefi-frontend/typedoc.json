@@ -23,5 +23,6 @@
   "theme": "markdown",
   "plugin": ["typedoc-plugin-markdown"],
   "includeVersion": true,
+  "readme": "none",
   "tsconfig": "./tsconfig.json"
 }

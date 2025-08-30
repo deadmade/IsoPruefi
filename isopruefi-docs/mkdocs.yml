@@ -1,5 +1,5 @@
 site_name: IsoPrüfi
-docs_dir: docs
+docs_dir: ./docs
 site_url: https://github.com/deadmade/IsoPruefi
 repo_url: https://github.com/deadmade/IsoPruefi
 repo_name: "deadmade/IsoPruefi"
@@ -9,35 +9,29 @@ nav:
   - Home: index.md
   - Build: build.md
   - Dev-Guidelines: guidelines.md
-  - Code Documentation:
-      - Rest-API: code/Rest-API/index.md
-      - MQTT-Receiver-Worker: code/MQTT-Receiver-Worker/index.md
-      - MQTT-Sender: code/MQTT-Sender/index.md
-      - Database: code/Database/index.md
-      - UnitTests: code/UnitTests/index.md
-      - Arduino: code/arduino/md/index.md
-      - Frontend:
-          - Overview: code/frontend/README.md
-          - App:
-              - App Overview: code/frontend/App/README.md
-              - App Component: code/frontend/App/functions/default.md
-          - Weather:
-              - Weather Overview: code/frontend/Weather/README.md
-              - Components:
-                  - Chart Title: code/frontend/Weather/functions/WeatherChartTitle.md
-                  - Temp Chart: code/frontend/Weather/functions/TempChart.md
-              - Data Types:
-                  - WeatherEntry: code/frontend/Weather/type-aliases/WeatherEntry.md
-                  - WeatherData: code/frontend/Weather/variables/WeatherData.md
-  - Docker:
-      - Docker Dev Environment: docker-dev.md
-  - IsoPrüfi Documentation:
-      - 01 Introduction and Goals: documentation/01_introduction_and_goals.md
-      - 02 Quality Requirements: documentation/02_quality_requirements.md
-      - 03 Architecture Constraints and Solution Strategy: documentation/03_architecture_constraints_and_solution_strategy.md
-      - 04 Architecture Decisions: documentation/04_architecture_decisions.md
-      - 05 Context and Scope: documentation/05_context_and_scope.md
-      - 06 Technical Risks: documentation/06_technical_risks.md
+  - Code Documentation: 
+    - Rest-API: code/Rest-API/index.md
+    - MQTT-Receiver-Worker: code/MQTT-Receiver-Worker/index.md
+    - MQTT-Sender: code/MQTT-Sender/index.md
+    - Database: code/Database/index.md
+    - UnitTests: code/UnitTests/index.md
+    - Arduino: code/arduino/md/index.md
+    - Frontend: 
+      - Overview: code/frontend/README.md
+      - Api: code/frontend/api
+      - Authentication: code/frontend/auth
+      - Components: code/frontend/components
+      - Pages: code/frontend/pages
+      - Utils: code/frontend/utils
+  - Docker: 
+    - Docker Dev Environment: docker-dev.md
+  - IsoPrüfi Documentation: 
+    - 01 Introduction and Goals: documentation/01_introduction_and_goals.md
+    - 02 Quality Requirements: documentation/02_quality_requirements.md
+    - 03 Architecture Constraints and Solution Strategy: documentation/03_architecture_constraints_and_solution_strategy.md
+    - 04 Architecture Decisions: documentation/04_architecture_decisions.md
+    - 05 Context and Scope: documentation/05_context_and_scope.md
+    - 06 Technical Risks: documentation/06_technical_risks.md
   - License: license.md
 
 theme:
@@ -82,7 +76,7 @@ plugins:
   - git-revision-date-localized
   - git-authors
   - callouts
-  # - to-pdf
+ # - to-pdf
 markdown_extensions:
   - pymdownx.extra
   - pymdownx.highlight
@@ -105,22 +99,22 @@ markdown_extensions:
   - pymdownx.caret
   - pymdownx.details
   - pymdownx.arithmatex:
-      generic: true
+        generic: true
   - pymdownx.betterem:
-      smart_enable: all
+        smart_enable: all
   - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_style: "default"
+        anchor_linenums: true
+        line_spans: __span
+        pygments_style: "default"
   - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
+        custom_fences:
+          - name: mermaid
+            class: mermaid
+            format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.inlinehilite
   - pymdownx.mark
   - pymdownx.tabbed:
-      alternate_style: true
+        alternate_style: true
   - pymdownx.tasklist:
-      custom_checkbox: true
+        custom_checkbox: true
   - pymdownx.tilde

@@ -5,7 +5,7 @@ import {
 import { tempClient, ApiException } from "../api/clients";
 
 type Row = {
-    ts: number;                // epoch ms (numeric X axis)
+    ts: number;
     tempSouth?: number;
     tempNorth?: number;
     tempOutside?: number;
@@ -17,6 +17,8 @@ type Props = {
 };
 
 const style = { width: "100%", height: 400 };
+
+const ALL_DAYS = 30;
 
 export function TempChart({
                               place = "Heidenheim an der Brenz",
@@ -30,44 +32,65 @@ export function TempChart({
     useEffect(() => {
         let cancelled = false;
 
-        const end = new Date();
-        const rangeMs =
-            filter === "hour" ? 1 * 60 * 60 * 1000 :
-                filter === "day"  ? 24 * 60 * 60 * 1000 :
-                    filter === "week" ? 7  * 24 * 60 * 60 * 1000 :
-                        30 * 24 * 60 * 60 * 1000; // all = last 30 days
-        const start = new Date(end.getTime() - rangeMs);
-
+        const now = new Date();
+        let start = new Date(now);
+        let end = new Date(now);
+        let bucketMs: number;
+        
+        if (filter === "hour") {
+            bucketMs = 60000;
+            start = new Date(end.getTime() - 60 * 60 * 1000);
+        } else if (filter === "day") {
+            bucketMs = 60 * 60 * 1000; // 1 hour
+            start = new Date(end);
+            start.setHours(0, 0, 0, 0); // local midnight
+        } else if (filter === "week") {
+            bucketMs = 12 * 60 * 60 * 1000; // 12 hours
+            start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const hours = start.getHours();
+            start.setHours(hours < 12 ? 0: 12, 0, 0, 0); // start to 12h boundary for stable 14 buckets
+        } else {
+            bucketMs = 24 * 60 * 60 * 1000; // 1 day
+            start = new Date (end.getTime() - ALL_DAYS * 24 * 60 * 60 * 1000);
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
+        }
+        
         const toMs = (v: unknown): number | null => {
             if (!v) return null;
             const t = new Date(v as any).getTime();
             return Number.isNaN(t) ? null : t;
-        };
+        }
+        
+        type TD = {timestamp?: any; temperature?: number};
 
-        const indexByTs = (
-            arr: Array<{ timestamp?: any; temperature?: number }> | undefined,
-        ) => {
-            const m = new Map<number, number>();
+        // Average readings into buckets anchored at "start"
+        const bucketSeries = (arr?: TD[]) => {
+            const sums = new Map<number, {s: number; n: number }>();
+            const startMs = start.getTime();
             for (const it of arr ?? []) {
                 const ts = toMs(it?.timestamp);
-                const temp = it?.temperature;
-                if (ts != null && typeof temp === "number" && !Number.isNaN(temp)) {
-                    m.set(ts, temp);
-                }
+                const v = it?.temperature;
+                if(ts == null || typeof v!== "number" || Number.isNaN(v)) continue;
+                const b = startMs + Math.floor((ts - startMs) / bucketMs) * bucketMs;
+                const cur = sums.get(b) ?? {s: 0, n: 0};
+                cur.s += v; cur.n += 1;
+                sums.set(b, cur);
             }
-            return m;
-        };
-
-        const decimate = (rows: Row[], max: number) => {
-            if (rows.length <= max) return rows;
-            const step = Math.ceil(rows.length / max);
-            const out: Row[] = [];
-            for (let i = 0; i < rows.length; i += step) out.push(rows[i]);
-            // include the very last point
-            const last = rows[rows.length - 1];
-            if (out[out.length - 1]?.ts !== last.ts) out.push(last);
+            const out = new Map<number, number>();
+            for (const [b, {s, n}] of sums) out.set(b, s/n);
             return out;
         };
+        
+        const buildTimeline = () => {
+            const t: number[] = [];
+            const startMs = start.getTime();
+            const endMs = end.getTime();
+            for (let ms = startMs; ms <= endMs; ms += bucketMs) t.push(ms);
+            if (t.length === 0 || t[t.length - 1] < endMs) t.push(startMs + 
+                Math.floor((endMs - startMs) / bucketMs) * bucketMs); 
+            return t;
+        }
 
         (async () => {
             setLoading(true);
@@ -76,29 +99,18 @@ export function TempChart({
                 const res = await tempClient.getTemperature(start, end, place, isFahrenheit);
                 if (cancelled) return;
 
-                const southM   = indexByTs(res?.temperatureSouth);
-                const northM   = indexByTs(res?.temperatureNord);
-                const outsideM = indexByTs(res?.temperatureOutside);
+                const southM   = bucketSeries(res?.temperatureSouth);
+                const northM   = bucketSeries(res?.temperatureNord);
+                const outsideM = bucketSeries(res?.temperatureOutside);
 
-                const keys = new Set<number>();
-                southM.forEach((_, k) => keys.add(k));
-                northM.forEach((_, k) => keys.add(k));
-                outsideM.forEach((_, k) => keys.add(k));
+                const timeline = buildTimeline();
 
-                let merged: Row[] = Array.from(keys)
-                    .sort((a, b) => a - b)
-                    .map(ts => ({
-                        ts,
-                        tempSouth:   southM.get(ts),
-                        tempNorth:   northM.get(ts),
-                        tempOutside: outsideM.get(ts),
-                    }));
-
-                // Downsample only for large ranges to keep rendering smooth
-                const MAX_POINTS =
-                    filter === "week" ? 2500 :
-                        filter === "all"  ? 3000 : 4000;
-                merged = decimate(merged, MAX_POINTS);
+                const merged: Row[] = timeline.map(ts => ({
+                    ts,
+                    tempSouth:   southM.get(ts),
+                    tempNorth:   northM.get(ts),
+                    tempOutside: outsideM.get(ts),
+                }));
 
                 setData(merged);
             } catch (err) {
@@ -113,6 +125,13 @@ export function TempChart({
         return () => { cancelled = true; };
     }, [place, isFahrenheit, filter]);
 
+    const tickFmt = (v: number) => {
+        const d = new Date(v);
+        if (filter === "hour") return d.toLocaleTimeString([], { minute: "2-digit", second: "2-digit" });
+        if (filter === "day")  return d.toLocaleTimeString([], { hour: "2-digit" });
+        if (filter === "week") return d.toLocaleString([], { month: "short", day: "2-digit", hour: "2-digit" });
+        return d.toLocaleDateString([], { month: "short", day: "2-digit" }); // all
+    };
     if (loading) return <div style={style}>Loading temperature data…</div>;
     if (error) {
         return (
@@ -122,33 +141,7 @@ export function TempChart({
             </div>
         );
     }
-
-    const tickFmt = (v: number) => {
-        const d = new Date(v);
-        return d.toLocaleString([], {
-            month: "short", day: "2-digit",
-            hour: "2-digit", minute: "2-digit"
-        });
-    };
-
-    if (!data.length) {
-        return (
-            <div style={style}>
-                <label style={{ marginBottom: 8, display: "block" }}>
-                    Show:{" "}
-                    <select value={filter} onChange={(e) => setFilter(e.target.value as any)}>
-                        <option value="all">All</option>
-                        <option value="hour">Last Hour</option>
-                        <option value="day">Today</option>
-                        <option value="week">This Week</option>
-                    </select>
-                    {" "}<small>({isFahrenheit ? "°F" : "°C"}, {place})</small>
-                </label>
-                <div style={{opacity:.7}}>No data for this range.</div>
-            </div>
-        );
-    }
-
+    
     return (
         <div style={style}>
             <label style={{ marginBottom: 8, display: "block" }}>

@@ -12,22 +12,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-    - name: Build Rest Docker
-      working-directory: ./isopruefi-backend
-      run: docker build . --file Rest-API/Dockerfile 
+      - name: Build Rest Docker
+        working-directory: ./isopruefi-backend
+        run: docker build . --file Rest-API/Dockerfile
 
-    - name: Build Frontend Docker
-      working-directory: ./isopruefi-frontend
-      run: docker build . --file Dockerfile 
+      - name: Build Frontend Docker
+        working-directory: ./isopruefi-frontend
+        run: docker build . --file Dockerfile
 
-    - name: Build MQTT-Receiver-Worker Docker
-      working-directory: ./isopruefi-backend
-      run: docker build . --file MQTT-Receiver-Worker/Dockerfile 
+      - name: Build MQTT-Receiver-Worker Docker
+        working-directory: ./isopruefi-backend
+        run: docker build . --file MQTT-Receiver-Worker/Dockerfile
 
-    - name: Build Get Weather Worker Docker
-      working-directory: ./isopruefi-backend
-      run: docker build . --file Get-weatherData-worker/Dockerfile 
+      - name: Build Get Weather Worker Docker
+        working-directory: ./isopruefi-backend
+        run: docker build . --file Get-weatherData-worker/Dockerfile 
       
 

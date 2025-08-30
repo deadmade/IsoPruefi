@@ -1,9 +1,11 @@
-# Contribute & Build 
+# Contribute & Build
 
 ## How do I contribute as a developer?
+
 <p style="color: red;"><b>READ THIS GUIDE BEFORE CONTRIBUTING</b></p>
 
-Since our project is secured by two pre-commit hocks, it is important to set up the project correctly before contributing.
+Since our project is secured by two pre-commit hocks, it is important to set up the project correctly before
+contributing.
 
 This is done as followed:
 
@@ -60,8 +62,9 @@ To get the development environment up and running, follow these steps:
      "DEFAULT_SERVER_NAME": "IsoPrüfi"
    }
    ```
-   
-6. Run dotnet user-secrets set "Influx:InfluxDBToken" "<Token>" --project isopruefi-backend\MQTT-Receiver-Worker\MQTT-Receiver-Worker.csproj 
+
+6. Run dotnet user-secrets set "Influx:InfluxDBToken" "<Token>" --project
+   isopruefi-backend\MQTT-Receiver-Worker\MQTT-Receiver-Worker.csproj
 
 7. Restart the Containers
 
@@ -73,7 +76,8 @@ To get the development environment up and running, follow these steps:
 
 - <a href="https://docs.arduino.cc/hardware/mkr-wifi-1010/#features">MKR WiFi 1010</a>
 - <a href="https://learn.adafruit.com/adt7410-breakout?view=all">Analog Devices ADT7410 Breakout</a>
-- <a href="https://randomnerdtutorials.com/guide-for-real-time-clock-rtc-module-with-arduino-ds1307-and-ds3231/">DS3231 RTC</a>
+- <a href="https://randomnerdtutorials.com/guide-for-real-time-clock-rtc-module-with-arduino-ds1307-and-ds3231/">DS3231
+  RTC</a>
 - <a href="https://randomnerdtutorials.com/guide-to-sd-card-module-with-arduino/">SD Card Module</a>
 
 ### Software
@@ -105,6 +109,7 @@ lib_deps =
 	gyverlibs/UnixTime
 	bblanchon/ArduinoJson@^7.4.2
 ```
+
 Tips:
 
 - PlatformIO installs the required libraries automatically on first build

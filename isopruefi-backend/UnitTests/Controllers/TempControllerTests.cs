@@ -1,3 +1,4 @@
+using Database.Repository.CoordinateRepo;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -5,23 +6,17 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Rest_API.Controllers;
 using Rest_API.Services.Temp;
-using Database.Repository.CoordinateRepo;
 
 namespace UnitTests.Controllers;
 
 /// <summary>
-/// Unit tests for the TempController class, verifying temperature operations and location management functionality.
+///     Unit tests for the TempController class, verifying temperature operations and location management functionality.
 /// </summary>
 [TestFixture]
 public class TempControllerTests
 {
-    private Mock<ITempService> _mockTempService;
-    private Mock<ICoordinateRepo> _mockCoordinateRepo;
-    private Mock<ILogger<TempController>> _mockLogger;
-    private TempController _controller;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -33,10 +28,13 @@ public class TempControllerTests
         _controller = new TempController(_mockTempService.Object, _mockCoordinateRepo.Object, _mockLogger.Object);
     }
 
-    #region Constructor Tests
+    private Mock<ITempService> _mockTempService;
+    private Mock<ICoordinateRepo> _mockCoordinateRepo;
+    private Mock<ILogger<TempController>> _mockLogger;
+    private TempController _controller;
 
     /// <summary>
-    /// Tests that the constructor creates a valid instance when provided with valid parameters.
+    ///     Tests that the constructor creates a valid instance when provided with valid parameters.
     /// </summary>
     [Test]
     public void Constructor_WithValidParameters_ShouldCreateInstance()
@@ -51,12 +49,8 @@ public class TempControllerTests
         act.Should().NotThrow();
     }
 
-    #endregion
-
-    #region GetAllPostalcodes Tests
-
     /// <summary>
-    /// Tests that GetAllPostalcodes returns OK with postal codes when service returns data.
+    ///     Tests that GetAllPostalcodes returns OK with postal codes when service returns data.
     /// </summary>
     [Test]
     public async Task GetAllPostalcodes_WithValidData_ShouldReturnOkWithPostalcodes()
@@ -83,7 +77,7 @@ public class TempControllerTests
     }
 
     /// <summary>
-    /// Tests that GetAllPostalcodes returns InternalServerError when service throws exception.
+    ///     Tests that GetAllPostalcodes returns InternalServerError when service throws exception.
     /// </summary>
     [Test]
     public async Task GetAllPostalcodes_WithException_ShouldReturnInternalServerError()
@@ -107,7 +101,7 @@ public class TempControllerTests
     }
 
     /// <summary>
-    /// Tests that GetAllPostalcodes returns OK with empty list when no postal codes exist.
+    ///     Tests that GetAllPostalcodes returns OK with empty list when no postal codes exist.
     /// </summary>
     [Test]
     public async Task GetAllPostalcodes_WithEmptyData_ShouldReturnOkWithEmptyList()
@@ -126,12 +120,8 @@ public class TempControllerTests
         okResult.Value.Should().Be(expectedPostalcodes);
     }
 
-    #endregion
-
-    #region InsertLocation Tests
-
     /// <summary>
-    /// Tests that InsertLocation returns OK when location is inserted successfully.
+    ///     Tests that InsertLocation returns OK when location is inserted successfully.
     /// </summary>
     [Test]
     public async Task InsertLocation_WithValidPostalcode_ShouldReturnOk()
@@ -150,7 +140,7 @@ public class TempControllerTests
     }
 
     /// <summary>
-    /// Tests that InsertLocation returns InternalServerError when InvalidOperationException is thrown.
+    ///     Tests that InsertLocation returns InternalServerError when InvalidOperationException is thrown.
     /// </summary>
     [Test]
     public async Task InsertLocation_WithInvalidOperationException_ShouldReturnInternalServerError()
@@ -175,7 +165,7 @@ public class TempControllerTests
     }
 
     /// <summary>
-    /// Tests that InsertLocation returns InternalServerError when generic exception is thrown.
+    ///     Tests that InsertLocation returns InternalServerError when generic exception is thrown.
     /// </summary>
     [Test]
     public async Task InsertLocation_WithGenericException_ShouldReturnInternalServerError()
@@ -199,12 +189,8 @@ public class TempControllerTests
         problemDetails.Detail.Should().Be("Unexpected error");
     }
 
-    #endregion
-
-    #region RemovePostalcode Tests
-
     /// <summary>
-    /// Tests that RemovePostalcode returns OK when postal code is removed successfully.
+    ///     Tests that RemovePostalcode returns OK when postal code is removed successfully.
     /// </summary>
     [Test]
     public async Task RemovePostalcode_WithValidPostalcode_ShouldReturnOk()
@@ -226,7 +212,7 @@ public class TempControllerTests
     }
 
     /// <summary>
-    /// Tests that RemovePostalcode returns InternalServerError when exception is thrown.
+    ///     Tests that RemovePostalcode returns InternalServerError when exception is thrown.
     /// </summary>
     [Test]
     public async Task RemovePostalcode_WithException_ShouldReturnInternalServerError()
@@ -250,12 +236,8 @@ public class TempControllerTests
         problemDetails.Detail.Should().Be("Database deletion failed");
     }
 
-    #endregion
-
-    #region Logging Tests
-
     /// <summary>
-    /// Tests that GetAllPostalcodes logs error when exception occurs.
+    ///     Tests that GetAllPostalcodes logs error when exception occurs.
     /// </summary>
     [Test]
     public async Task GetAllPostalcodes_WithException_ShouldLogError()
@@ -280,7 +262,7 @@ public class TempControllerTests
     }
 
     /// <summary>
-    /// Tests that InsertLocation logs error when InvalidOperationException occurs.
+    ///     Tests that InsertLocation logs error when InvalidOperationException occurs.
     /// </summary>
     [Test]
     public async Task InsertLocation_WithInvalidOperationException_ShouldLogError()
@@ -306,7 +288,7 @@ public class TempControllerTests
     }
 
     /// <summary>
-    /// Tests that RemovePostalcode logs error when exception occurs.
+    ///     Tests that RemovePostalcode logs error when exception occurs.
     /// </summary>
     [Test]
     public async Task RemovePostalcode_WithException_ShouldLogError()
@@ -330,6 +312,4 @@ public class TempControllerTests
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
     }
-
-    #endregion
 }

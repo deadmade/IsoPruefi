@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Rest_API.Controllers;
 
 /// <summary>
-/// Manages MQTT topic configuration settings for the temperature monitoring system.
-/// Provides endpoints for configuring sensor locations and MQTT topic mappings.
+///     Manages MQTT topic configuration settings for the temperature monitoring system.
+///     Provides endpoints for configuring sensor locations and MQTT topic mappings.
 /// </summary>
 [ApiVersion(1)]
 [ApiController]
@@ -20,7 +20,7 @@ public class TopicController : ControllerBase
     private readonly ISettingsRepo _settingsRepo;
 
     /// <summary>
-    /// Initializes a new instance of the TopicController
+    ///     Initializes a new instance of the TopicController
     /// </summary>
     /// <param name="settingsRepo">Settings repository for topic operations</param>
     public TopicController(ISettingsRepo settingsRepo)
@@ -29,40 +29,37 @@ public class TopicController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves all configured MQTT topic settings from the system.
+    ///     Retrieves all configured MQTT topic settings from the system.
     /// </summary>
     /// <remarks>
-    /// This endpoint returns all MQTT topic configurations including:
-    /// - Sensor names and their physical locations (North, South, etc.)
-    /// - MQTT topic mappings for each sensor
-    /// - Configuration metadata for the monitoring system
-    /// 
-    /// **Authorization Required**: Bearer token with Admin role
-    /// 
-    /// This information is essential for:
-    /// - System administration and configuration management
-    /// - Troubleshooting sensor connectivity issues
-    /// - Understanding the current sensor topology
-    /// 
-    /// **Example Response**:
-    /// ```json
-    /// [
-    ///   {
+    ///     This endpoint returns all MQTT topic configurations including:
+    ///     - Sensor names and their physical locations (North, South, etc.)
+    ///     - MQTT topic mappings for each sensor
+    ///     - Configuration metadata for the monitoring system
+    ///     **Authorization Required**: Bearer token with Admin role
+    ///     This information is essential for:
+    ///     - System administration and configuration management
+    ///     - Troubleshooting sensor connectivity issues
+    ///     - Understanding the current sensor topology
+    ///     **Example Response**:
+    ///     ```json
+    ///     [
+    ///     {
     ///     "id": 1,
     ///     "sensorName": "TempSensor_01",
     ///     "sensorLocation": "North",
     ///     "mqttTopic": "sensors/temperature/north",
     ///     "isActive": true
-    ///   },
-    ///   {
+    ///     },
+    ///     {
     ///     "id": 2,
-    ///     "sensorName": "TempSensor_02", 
+    ///     "sensorName": "TempSensor_02",
     ///     "sensorLocation": "South",
     ///     "mqttTopic": "sensors/temperature/south",
     ///     "isActive": true
-    ///   }
-    /// ]
-    /// ```
+    ///     }
+    ///     ]
+    ///     ```
     /// </remarks>
     /// <returns>A comprehensive list of all MQTT topic settings and sensor configurations.</returns>
     /// <response code="200">Successfully retrieved all topic settings.</response>
@@ -90,42 +87,37 @@ public class TopicController : ControllerBase
     }
 
     /// <summary>
-    /// Creates a new MQTT topic configuration for sensor monitoring.
+    ///     Creates a new MQTT topic configuration for sensor monitoring.
     /// </summary>
     /// <remarks>
-    /// This endpoint allows administrators to add new sensor configurations to the monitoring system.
-    /// Each topic setting maps a physical sensor to its MQTT topic and location within the building.
-    /// 
-    /// **Authorization Required**: Bearer token with Admin role
-    /// 
-    /// **Required Fields**:
-    /// - `sensorName`: Unique identifier for the sensor (e.g., "TempSensor_03")
-    /// - `sensorLocation`: Physical location (e.g., "North", "South", "East", "West", "Center")
-    /// - `mqttTopic`: MQTT topic path for this sensor (e.g., "sensors/temperature/east")
-    /// 
-    /// **Example Request**:
-    /// ```json
-    /// {
-    ///   "sensorName": "TempSensor_03",
-    ///   "sensorLocation": "East",
-    ///   "mqttTopic": "sensors/temperature/east",
-    ///   "isActive": true,
-    ///   "description": "Temperature sensor in the eastern section"
-    /// }
-    /// ```
-    /// 
-    /// **Example Response**:
-    /// ```json
-    /// {
-    ///   "id": 3,
-    ///   "message": "Topic created successfully"
-    /// }
-    /// ```
-    /// 
-    /// **Validation Rules**:
-    /// - Sensor names must be unique across the system
-    /// - MQTT topics should follow the pattern: `sensors/temperature/{location}`
-    /// - Location names should be descriptive and consistent
+    ///     This endpoint allows administrators to add new sensor configurations to the monitoring system.
+    ///     Each topic setting maps a physical sensor to its MQTT topic and location within the building.
+    ///     **Authorization Required**: Bearer token with Admin role
+    ///     **Required Fields**:
+    ///     - `sensorName`: Unique identifier for the sensor (e.g., "TempSensor_03")
+    ///     - `sensorLocation`: Physical location (e.g., "North", "South", "East", "West", "Center")
+    ///     - `mqttTopic`: MQTT topic path for this sensor (e.g., "sensors/temperature/east")
+    ///     **Example Request**:
+    ///     ```json
+    ///     {
+    ///     "sensorName": "TempSensor_03",
+    ///     "sensorLocation": "East",
+    ///     "mqttTopic": "sensors/temperature/east",
+    ///     "isActive": true,
+    ///     "description": "Temperature sensor in the eastern section"
+    ///     }
+    ///     ```
+    ///     **Example Response**:
+    ///     ```json
+    ///     {
+    ///     "id": 3,
+    ///     "message": "Topic created successfully"
+    ///     }
+    ///     ```
+    ///     **Validation Rules**:
+    ///     - Sensor names must be unique across the system
+    ///     - MQTT topics should follow the pattern: `sensors/temperature/{location}`
+    ///     - Location names should be descriptive and consistent
     /// </remarks>
     /// <param name="topicSetting">The complete topic setting configuration to create.</param>
     /// <returns>The ID of the newly created topic setting along with a success message.</returns>

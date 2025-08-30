@@ -6,18 +6,18 @@ using MQTTnet.Protocol;
 namespace MQTT_Receiver_Worker.MQTT;
 
 /// <summary>
-/// Handles MQTT topic subscription and message receiving functionality.
-/// This class is responsible for subscribing to configured topics from the settings repository
-/// and managing the connection to the MQTT broker.
+///     Handles MQTT topic subscription and message receiving functionality.
+///     This class is responsible for subscribing to configured topics from the settings repository
+///     and managing the connection to the MQTT broker.
 /// </summary>
 public class Receiver : IReceiver
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly IConnection _connection;
     private readonly ILogger<Receiver> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Receiver"/> class.
+    ///     Initializes a new instance of the <see cref="Receiver" /> class.
     /// </summary>
     /// <param name="serviceProvider">Service provider for dependency injection.</param>
     /// <param name="connection">Connection manager for the MQTT client.</param>
@@ -30,8 +30,8 @@ public class Receiver : IReceiver
     }
 
     /// <summary>
-    /// Subscribes to configured MQTT topics using shared subscriptions.
-    /// Retrieves topic settings from the repository and establishes subscriptions
+    ///     Subscribes to configured MQTT topics using shared subscriptions.
+    ///     Retrieves topic settings from the repository and establishes subscriptions
     /// </summary>
     /// <returns>A task that represents the asynchronous subscribe operation.</returns>
     public async Task SubscribeToTopics()

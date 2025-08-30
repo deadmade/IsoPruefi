@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Database.Repository.CoordinateRepo;
 
 /// <summary>
-/// Repository implementation for accessing and managing available locations.
+///     Repository implementation for accessing and managing available locations.
 /// </summary>
 public class CoordinateRepo : ICoordinateRepo
 {
-    private ApplicationDbContext _applicationDbContext;
+    private readonly ApplicationDbContext _applicationDbContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoordinateRepo"/> class.
+    ///     Initializes a new instance of the <see cref="CoordinateRepo" /> class.
     /// </summary>
     /// <param name="applicationDbContext"></param>
     public CoordinateRepo(ApplicationDbContext applicationDbContext)

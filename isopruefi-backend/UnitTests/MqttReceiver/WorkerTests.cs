@@ -7,18 +7,13 @@ using MQTT_Receiver_Worker.MQTT.Interfaces;
 namespace UnitTests.MqttReceiver;
 
 /// <summary>
-/// Unit tests for the Worker class, verifying background service orchestration functionality.
+///     Unit tests for the Worker class, verifying background service orchestration functionality.
 /// </summary>
 [TestFixture]
 public class WorkerTests
 {
-    private Mock<ILogger<Worker>> _mockLogger;
-    private Mock<IReceiver> _mockReceiver;
-    private Mock<IConnection> _mockConnection;
-    private Worker _worker;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -31,7 +26,7 @@ public class WorkerTests
     }
 
     /// <summary>
-    /// Cleans up resources after each test execution.
+    ///     Cleans up resources after each test execution.
     /// </summary>
     [TearDown]
     public void TearDown()
@@ -39,10 +34,13 @@ public class WorkerTests
         _worker?.Dispose();
     }
 
-    #region Constructor Tests
+    private Mock<ILogger<Worker>> _mockLogger;
+    private Mock<IReceiver> _mockReceiver;
+    private Mock<IConnection> _mockConnection;
+    private Worker _worker;
 
     /// <summary>
-    /// Tests that the Worker constructor properly initializes with valid dependencies.
+    ///     Tests that the Worker constructor properly initializes with valid dependencies.
     /// </summary>
     [Test]
     public void Constructor_WithValidDependencies_InitializesSuccessfully()
@@ -57,7 +55,7 @@ public class WorkerTests
     }
 
     /// <summary>
-    /// Tests that the Worker constructor throws when logger is null.
+    ///     Tests that the Worker constructor throws when logger is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullLogger_ThrowsArgumentNullException()
@@ -71,7 +69,7 @@ public class WorkerTests
     }
 
     /// <summary>
-    /// Tests that the Worker constructor throws when receiver is null.
+    ///     Tests that the Worker constructor throws when receiver is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullReceiver_ThrowsArgumentNullException()
@@ -79,17 +77,13 @@ public class WorkerTests
         var logger = Mock.Of<ILogger<Worker>>();
         var connection = Mock.Of<IConnection>();
 
-        var action = () => new Worker(logger, (IReceiver)null!, connection);
+        var action = () => new Worker(logger, null!, connection);
 
         action.Should().Throw<ArgumentNullException>();
     }
 
-    #endregion
-
-    #region ExecuteAsync Tests
-
     /// <summary>
-    /// Tests that ExecuteAsync handles cancellation token properly.
+    ///     Tests that ExecuteAsync handles cancellation token properly.
     /// </summary>
     [Test]
     public async Task ExecuteAsync_WithCancellationToken_CompletesGracefully()
@@ -108,13 +102,8 @@ public class WorkerTests
         stopTask.IsCompletedSuccessfully.Should().BeTrue();
     }
 
-    #endregion
-
-
-    #region Dispose Tests
-
     /// <summary>
-    /// Tests that the worker disposes properly.
+    ///     Tests that the worker disposes properly.
     /// </summary>
     [Test]
     public void Dispose_DisposesWithoutException()
@@ -125,7 +114,7 @@ public class WorkerTests
     }
 
     /// <summary>
-    /// Tests that the worker can be disposed multiple times without exception.
+    ///     Tests that the worker can be disposed multiple times without exception.
     /// </summary>
     [Test]
     public void Dispose_MultipleCalls_DoesNotThrow()
@@ -136,6 +125,4 @@ public class WorkerTests
 
         action.Should().NotThrow();
     }
-
-    #endregion
 }

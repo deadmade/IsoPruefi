@@ -4,8 +4,8 @@ namespace Get_weatherData_worker.Helper;
 
 public class OpenMeteoHealthCheck : IHealthCheck
 {
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<OpenMeteoHealthCheck> _logger;
 
     public OpenMeteoHealthCheck(IHttpClientFactory httpClientFactory, IConfiguration configuration,
@@ -38,11 +38,10 @@ public class OpenMeteoHealthCheck : IHealthCheck
 
             if (response.IsSuccessStatusCode)
                 return HealthCheckResult.Healthy($"OpenMeteo API is reachable (Status: {response.StatusCode})");
-            else if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
+            if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
                 // 4xx errors might be expected for HEAD requests, service is still reachable
                 return HealthCheckResult.Healthy($"OpenMeteo API is reachable (Status: {response.StatusCode})");
-            else
-                return HealthCheckResult.Unhealthy($"OpenMeteo API returned status code: {response.StatusCode}");
+            return HealthCheckResult.Unhealthy($"OpenMeteo API returned status code: {response.StatusCode}");
         }
         catch (Exception)
         {

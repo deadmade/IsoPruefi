@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using Database.Migrations;
 using Database.Repository.CoordinateRepo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,8 @@ using Rest_API.Services.Temp;
 namespace Rest_API.Controllers;
 
 /// <summary>
-/// Controller for managing temperature data actions. Provides endpoints for retrieving postalcodes and getting locations.
+///     Controller for managing temperature data actions. Provides endpoints for retrieving postalcodes and getting
+///     locations.
 /// </summary>
 [ApiVersion(1)]
 [ApiController]
@@ -17,12 +17,12 @@ namespace Rest_API.Controllers;
 [Consumes("application/json")]
 public class TempController : ControllerBase
 {
-    private readonly ITempService _tempService;
-    private readonly ILogger<TempController> _logger;
     private readonly ICoordinateRepo _coordinateRepo;
+    private readonly ILogger<TempController> _logger;
+    private readonly ITempService _tempService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TempController"/> class.
+    ///     Initializes a new instance of the <see cref="TempController" /> class.
     /// </summary>
     /// <param name="tempService">The temp service to handle temperature operations.</param>
     /// <param name="logger">The logger instance for logging actions and errors.</param>
@@ -34,7 +34,7 @@ public class TempController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves all saved locations.
+    ///     Retrieves all saved locations.
     /// </summary>
     /// <returns>A list of all postalcodes; otherwise, NotFound.</returns>
     [HttpGet]
@@ -56,7 +56,7 @@ public class TempController : ControllerBase
     }
 
     /// <summary>
-    /// Checks for existence of location and if necessary inserts new location.
+    ///     Checks for existence of location and if necessary inserts new location.
     /// </summary>
     /// <param name="postalcode">Defines the location.</param>
     /// <returns>Ok if successful; otherwise, an error response.</returns>

@@ -1,6 +1,5 @@
 using System.Security.Authentication;
 using Asp.Versioning;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rest_API.Helper;
 using Rest_API.Models;
@@ -9,8 +8,8 @@ using IAuthenticationService = Rest_API.Services.Auth.IAuthenticationService;
 namespace Rest_API.Controllers;
 
 /// <summary>
-/// Handles user authentication operations including login, registration, and token refresh.
-/// Provides secure JWT-based authentication for the IsoPruefi temperature monitoring system.
+///     Handles user authentication operations including login, registration, and token refresh.
+///     Provides secure JWT-based authentication for the IsoPruefi temperature monitoring system.
 /// </summary>
 [Route("v{version:apiVersion}/[controller]/[action]")]
 [ApiController]
@@ -24,28 +23,26 @@ public class AuthenticationController(
     private readonly ILogger<AuthenticationController> _logger = logger;
 
     /// <summary>
-    /// Authenticates a user and returns a JWT token for API access.
+    ///     Authenticates a user and returns a JWT token for API access.
     /// </summary>
     /// <remarks>
-    /// This endpoint validates user credentials and returns a JWT access token and refresh token.
-    /// The returned tokens should be used for authenticating subsequent API requests.
-    /// 
-    /// Example request:
-    /// ```json
-    /// {
-    ///   "userName": "admin",
-    ///   "password": "your-password"
-    /// }
-    /// ```
-    /// 
-    /// Example response:
-    /// ```json
-    /// {
-    ///   "accessToken": "CakeIsNotALie.",
-    ///   "refreshToken": "refresh-token-here",
-    ///   "expiresIn": 3600
-    /// }
-    /// ```
+    ///     This endpoint validates user credentials and returns a JWT access token and refresh token.
+    ///     The returned tokens should be used for authenticating subsequent API requests.
+    ///     Example request:
+    ///     ```json
+    ///     {
+    ///     "userName": "admin",
+    ///     "password": "your-password"
+    ///     }
+    ///     ```
+    ///     Example response:
+    ///     ```json
+    ///     {
+    ///     "accessToken": "CakeIsNotALie.",
+    ///     "refreshToken": "refresh-token-here",
+    ///     "expiresIn": 3600
+    ///     }
+    ///     ```
     /// </remarks>
     /// <param name="input">The login credentials containing username and password.</param>
     /// <returns>JWT tokens and expiration information on successful authentication.</returns>
@@ -65,16 +62,14 @@ public class AuthenticationController(
                 _logger.LogInformation("Login successful for user: {InputUserName}", input.UserName.SanitizeString());
                 return Ok(jwt);
             }
-            else
+
+            _logger.LogWarning("Invalid model state for user: {InputUserName}", input.UserName.SanitizeString());
+            var details = new ValidationProblemDetails(ModelState)
             {
-                _logger.LogWarning("Invalid model state for user: {InputUserName}", input.UserName.SanitizeString());
-                var details = new ValidationProblemDetails(ModelState)
-                {
-                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                    Status = StatusCodes.Status400BadRequest
-                };
-                return BadRequest(details);
-            }
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Status = StatusCodes.Status400BadRequest
+            };
+            return BadRequest(details);
         }
         catch (AuthenticationException e)
         {
@@ -112,24 +107,21 @@ public class AuthenticationController(
     }
 
     /// <summary>
-    /// Registers a new user in the system. Admin access required.
+    ///     Registers a new user in the system. Admin access required.
     /// </summary>
     /// <remarks>
-    /// This endpoint allows administrators to create new user accounts in the system.
-    /// Only users with the "Admin" role can access this endpoint.
-    /// 
-    /// **Authorization Required**: Bearer token with Admin role
-    /// 
-    /// Example request:
-    /// ```json
-    /// {
-    ///   "userName": "newuser",
-    ///   "password": "secure-password"
-    /// }
-    /// ```
-    /// 
-    /// The new user will be created with the "User" role by default and can access 
-    /// temperature data endpoints but cannot perform administrative functions.
+    ///     This endpoint allows administrators to create new user accounts in the system.
+    ///     Only users with the "Admin" role can access this endpoint.
+    ///     **Authorization Required**: Bearer token with Admin role
+    ///     Example request:
+    ///     ```json
+    ///     {
+    ///     "userName": "newuser",
+    ///     "password": "secure-password"
+    ///     }
+    ///     ```
+    ///     The new user will be created with the "User" role by default and can access
+    ///     temperature data endpoints but cannot perform administrative functions.
     /// </remarks>
     /// <param name="input">The registration data containing username and password for the new user.</param>
     /// <returns>Success confirmation when user is created successfully.</returns>
@@ -157,16 +149,14 @@ public class AuthenticationController(
                     input.UserName.SanitizeString());
                 return Ok();
             }
-            else
+
+            _logger.LogWarning("Invalid model state for user: {InputUserName}", input.UserName.SanitizeString());
+            var details = new ValidationProblemDetails(ModelState)
             {
-                _logger.LogWarning("Invalid model state for user: {InputUserName}", input.UserName.SanitizeString());
-                var details = new ValidationProblemDetails(ModelState)
-                {
-                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                    Status = StatusCodes.Status400BadRequest
-                };
-                return BadRequest(details);
-            }
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Status = StatusCodes.Status400BadRequest
+            };
+            return BadRequest(details);
         }
         catch (Exception e)
         {
@@ -183,31 +173,28 @@ public class AuthenticationController(
     }
 
     /// <summary>
-    /// Refreshes an expired JWT access token using a valid refresh token.
+    ///     Refreshes an expired JWT access token using a valid refresh token.
     /// </summary>
     /// <remarks>
-    /// This endpoint allows clients to obtain a new access token without requiring 
-    /// the user to log in again. The refresh token must be valid and not expired.
-    /// 
-    /// Use this endpoint when your access token expires to maintain continuous 
-    /// authentication without user intervention.
-    /// 
-    /// Example request:
-    /// ```json
-    /// {
-    ///   "accessToken": "expired-access-token",
-    ///   "refreshToken": "valid-refresh-token"
-    /// }
-    /// ```
-    /// 
-    /// Example response:
-    /// ```json
-    /// {
-    ///   "accessToken": "new-jwt-access-token",
-    ///   "refreshToken": "new-refresh-token",
-    ///   "expiresIn": 3600
-    /// }
-    /// ```
+    ///     This endpoint allows clients to obtain a new access token without requiring
+    ///     the user to log in again. The refresh token must be valid and not expired.
+    ///     Use this endpoint when your access token expires to maintain continuous
+    ///     authentication without user intervention.
+    ///     Example request:
+    ///     ```json
+    ///     {
+    ///     "accessToken": "expired-access-token",
+    ///     "refreshToken": "valid-refresh-token"
+    ///     }
+    ///     ```
+    ///     Example response:
+    ///     ```json
+    ///     {
+    ///     "accessToken": "new-jwt-access-token",
+    ///     "refreshToken": "new-refresh-token",
+    ///     "expiresIn": 3600
+    ///     }
+    ///     ```
     /// </remarks>
     /// <param name="token">The JWT token object containing both the expired access token and valid refresh token.</param>
     /// <returns>A new set of JWT tokens if the refresh token is valid.</returns>
@@ -231,16 +218,14 @@ public class AuthenticationController(
                 _logger.LogInformation("Refresh token successful for access token");
                 return Ok(result);
             }
-            else
+
+            _logger.LogWarning("Invalid model state for refresh token request");
+            var details = new ValidationProblemDetails(ModelState)
             {
-                _logger.LogWarning("Invalid model state for refresh token request");
-                var details = new ValidationProblemDetails(ModelState)
-                {
-                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                    Status = StatusCodes.Status400BadRequest
-                };
-                return BadRequest(details);
-            }
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Status = StatusCodes.Status400BadRequest
+            };
+            return BadRequest(details);
         }
         catch (Exception e)
         {

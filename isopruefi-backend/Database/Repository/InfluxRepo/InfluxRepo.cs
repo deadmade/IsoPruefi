@@ -14,7 +14,7 @@ public class InfluxRepo : IInfluxRepo
 
 
     /// <summary>
-    /// Constructor for the InfluxRepo class.
+    ///     Constructor for the InfluxRepo class.
     /// </summary>
     /// <param name="configuration"></param>
     /// <param name="logger"></param>
@@ -106,19 +106,17 @@ public class InfluxRepo : IInfluxRepo
         if (timespan.TotalHours < 24) group = "1m";
         else if (timespan.TotalDays < 30) group = "1h";
         else group = "1d";
-        
+
         var bucket = TimeSpan.FromDays(2);
         var bucketStart = start;
         while (bucketStart < end)
         {
             var bucketEnd = bucketStart + bucket;
-            if (bucketEnd > end)
-            {
-                bucketEnd = end;
-            }
-            
-            query = $"SELECT MEAN(value) FROM temperature where place='{place}' AND time >= '{bucketStart:yyyy-MM-dd HH:mm:ss}' AND time <= '{bucketEnd:yyyy-MM-dd HH:mm:ss}' GROUP BY time({group}) fill(none)";
-            
+            if (bucketEnd > end) bucketEnd = end;
+
+            query =
+                $"SELECT MEAN(value) FROM temperature where place='{place}' AND time >= '{bucketStart:yyyy-MM-dd HH:mm:ss}' AND time <= '{bucketEnd:yyyy-MM-dd HH:mm:ss}' GROUP BY time({group}) fill(none)";
+
             try
             {
                 result = _client.Query(query, QueryType.InfluxQL);
@@ -128,11 +126,8 @@ public class InfluxRepo : IInfluxRepo
                 _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
                 throw;
             }
-            
-            await foreach (var row in result)
-            {
-                yield return row;
-            }
+
+            await foreach (var row in result) yield return row;
 
             bucketStart = bucketEnd;
         }
@@ -150,19 +145,17 @@ public class InfluxRepo : IInfluxRepo
         if (timespan.TotalHours < 24) group = "1m";
         else if (timespan.TotalDays < 30) group = "1h";
         else group = "1d";
-        
+
         var bucket = TimeSpan.FromDays(2);
         var bucketStart = start;
         while (bucketStart < end)
         {
             var bucketEnd = bucketStart + bucket;
-            if (bucketEnd > end)
-            {
-                bucketEnd = end;
-            }
-            
-            query = $"SELECT MEAN(value) FROM temperature where sensor='{sensor}' AND time >= '{bucketStart:yyyy-MM-dd HH:mm:ss}' AND time <= '{bucketEnd:yyyy-MM-dd HH:mm:ss}' GROUP BY time({group}) fill(none)";
-            
+            if (bucketEnd > end) bucketEnd = end;
+
+            query =
+                $"SELECT MEAN(value) FROM temperature where sensor='{sensor}' AND time >= '{bucketStart:yyyy-MM-dd HH:mm:ss}' AND time <= '{bucketEnd:yyyy-MM-dd HH:mm:ss}' GROUP BY time({group}) fill(none)";
+
             try
             {
                 result = _client.Query(query, QueryType.InfluxQL);
@@ -172,11 +165,8 @@ public class InfluxRepo : IInfluxRepo
                 _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
                 throw;
             }
-            
-            await foreach (var row in result)
-            {
-                yield return row;
-            }
+
+            await foreach (var row in result) yield return row;
 
             bucketStart = bucketEnd;
         }

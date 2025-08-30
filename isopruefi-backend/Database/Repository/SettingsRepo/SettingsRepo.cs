@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Database.Repository.SettingsRepo;
 
 /// <summary>
-/// Repository implementation for accessing and managing topic settings in the database.
+///     Repository implementation for accessing and managing topic settings in the database.
 /// </summary>
 public class SettingsRepo : ISettingsRepo
 {
-    private ApplicationDbContext _applicationDbContext;
+    private readonly ApplicationDbContext _applicationDbContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SettingsRepo"/> class with the specified settings context.
+    ///     Initializes a new instance of the <see cref="SettingsRepo" /> class with the specified settings context.
     /// </summary>
     /// <param name="applicationDbContext">The database context for settings.</param>
     public SettingsRepo(ApplicationDbContext applicationDbContext)

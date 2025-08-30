@@ -2,7 +2,6 @@ using Database.EntityFramework.Models;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using FluentAssertions;
-using Google.Protobuf.WellKnownTypes;
 using InfluxDB3.Client.Write;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,19 +12,14 @@ using Rest_API.Models;
 namespace UnitTests.Controllers;
 
 /// <summary>
-/// Unit tests for the TemperatureDataController class, verifying temperature data retrieval and formatting functionality.
+///     Unit tests for the TemperatureDataController class, verifying temperature data retrieval and formatting
+///     functionality.
 /// </summary>
 [TestFixture]
 public class TemperatureDataControllerTests
 {
-    private Mock<ILogger<TemperatureDataController>> _mockLogger;
-    private Mock<ISettingsRepo> _mockSettingsRepo;
-    private Mock<IInfluxRepo> _mockInfluxRepo;
-    private TemperatureDataController _controller;
-    private IAsyncEnumerable<object?[]> _influxReturnData;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -47,10 +41,14 @@ public class TemperatureDataControllerTests
         }
     }
 
-    #region Constructor Tests
+    private Mock<ILogger<TemperatureDataController>> _mockLogger;
+    private Mock<ISettingsRepo> _mockSettingsRepo;
+    private Mock<IInfluxRepo> _mockInfluxRepo;
+    private TemperatureDataController _controller;
+    private IAsyncEnumerable<object?[]> _influxReturnData;
 
     /// <summary>
-    /// Tests that the constructor creates a valid instance when provided with valid parameters.
+    ///     Tests that the constructor creates a valid instance when provided with valid parameters.
     /// </summary>
     [Test]
     public void Constructor_WithValidParameters_ShouldCreateInstance()
@@ -66,7 +64,7 @@ public class TemperatureDataControllerTests
     }
 
     /// <summary>
-    /// Tests that the constructor throws ArgumentNullException when logger parameter is null.
+    ///     Tests that the constructor throws ArgumentNullException when logger parameter is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
@@ -81,7 +79,7 @@ public class TemperatureDataControllerTests
     }
 
     /// <summary>
-    /// Tests that the constructor throws ArgumentNullException when settings repository parameter is null.
+    ///     Tests that the constructor throws ArgumentNullException when settings repository parameter is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullSettingsRepo_ShouldThrowArgumentNullException()
@@ -96,7 +94,7 @@ public class TemperatureDataControllerTests
     }
 
     /// <summary>
-    /// Tests that the constructor throws ArgumentNullException when InfluxDB repository parameter is null.
+    ///     Tests that the constructor throws ArgumentNullException when InfluxDB repository parameter is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullInfluxRepo_ShouldThrowArgumentNullException()
@@ -110,12 +108,8 @@ public class TemperatureDataControllerTests
         act.Should().Throw<ArgumentNullException>().WithMessage("*influxRepo*");
     }
 
-    #endregion
-
-    #region GetTemperature Tests
-
     /// <summary>
-    /// Tests that GetTemperature with valid parameters returns an OK result with temperature data.
+    ///     Tests that GetTemperature with valid parameters returns an OK result with temperature data.
     /// </summary>
     [Test]
     public async Task GetTemperature_WithValidParameters_ShouldReturnOkWithTemperatureData()
@@ -156,7 +150,7 @@ public class TemperatureDataControllerTests
     }
 
     /// <summary>
-    /// Tests that GetTemperature with Fahrenheit conversion returns temperatures converted from Celsius to Fahrenheit.
+    ///     Tests that GetTemperature with Fahrenheit conversion returns temperatures converted from Celsius to Fahrenheit.
     /// </summary>
     [Test]
     public async Task GetTemperature_WithFahrenheitConversion_ShouldReturnConvertedTemperatures()
@@ -193,7 +187,7 @@ public class TemperatureDataControllerTests
     }
 
     /// <summary>
-    /// Tests that GetTemperature handles gracefully when no sensor settings are available.
+    ///     Tests that GetTemperature handles gracefully when no sensor settings are available.
     /// </summary>
     [Test]
     public async Task GetTemperature_WithNoSensorSettings_ShouldHandleGracefully()
@@ -208,7 +202,7 @@ public class TemperatureDataControllerTests
             .Returns(_influxReturnData);
 
         // Act
-        var result = await _controller.GetTemperature(start, end, place, false);
+        var result = await _controller.GetTemperature(start, end, place);
 
         // Assert
         result.Should().BeOfType<OkObjectResult>();
@@ -220,12 +214,8 @@ public class TemperatureDataControllerTests
         temperatureData.TemperatureOutside.Should().BeEmpty();
     }
 
-    #endregion
-
-    #region Temperature Conversion Tests
-
     /// <summary>
-    /// Tests that ConvertToFahrenheit method correctly converts Celsius values to Fahrenheit.
+    ///     Tests that ConvertToFahrenheit method correctly converts Celsius values to Fahrenheit.
     /// </summary>
     [Test]
     public void ConvertToFahrenheit_WithCelsiusValues_ShouldReturnCorrectFahrenheitValues()
@@ -251,7 +241,7 @@ public class TemperatureDataControllerTests
     }
 
     /// <summary>
-    /// Tests that date formatting produces correctly formatted date strings.
+    ///     Tests that date formatting produces correctly formatted date strings.
     /// </summary>
     [Test]
     public void DateFormatting_ShouldFormatCorrectly()
@@ -267,15 +257,9 @@ public class TemperatureDataControllerTests
         expectedEndFormat.Should().Be("2022-01-02 00:00:00");
     }
 
-    #endregion
-
-    #region Helper Methods
-
     private static async IAsyncEnumerable<PointDataValues> CreateEmptyAsyncEnumerable()
     {
         await Task.CompletedTask;
         yield break;
     }
-
-    #endregion
 }

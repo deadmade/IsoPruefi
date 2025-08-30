@@ -9,8 +9,8 @@ using Rest_API.Models;
 namespace Rest_API.Controllers;
 
 /// <summary>
-/// Provides endpoints for retrieving temperature data from multiple sources.
-/// Combines indoor sensor data with external weather data for comprehensive temperature monitoring.
+///     Provides endpoints for retrieving temperature data from multiple sources.
+///     Combines indoor sensor data with external weather data for comprehensive temperature monitoring.
 /// </summary>
 [ApiVersion(1)]
 [ApiController]
@@ -19,13 +19,13 @@ namespace Rest_API.Controllers;
 [Consumes("application/json")]
 public class TemperatureDataController : ControllerBase
 {
+    private readonly IInfluxRepo _influxRepo;
     private readonly ILogger<TemperatureDataController> _logger;
-    private ISettingsRepo _settingsRepo;
-    private IInfluxRepo _influxRepo;
+    private readonly ISettingsRepo _settingsRepo;
 
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TemperatureDataController"/> class.
+    ///     Initializes a new instance of the <see cref="TemperatureDataController" /> class.
     /// </summary>
     /// <param name="logger">The logger instance used for logging operations.</param>
     /// <param name="settingsRepo">The repository for accessing application settings.</param>
@@ -40,7 +40,7 @@ public class TemperatureDataController : ControllerBase
     }
 
     /// <summary>
-    /// Converts a temperature from Celsius to Fahrenheit.
+    ///     Converts a temperature from Celsius to Fahrenheit.
     /// </summary>
     /// <param name="celsius">Temperature in Celsius.</param>
     /// <returns>Temperature in Fahrenheit.</returns>
@@ -50,33 +50,29 @@ public class TemperatureDataController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves comprehensive temperature data for a specified time range and location.
+    ///     Retrieves comprehensive temperature data for a specified time range and location.
     /// </summary>
     /// <remarks>
-    /// This endpoint provides temperature readings from multiple sources:
-    /// - **Indoor sensors**: North and South sensor locations
-    /// - **External weather data**: Outside temperature for the specified location
-    /// 
-    /// **Authorization Required**: Bearer token with User or Admin role
-    /// 
-    /// **Time Range Requirements**:
-    /// - Start date must be before end date
-    /// - Maximum time range is recommended to be 30 days for optimal performance
-    /// - Dates should be in ISO 8601 format (e.g., "2024-01-15T10:30:00Z")
-    /// 
-    /// **Temperature Unit Conversion**:
-    /// - Default: Celsius (°C)
-    /// - Optional: Fahrenheit (°F) by setting `isFahrenheit=true`
-    /// 
-    /// **Example Usage**:
-    /// ```
-    /// GET /api/v1/TemperatureData/GetTemperature?start=2024-01-15T00:00:00Z&amp;end=2024-01-16T00:00:00Z&amp;place=Berlin&amp;isFahrenheit=false
-    /// ```
-    /// 
-    /// **Data Quality**:
-    /// - Automatic plausibility checks are performed on all temperature readings
-    /// - Suspicious readings (outside -30°C to 45°C for outdoor, -10°C to 35°C for indoor) are logged as warnings
-    /// - Large temperature jumps (>10°C between consecutive readings) are flagged
+    ///     This endpoint provides temperature readings from multiple sources:
+    ///     - **Indoor sensors**: North and South sensor locations
+    ///     - **External weather data**: Outside temperature for the specified location
+    ///     **Authorization Required**: Bearer token with User or Admin role
+    ///     **Time Range Requirements**:
+    ///     - Start date must be before end date
+    ///     - Maximum time range is recommended to be 30 days for optimal performance
+    ///     - Dates should be in ISO 8601 format (e.g., "2024-01-15T10:30:00Z")
+    ///     **Temperature Unit Conversion**:
+    ///     - Default: Celsius (°C)
+    ///     - Optional: Fahrenheit (°F) by setting `isFahrenheit=true`
+    ///     **Example Usage**:
+    ///     ```
+    ///     GET /api/v1/TemperatureData/GetTemperature?start=2024-01-15T00:00:00Z&amp;end=2024-01-16T00:00:00Z&amp;place=Berlin
+    ///     &amp;isFahrenheit=false
+    ///     ```
+    ///     **Data Quality**:
+    ///     - Automatic plausibility checks are performed on all temperature readings
+    ///     - Suspicious readings (outside -30°C to 45°C for outdoor, -10°C to 35°C for indoor) are logged as warnings
+    ///     - Large temperature jumps (>10°C between consecutive readings) are flagged
     /// </remarks>
     /// <param name="start">Start date and time for the data range (ISO 8601 format).</param>
     /// <param name="end">End date and time for the data range (ISO 8601 format).</param>
@@ -103,7 +99,7 @@ public class TemperatureDataController : ControllerBase
     }
 
     /// <summary>
-    /// Combines outside and sensor temperature data, applying Fahrenheit conversion if requested.
+    ///     Combines outside and sensor temperature data, applying Fahrenheit conversion if requested.
     /// </summary>
     /// <param name="start">Start date and time for the data range.</param>
     /// <param name="end">End date and time for the data range.</param>
@@ -176,7 +172,7 @@ public class TemperatureDataController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves outside temperature data from the InfluxDB for the specified time range and location.
+    ///     Retrieves outside temperature data from the InfluxDB for the specified time range and location.
     /// </summary>
     /// <param name="start">Start date and time for the data range.</param>
     /// <param name="end">End date and time for the data range.</param>
@@ -224,7 +220,7 @@ public class TemperatureDataController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves sensor temperature data from the InfluxDB for the specified time range
+    ///     Retrieves sensor temperature data from the InfluxDB for the specified time range
     /// </summary>
     /// <param name="start">Start date and time for the data range.</param>
     /// <param name="end">End date and time for the data range.</param>

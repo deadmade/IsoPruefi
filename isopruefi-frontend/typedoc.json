@@ -1,8 +1,13 @@
 {
-  "entryPoints": ["src/Weather.tsx", "src/App.tsx"],
+  "entryPoints": [
+    "src/Weather.tsx",
+    "src/App.tsx"
+  ],
   "entryPointStrategy": "resolve",
   "out": "../isopruefi-docs/docs/code/frontend",
-  "plugin": ["typedoc-plugin-markdown"],
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
   "includeVersion": true,
   "tsconfig": "./tsconfig.json"
 }

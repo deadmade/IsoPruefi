@@ -13,12 +13,12 @@ using MQTT_Receiver_Worker.MQTT.Interfaces;
 namespace MQTT_Receiver_Worker;
 
 /// <summary>
-/// This class is the entry point for the MQTT Receiver Worker application.
+///     This class is the entry point for the MQTT Receiver Worker application.
 /// </summary>
 public class Program
 {
     /// <summary>
-    /// Entry point for the MQTT Receiver Worker application.
+    ///     Entry point for the MQTT Receiver Worker application.
     /// </summary>
     /// <param name="args"></param>
     public static void Main(string[] args)

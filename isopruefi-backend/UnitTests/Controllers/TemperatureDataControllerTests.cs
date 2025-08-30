@@ -2,6 +2,7 @@ using Database.EntityFramework.Models;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using FluentAssertions;
+using Google.Protobuf.WellKnownTypes;
 using InfluxDB3.Client.Write;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,7 @@ public class TemperatureDataControllerTests
     private Mock<ISettingsRepo> _mockSettingsRepo;
     private Mock<IInfluxRepo> _mockInfluxRepo;
     private TemperatureDataController _controller;
+    private IAsyncEnumerable<object?[]> _influxReturnData;
 
     /// <summary>
     /// Sets up test fixtures and initializes mocks before each test execution.
@@ -36,6 +38,13 @@ public class TemperatureDataControllerTests
             _mockLogger.Object,
             _mockSettingsRepo.Object,
             _mockInfluxRepo.Object);
+
+        _influxReturnData = GetData();
+
+        async IAsyncEnumerable<object?[]> GetData()
+        {
+            yield break;
+        }
     }
 
     #region Constructor Tests
@@ -125,9 +134,11 @@ public class TemperatureDataControllerTests
 
         _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync()).ReturnsAsync(topicSettings);
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
-            .Returns(CreateEmptyAsyncEnumerable());
-        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end))
-            .Returns(CreateEmptyAsyncEnumerable());
+            .Returns(_influxReturnData);
+        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[0].SensorName))
+            .Returns(_influxReturnData);
+        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[1].SensorName))
+            .Returns(_influxReturnData);
 
         // Act
         var result = await _controller.GetTemperature(start, end, place, isFahrenheit);
@@ -163,9 +174,9 @@ public class TemperatureDataControllerTests
 
         _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync()).ReturnsAsync(topicSettings);
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
-            .Returns(CreateEmptyAsyncEnumerable());
-        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end))
-            .Returns(CreateEmptyAsyncEnumerable());
+            .Returns(_influxReturnData);
+        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[0].SensorName))
+            .Returns(_influxReturnData);
 
         // Act
         var result = await _controller.GetTemperature(start, end, place, isFahrenheit);
@@ -194,9 +205,7 @@ public class TemperatureDataControllerTests
 
         _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync()).ReturnsAsync(new List<TopicSetting>());
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
-            .Returns(CreateEmptyAsyncEnumerable());
-        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end))
-            .Returns(CreateEmptyAsyncEnumerable());
+            .Returns(_influxReturnData);
 
         // Act
         var result = await _controller.GetTemperature(start, end, place, false);
@@ -208,6 +217,7 @@ public class TemperatureDataControllerTests
 
         temperatureData.TemperatureNord.Should().BeEmpty();
         temperatureData.TemperatureSouth.Should().BeEmpty();
+        temperatureData.TemperatureOutside.Should().BeEmpty();
     }
 
     #endregion

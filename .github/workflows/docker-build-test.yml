@@ -29,4 +29,3 @@ jobs:
     - name: Build Get Weather Worker Docker
       working-directory: ./isopruefi-backend
       run: docker build . --file Get-weatherData-worker/Dockerfile 
-      

@@ -1,4 +1,3 @@
-import './App.css';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Welcome from "./pages/Welcome.tsx";
 import SignIn from "./auth/SignIn.tsx";
@@ -8,7 +7,7 @@ import AdminPage from "./pages/AdminPage.tsx";
 // import {WeatherChartTitle} from "./components/Weather.tsx"
 // import {TempChart} from "./components/Weather.tsx";
 
-// entry point of the website
+// entry point of the website. shows WeatherChartTitle and TempChart
 
 export default function App() {
 

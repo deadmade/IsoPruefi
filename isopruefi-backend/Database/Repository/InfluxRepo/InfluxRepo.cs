@@ -1,4 +1,5 @@
 using InfluxDB3.Client;
+using InfluxDB3.Client.Query;
 using InfluxDB3.Client.Write;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -84,7 +85,7 @@ public class InfluxRepo : IInfluxRepo
             var point = PointData.Measurement("uptime")
                 .SetField("sensor", sensor)
                 .SetTimestamp(dateTimeUtc);
-            
+
             await _client.WritePointAsync(point);
         }
         catch (Exception e)
@@ -95,14 +96,24 @@ public class InfluxRepo : IInfluxRepo
     }
 
     /// <inheritdoc />
-    public IAsyncEnumerable<PointDataValues> GetOutsideWeatherData(DateTime start, DateTime end, string place)
+    public IAsyncEnumerable<object?[]> GetOutsideWeatherData(DateTime start, DateTime end, string place)
     {
+        var timespan = end - start;
+        string query;
+
+        if (timespan.Hours < 24)
+            query =
+                $"SELECT MEAN(value) FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
+        else if (timespan.Days < 30)
+            query =
+                $"SELECT MEAN(value) FROM outside_temperature WHERE place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h) fill(none)";
+        else
+            query =
+                $"SELECT MEAN(value) FROM outside_temperature WHERE place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d) fill(none)";
+
         try
         {
-            var query =
-                $"SELECT place, time, value FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
-
-            return _client.QueryPoints(query);
+            return _client.Query(query, QueryType.InfluxQL);
         }
         catch (Exception e)
         {
@@ -113,14 +124,33 @@ public class InfluxRepo : IInfluxRepo
 
 
     /// <inheritdoc />
-    public IAsyncEnumerable<PointDataValues> GetSensorWeatherData(DateTime start, DateTime end)
+    public IAsyncEnumerable<object?[]> GetSensorWeatherData(DateTime start, DateTime end, string sensor)
     {
+        var timespan = end - start;
+        string query;
+
+        if (timespan.TotalHours < 24)
+        {
+            Console.WriteLine("Case1");
+            query =
+                $"SELECT MEAN(value) FROM temperature where sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
+        }
+        else if (timespan.TotalDays < 30)
+        {
+            Console.WriteLine("Case2");
+            query =
+                $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h) fill(none)";
+        }
+        else
+        {
+            Console.WriteLine("Case3");
+            query =
+                $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d) fill(none)";
+        }
+
         try
         {
-            var query =
-                $"SELECT sensor, time, value FROM temperature WHERE time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}'";
-
-            return _client.QueryPoints(query);
+            return _client.Query(query, QueryType.InfluxQL);
         }
         catch (Exception e)
         {

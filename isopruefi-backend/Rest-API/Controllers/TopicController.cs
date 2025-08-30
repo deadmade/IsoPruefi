@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Database.EntityFramework.Models;
 using Database.Repository.SettingsRepo;
 using Microsoft.AspNetCore.Authorization;
@@ -25,7 +25,7 @@ public class TopicController : ControllerBase
     /// <param name="settingsRepo">Settings repository for topic operations</param>
     public TopicController(ISettingsRepo settingsRepo)
     {
-        _settingsRepo = settingsRepo;
+        _settingsRepo = settingsRepo ?? throw new ArgumentNullException(nameof(settingsRepo));
     }
 
     /// <summary>

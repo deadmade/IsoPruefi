@@ -56,43 +56,55 @@ export default function AuthForm({ mode }: AuthFormProps) {
     };
 
 
-    return (
-        <form onSubmit={handleSubmit} style={{ maxWidth: 300, margin: "auto" }}>
-            <h2>{mode === "signin" ? "Sign In" : "Sign Up"}</h2>
+return (
+  <form
+    onSubmit={handleSubmit}
+    className="flex flex-col gap-4 max-w-sm mx-auto"
+  >
+    <h2 className="text-3xl font-bold text-center text-[#d3546c] mb-4">
+      {mode === "signin" ? "Sign In" : "Sign Up"}
+    </h2>
 
-            <label>
-                <div>
-                    Username:
-                    <p>
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
-                    </p>
-                </div>
-            </label>
+    <label>
+      <div>
+        <span className="block text-sm font-bold text-gray-700 mb-1">
+          Username
+        </span>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          className="w-full rounded-lg border border-gray-300 px-4 py-2
+                     focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
+        />
+      </div>
+    </label>
 
-            <label>
-                <div>
-                    Password:  
-                    <p>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </p>
-                </div>
-            </label>
+    <label>
+      <div>
+        <span className="block text-sm font-bold text-gray-700 mb-1">
+          Password
+        </span>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full rounded-lg border border-gray-300 px-4 py-2
+                     focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
+        />
+      </div>
+    </label>
 
-            <button type="submit" style={{ marginTop: 12 }}>
-                {mode === "signin" ? "Login" : "Register"}
-            </button>
+    <button
+      type="submit"
+      className="w-full mt-2 rounded-lg bg-pink-600 text-white py-2 font-semibold hover:bg-pink-800"
+    >
+      {mode === "signin" ? "Login" : "Register"}
+    </button>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
-        </form>
-    );
+    {error && <p className="text-red-600 text-sm mt-2 text-center">{error}</p>}
+  </form>
+);
 }

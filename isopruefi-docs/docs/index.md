@@ -1,4 +1,5 @@
 # Welcome to IsoPrüfi
 
-Welcome 🥳🎉
+We are happy that you are here 🥳🎉
 
+![IsoPrüfi Logo](images/isopruefi.png)

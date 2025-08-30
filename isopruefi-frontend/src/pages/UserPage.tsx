@@ -6,42 +6,50 @@ import { useNavigate } from "react-router-dom";
 import { clearToken } from "../utils/tokenHelpers";
 
 export default function UserPage() {
-    const style = { padding: 20 };
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [place, setPlace] = useState("Heidenheim an der Brenz");
-    const [isF, setIsF] = useState(false);
+  const [place, setPlace] = useState("Heidenheim an der Brenz");
+  const [isF, setIsF] = useState(false);
 
-    const handleLogout = () => {
-        clearToken();
-        navigate("/signin");
-    };
+  const handleLogout = () => {
+    clearToken();
+    navigate("/signin");
+  };
 
-    return (
-        <div style={style}>
-            <h1>User Page</h1>
+  return (
+    <div className="h-full w-full bg-[#f5cacd] p-6">
+      <h1 className="text-4xl font-extrabold text-[#d3546c] mb-8 text-center">
+        User Page
+      </h1>
 
-            <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-                <div>
-                    <div style={{ fontWeight: 600 }}>Place</div>
-                    <PlacePicker value={place} onChange={setPlace} />
-                    <small style={{ marginLeft: 8, opacity: 0.7 }}>Pick the location</small>
-                </div>
-
-                <div>
-                    <div style={{ fontWeight: 600 }}>Units</div>
-                    <UnitToggle value={isF} onChange={setIsF} />
-                </div>
-            </div>
-
-            <section style={{ marginTop: 16 }}>
-                <TempChart place={place} isFahrenheit={isF} />
-            </section>
-            
-            <br/><br/>
-            <button style={{ marginTop: 24 }} onClick={handleLogout}>
-                Logout
-            </button>
+      <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+        <div>
+          <div style={{ fontWeight: 600 }}>Place</div>
+          <PlacePicker value={place} onChange={setPlace} />
+          <small style={{ marginLeft: 8, opacity: 0.7 }}>Pick the location</small>
         </div>
-    );
+
+        <div>
+          <div style={{ fontWeight: 600 }}>Units</div>
+          <UnitToggle value={isF} onChange={setIsF} />
+        </div>
+      </div>
+
+      <section className="bg-white rounded-xl shadow p-6 max-w-[1200px] mx-auto mt-4">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+          Weather Chart
+        </h2>
+        <TempChart place={place} isFahrenheit={isF} />
+      </section>
+
+      <div className="flex justify-end">
+        <button
+          onClick={handleLogout}
+          className="mt-6 px-6 py-2 rounded-lg bg-pink-600 text-white font-semibold hover:bg-pink-800"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  );
 }

@@ -1,4 +1,4 @@
-using Database.Repository.InfluxRepo;
+using Database.Repository.InfluxRepo.InfluxCache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MQTT_Receiver_Worker.MQTT;

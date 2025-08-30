@@ -1,4 +1,4 @@
-using Database.Repository.InfluxRepo;
+using Database.Repository.InfluxRepo.Influx;
 using FluentAssertions;
 using InfluxDB3.Client;
 using Microsoft.Extensions.Configuration;
@@ -8,21 +8,14 @@ using Moq;
 namespace UnitTests.Repositories;
 
 /// <summary>
-/// Unit tests for the InfluxRepo class, verifying InfluxDB repository operations including data writing and querying functionality.
+///     Unit tests for the InfluxRepo class, verifying InfluxDB repository operations including data writing and querying
+///     functionality.
 /// </summary>
 [TestFixture]
 public class InfluxRepoTests
 {
-    private Mock<IConfiguration> _mockConfiguration;
-    private Mock<ILogger<InfluxRepo>> _mockLogger;
-    private Mock<InfluxDBClient> _mockInfluxClient;
-    private const string TestToken = "test-token";
-
-    private readonly string _testHost =
-        Environment.GetEnvironmentVariable("TEST_INFLUXDB_HOST") ?? "http://localhost:8086";
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -35,8 +28,16 @@ public class InfluxRepoTests
         _mockConfiguration.Setup(x => x["Influx:InfluxDBHost"]).Returns(_testHost);
     }
 
+    private Mock<IConfiguration> _mockConfiguration;
+    private Mock<ILogger<InfluxRepo>> _mockLogger;
+    private Mock<InfluxDBClient> _mockInfluxClient;
+    private const string TestToken = "test-token";
+
+    private readonly string _testHost =
+        Environment.GetEnvironmentVariable("TEST_INFLUXDB_HOST") ?? "http://localhost:8086";
+
     /// <summary>
-    /// Tests that the constructor creates a valid instance when provided with valid configuration.
+    ///     Tests that the constructor creates a valid instance when provided with valid configuration.
     /// </summary>
     [Test]
     public void Constructor_WithValidConfiguration_ShouldCreateInstance()
@@ -49,7 +50,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that the constructor throws ArgumentNullException when logger parameter is null.
+    ///     Tests that the constructor throws ArgumentNullException when logger parameter is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
@@ -62,7 +63,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that the constructor throws ArgumentException when InfluxDB token is missing from configuration.
+    ///     Tests that the constructor throws ArgumentException when InfluxDB token is missing from configuration.
     /// </summary>
     [Test]
     public void Constructor_WithMissingToken_ShouldThrowArgumentException()
@@ -79,7 +80,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that the constructor throws ArgumentException when InfluxDB host is missing from configuration.
+    ///     Tests that the constructor throws ArgumentException when InfluxDB host is missing from configuration.
     /// </summary>
     [Test]
     public void Constructor_WithMissingHost_ShouldThrowArgumentException()
@@ -96,7 +97,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that the constructor creates a valid instance when InfluxDB token is provided via environment variable.
+    ///     Tests that the constructor creates a valid instance when InfluxDB token is provided via environment variable.
     /// </summary>
     [Test]
     public void Constructor_WithEnvironmentVariableToken_ShouldCreateInstance()
@@ -113,7 +114,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that the constructor creates a valid instance when InfluxDB host is provided via environment variable.
+    ///     Tests that the constructor creates a valid instance when InfluxDB host is provided via environment variable.
     /// </summary>
     [Test]
     public void Constructor_WithEnvironmentVariableHost_ShouldCreateInstance()
@@ -130,7 +131,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that WriteSensorData with valid data writes the point correctly to InfluxDB.
+    ///     Tests that WriteSensorData with valid data writes the point correctly to InfluxDB.
     /// </summary>
     [Test]
     public async Task WriteSensorData_WithValidData_ShouldWritePointCorrectly()
@@ -152,7 +153,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that GetOutsideWeatherData logs error and rethrows exception when an error occurs.
+    ///     Tests that GetOutsideWeatherData logs error and rethrows exception when an error occurs.
     /// </summary>
     [Test]
     public async Task GetOutsideWeatherData_WithException_ShouldLogErrorAndRethrow()
@@ -178,7 +179,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that GetSensorWeatherData with valid parameters generates the correct InfluxDB query.
+    ///     Tests that GetSensorWeatherData with valid parameters generates the correct InfluxDB query.
     /// </summary>
     [Test]
     public async Task GetSensorWeatherData_WithValidParameters_ShouldGenerateCorrectQuery()
@@ -209,7 +210,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that GetSensorWeatherData logs error and rethrows exception when an error occurs.
+    ///     Tests that GetSensorWeatherData logs error and rethrows exception when an error occurs.
     /// </summary>
     [Test]
     public async Task GetSensorWeatherData_WithException_ShouldLogErrorAndRethrow()
@@ -235,7 +236,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that WriteSensorData correctly converts Unix timestamp to proper DateTime format.
+    ///     Tests that WriteSensorData correctly converts Unix timestamp to proper DateTime format.
     /// </summary>
     [Test]
     public void WriteSensorData_TimestampConversion_ShouldConvertUnixTimestampCorrectly()
@@ -259,7 +260,7 @@ public class InfluxRepoTests
     }
 
     /// <summary>
-    /// Tests that WriteOutsideWeatherData correctly converts temperature from Celsius to Fahrenheit.
+    ///     Tests that WriteOutsideWeatherData correctly converts temperature from Celsius to Fahrenheit.
     /// </summary>
     [Test]
     public void WriteOutsideWeatherData_TemperatureConversion_ShouldConvertCelsiusToFahrenheitCorrectly()

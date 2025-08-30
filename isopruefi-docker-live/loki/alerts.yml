@@ -1,152 +1,152 @@
 groups:
-- name: isopruefi-services
-  rules:
-  # Service Down Alerts
-  - alert: IsoPruefiAPIDown
-    expr: up{job="isopruefi-backend-api"} == 0
-    for: 30s
-    labels:
-      severity: critical
-      service: api
-    annotations:
-      summary: "IsoPruefi Backend API is down"
-      description: "The IsoPruefi Backend API has been down for more than 30 seconds. Service: {{ $labels.instance }}"
+  - name: isopruefi-services
+    rules:
+      # Service Down Alerts
+      - alert: IsoPruefiAPIDown
+        expr: up{job="isopruefi-backend-api"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "IsoPruefi Backend API is down"
+          description: "The IsoPruefi Backend API has been down for more than 30 seconds. Service: {{ $labels.instance }}"
 
-  - alert: MQTTReceiverDown
-    expr: up{job="isopruefi-mqtt-receiver"} == 0
-    for: 30s
-    labels:
-      severity: critical
-      service: mqtt
-    annotations:
-      summary: "IsoPruefi MQTT Receiver is down"
-      description: "The IsoPruefi MQTT Receiver has been down for more than 30 seconds. Service: {{ $labels.instance }}"
+      - alert: MQTTReceiverDown
+        expr: up{job="isopruefi-mqtt-receiver"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: mqtt
+        annotations:
+          summary: "IsoPruefi MQTT Receiver is down"
+          description: "The IsoPruefi MQTT Receiver has been down for more than 30 seconds. Service: {{ $labels.instance }}"
 
-  - alert: WeatherWorkerDown
-    expr: up{job="isopruefi-weather-worker"} == 0
-    for: 30s
-    labels:
-      severity: critical
-      service: weather
-    annotations:
-      summary: "IsoPruefi Weather Worker is down"
-      description: "The IsoPruefi Weather Worker has been down for more than 30 seconds. Service: {{ $labels.instance }}"
+      - alert: WeatherWorkerDown
+        expr: up{job="isopruefi-weather-worker"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: weather
+        annotations:
+          summary: "IsoPruefi Weather Worker is down"
+          description: "The IsoPruefi Weather Worker has been down for more than 30 seconds. Service: {{ $labels.instance }}"
+      
+      # Health Check Alerts
+      - alert: ServiceHealthCheckFailing
+        expr: probe_success{job=~"isopruefi-.*"} == 0
+        for: 1m
+        labels:
+          severity: warning
+          service: health
+        annotations:
+          summary: "Service health check failing"
+          description: "Health check for {{ $labels.job }} has been failing for more than 1 minute. Instance: {{ $labels.instance }}"
+      
+      # Response Time Alerts
+      - alert: HighResponseTime
+        expr: probe_duration_seconds{job=~"isopruefi-.*"} > 5
+        for: 2m
+        labels:
+          severity: warning
+          service: performance
+        annotations:
+          summary: "High response time detected"
+          description: "{{ $labels.job }} response time is {{ $value }}s, which is above the 5s threshold. Instance: {{ $labels.instance }}"
 
-  # Health Check Alerts
-  - alert: ServiceHealthCheckFailing
-    expr: probe_success{job=~"isopruefi-.*"} == 0
-    for: 1m
-    labels:
-      severity: warning
-      service: health
-    annotations:
-      summary: "Service health check failing"
-      description: "Health check for {{ $labels.job }} has been failing for more than 1 minute. Instance: {{ $labels.instance }}"
+  - name: infrastructure
+    rules:
+      # Infrastructure Service Down Alerts
+      - alert: TraefikDown
+        expr: up{job="traefik"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: loadbalancer
+        annotations:
+          summary: "Traefik load balancer is down"
+          description: "Traefik has been unreachable for more than 30 seconds"
 
-  # Response Time Alerts
-  - alert: HighResponseTime
-    expr: probe_duration_seconds{job=~"isopruefi-.*"} > 5
-    for: 2m
-    labels:
-      severity: warning
-      service: performance
-    annotations:
-      summary: "High response time detected"
-      description: "{{ $labels.job }} response time is {{ $value }}s, which is above the 5s threshold. Instance: {{ $labels.instance }}"
+      - alert: InfluxDBDown
+        expr: up{job="influxdb"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "InfluxDB is down"
+          description: "InfluxDB has been unreachable for more than 30 seconds"
 
-- name: infrastructure
-  rules:
-  # Infrastructure Service Down Alerts
-  - alert: TraefikDown
-    expr: up{job="traefik"} == 0
-    for: 30s
-    labels:
-      severity: critical
-      service: loadbalancer
-    annotations:
-      summary: "Traefik load balancer is down"
-      description: "Traefik has been unreachable for more than 30 seconds"
+      - alert: GrafanaDown
+        expr: up{job="grafana"} == 0
+        for: 30s
+        labels:
+          severity: warning
+          service: monitoring
+        annotations:
+          summary: "Grafana is down"
+          description: "Grafana has been unreachable for more than 30 seconds"
 
-  - alert: InfluxDBDown
-    expr: up{job="influxdb"} == 0
-    for: 30s
-    labels:
-      severity: critical
-      service: database
-    annotations:
-      summary: "InfluxDB is down"
-      description: "InfluxDB has been unreachable for more than 30 seconds"
+      - alert: AlloyDown
+        expr: up{job="alloy"} == 0
+        for: 30s
+        labels:
+          severity: warning
+          service: monitoring
+        annotations:
+          summary: "Alloy telemetry collector is down"
+          description: "Alloy has been unreachable for more than 30 seconds"
+      
+      # Prometheus Self-Monitoring
+      - alert: PrometheusConfigReloadFailed
+        expr: prometheus_config_last_reload_successful == 0
+        for: 5m
+        labels:
+          severity: warning
+          service: monitoring
+        annotations:
+          summary: "Prometheus configuration reload failed"
+          description: "Prometheus configuration reload has been failing for 5 minutes"
 
-  - alert: GrafanaDown
-    expr: up{job="grafana"} == 0
-    for: 30s
-    labels:
-      severity: warning
-      service: monitoring
-    annotations:
-      summary: "Grafana is down"
-      description: "Grafana has been unreachable for more than 30 seconds"
+      - alert: PrometheusTargetDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: warning
+          service: monitoring
+        annotations:
+          summary: "Prometheus target down"
+          description: "Target {{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute"
 
-  - alert: AlloyDown
-    expr: up{job="alloy"} == 0
-    for: 30s
-    labels:
-      severity: warning
-      service: monitoring
-    annotations:
-      summary: "Alloy telemetry collector is down"
-      description: "Alloy has been unreachable for more than 30 seconds"
+  - name: container-health
+    rules:
+      # Docker Container Health Alerts
+      - alert: ContainerHealthcheckFailing
+        expr: container_last_seen{container_label_logging_isopruefi_enabled="true"} < (time() - 60)
+        for: 2m
+        labels:
+          severity: warning
+          service: container
+        annotations:
+          summary: "Container health check failing"
+          description: "Container {{ $labels.name }} health check has been failing for more than 2 minutes"
 
-  # Prometheus Self-Monitoring
-  - alert: PrometheusConfigReloadFailed
-    expr: prometheus_config_last_reload_successful == 0
-    for: 5m
-    labels:
-      severity: warning
-      service: monitoring
-    annotations:
-      summary: "Prometheus configuration reload failed"
-      description: "Prometheus configuration reload has been failing for 5 minutes"
+      - alert: HighContainerMemoryUsage
+        expr: (container_memory_usage_bytes{container_label_logging_isopruefi_enabled="true"} / container_spec_memory_limit_bytes) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          service: resources
+        annotations:
+          summary: "High container memory usage"
+          description: "Container {{ $labels.name }} memory usage is above 90% for more than 5 minutes"
 
-  - alert: PrometheusTargetDown
-    expr: up == 0
-    for: 1m
-    labels:
-      severity: warning
-      service: monitoring
-    annotations:
-      summary: "Prometheus target down"
-      description: "Target {{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute"
-
-- name: container-health
-  rules:
-  # Docker Container Health Alerts
-  - alert: ContainerHealthcheckFailing
-    expr: container_last_seen{container_label_logging_isopruefi_enabled="true"} < (time() - 60)
-    for: 2m
-    labels:
-      severity: warning
-      service: container
-    annotations:
-      summary: "Container health check failing"
-      description: "Container {{ $labels.name }} health check has been failing for more than 2 minutes"
-
-  - alert: HighContainerMemoryUsage
-    expr: (container_memory_usage_bytes{container_label_logging_isopruefi_enabled="true"} / container_spec_memory_limit_bytes) * 100 > 90
-    for: 5m
-    labels:
-      severity: warning
-      service: resources
-    annotations:
-      summary: "High container memory usage"
-      description: "Container {{ $labels.name }} memory usage is above 90% for more than 5 minutes"
-
-  - alert: HighContainerCPUUsage
-    expr: rate(container_cpu_usage_seconds_total{container_label_logging_isopruefi_enabled="true"}[5m]) * 100 > 80
-    for: 5m
-    labels:
-      severity: warning
-      service: resources
-    annotations:
-      summary: "High container CPU usage"
-      description: "Container {{ $labels.name }} CPU usage is above 80% for more than 5 minutes"
+      - alert: HighContainerCPUUsage
+        expr: rate(container_cpu_usage_seconds_total{container_label_logging_isopruefi_enabled="true"}[5m]) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: resources
+        annotations:
+          summary: "High container CPU usage"
+          description: "Container {{ $labels.name }} CPU usage is above 80% for more than 5 minutes"

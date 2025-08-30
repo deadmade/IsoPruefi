@@ -187,6 +187,140 @@ export class AuthenticationClient {
     }
 }
 
+export class LocationClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * Retrieves all saved locations.
+     * @return A list of all postalcodes; otherwise, NotFound.
+     */
+    getAllPostalcodes(): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/v1/Location/GetAllPostalcodes";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetAllPostalcodes(_response);
+        });
+    }
+
+    protected processGetAllPostalcodes(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    /**
+     * Checks for existence of location and if necessary inserts new location.
+     * @param postalcode (optional) Defines the location.
+     * @return Ok if successful; otherwise, an error response.
+     */
+    insertLocation(postalcode?: number | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/v1/Location/InsertLocation?";
+        if (postalcode === null)
+            throw new Error("The parameter 'postalcode' cannot be null.");
+        else if (postalcode !== undefined)
+            url_ += "postalcode=" + encodeURIComponent("" + postalcode) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processInsertLocation(_response);
+        });
+    }
+
+    protected processInsertLocation(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    removePostalcode(postalCode?: number | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/v1/Location/RemovePostalcode?";
+        if (postalCode === null)
+            throw new Error("The parameter 'postalCode' cannot be null.");
+        else if (postalCode !== undefined)
+            url_ += "postalCode=" + encodeURIComponent("" + postalCode) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processRemovePostalcode(_response);
+        });
+    }
+
+    protected processRemovePostalcode(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+}
+
 export class TemperatureDataClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -281,140 +415,6 @@ export class TemperatureDataClient {
     }
 }
 
-export class TempClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "";
-    }
-
-    /**
-     * Retrieves all saved locations.
-     * @return A list of all postalcodes; otherwise, NotFound.
-     */
-    getAllPostalcodes(): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/v1/Temp/GetAllPostalcodes";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-                "Accept": "application/octet-stream"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetAllPostalcodes(_response);
-        });
-    }
-
-    protected processGetAllPostalcodes(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
-    }
-
-    /**
-     * Checks for existence of location and if necessary inserts new location.
-     * @param postalcode (optional) Defines the location.
-     * @return Ok if successful; otherwise, an error response.
-     */
-    insertLocation(postalcode?: number | undefined): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/v1/Temp/InsertLocation?";
-        if (postalcode === null)
-            throw new Error("The parameter 'postalcode' cannot be null.");
-        else if (postalcode !== undefined)
-            url_ += "postalcode=" + encodeURIComponent("" + postalcode) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
-                "Accept": "application/octet-stream"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processInsertLocation(_response);
-        });
-    }
-
-    protected processInsertLocation(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
-    }
-
-    removePostalcode(postalCode?: number | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/v1/Temp/RemovePostalcode?";
-        if (postalCode === null)
-            throw new Error("The parameter 'postalCode' cannot be null.");
-        else if (postalCode !== undefined)
-            url_ += "postalCode=" + encodeURIComponent("" + postalCode) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "DELETE",
-            headers: {
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRemovePostalcode(_response);
-        });
-    }
-
-    protected processRemovePostalcode(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(null as any);
-    }
-}
-
 export class TopicClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -486,6 +486,65 @@ export class TopicClient {
             });
         }
         return Promise.resolve<TopicSetting[]>(null as any);
+    }
+
+    getAllSensorTypes(): Promise<string[]> {
+        let url_ = this.baseUrl + "/api/v1/Topic/GetAllSensorTypes";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetAllSensorTypes(_response);
+        });
+    }
+
+    protected processGetAllSensorTypes(response: Response): Promise<string[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(item);
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string[]>(null as any);
     }
 
     /**
@@ -887,9 +946,11 @@ export class UserInfoClient {
 
 /** Represents the login credentials for a user. */
 export class Login implements ILogin {
-    /** Gets or sets the username of the user. */
+    /** Gets or sets the username of the user.
+             */
     userName!: string;
-    /** Gets or sets the password of the user. */
+    /** Gets or sets the password of the user.
+             */
     password!: string;
 
     constructor(data?: ILogin) {
@@ -925,9 +986,11 @@ export class Login implements ILogin {
 
 /** Represents the login credentials for a user. */
 export interface ILogin {
-    /** Gets or sets the username of the user. */
+    /** Gets or sets the username of the user.
+             */
     userName: string;
-    /** Gets or sets the password of the user. */
+    /** Gets or sets the password of the user.
+             */
     password: string;
 }
 
@@ -997,9 +1060,11 @@ export interface IProblemDetails {
 
 /** Represents the registration credentials for a new user. */
 export class Register implements IRegister {
-    /** Gets or sets the username for the new user. */
+    /** Gets or sets the username for the new user.
+             */
     userName!: string;
-    /** Gets or sets the password for the new user. */
+    /** Gets or sets the password for the new user.
+             */
     password!: string;
 
     constructor(data?: IRegister) {
@@ -1035,23 +1100,30 @@ export class Register implements IRegister {
 
 /** Represents the registration credentials for a new user. */
 export interface IRegister {
-    /** Gets or sets the username for the new user. */
+    /** Gets or sets the username for the new user.
+             */
     userName: string;
-    /** Gets or sets the password for the new user. */
+    /** Gets or sets the password for the new user.
+             */
     password: string;
 }
 
 /** Represents a JWT token and its associated refresh token and metadata. */
 export class JwtToken implements IJwtToken {
-    /** Gets or sets the JWT access token string. */
+    /** Gets or sets the JWT access token string.
+             */
     token?: string;
-    /** Gets or sets the refresh token string. */
+    /** Gets or sets the refresh token string.
+             */
     refreshToken?: string;
-    /** Gets or sets the expiry date and time of the JWT token. */
+    /** Gets or sets the expiry date and time of the JWT token.
+             */
     expiryDate?: Date;
-    /** Gets or sets the creation date and time of the JWT token. */
+    /** Gets or sets the creation date and time of the JWT token.
+             */
     createdDate?: Date;
-    /** Gets or sets the user roles associated with the JWT token. */
+    /** Gets or sets the user roles associated with the JWT token.
+             */
     roles?: string[] | undefined;
 
     constructor(data?: IJwtToken) {
@@ -1101,25 +1173,28 @@ export class JwtToken implements IJwtToken {
 
 /** Represents a JWT token and its associated refresh token and metadata. */
 export interface IJwtToken {
-    /** Gets or sets the JWT access token string. */
+    /** Gets or sets the JWT access token string.
+             */
     token?: string;
-    /** Gets or sets the refresh token string. */
+    /** Gets or sets the refresh token string.
+             */
     refreshToken?: string;
-    /** Gets or sets the expiry date and time of the JWT token. */
+    /** Gets or sets the expiry date and time of the JWT token.
+             */
     expiryDate?: Date;
-    /** Gets or sets the creation date and time of the JWT token. */
+    /** Gets or sets the creation date and time of the JWT token.
+             */
     createdDate?: Date;
-    /** Gets or sets the user roles associated with the JWT token. */
+    /** Gets or sets the user roles associated with the JWT token.
+             */
     roles?: string[] | undefined;
 }
 
 /** Represents an overview of temperature data for different locations. */
 export class TemperatureDataOverview implements ITemperatureDataOverview {
-    /** Gets or sets the list of temperature data for the south location. */
-    temperatureSouth?: TemperatureData[];
-    /** Gets or sets the list of temperature data for the north location. */
-    temperatureNord?: TemperatureData[];
-    /** Gets or sets the list of temperature data for the outside location. */
+    sensorData?: SensorData[];
+    /** Gets or sets the list of temperature data for the outside location.
+             */
     temperatureOutside?: TemperatureData[];
 
     constructor(data?: ITemperatureDataOverview) {
@@ -1133,15 +1208,10 @@ export class TemperatureDataOverview implements ITemperatureDataOverview {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["temperatureSouth"])) {
-                this.temperatureSouth = [] as any;
-                for (let item of _data["temperatureSouth"])
-                    this.temperatureSouth!.push(TemperatureData.fromJS(item));
-            }
-            if (Array.isArray(_data["temperatureNord"])) {
-                this.temperatureNord = [] as any;
-                for (let item of _data["temperatureNord"])
-                    this.temperatureNord!.push(TemperatureData.fromJS(item));
+            if (Array.isArray(_data["sensorData"])) {
+                this.sensorData = [] as any;
+                for (let item of _data["sensorData"])
+                    this.sensorData!.push(SensorData.fromJS(item));
             }
             if (Array.isArray(_data["temperatureOutside"])) {
                 this.temperatureOutside = [] as any;
@@ -1160,15 +1230,10 @@ export class TemperatureDataOverview implements ITemperatureDataOverview {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.temperatureSouth)) {
-            data["temperatureSouth"] = [];
-            for (let item of this.temperatureSouth)
-                data["temperatureSouth"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.temperatureNord)) {
-            data["temperatureNord"] = [];
-            for (let item of this.temperatureNord)
-                data["temperatureNord"].push(item ? item.toJSON() : <any>undefined);
+        if (Array.isArray(this.sensorData)) {
+            data["sensorData"] = [];
+            for (let item of this.sensorData)
+                data["sensorData"].push(item ? item.toJSON() : <any>undefined);
         }
         if (Array.isArray(this.temperatureOutside)) {
             data["temperatureOutside"] = [];
@@ -1181,20 +1246,73 @@ export class TemperatureDataOverview implements ITemperatureDataOverview {
 
 /** Represents an overview of temperature data for different locations. */
 export interface ITemperatureDataOverview {
-    /** Gets or sets the list of temperature data for the south location. */
-    temperatureSouth?: TemperatureData[];
-    /** Gets or sets the list of temperature data for the north location. */
-    temperatureNord?: TemperatureData[];
-    /** Gets or sets the list of temperature data for the outside location. */
+    sensorData?: SensorData[];
+    /** Gets or sets the list of temperature data for the outside location.
+             */
     temperatureOutside?: TemperatureData[];
+}
+
+export class SensorData implements ISensorData {
+    sensorName?: string;
+    location?: string;
+    temperatureDatas?: TemperatureData[];
+
+    constructor(data?: ISensorData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.sensorName = _data["sensorName"];
+            this.location = _data["location"];
+            if (Array.isArray(_data["temperatureDatas"])) {
+                this.temperatureDatas = [] as any;
+                for (let item of _data["temperatureDatas"])
+                    this.temperatureDatas!.push(TemperatureData.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SensorData {
+        data = typeof data === 'object' ? data : {};
+        let result = new SensorData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["sensorName"] = this.sensorName;
+        data["location"] = this.location;
+        if (Array.isArray(this.temperatureDatas)) {
+            data["temperatureDatas"] = [];
+            for (let item of this.temperatureDatas)
+                data["temperatureDatas"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface ISensorData {
+    sensorName?: string;
+    location?: string;
+    temperatureDatas?: TemperatureData[];
 }
 
 /** Represents a single temperature data point with timestamp and value. */
 export class TemperatureData implements ITemperatureData {
-    /** Gets or sets the timestamp of the temperature measurement. */
+    /** Gets or sets the timestamp of the temperature measurement.
+             */
     timestamp?: Date;
-    /** Gets or sets the temperature value. */
+    /** Gets or sets the temperature value.
+             */
     temperature?: number;
+    plausibility?: string;
 
     constructor(data?: ITemperatureData) {
         if (data) {
@@ -1209,6 +1327,7 @@ export class TemperatureData implements ITemperatureData {
         if (_data) {
             this.timestamp = _data["timestamp"] ? new Date(_data["timestamp"].toString()) : <any>undefined;
             this.temperature = _data["temperature"];
+            this.plausibility = _data["plausibility"];
         }
     }
 
@@ -1223,33 +1342,46 @@ export class TemperatureData implements ITemperatureData {
         data = typeof data === 'object' ? data : {};
         data["timestamp"] = this.timestamp ? this.timestamp.toISOString() : <any>undefined;
         data["temperature"] = this.temperature;
+        data["plausibility"] = this.plausibility;
         return data;
     }
 }
 
 /** Represents a single temperature data point with timestamp and value. */
 export interface ITemperatureData {
-    /** Gets or sets the timestamp of the temperature measurement. */
+    /** Gets or sets the timestamp of the temperature measurement.
+             */
     timestamp?: Date;
-    /** Gets or sets the temperature value. */
+    /** Gets or sets the temperature value.
+             */
     temperature?: number;
+    plausibility?: string;
 }
 
 /** Represents the settings for a specific MQTT topic, including default path, group, and sensor information. */
 export class TopicSetting implements ITopicSetting {
-    /** Gets or sets the unique identifier for the TopicSetting entity. */
+    /** Gets or sets the unique identifier for the TopicSetting entity.
+             */
     topicSettingId?: number;
-    /** Gets or sets the default MQTT topic path for this setting. */
+    coordinateMappingId?: number;
+    coordinateMapping?: CoordinateMapping | undefined;
+    /** Gets or sets the default MQTT topic path for this setting.
+             */
     defaultTopicPath?: string;
-    /** Gets or sets the group identifier associated with this topic setting. */
+    /** Gets or sets the group identifier associated with this topic setting.
+             */
     groupId?: number;
-    /** Gets or sets the type of sensor (e.g., temperature, humidity). */
-    sensorType?: string;
-    /** Gets or sets the name of the sensor. */
+    /** Gets or sets the type of sensor (e.g., temperature, humidity).
+             */
+    sensorTypeEnum?: SensorType;
+    /** Gets or sets the name of the sensor.
+             */
     sensorName?: string | undefined;
-    /** Gets or sets the location of the sensor. */
+    /** Gets or sets the location of the sensor.
+             */
     sensorLocation?: string | undefined;
-    /** Gets or sets a value indicating whether this topic setting has recovery enabled. */
+    /** Gets or sets a value indicating whether this topic setting has recovery enabled.
+             */
     hasRecovery?: boolean;
 
     constructor(data?: ITopicSetting) {
@@ -1264,9 +1396,11 @@ export class TopicSetting implements ITopicSetting {
     init(_data?: any) {
         if (_data) {
             this.topicSettingId = _data["topicSettingId"];
+            this.coordinateMappingId = _data["coordinateMappingId"];
+            this.coordinateMapping = _data["coordinateMapping"] ? CoordinateMapping.fromJS(_data["coordinateMapping"]) : <any>undefined;
             this.defaultTopicPath = _data["defaultTopicPath"];
             this.groupId = _data["groupId"];
-            this.sensorType = _data["sensorType"];
+            this.sensorTypeEnum = _data["sensorTypeEnum"];
             this.sensorName = _data["sensorName"];
             this.sensorLocation = _data["sensorLocation"];
             this.hasRecovery = _data["hasRecovery"];
@@ -1283,9 +1417,11 @@ export class TopicSetting implements ITopicSetting {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["topicSettingId"] = this.topicSettingId;
+        data["coordinateMappingId"] = this.coordinateMappingId;
+        data["coordinateMapping"] = this.coordinateMapping ? this.coordinateMapping.toJSON() : <any>undefined;
         data["defaultTopicPath"] = this.defaultTopicPath;
         data["groupId"] = this.groupId;
-        data["sensorType"] = this.sensorType;
+        data["sensorTypeEnum"] = this.sensorTypeEnum;
         data["sensorName"] = this.sensorName;
         data["sensorLocation"] = this.sensorLocation;
         data["hasRecovery"] = this.hasRecovery;
@@ -1295,29 +1431,132 @@ export class TopicSetting implements ITopicSetting {
 
 /** Represents the settings for a specific MQTT topic, including default path, group, and sensor information. */
 export interface ITopicSetting {
-    /** Gets or sets the unique identifier for the TopicSetting entity. */
+    /** Gets or sets the unique identifier for the TopicSetting entity.
+             */
     topicSettingId?: number;
-    /** Gets or sets the default MQTT topic path for this setting. */
+    coordinateMappingId?: number;
+    coordinateMapping?: CoordinateMapping | undefined;
+    /** Gets or sets the default MQTT topic path for this setting.
+             */
     defaultTopicPath?: string;
-    /** Gets or sets the group identifier associated with this topic setting. */
+    /** Gets or sets the group identifier associated with this topic setting.
+             */
     groupId?: number;
-    /** Gets or sets the type of sensor (e.g., temperature, humidity). */
-    sensorType?: string;
-    /** Gets or sets the name of the sensor. */
+    /** Gets or sets the type of sensor (e.g., temperature, humidity).
+             */
+    sensorTypeEnum?: SensorType;
+    /** Gets or sets the name of the sensor.
+             */
     sensorName?: string | undefined;
-    /** Gets or sets the location of the sensor. */
+    /** Gets or sets the location of the sensor.
+             */
     sensorLocation?: string | undefined;
-    /** Gets or sets a value indicating whether this topic setting has recovery enabled. */
+    /** Gets or sets a value indicating whether this topic setting has recovery enabled.
+             */
     hasRecovery?: boolean;
+}
+
+/** Stores geographic coordinates associated with postalcodes, including the time the mapping was used. */
+export class CoordinateMapping implements ICoordinateMapping {
+    /** Gets or sets the postalcode which is also the uniqe identifier.
+             */
+    postalCode?: number;
+    /** Gets or sets the name of the location.
+             */
+    location?: string;
+    /** Gets or sets the latitude for the location.
+             */
+    latitude?: number;
+    /** Gets or sets the longitude of the location.
+             */
+    longitude?: number;
+    /** Gets or sets the time the postalcode was last entered by the user.
+             */
+    lastUsed?: Date | undefined;
+    /** Gets or sets the time until which the entry is locked.
+             */
+    lockedUntil?: Date | undefined;
+
+    constructor(data?: ICoordinateMapping) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.postalCode = _data["postalCode"];
+            this.location = _data["location"];
+            this.latitude = _data["latitude"];
+            this.longitude = _data["longitude"];
+            this.lastUsed = _data["lastUsed"] ? new Date(_data["lastUsed"].toString()) : <any>undefined;
+            this.lockedUntil = _data["lockedUntil"] ? new Date(_data["lockedUntil"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CoordinateMapping {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoordinateMapping();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["postalCode"] = this.postalCode;
+        data["location"] = this.location;
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        data["lastUsed"] = this.lastUsed ? this.lastUsed.toISOString() : <any>undefined;
+        data["lockedUntil"] = this.lockedUntil ? this.lockedUntil.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+/** Stores geographic coordinates associated with postalcodes, including the time the mapping was used. */
+export interface ICoordinateMapping {
+    /** Gets or sets the postalcode which is also the uniqe identifier.
+             */
+    postalCode?: number;
+    /** Gets or sets the name of the location.
+             */
+    location?: string;
+    /** Gets or sets the latitude for the location.
+             */
+    latitude?: number;
+    /** Gets or sets the longitude of the location.
+             */
+    longitude?: number;
+    /** Gets or sets the time the postalcode was last entered by the user.
+             */
+    lastUsed?: Date | undefined;
+    /** Gets or sets the time until which the entry is locked.
+             */
+    lockedUntil?: Date | undefined;
+}
+
+export enum SensorType {
+    Temp = 0,
+    Spl = 1,
+    Hum = 2,
+    Ikea = 3,
+    Co2 = 4,
+    Mic = 5,
 }
 
 /** Represents a request to change a user's password. */
 export class ChangePassword implements IChangePassword {
-    /** Gets or sets the unique identifier of the user whose password is to be changed. */
+    /** Gets or sets the unique identifier of the user whose password is to be changed.
+             */
     userId?: string | undefined;
-    /** Gets or sets the current password of the user. */
+    /** Gets or sets the current password of the user.
+             */
     currentPassword?: string | undefined;
-    /** Gets or sets the new password to be set for the user. */
+    /** Gets or sets the new password to be set for the user.
+             */
     newPassword?: string | undefined;
 
     constructor(data?: IChangePassword) {
@@ -1355,11 +1594,14 @@ export class ChangePassword implements IChangePassword {
 
 /** Represents a request to change a user's password. */
 export interface IChangePassword {
-    /** Gets or sets the unique identifier of the user whose password is to be changed. */
+    /** Gets or sets the unique identifier of the user whose password is to be changed.
+             */
     userId?: string | undefined;
-    /** Gets or sets the current password of the user. */
+    /** Gets or sets the current password of the user.
+             */
     currentPassword?: string | undefined;
-    /** Gets or sets the new password to be set for the user. */
+    /** Gets or sets the new password to be set for the user.
+             */
     newPassword?: string | undefined;
 }
 

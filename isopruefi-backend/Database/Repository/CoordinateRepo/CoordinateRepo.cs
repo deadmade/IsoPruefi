@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Database.Repository.CoordinateRepo;
 
 /// <summary>
-/// Repository implementation for accessing and managing available locations.
+///     Repository implementation for accessing and managing available locations.
 /// </summary>
 public class CoordinateRepo : ICoordinateRepo
 {
-    private ApplicationDbContext _applicationDbContext;
+    private readonly ApplicationDbContext _applicationDbContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoordinateRepo"/> class.
+    ///     Initializes a new instance of the <see cref="CoordinateRepo" /> class.
     /// </summary>
     /// <param name="applicationDbContext"></param>
     public CoordinateRepo(ApplicationDbContext applicationDbContext)
@@ -54,6 +54,15 @@ public class CoordinateRepo : ICoordinateRepo
     }
 
     /// <inheritdoc />
+    public async Task<CoordinateMapping?> GetLocation(string place)
+    {
+        var result = await _applicationDbContext.CoordinateMappings
+            .FirstOrDefaultAsync(c => c.Location == place);
+
+        return result;
+    }
+
+    /// <inheritdoc />
     public async Task<List<Tuple<int, string>>> GetAllLocations()
     {
         var result = await _applicationDbContext.CoordinateMappings
@@ -84,7 +93,6 @@ public class CoordinateRepo : ICoordinateRepo
         await transaction.CommitAsync();
         return null;
     }
-
 
     /// <inheritdoc />
     public async Task DeletePostalCode(int postalcode)

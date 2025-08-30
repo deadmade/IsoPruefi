@@ -11,17 +11,13 @@ using Rest_API.Services.User;
 namespace UnitTests.Controllers;
 
 /// <summary>
-/// Unit tests for the UserInfoController class, verifying user management functionality.
+///     Unit tests for the UserInfoController class, verifying user management functionality.
 /// </summary>
 [TestFixture]
 public class UserInfoControllerTests
 {
-    private Mock<IUserService> _mockUserService;
-    private Mock<ILogger<UserInfoController>> _mockLogger;
-    private UserInfoController _controller;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -31,10 +27,12 @@ public class UserInfoControllerTests
         _controller = new UserInfoController(_mockUserService.Object, _mockLogger.Object);
     }
 
-    #region Constructor Tests
+    private Mock<IUserService> _mockUserService;
+    private Mock<ILogger<UserInfoController>> _mockLogger;
+    private UserInfoController _controller;
 
     /// <summary>
-    /// Tests that the constructor creates a valid instance when provided with valid parameters.
+    ///     Tests that the constructor creates a valid instance when provided with valid parameters.
     /// </summary>
     [Test]
     public void Constructor_WithValidParameters_ShouldCreateInstance()
@@ -46,12 +44,8 @@ public class UserInfoControllerTests
         act.Should().NotThrow();
     }
 
-    #endregion
-
-    #region GetAllUsers Tests
-
     /// <summary>
-    /// Tests that GetAllUsers returns OK with users when service returns data.
+    ///     Tests that GetAllUsers returns OK with users when service returns data.
     /// </summary>
     [Test]
     public async Task GetAllUsers_WithValidData_ShouldReturnOkWithUsers()
@@ -78,7 +72,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that GetAllUsers returns InternalServerError when service throws exception.
+    ///     Tests that GetAllUsers returns InternalServerError when service throws exception.
     /// </summary>
     [Test]
     public async Task GetAllUsers_WithException_ShouldReturnInternalServerError()
@@ -102,7 +96,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that GetAllUsers logs information when fetching users.
+    ///     Tests that GetAllUsers logs information when fetching users.
     /// </summary>
     [Test]
     public async Task GetAllUsers_ShouldLogInformation()
@@ -126,12 +120,8 @@ public class UserInfoControllerTests
             Times.Once);
     }
 
-    #endregion
-
-    #region GetUserById Tests
-
     /// <summary>
-    /// Tests that GetUserById returns OK with user when user exists.
+    ///     Tests that GetUserById returns OK with user when user exists.
     /// </summary>
     [Test]
     public async Task GetUserById_WithExistingUser_ShouldReturnOkWithUser()
@@ -155,7 +145,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that GetUserById returns NotFound when user does not exist.
+    ///     Tests that GetUserById returns NotFound when user does not exist.
     /// </summary>
     [Test]
     public async Task GetUserById_WithNonExistentUser_ShouldReturnNotFound()
@@ -174,7 +164,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that GetUserById returns InternalServerError when service throws exception.
+    ///     Tests that GetUserById returns InternalServerError when service throws exception.
     /// </summary>
     [Test]
     public async Task GetUserById_WithException_ShouldReturnInternalServerError()
@@ -198,12 +188,8 @@ public class UserInfoControllerTests
         problemDetails.Detail.Should().Be("Database connection failed");
     }
 
-    #endregion
-
-    #region ChangePassword Tests
-
     /// <summary>
-    /// Tests that ChangePassword returns OK when password is changed successfully.
+    ///     Tests that ChangePassword returns OK when password is changed successfully.
     /// </summary>
     [Test]
     public async Task ChangePassword_WithValidData_ShouldReturnOk()
@@ -237,7 +223,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that ChangePassword returns NotFound when user does not exist.
+    ///     Tests that ChangePassword returns NotFound when user does not exist.
     /// </summary>
     [Test]
     public async Task ChangePassword_WithNonExistentUser_ShouldReturnNotFound()
@@ -265,7 +251,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that ChangePassword returns BadRequest when model state is invalid.
+    ///     Tests that ChangePassword returns BadRequest when model state is invalid.
     /// </summary>
     [Test]
     public async Task ChangePassword_WithInvalidModelState_ShouldReturnBadRequest()
@@ -294,7 +280,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that ChangePassword returns InternalServerError when service throws exception.
+    ///     Tests that ChangePassword returns InternalServerError when service throws exception.
     /// </summary>
     [Test]
     public async Task ChangePassword_WithException_ShouldReturnInternalServerError()
@@ -329,12 +315,8 @@ public class UserInfoControllerTests
         problemDetails.Detail.Should().Be("Password change failed");
     }
 
-    #endregion
-
-    #region ChangeUser Tests
-
     /// <summary>
-    /// Tests that ChangeUser returns OK when user is updated successfully.
+    ///     Tests that ChangeUser returns OK when user is updated successfully.
     /// </summary>
     [Test]
     public async Task ChangeUser_WithValidData_ShouldReturnOk()
@@ -354,7 +336,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that ChangeUser returns BadRequest when model state is invalid.
+    ///     Tests that ChangeUser returns BadRequest when model state is invalid.
     /// </summary>
     [Test]
     public async Task ChangeUser_WithInvalidModelState_ShouldReturnBadRequest()
@@ -375,7 +357,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that ChangeUser returns InternalServerError when service throws exception.
+    ///     Tests that ChangeUser returns InternalServerError when service throws exception.
     /// </summary>
     [Test]
     public async Task ChangeUser_WithException_ShouldReturnInternalServerError()
@@ -400,12 +382,8 @@ public class UserInfoControllerTests
         problemDetails.Detail.Should().Be("User update failed");
     }
 
-    #endregion
-
-    #region DeleteUser Tests
-
     /// <summary>
-    /// Tests that DeleteUser returns OK when user is deleted successfully.
+    ///     Tests that DeleteUser returns OK when user is deleted successfully.
     /// </summary>
     [Test]
     public async Task DeleteUser_WithExistingUser_ShouldReturnOk()
@@ -430,7 +408,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that DeleteUser returns NotFound when user does not exist.
+    ///     Tests that DeleteUser returns NotFound when user does not exist.
     /// </summary>
     [Test]
     public async Task DeleteUser_WithNonExistentUser_ShouldReturnNotFound()
@@ -451,7 +429,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that DeleteUser returns InternalServerError when deletion fails.
+    ///     Tests that DeleteUser returns InternalServerError when deletion fails.
     /// </summary>
     [Test]
     public async Task DeleteUser_WhenDeletionFails_ShouldReturnInternalServerError()
@@ -479,7 +457,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that DeleteUser returns InternalServerError when service throws exception.
+    ///     Tests that DeleteUser returns InternalServerError when service throws exception.
     /// </summary>
     [Test]
     public async Task DeleteUser_WithException_ShouldReturnInternalServerError()
@@ -507,12 +485,8 @@ public class UserInfoControllerTests
         problemDetails.Detail.Should().Be("Database deletion failed");
     }
 
-    #endregion
-
-    #region Logging Tests
-
     /// <summary>
-    /// Tests that GetUserById logs information when fetching a user.
+    ///     Tests that GetUserById logs information when fetching a user.
     /// </summary>
     [Test]
     public async Task GetUserById_ShouldLogInformation()
@@ -538,7 +512,7 @@ public class UserInfoControllerTests
     }
 
     /// <summary>
-    /// Tests that ChangePassword logs warning when model state is invalid.
+    ///     Tests that ChangePassword logs warning when model state is invalid.
     /// </summary>
     [Test]
     public async Task ChangePassword_WithInvalidModelState_ShouldLogWarning()
@@ -566,6 +540,4 @@ public class UserInfoControllerTests
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
     }
-
-    #endregion
 }

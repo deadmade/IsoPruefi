@@ -1,34 +1,34 @@
-      global:
-        checkNewVersion: false
-        sendAnonymousUsage: false
-      metrics:
-        prometheus:
-          addEntryPointsLabels: true
-          addServicesLabels: true
-          addRoutersLabels: true
-          entryPoint: metrics
-      api:
-          dashboard: true
-          insecure: true
-      entryPoints:
-          web:
-            address: ":80"
-            http:
-              redirections:
-                entrypoint:
-                  to: websecure
-                  scheme: https
-          websecure:
-            address: ":443"
-          metrics:
-            address: :8082
-      providers:
-          docker:
-            watch: true
-            exposedByDefault: false
-            network: isopruefi-network
-          file:
-            watch: true
-            directory: ./conf
-      log:
-          level: "DEBUG"
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+    addServicesLabels: true
+    addRoutersLabels: true
+    entryPoint: metrics
+api:
+  dashboard: true
+  insecure: true
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entrypoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+  metrics:
+    address: :8082
+providers:
+  docker:
+    watch: true
+    exposedByDefault: false
+    network: isopruefi-network
+  file:
+    watch: true
+    directory: ./conf
+log:
+  level: "DEBUG"

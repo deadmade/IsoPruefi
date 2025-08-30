@@ -6,16 +6,13 @@ using MQTT_Receiver_Worker.MQTT.Models;
 namespace UnitTests.MqttReceiver;
 
 /// <summary>
-/// Unit tests for the NullMetaListConverter class, verifying JSON conversion logic for TempSensorReading lists.
+///     Unit tests for the NullMetaListConverter class, verifying JSON conversion logic for TempSensorReading lists.
 /// </summary>
 [TestFixture]
 public class NullMetaListConverterTests
 {
-    private NullMetaListConverter _converter;
-    private JsonSerializerOptions _options;
-
     /// <summary>
-    /// Sets up test fixtures and initializes the converter with JSON options.
+    ///     Sets up test fixtures and initializes the converter with JSON options.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -28,10 +25,11 @@ public class NullMetaListConverterTests
         };
     }
 
-    #region Read Method Tests
+    private NullMetaListConverter _converter;
+    private JsonSerializerOptions _options;
 
     /// <summary>
-    /// Tests that a null JSON value is correctly converted to null.
+    ///     Tests that a null JSON value is correctly converted to null.
     /// </summary>
     [Test]
     public void Read_NullJson_ReturnsNull()
@@ -44,7 +42,7 @@ public class NullMetaListConverterTests
     }
 
     /// <summary>
-    /// Tests that an empty JSON array is correctly converted to null.
+    ///     Tests that an empty JSON array is correctly converted to null.
     /// </summary>
     [Test]
     public void Read_EmptyArray_ReturnsNull()
@@ -57,7 +55,7 @@ public class NullMetaListConverterTests
     }
 
     /// <summary>
-    /// Tests that an array containing only null values is correctly converted to null.
+    ///     Tests that an array containing only null values is correctly converted to null.
     /// </summary>
     [Test]
     public void Read_ArrayWithOnlyNulls_ReturnsNull()
@@ -70,7 +68,7 @@ public class NullMetaListConverterTests
     }
 
     /// <summary>
-    /// Tests that an array with valid TempSensorReading objects is preserved.
+    ///     Tests that an array with valid TempSensorReading objects is preserved.
     /// </summary>
     [Test]
     public void Read_ArrayWithValidObjects_ReturnsArray()
@@ -103,7 +101,7 @@ public class NullMetaListConverterTests
     }
 
     /// <summary>
-    /// Tests that an array with mixed null and valid objects is preserved.
+    ///     Tests that an array with mixed null and valid objects is preserved.
     /// </summary>
     [Test]
     public void Read_ArrayWithMixedNullAndValidObjects_ReturnsArray()
@@ -131,7 +129,7 @@ public class NullMetaListConverterTests
     }
 
     /// <summary>
-    /// Tests that a single valid object in an array is preserved.
+    ///     Tests that a single valid object in an array is preserved.
     /// </summary>
     [Test]
     public void Read_ArrayWithSingleValidObject_ReturnsArray()
@@ -153,12 +151,8 @@ public class NullMetaListConverterTests
         result![0].Timestamp.Should().Be(1234567890);
     }
 
-    #endregion
-
-    #region Write Method Tests
-
     /// <summary>
-    /// Tests that a null list is correctly serialized as null.
+    ///     Tests that a null list is correctly serialized as null.
     /// </summary>
     [Test]
     public void Write_NullList_SerializesAsNull()
@@ -171,7 +165,7 @@ public class NullMetaListConverterTests
     }
 
     /// <summary>
-    /// Tests that an empty list is correctly serialized as an empty array.
+    ///     Tests that an empty list is correctly serialized as an empty array.
     /// </summary>
     [Test]
     public void Write_EmptyList_SerializesAsEmptyArray()
@@ -184,7 +178,7 @@ public class NullMetaListConverterTests
     }
 
     /// <summary>
-    /// Tests that a list with valid objects is correctly serialized.
+    ///     Tests that a list with valid objects is correctly serialized.
     /// </summary>
     [Test]
     public void Write_ListWithValidObjects_SerializesCorrectly()
@@ -207,7 +201,7 @@ public class NullMetaListConverterTests
     }
 
     /// <summary>
-    /// Tests that a list with null objects is correctly serialized.
+    ///     Tests that a list with null objects is correctly serialized.
     /// </summary>
     [Test]
     public void Write_ListWithNullObjects_SerializesCorrectly()
@@ -218,6 +212,4 @@ public class NullMetaListConverterTests
 
         json.Should().Be("[null,null]");
     }
-
-    #endregion
 }

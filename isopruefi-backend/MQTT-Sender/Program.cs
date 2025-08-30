@@ -20,7 +20,9 @@ internal class Program
             double?[]? value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             var tempGen = new TempSensorReading
-                { Timestamp = timestamp, Value = value, Sequence = sequenceOne++, Meta = { } };
+            {
+                Timestamp = timestamp, Value = value, Sequence = sequenceOne++
+            };
             var json = JsonSerializer.Serialize(tempGen);
 
 
@@ -55,7 +57,9 @@ internal class Program
             value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             tempGen = new TempSensorReading
-                { Timestamp = timestamp, Value = value, Sequence = sequenceTwo++, Meta = { } };
+            {
+                Timestamp = timestamp, Value = value, Sequence = sequenceTwo++
+            };
             json = JsonSerializer.Serialize(tempGen);
 
             applicationMessage = new MqttApplicationMessageBuilder()

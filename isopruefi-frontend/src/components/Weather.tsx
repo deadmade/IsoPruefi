@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
-import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
-} from "recharts";
-import { tempClient, ApiException } from "../api/clients";
+import {useEffect, useState} from "react";
+import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
+import {ApiException, tempClient} from "../api/clients";
 
 export type WeatherEntry = {
     timestamp: string;
@@ -29,7 +27,10 @@ export function TempChart() {
 
             try {
                 const data = await tempClient.getTemperature(start, end, place, isFahrenheit);
-                if (!data) { setError("No data received from server"); return; }
+                if (!data) {
+                    setError("No data received from server");
+                    return;
+                }
 
                 const south = data.temperatureSouth || [];
                 const north = data.temperatureNord || [];
@@ -39,7 +40,7 @@ export function TempChart() {
                 const toIso = (t: unknown) =>
                     t ? (t instanceof Date ? t.toISOString() : new Date(t as any).toISOString()) : "";
 
-                const formatted: WeatherEntry[] = Array.from({ length: maxLen }, (_, i) => {
+                const formatted: WeatherEntry[] = Array.from({length: maxLen}, (_, i) => {
                     const anyTs = north[i]?.timestamp ?? south[i]?.timestamp ?? outside[i]?.timestamp ?? null;
                     return {
                         timestamp: toIso(anyTs),
@@ -66,10 +67,17 @@ export function TempChart() {
     const now = new Date().getTime();
     let cutoff = 0;
     switch (filter) {
-        case "hour": cutoff = now - 60 * 60 * 1000; break;
-        case "day": cutoff = now - 24 * 60 * 60 * 1000; break;
-        case "week": cutoff = now - 7 * 24 * 60 * 60 * 1000; break;
-        default: cutoff = 0;
+        case "hour":
+            cutoff = now - 60 * 60 * 1000;
+            break;
+        case "day":
+            cutoff = now - 24 * 60 * 60 * 1000;
+            break;
+        case "week":
+            cutoff = now - 7 * 24 * 60 * 60 * 1000;
+            break;
+        default:
+            cutoff = 0;
     }
 
     const filteredData = filter === "all"
@@ -86,7 +94,8 @@ export function TempChart() {
     );
 
     if (error) return (
-        <div className="w-full h-[400px] rounded-xl bg-white boder-black-100 shadow p-4 flex flex-col items-center justify-center gap-3">
+        <div
+            className="w-full h-[400px] rounded-xl bg-white boder-black-100 shadow p-4 flex flex-col items-center justify-center gap-3">
             <p className="text-red-600 text-sm">Error loading temperature data: {error}</p>
             <button
                 onClick={() => window.location.reload()}
@@ -131,20 +140,20 @@ export function TempChart() {
                 </label>
 
                 <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={filteredData} margin={{ top: 8, right: 16, left: 8, bottom: 32 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
+                    <LineChart data={filteredData} margin={{top: 8, right: 16, left: 8, bottom: 32}}>
+                        <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis
                             dataKey="timestamp"
                             tickFormatter={(v) =>
-                                new Date(v).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                                new Date(v).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
                             }
                         />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: 8 }} />
-                        <Line type="monotone" dataKey="tempSouth" name="South" stroke="#d3546c" activeDot={{ r: 1 }} />
-                        <Line type="monotone" dataKey="tempNorth" name="North" stroke="#84d8d2" activeDot={{ r: 1 }} />
-                        <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#82ca9d" activeDot={{ r: 1 }} />
+                        <YAxis/>
+                        <Tooltip/>
+                        <Legend verticalAlign="bottom" align="center" wrapperStyle={{paddingTop: 8}}/>
+                        <Line type="monotone" dataKey="tempSouth" name="South" stroke="#d3546c" activeDot={{r: 1}}/>
+                        <Line type="monotone" dataKey="tempNorth" name="North" stroke="#84d8d2" activeDot={{r: 1}}/>
+                        <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#82ca9d" activeDot={{r: 1}}/>
                     </LineChart>
                 </ResponsiveContainer>
             </div>

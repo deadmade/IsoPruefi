@@ -1,38 +1,39 @@
 namespace Rest_API.Models;
 
 /// <summary>
-/// Represents an overview of temperature data for different locations.
+///     Represents an overview of temperature data for different locations.
 /// </summary>
 public class TemperatureDataOverview
 {
-    /// <summary>
-    /// Gets or sets the list of temperature data for the south location.
-    /// </summary>
-    public required List<TemperatureData> TemperatureSouth { get; set; }
+    public List<SensorData> SensorData { get; set; }
 
     /// <summary>
-    /// Gets or sets the list of temperature data for the north location.
+    ///     Gets or sets the list of temperature data for the outside location.
     /// </summary>
-    public required List<TemperatureData> TemperatureNord { get; set; }
+    public List<TemperatureData> TemperatureOutside { get; set; }
+}
 
-    /// <summary>
-    /// Gets or sets the list of temperature data for the outside location.
-    /// </summary>
-    public required List<TemperatureData> TemperatureOutside { get; set; }
+public class SensorData
+{
+    public string SensorName { get; set; }
+    public string Location { get; set; }
+    public List<TemperatureData> TemperatureDatas { get; set; }
 }
 
 /// <summary>
-/// Represents a single temperature data point with timestamp and value.
+///     Represents a single temperature data point with timestamp and value.
 /// </summary>
 public class TemperatureData
 {
     /// <summary>
-    /// Gets or sets the timestamp of the temperature measurement.
+    ///     Gets or sets the timestamp of the temperature measurement.
     /// </summary>
     public DateTime Timestamp { get; set; }
 
     /// <summary>
-    /// Gets or sets the temperature value.
+    ///     Gets or sets the temperature value.
     /// </summary>
     public double Temperature { get; set; }
+
+    public string Plausibility { get; set; }
 }

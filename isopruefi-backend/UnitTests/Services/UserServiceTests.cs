@@ -8,17 +8,14 @@ using Rest_API.Services.User;
 namespace UnitTests.Services;
 
 /// <summary>
-/// Unit tests for the UserService class, verifying user management operations including retrieval, updates, and deletion.
+///     Unit tests for the UserService class, verifying user management operations including retrieval, updates, and
+///     deletion.
 /// </summary>
 [TestFixture]
 public class UserServiceTests
 {
-    private Mock<ILogger<UserService>> _mockLogger;
-    private Mock<UserManager<ApiUser>> _mockUserManager;
-    private UserService _userService;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -29,10 +26,12 @@ public class UserServiceTests
         _userService = new UserService(_mockLogger.Object, _mockUserManager.Object);
     }
 
-    #region GetUserInformations Tests
+    private Mock<ILogger<UserService>> _mockLogger;
+    private Mock<UserManager<ApiUser>> _mockUserManager;
+    private UserService _userService;
 
     /// <summary>
-    /// Tests that GetUserInformations returns all users from the system.
+    ///     Tests that GetUserInformations returns all users from the system.
     /// </summary>
     [Test]
     public void GetUserInformations_ShouldReturnAllUsers()
@@ -50,7 +49,7 @@ public class UserServiceTests
     }
 
     /// <summary>
-    /// Gets user information and verifies that an empty list is returned when no users exist.
+    ///     Gets user information and verifies that an empty list is returned when no users exist.
     /// </summary>
     [Test]
     public void GetUserInformations_WhenNoUsers_ShouldReturnEmptyList()
@@ -68,7 +67,7 @@ public class UserServiceTests
     }
 
     /// <summary>
-    /// Gets user information and verifies that the user list is returned successfully.
+    ///     Gets user information and verifies that the user list is returned successfully.
     /// </summary>
     [Test]
     public async Task GetUserInformations_WhenExceptionThrown_ShouldLogErrorAndRethrow()
@@ -93,12 +92,8 @@ public class UserServiceTests
             Times.Once);
     }
 
-    #endregion
-
-    #region GetUserById Tests
-
     /// <summary>
-    /// Gets a user by ID and verifies that the user is returned successfully.
+    ///     Gets a user by ID and verifies that the user is returned successfully.
     /// </summary>
     [Test]
     public async Task GetUserById_WithValidId_ShouldReturnUser()
@@ -121,7 +116,7 @@ public class UserServiceTests
     }
 
     /// <summary>
-    /// Gets a user by ID and verifies that null is returned when the user does not exist.
+    ///     Gets a user by ID and verifies that null is returned when the user does not exist.
     /// </summary>
     [Test]
     public async Task GetUserById_WithNonExistentId_ShouldReturnNull()
@@ -140,7 +135,7 @@ public class UserServiceTests
     }
 
     /// <summary>
-    /// Gets a user by ID and verifies that an exception is logged and rethrown when an error occurs.
+    ///     Gets a user by ID and verifies that an exception is logged and rethrown when an error occurs.
     /// </summary>
     [Test]
     public async Task GetUserById_WhenExceptionThrown_ShouldLogErrorAndRethrow()
@@ -167,12 +162,8 @@ public class UserServiceTests
             Times.Once);
     }
 
-    #endregion
-
-    #region ChangePassword Tests
-
     /// <summary>
-    /// Changes a user's password and verifies that the password is changed successfully.
+    ///     Changes a user's password and verifies that the password is changed successfully.
     /// </summary>
     [Test]
     public async Task ChangePassword_WithValidData_ShouldChangePasswordSuccessfully()
@@ -204,7 +195,7 @@ public class UserServiceTests
     }
 
     /// <summary>
-    /// Changes a user's password and verifies that an exception is thrown when invalid data is provided.
+    ///     Changes a user's password and verifies that an exception is thrown when invalid data is provided.
     /// </summary>
     [Test]
     public async Task ChangePassword_WhenExceptionThrown_ShouldLogErrorAndRethrow()
@@ -234,12 +225,8 @@ public class UserServiceTests
             Times.Once);
     }
 
-    #endregion
-
-    #region ChangeUser Tests
-
     /// <summary>
-    /// Changes a user's information and verifies that the user is updated successfully.
+    ///     Changes a user's information and verifies that the user is updated successfully.
     /// </summary>
     [Test]
     public async Task ChangeUser_WithValidUser_ShouldUpdateUserSuccessfully()
@@ -269,7 +256,7 @@ public class UserServiceTests
     }
 
     /// <summary>
-    /// Changes a user's information and verifies that an exception is thrown when invalid data is provided.
+    ///     Changes a user's information and verifies that an exception is thrown when invalid data is provided.
     /// </summary>
     [Test]
     public async Task ChangeUser_WithInvalidData_ShouldThrowException()
@@ -299,7 +286,7 @@ public class UserServiceTests
     }
 
     /// <summary>
-    /// Changes a user's information and verifies that an exception is logged and rethrown.
+    ///     Changes a user's information and verifies that an exception is logged and rethrown.
     /// </summary>
     [Test]
     public async Task ChangeUser_WhenExceptionThrown_ShouldLogErrorAndRethrow()
@@ -326,12 +313,8 @@ public class UserServiceTests
             Times.Once);
     }
 
-    #endregion
-
-    #region DeleteUser Tests
-
     /// <summary>
-    /// Deletes a user and verifies that the deletion is successful, returning true.
+    ///     Deletes a user and verifies that the deletion is successful, returning true.
     /// </summary>
     [Test]
     public async Task DeleteUser_WithValidUser_ShouldDeleteUserSuccessfully()
@@ -360,7 +343,7 @@ public class UserServiceTests
     }
 
     /// <summary>
-    /// Deletes a user and verifies that the deletion fails, returning false.
+    ///     Deletes a user and verifies that the deletion fails, returning false.
     /// </summary>
     [Test]
     public async Task DeleteUser_WhenDeletionFails_ShouldReturnFalse()
@@ -392,7 +375,7 @@ public class UserServiceTests
     }
 
     /// <summary>
-    /// Deletes a user and verifies that an exception is logged and rethrown.
+    ///     Deletes a user and verifies that an exception is logged and rethrown.
     /// </summary>
     [Test]
     public async Task DeleteUser_WhenExceptionThrown_ShouldLogErrorAndRethrow()
@@ -419,15 +402,9 @@ public class UserServiceTests
             Times.Once);
     }
 
-    #endregion
-
-    #region Helper Methods
-
     private static Mock<UserManager<ApiUser>> CreateMockUserManager()
     {
         var store = new Mock<IUserStore<ApiUser>>();
         return new Mock<UserManager<ApiUser>>(store.Object, null!, null!, null!, null!, null!, null!, null!, null!);
     }
-
-    #endregion
 }

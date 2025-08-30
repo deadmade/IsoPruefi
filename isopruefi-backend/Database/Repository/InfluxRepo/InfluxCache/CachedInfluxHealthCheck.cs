@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 
-namespace Database.Repository.InfluxRepo;
+namespace Database.Repository.InfluxRepo.InfluxCache;
 
 /// <summary>
-/// Enhanced health check for InfluxDB connectivity and cache status.
-/// Provides information about both InfluxDB connectivity and cached writes.
+///     Enhanced health check for InfluxDB connectivity and cache status.
+///     Provides information about both InfluxDB connectivity and cached writes.
 /// </summary>
 public class CachedInfluxHealthCheck : IHealthCheck
 {
@@ -13,7 +13,7 @@ public class CachedInfluxHealthCheck : IHealthCheck
     private readonly ILogger<CachedInfluxHealthCheck> _logger;
 
     /// <summary>
-    /// Constructor for the CachedInfluxHealthCheck class.
+    ///     Constructor for the CachedInfluxHealthCheck class.
     /// </summary>
     /// <param name="cachedInfluxRepo">The cached InfluxDB repository.</param>
     /// <param name="logger">The logger instance.</param>
@@ -24,7 +24,7 @@ public class CachedInfluxHealthCheck : IHealthCheck
     }
 
     /// <summary>
-    /// Checks the health of the InfluxDB connection and cache status.
+    ///     Checks the health of the InfluxDB connection and cache status.
     /// </summary>
     /// <param name="context">The health check context.</param>
     /// <param name="cancellationToken">The cancellation token.</param>

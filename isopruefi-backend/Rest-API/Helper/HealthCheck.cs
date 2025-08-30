@@ -1,4 +1,4 @@
-using Database.Repository.InfluxRepo;
+using Database.Repository.InfluxRepo.Influx;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Rest_API.Helper;

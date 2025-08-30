@@ -2,19 +2,18 @@ using System.Text.Json;
 using Database.EntityFramework.Models;
 using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
-using Database.Repository.SettingsRepo;
 
 namespace Get_weatherData_worker;
 
 public class Worker : BackgroundService
 {
-    private readonly ILogger<Worker> _logger;
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly string _alternativeWeatherDataApi;
     private readonly IConfiguration _configuration;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<Worker> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
     private readonly string _weatherDataApi;
-    private readonly string _alternativeWeatherDataApi;
 
     public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory,
         IConfiguration configuration, IServiceProvider serviceProvider)
@@ -138,10 +137,8 @@ public class Worker : BackgroundService
 
                     return weatherData;
                 }
-                else
-                {
-                    _logger.LogWarning("Weather data from Meteo incomplete");
-                }
+
+                _logger.LogWarning("Weather data from Meteo incomplete");
             }
         }
         else
@@ -181,10 +178,8 @@ public class Worker : BackgroundService
                     _logger.LogInformation("Weather data from Bright Sky retrieved successfully.");
                     return weatherData;
                 }
-                else
-                {
-                    _logger.LogWarning("Data from Bright Sky incomplete.");
-                }
+
+                _logger.LogWarning("Data from Bright Sky incomplete.");
             }
         }
         else

@@ -6,6 +6,7 @@ export interface JwtPayload {
     sub?: string;
     exp?: number;
     iat?: number;
+
     [key: string]: unknown; // Allow additional claims
 }
 

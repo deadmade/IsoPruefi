@@ -13,7 +13,7 @@ public class TokenService : ITokenService
     private readonly ILogger<TokenService> _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TokenService"/> class.
+    ///     Initializes a new instance of the <see cref="TokenService" /> class.
     /// </summary>
     /// <param name="configuration">Application configuration for JWT settings.</param>
     /// <param name="logger">Logger instance for logging operations.</param>

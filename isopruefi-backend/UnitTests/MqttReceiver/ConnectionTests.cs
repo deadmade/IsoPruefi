@@ -13,20 +13,13 @@ using MQTT_Receiver_Worker.MQTT.Models;
 namespace UnitTests.MqttReceiver;
 
 /// <summary>
-/// Unit tests for the Connection class, verifying MQTT connection management and message processing functionality.
+///     Unit tests for the Connection class, verifying MQTT connection management and message processing functionality.
 /// </summary>
 [TestFixture]
 public class ConnectionTests
 {
-    private Mock<ILogger<Connection>> _mockLogger;
-    private Mock<IServiceProvider> _mockServiceProvider;
-    private Mock<IServiceScope> _mockServiceScope;
-    private IConfiguration _configuration;
-    private Mock<IInfluxRepo> _mockInfluxRepo;
-    private Connection _connection;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -61,10 +54,15 @@ public class ConnectionTests
         _connection = new Connection(_mockLogger.Object, _mockServiceProvider.Object, _configuration);
     }
 
-    #region Constructor Tests
+    private Mock<ILogger<Connection>> _mockLogger;
+    private Mock<IServiceProvider> _mockServiceProvider;
+    private Mock<IServiceScope> _mockServiceScope;
+    private IConfiguration _configuration;
+    private Mock<IInfluxRepo> _mockInfluxRepo;
+    private Connection _connection;
 
     /// <summary>
-    /// Tests that the Connection constructor properly initializes with valid dependencies.
+    ///     Tests that the Connection constructor properly initializes with valid dependencies.
     /// </summary>
     [Test]
     public void Constructor_WithValidDependencies_InitializesSuccessfully()
@@ -86,7 +84,7 @@ public class ConnectionTests
     }
 
     /// <summary>
-    /// Tests that the Connection constructor throws when logger is null.
+    ///     Tests that the Connection constructor throws when logger is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullLogger_ThrowsArgumentNullException()
@@ -100,7 +98,7 @@ public class ConnectionTests
     }
 
     /// <summary>
-    /// Tests that the Connection constructor throws when service provider is null.
+    ///     Tests that the Connection constructor throws when service provider is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullServiceProvider_ThrowsArgumentNullException()
@@ -115,7 +113,7 @@ public class ConnectionTests
     }
 
     /// <summary>
-    /// Tests that the Connection constructor throws when configuration is null.
+    ///     Tests that the Connection constructor throws when configuration is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullConfiguration_ThrowsArgumentNullException()
@@ -129,7 +127,7 @@ public class ConnectionTests
     }
 
     /// <summary>
-    /// Tests that the constructor properly reads configuration values.
+    ///     Tests that the constructor properly reads configuration values.
     /// </summary>
     [Test]
     public void Constructor_ReadsConfigurationValues_Successfully()
@@ -148,12 +146,8 @@ public class ConnectionTests
         connection.Should().NotBeNull();
     }
 
-    #endregion
-
-    #region JSON Serialization Tests
-
     /// <summary>
-    /// Tests that JSON serializer options are properly configured.
+    ///     Tests that JSON serializer options are properly configured.
     /// </summary>
     [Test]
     public void JsonSerializerOptions_AreConfiguredCorrectly()
@@ -172,7 +166,7 @@ public class ConnectionTests
     }
 
     /// <summary>
-    /// Tests deserialization of valid sensor reading JSON.
+    ///     Tests deserialization of valid sensor reading JSON.
     /// </summary>
     [Test]
     public void JsonDeserialization_ValidSensorReading_DeserializesCorrectly()
@@ -194,7 +188,7 @@ public class ConnectionTests
     }
 
     /// <summary>
-    /// Tests deserialization of invalid JSON.
+    ///     Tests deserialization of invalid JSON.
     /// </summary>
     [Test]
     public void JsonDeserialization_InvalidJson_ThrowsJsonException()
@@ -206,12 +200,8 @@ public class ConnectionTests
         action.Should().Throw<JsonException>();
     }
 
-    #endregion
-
-    #region Message Processing Tests - Via Reflection
-
     /// <summary>
-    /// Tests processing of a valid single sensor reading message using reflection.
+    ///     Tests processing of a valid single sensor reading message using reflection.
     /// </summary>
     [Test]
     public async Task ProcessSensorReading_ValidSingleReading_WritesToDatabase()
@@ -238,7 +228,7 @@ public class ConnectionTests
     }
 
     /// <summary>
-    /// Tests processing of sensor reading with null value.
+    ///     Tests processing of sensor reading with null value.
     /// </summary>
     [Test]
     public async Task ProcessSensorReading_NullValue_SkipsProcessing()
@@ -266,7 +256,7 @@ public class ConnectionTests
     }
 
     /// <summary>
-    /// Tests processing of sensor reading with empty value array.
+    ///     Tests processing of sensor reading with empty value array.
     /// </summary>
     [Test]
     public async Task ProcessSensorReading_EmptyValueArray_SkipsProcessing()
@@ -294,7 +284,7 @@ public class ConnectionTests
     }
 
     /// <summary>
-    /// Tests processing of batch sensor readings with meta data.
+    ///     Tests processing of batch sensor readings with meta data.
     /// </summary>
     [Test]
     public async Task ProcessBatchSensorReading_WithMetaData_ProcessesAllReadings()
@@ -327,12 +317,8 @@ public class ConnectionTests
         }
     }
 
-    #endregion
-
-    #region Error Handling Tests
-
     /// <summary>
-    /// Tests that database write errors are handled gracefully.
+    ///     Tests that database write errors are handled gracefully.
     /// </summary>
     [Test]
     public async Task ProcessSensorReading_DatabaseError_HandlesGracefully()
@@ -364,6 +350,4 @@ public class ConnectionTests
                 .WithMessage("Database error");
         }
     }
-
-    #endregion
 }

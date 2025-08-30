@@ -1,14 +1,14 @@
 ﻿namespace Rest_API.Helper;
 
 /// <summary>
-/// This class provides utility methods for string manipulation.
+///     This class provides utility methods for string manipulation.
 /// </summary>
 public static class StringTools
 
 
 {
     /// <summary>
-    /// Takes a string input and sanitizes it by removing any characters that are not alphanumeric, spaces, or underscores.
+    ///     Takes a string input and sanitizes it by removing any characters that are not alphanumeric, spaces, or underscores.
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>

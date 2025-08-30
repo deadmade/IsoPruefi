@@ -2,6 +2,7 @@ using System.Net;
 using Database.EntityFramework;
 using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
+using Database.Repository.InfluxRepo.Influx;
 using Database.Repository.SettingsRepo;
 using Get_weatherData_worker.Helper;
 using HealthChecks.UI.Client;

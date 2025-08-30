@@ -5,24 +5,23 @@ using Microsoft.EntityFrameworkCore;
 namespace Database.Repository.TokenRepo;
 
 /// <summary>
-/// Repository implementation for managing TokenInfo entities.
+///     Repository implementation for managing TokenInfo entities.
 /// </summary>
 public class TokenRepo : ITokenRepo
 {
     private readonly ApplicationDbContext _context;
 
     /// <summary>
-    /// Initializes a new instance of the TokenRepo class.
+    ///     Initializes a new instance of the TokenRepo class.
     /// </summary>
     /// <param name="context">The database context.</param>
-    /// <exception cref="ArgumentNullException">Thrown when context is null.</exception>
     public TokenRepo(ApplicationDbContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <summary>
-    /// Gets a token info by refresh token.
+    ///     Gets a token info by refresh token.
     /// </summary>
     /// <param name="refreshToken">The refresh token to search for.</param>
     /// <returns>The token info if found; otherwise, null.</returns>
@@ -33,7 +32,7 @@ public class TokenRepo : ITokenRepo
     }
 
     /// <summary>
-    /// Gets a token info by username.
+    ///     Gets a token info by username.
     /// </summary>
     /// <param name="username">The username to search for.</param>
     /// <returns>The token info if found; otherwise, null.</returns>
@@ -44,7 +43,7 @@ public class TokenRepo : ITokenRepo
     }
 
     /// <summary>
-    /// Gets the first token info for a user by username.
+    ///     Gets the first token info for a user by username.
     /// </summary>
     /// <param name="username">The username to search for.</param>
     /// <returns>The first token info if found; otherwise, null.</returns>
@@ -55,7 +54,7 @@ public class TokenRepo : ITokenRepo
     }
 
     /// <summary>
-    /// Adds a new token info.
+    ///     Adds a new token info.
     /// </summary>
     /// <param name="tokenInfo">The token info to add.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
@@ -65,7 +64,7 @@ public class TokenRepo : ITokenRepo
     }
 
     /// <summary>
-    /// Updates an existing token info.
+    ///     Updates an existing token info.
     /// </summary>
     /// <param name="tokenInfo">The token info to update.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
@@ -76,7 +75,7 @@ public class TokenRepo : ITokenRepo
     }
 
     /// <summary>
-    /// Saves changes to the database.
+    ///     Saves changes to the database.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task SaveChangesAsync()

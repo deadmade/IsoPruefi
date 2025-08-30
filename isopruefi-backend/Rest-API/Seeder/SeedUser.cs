@@ -5,12 +5,12 @@ using Rest_API.Models;
 namespace Rest_API.Seeder;
 
 /// <summary>
-/// Seeds the initial user data into the application.
+///     Seeds the initial user data into the application.
 /// </summary>
 public class SeedUser
 {
     /// <summary>
-    /// Seeds the initial user data into the application.
+    ///     Seeds the initial user data into the application.
     /// </summary>
     /// <param name="app"></param>
     public static async Task SeedData(IApplicationBuilder app)
@@ -55,7 +55,7 @@ public class SeedUser
             logger.LogInformation("Using admin configuration - UserName: {AdminUserName}", adminUserName);
 
             // Check if any users exist to prevent duplicate seeding
-            if (userManager.Users.Any() == false)
+            if (!userManager.Users.Any())
             {
                 var user = new ApiUser
                 {
@@ -65,13 +65,13 @@ public class SeedUser
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
                 // Create Admin role if it doesn't exist
-                if (await roleManager.RoleExistsAsync(Roles.Admin) == false)
+                if (!await roleManager.RoleExistsAsync(Roles.Admin))
                 {
                     logger.LogInformation("Admin role is creating");
                     var roleResult = await roleManager
                         .CreateAsync(new IdentityRole(Roles.Admin));
 
-                    if (roleResult.Succeeded == false)
+                    if (!roleResult.Succeeded)
                     {
                         var roleErros = roleResult.Errors.Select(e => e.Description);
                         logger.LogError("Failed to create admin role. Errors : {Join}", string.Join(",", roleErros));
@@ -83,13 +83,13 @@ public class SeedUser
                 }
 
                 // Create User role if it doesn't exist
-                if (await roleManager.RoleExistsAsync(Roles.User) == false)
+                if (!await roleManager.RoleExistsAsync(Roles.User))
                 {
                     logger.LogInformation("User role is creating");
                     var userRoleResult = await roleManager
                         .CreateAsync(new IdentityRole(Roles.User));
 
-                    if (userRoleResult.Succeeded == false)
+                    if (!userRoleResult.Succeeded)
                     {
                         var userRoleErrors = userRoleResult.Errors.Select(e => e.Description);
                         logger.LogError("Failed to create user role. Errors : {Join}",
@@ -105,7 +105,7 @@ public class SeedUser
                 var createUserResult = await userManager
                     .CreateAsync(user, adminPassword);
                 // Validate user creation
-                if (createUserResult.Succeeded == false)
+                if (!createUserResult.Succeeded)
                 {
                     var errors = createUserResult.Errors.Select(e => e.Description);
                     logger.LogError("Failed to create admin user. Errors: {Join}", string.Join(", ", errors));
@@ -116,7 +116,7 @@ public class SeedUser
                 var addUserToRoleResult = await userManager
                     .AddToRoleAsync(user, Roles.Admin);
 
-                if (addUserToRoleResult.Succeeded == false)
+                if (!addUserToRoleResult.Succeeded)
                 {
                     var errors = addUserToRoleResult.Errors.Select(e => e.Description);
                     logger.LogError("Failed to add admin role to user. Errors : {Join}", string.Join(",", errors));
@@ -125,7 +125,7 @@ public class SeedUser
                 addUserToRoleResult = await userManager
                     .AddToRoleAsync(user, Roles.User);
 
-                if (addUserToRoleResult.Succeeded == false)
+                if (!addUserToRoleResult.Succeeded)
                 {
                     var errors = addUserToRoleResult.Errors.Select(e => e.Description);
                     logger.LogError("Failed to add admin role to user. Errors : {Join}", string.Join(",", errors));

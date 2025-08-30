@@ -5,7 +5,7 @@ import './index.css';
 
 async function start() {
     try {
-        const res = await fetch("/config.json", { cache: "no-store" });
+        const res = await fetch("/config.json", {cache: "no-store"});
         (window as any).__APP_CONFIG__ = res.ok ? await res.json() : {};
     } catch {
         (window as any).__APP_CONFIG__ = {};
@@ -15,7 +15,7 @@ async function start() {
     ReactDOM.createRoot(document.getElementById("root")!).render(
         <React.StrictMode>
             <title>IsoPruefi</title>
-            <App />
+            <App/>
         </React.StrictMode>
     );
 }

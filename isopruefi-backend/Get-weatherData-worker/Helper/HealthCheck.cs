@@ -1,4 +1,4 @@
-using Database.Repository.InfluxRepo;
+using Database.Repository.InfluxRepo.Influx;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 

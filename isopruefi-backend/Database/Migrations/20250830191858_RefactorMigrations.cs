@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Database.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class RefactorMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,6 +54,23 @@ namespace Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CoordinateMappings",
+                columns: table => new
+                {
+                    PostalCode = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Location = table.Column<string>(type: "text", nullable: false),
+                    Latitude = table.Column<double>(type: "double precision", nullable: false),
+                    Longitude = table.Column<double>(type: "double precision", nullable: false),
+                    LastUsed = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LockedUntil = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CoordinateMappings", x => x.PostalCode);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TokenInfos",
                 columns: table => new
                 {
@@ -66,23 +83,6 @@ namespace Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TokenInfos", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TopicSettings",
-                columns: table => new
-                {
-                    TopicSettingId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DefaultTopicPath = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    GroupId = table.Column<int>(type: "integer", nullable: false),
-                    SensorType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    SensorName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    SensorLocation = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TopicSettings", x => x.TopicSettingId);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,13 +191,43 @@ namespace Database.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "TopicSettings",
+                columns: table => new
+                {
+                    TopicSettingId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CoordinateMappingId = table.Column<int>(type: "integer", nullable: false),
+                    DefaultTopicPath = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    GroupId = table.Column<int>(type: "integer", nullable: false),
+                    SensorTypeEnum = table.Column<int>(type: "integer", nullable: false),
+                    SensorName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    SensorLocation = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    HasRecovery = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TopicSettings", x => x.TopicSettingId);
+                    table.ForeignKey(
+                        name: "FK_TopicSettings_CoordinateMappings_CoordinateMappingId",
+                        column: x => x.CoordinateMappingId,
+                        principalTable: "CoordinateMappings",
+                        principalColumn: "PostalCode",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "CoordinateMappings",
+                columns: new[] { "PostalCode", "LastUsed", "Latitude", "Location", "LockedUntil", "Longitude" },
+                values: new object[] { 89518, null, 48.685200000000002, "Heidenheim an der Brenz", null, 10.1287 });
+
             migrationBuilder.InsertData(
                 table: "TopicSettings",
-                columns: new[] { "TopicSettingId", "DefaultTopicPath", "GroupId", "SensorLocation", "SensorName", "SensorType" },
+                columns: new[] { "TopicSettingId", "CoordinateMappingId", "DefaultTopicPath", "GroupId", "HasRecovery", "SensorLocation", "SensorName", "SensorTypeEnum" },
                 values: new object[,]
                 {
-                    { 1, "dhbw/ai/si2023", 2, "North", "Sensor_One", "temp" },
-                    { 2, "dhbw/ai/si2023", 2, "South", "Sensor_Two", "temp" }
+                    { 1, 89518, "dhbw/ai/si2023", 2, true, "North", "Sensor_One", 0 },
+                    { 2, 89518, "dhbw/ai/si2023", 2, true, "South", "Sensor_Two", 0 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -236,6 +266,11 @@ namespace Database.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TopicSettings_CoordinateMappingId",
+                table: "TopicSettings",
+                column: "CoordinateMappingId");
         }
 
         /// <inheritdoc />
@@ -267,6 +302,9 @@ namespace Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "CoordinateMappings");
         }
     }
 }

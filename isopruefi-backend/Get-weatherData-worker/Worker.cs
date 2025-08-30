@@ -10,12 +10,34 @@ namespace Get_weatherData_worker;
 /// </summary>
 public class Worker : BackgroundService
 {
+    /// <summary>
+    /// Logger instance for documenting diagnostics.
+    /// </summary>
     private readonly ILogger<Worker> _logger;
+    
+    /// <summary>
+    /// HttpClient factory for making API calls.
+    /// </summary>
     private readonly IHttpClientFactory _httpClientFactory;
+    
+    /// <summary>
+    /// Service provider for accessing services.
+    /// </summary>
     private readonly IServiceProvider _serviceProvider;
+    
+    /// <summary>
+    /// Configuration for accessing settings.
+    /// </summary>
     private readonly IConfiguration _configuration;
 
+    /// <summary>
+    /// URL of the API.
+    /// </summary>
     private readonly string _weatherDataApi;
+    
+    /// <summary>
+    /// Alternative URL if the first API is unavailable.
+    /// </summary>
     private readonly string _alternativeWeatherDataApi;
 
     /// <summary>
@@ -25,7 +47,7 @@ public class Worker : BackgroundService
     /// <param name="httpClientFactory">Http Client Factory for handling connections for API calls.</param>
     /// <param name="configuration">Configuration for retrieving parameters.</param>
     /// <param name="serviceProvider">Service Provider for including required services.</param>
-    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="InvalidOperationException">Thrown when no configuration is available.</exception>
     public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory,
         IConfiguration configuration, IServiceProvider serviceProvider)
     {
@@ -133,7 +155,7 @@ public class Worker : BackgroundService
     /// <summary>
     /// Calling the Meteo API for data.
     /// </summary>
-    /// <param name="lat">Latidute coordinate</param>
+    /// <param name="lat">Latitude coordinate</param>
     /// <param name="lon">Longitude coordinate</param>
     /// <returns>An instance of the Weather Data class containing the data.</returns>
     private async Task<WeatherData?> CallMeteoApi(double lat, double lon)

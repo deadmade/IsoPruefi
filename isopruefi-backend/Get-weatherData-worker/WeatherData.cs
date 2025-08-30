@@ -5,6 +5,13 @@ namespace Get_weatherData_worker;
 /// </summary>
 public class WeatherData
 {
+    /// <summary>
+    /// Temperature of the weather data.
+    /// </summary>
     public double Temperature { get; set; }
+    
+    /// <summary>
+    /// Time of the measurement.
+    /// </summary>
     public DateTime Timestamp { get; set; }
 }

@@ -101,7 +101,7 @@ public class CachedInfluxRepo : IInfluxRepo
             if (bucketEnd > end) bucketEnd = end;
 
             query =
-                $"SELECT MEAN(value) FROM temperature where place='{place}' AND time >= '{bucketStart:yyyy-MM-dd HH:mm:ss}' AND time <= '{bucketEnd:yyyy-MM-dd HH:mm:ss}' GROUP BY time({group}) fill(none)";
+                $"SELECT MEAN(value) FROM outside_temperature where place='{place}' AND time >= '{bucketStart:yyyy-MM-dd HH:mm:ss}' AND time <= '{bucketEnd:yyyy-MM-dd HH:mm:ss}' GROUP BY time({group}) fill(none)";
 
             try
             {

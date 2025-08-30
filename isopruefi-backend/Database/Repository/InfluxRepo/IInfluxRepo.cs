@@ -1,5 +1,4 @@
-﻿
-using InfluxDB3.Client.Write;
+﻿using InfluxDB3.Client.Write;
 
 namespace Database.Repository.InfluxRepo;
 
@@ -14,8 +13,8 @@ public interface IInfluxRepo
     /// <param name="measurement">Temperature Value</param>
     /// <param name="sensor">SensorId</param>
     /// <param name="timestamp">Unix Timestamp</param>
-    /// <param name="sequence"></param>
-    /// <returns></returns>
+    /// <param name="sequence">Sequence number</param>
+    /// <returns>A task that represents asynchronous saving of data.</returns>
     Task WriteSensorData(double measurement, string sensor, long timestamp, int sequence);
 
     /// <summary>
@@ -26,7 +25,7 @@ public interface IInfluxRepo
     /// <param name="temperature">Temperature data</param>
     /// <param name="timestamp">Timestamp</param>
     /// <param name="postalcode">Associated postalcode</param>
-    /// <returns></returns>
+    /// <returns>A task that represents asynchronous saving of data.</returns>
     Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp, int postalcode);
     
     /// <summary>
@@ -34,7 +33,7 @@ public interface IInfluxRepo
     /// </summary>
     /// <param name="sensor">Sensor name</param>
     /// <param name="timestamp">Timestamp</param>
-    /// <returns></returns>
+    /// <returns>A task that represents asynchronous saving of data.</returns>
     public Task WriteUptime(string sensor, long timestamp);
 
     /// <summary>

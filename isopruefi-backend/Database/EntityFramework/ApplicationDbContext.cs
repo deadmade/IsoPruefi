@@ -8,8 +8,6 @@ namespace Database.EntityFramework;
 /// <inheritdoc />
 public class ApplicationDbContext : IdentityDbContext<ApiUser>
 {
-    //public DbSet<GeneralSetting> GeneralSettings { get; set; } = null!;
-
     /// <summary>
     /// Represents the collection of TopicSetting entities in the database.
     /// </summary>
@@ -72,8 +70,8 @@ public class ApplicationDbContext : IdentityDbContext<ApiUser>
     /// <summary>
     /// Applies any pending migrations for the specified DbContext.
     /// </summary>
-    /// <param name="scope"></param>
-    /// <typeparam name="TDbContext"></typeparam>
+    /// <param name="scope">Dependency Injection Scope for resolving the DbContext.</param>
+    /// <typeparam name="TDbContext">DbContext type that is applied for migrations.</typeparam>
     public static void ApplyMigration<TDbContext>(IServiceScope scope)
         where TDbContext : DbContext
     {

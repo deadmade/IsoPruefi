@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 namespace Database.EntityFramework.Models;
 
 /// <summary>
-/// Stores geographic coordinates associated with postalcodes, including the time the mapping was used.
+/// Stores geographic coordinates associated with postalcodes.
 /// </summary>
 public class CoordinateMapping
 {
     /// <summary>
-    ///  Gets or sets the postalcode which is also the uniqe identifier.
+    ///  Gets or sets the postalcode which is also the unique identifier.
     /// </summary>
     [Key]
     public int PostalCode { get; set; }
@@ -19,7 +19,7 @@ public class CoordinateMapping
     public string Location { get; set; }
 
     /// <summary>
-    /// Gets or sets the latitude for the location.
+    /// Gets or sets the latitude of the location.
     /// </summary>
     public double Latitude { get; set; }
 
@@ -29,7 +29,7 @@ public class CoordinateMapping
     public double Longitude { get; set; }
 
     /// <summary>
-    /// Gets or sets the time the postalcode was last entered by the user.
+    /// Gets or sets the time the postalcode was last processed by the GetWeatherDataWorker.
     /// </summary>
     [DataType(DataType.DateTime)]
     public DateTime? LastUsed { get; set; } = null;

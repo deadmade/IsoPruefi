@@ -9,6 +9,9 @@ namespace Database.Repository.CoordinateRepo;
 /// </summary>
 public class CoordinateRepo : ICoordinateRepo
 {
+    /// <summary>
+    /// The ApplicationDbContext that is used for accessing the database.
+    /// </summary>
     private ApplicationDbContext _applicationDbContext;
 
     /// <summary>
@@ -65,8 +68,7 @@ public class CoordinateRepo : ICoordinateRepo
         await transaction.CommitAsync();
         return null;
     }
-
-
+    
     /// <inheritdoc />
     public async Task DeletePostalCode(int postalcode)
     {

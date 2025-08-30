@@ -6,7 +6,6 @@ namespace Database.EntityFramework.Models;
 /// <summary>
 /// Represents the settings for a specific MQTT topic, including default path, group, and sensor information.
 /// </summary>
-// Represents the settings for a specific topic, including default path, group, and sensor information.
 public class TopicSetting
 {
     /// <summary>
@@ -38,7 +37,6 @@ public class TopicSetting
     /// </summary>
     [MaxLength(50)]
     public string? SensorName { get; set; }
-
 
     /// <summary>
     /// Gets or sets the location of the sensor.

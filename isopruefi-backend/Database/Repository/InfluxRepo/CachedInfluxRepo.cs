@@ -13,9 +13,24 @@ namespace Database.Repository.InfluxRepo;
 /// </summary>
 public class CachedInfluxRepo : IInfluxRepo
 {
+    /// <summary>
+    /// InfluxDb client for communicating with the server.
+    /// </summary>
     private readonly InfluxDBClient _client;
+    
+    /// <summary>
+    /// In-memory cache for storing data in case of unavailability.
+    /// </summary>
     private readonly IMemoryCache _memoryCache;
+    
+    /// <summary>
+    /// Logger instance to capture diagnostics.
+    /// </summary>
     private readonly ILogger<CachedInfluxRepo> _logger;
+    
+    /// <summary>
+    /// Prefix for cache keys.
+    /// </summary>
     private const string CACHE_KEY_PREFIX = "failed_influx_point:";
 
     /// <summary>
@@ -188,7 +203,6 @@ public class CachedInfluxRepo : IInfluxRepo
     /// </summary>
     /// <param name="point">The PointData to write</param>
     /// <param name="dataType">Type of data for logging purposes (sensor/weather)</param>
-    /// <param name="writeToCache"></param>
     private async Task WritePointWithCache(PointData point, string dataType)
     {
         try

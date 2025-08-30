@@ -1,6 +1,4 @@
-using Database.Repository.InfluxRepo;
 using InfluxDB3.Client.Write;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -13,8 +11,19 @@ namespace Database.Repository.InfluxRepo;
 /// </summary>
 public class InfluxRetryService : BackgroundService
 {
+    /// <summary>
+    /// Factory for creating service scopes.
+    /// </summary>
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    
+    /// <summary>
+    /// Logger instance to record diagnostics.
+    /// </summary>
     private readonly ILogger<InfluxRetryService> _logger;
+    
+    /// <summary>
+    /// Time between retry attemps.
+    /// </summary>
     private readonly TimeSpan _retryInterval = TimeSpan.FromMinutes(5);
 
     /// <summary>

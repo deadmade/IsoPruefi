@@ -9,6 +9,9 @@ namespace Database.Repository.SettingsRepo;
 /// </summary>
 public class SettingsRepo : ISettingsRepo
 {
+    /// <summary>
+    /// The ApplicationDbContext that is used for accessing the database.
+    /// </summary>
     private ApplicationDbContext _applicationDbContext;
 
     /// <summary>
@@ -19,8 +22,7 @@ public class SettingsRepo : ISettingsRepo
     {
         _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
     }
-
-
+    
     /// <inheritdoc />
     public Task<List<TopicSetting>> GetTopicSettingsAsync()
     {
@@ -36,8 +38,7 @@ public class SettingsRepo : ISettingsRepo
         _applicationDbContext.TopicSettings.Add(topicSetting);
         return await _applicationDbContext.SaveChangesAsync();
     }
-
-
+    
     /// <inheritdoc />
     public async Task<int> RemoveTopicSettingAsync(TopicSetting topicSetting)
     {
@@ -47,8 +48,7 @@ public class SettingsRepo : ISettingsRepo
         _applicationDbContext.TopicSettings.Remove(topicSetting);
         return await _applicationDbContext.SaveChangesAsync();
     }
-
-
+    
     /// <inheritdoc />
     public async Task<int> UpdateTopicSettingAsync(TopicSetting topicSetting)
     {

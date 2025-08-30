@@ -1,0 +1,962 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="mqtt_8cpp" kind="file" language="C++">
+    <compoundname>mqtt.cpp</compoundname>
+    <includes refid="mqtt_8h" local="yes">mqtt.h</includes>
+    <includes refid="storage_8h" local="yes">storage.h</includes>
+    <incdepgraph>
+      <node id="2">
+        <label>mqtt.h</label>
+        <link refid="mqtt_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>platform.h</label>
+        <link refid="platform_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>storage.h</label>
+        <link refid="storage_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>src/mqtt.cpp</label>
+        <link refid="mqtt_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>Adafruit_ADT7410.h</label>
+      </node>
+      <node id="4">
+        <label>Arduino.h</label>
+      </node>
+      <node id="9">
+        <label>ArduinoJson.h</label>
+      </node>
+      <node id="10">
+        <label>ArduinoMqttClient.h</label>
+      </node>
+      <node id="7">
+        <label>RTClib.h</label>
+      </node>
+      <node id="6">
+        <label>SdFat.h</label>
+      </node>
+      <node id="5">
+        <label>Wire.h</label>
+      </node>
+      <node id="12">
+        <label>cstdio</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t SMALL_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>SMALL_BUFFER_SIZE</name>
+        <initializer>= 128</initializer>
+        <briefdescription>
+<para>Buffer size for small MQTT topics, payloads, and JSON documents. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="9" column="21" bodyfile="src/mqtt.cpp" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t LARGE_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>LARGE_BUFFER_SIZE</name>
+        <initializer>= 2048</initializer>
+        <briefdescription>
+<para>Buffer size for large MQTT payloads and JSON documents (recovery data) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="11" column="21" bodyfile="src/mqtt.cpp" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1aa4d6a09459b76d7be490a8804e8bffe4" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t FILE_NAME_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>FILE_NAME_BUFFER_SIZE</name>
+        <initializer>= 64</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="12" column="21" bodyfile="src/mqtt.cpp" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1a407875f5e946a88244a5d566c3d29d03" prot="public" static="yes" mutable="no">
+        <type>const int</type>
+        <definition>const int MAX_RECOVERY_FILES_PER_LOOP</definition>
+        <argsstring></argsstring>
+        <name>MAX_RECOVERY_FILES_PER_LOOP</name>
+        <initializer>= 3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="13" column="18" bodyfile="src/mqtt.cpp" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1a633b6d91d2a6b9fe94d49679bf76cf8d" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t FOLDER_NAME_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>FOLDER_NAME_BUFFER_SIZE</name>
+        <initializer>= 8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="19" column="21" bodyfile="src/mqtt.cpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1ac89604b3a86db0dabb5538b2f3a5cdd6" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t FULL_PATH_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>FULL_PATH_BUFFER_SIZE</name>
+        <initializer>= 64</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="20" column="21" bodyfile="src/mqtt.cpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1abb1c8ff7f876cef50bab38d6ac9a4d10" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t LINE_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>LINE_BUFFER_SIZE</name>
+        <initializer>= 64</initializer>
+        <briefdescription>
+<para>Buffer size for reading individual CSV lines. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="22" column="21" bodyfile="src/mqtt.cpp" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1a700fb0855fc0d557992d5068df21e937" prot="public" static="yes" mutable="no">
+        <type>const uint32_t</type>
+        <definition>const uint32_t SECONDS_IN_24_HOURS</definition>
+        <argsstring></argsstring>
+        <name>SECONDS_IN_24_HOURS</name>
+        <initializer>= 86400</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="23" column="23" bodyfile="src/mqtt.cpp" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1a8fa547868639ebfd54dcfd92dc6f0dc7" prot="public" static="yes" mutable="no">
+        <type>const unsigned long</type>
+        <definition>const unsigned long RECOVERY_TIMEOUT_MS</definition>
+        <argsstring></argsstring>
+        <name>RECOVERY_TIMEOUT_MS</name>
+        <initializer>= 60000</initializer>
+        <briefdescription>
+<para>Timeout for recovery operations in milliseconds (60 seconds) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="25" column="28" bodyfile="src/mqtt.cpp" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1aba2b7ae1d49c468937bdcded3695352b" prot="public" static="yes" mutable="no">
+        <type>const unsigned long</type>
+        <definition>const unsigned long ACK_TIMEOUT_MS</definition>
+        <argsstring></argsstring>
+        <name>ACK_TIMEOUT_MS</name>
+        <initializer>= 5000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="26" column="28" bodyfile="src/mqtt.cpp" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1ad1462ad318bc6cd52a0b6ce826ca946c" prot="public" static="yes" mutable="no">
+        <type>const unsigned long</type>
+        <definition>const unsigned long RECOVERY_ACK_TIMEOUT_MS</definition>
+        <argsstring></argsstring>
+        <name>RECOVERY_ACK_TIMEOUT_MS</name>
+        <initializer>= 10000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="27" column="28" bodyfile="src/mqtt.cpp" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1ac4ded6926a35bdbecaf8318908797a51" prot="public" static="yes" mutable="no">
+        <type>const unsigned long</type>
+        <definition>const unsigned long DELAY_POLLING_LOOP_MS</definition>
+        <argsstring></argsstring>
+        <name>DELAY_POLLING_LOOP_MS</name>
+        <initializer>= 10</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="28" column="28" bodyfile="src/mqtt.cpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1ad5cdeb03df0da73c08309eb1693816f4" prot="public" static="yes" mutable="no">
+        <type>volatile bool</type>
+        <definition>volatile bool s_ackSeen</definition>
+        <argsstring></argsstring>
+        <name>s_ackSeen</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="56" column="23" bodyfile="src/mqtt.cpp" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1af87e53fea3cf7b797a5bd30588380511" prot="public" static="yes" mutable="no">
+        <type>volatile long</type>
+        <definition>volatile long s_ackSeq</definition>
+        <argsstring></argsstring>
+        <name>s_ackSeq</name>
+        <initializer>= -1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="57" column="23" bodyfile="src/mqtt.cpp" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1a365552749e351abf6c38ffb0946ae993" prot="public" static="yes" mutable="no">
+        <type>String</type>
+        <definition>String s_pubTopic</definition>
+        <argsstring></argsstring>
+        <name>s_pubTopic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="58" column="23" bodyfile="src/mqtt.cpp" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="mqtt_8cpp_1a8671bf831d0fbe6895dfdf718ba4ca1c" prot="public" static="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool s_ackInit</definition>
+        <argsstring></argsstring>
+        <name>s_ackInit</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="59" column="23" bodyfile="src/mqtt.cpp" bodystart="59" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="mqtt_8cpp_1a3b3cc778b2593946d67d627e9e2b4aa5" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool ExtractSequence</definition>
+        <argsstring>(const char *json, long &amp;outSeq)</argsstring>
+        <name>ExtractSequence</name>
+        <param>
+          <type>const char *</type>
+          <declname>json</declname>
+        </param>
+        <param>
+          <type>long &amp;</type>
+          <declname>outSeq</declname>
+        </param>
+        <briefdescription>
+<para>Extracts the sequence number from a JSON string. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Searches for the &quot;sequence&quot; field in the provided JSON and parses its value. Returns false if the field is missing or set to null.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>json</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The JSON string to search </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>outSeq</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to store the extracted sequence number </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if a valid sequence number was found, false otherwise </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="71" column="13" bodyfile="src/mqtt.cpp" bodystart="71" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="mqtt_8cpp_1ab2487e7989185134f386a99d2f543323" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void OnMqttEchoMessage</definition>
+        <argsstring>(int messageSize)</argsstring>
+        <name>OnMqttEchoMessage</name>
+        <param>
+          <type>int</type>
+          <declname>messageSize</declname>
+        </param>
+        <briefdescription>
+<para>MQTT message callback to detect PUBACK/echo for published messages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Processes incoming MQTT messages, filtering by MQTT_TOPIC and retain flag. If the message is an echo for the current publish MQTT_TOPIC and not retained, extracts the sequence number and sets acknowledgment flags.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>messageSize</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of the incoming message (needed because of the MQTT library&apos;s callback interface) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="92" column="13" bodyfile="src/mqtt.cpp" bodystart="92" bodyend="109"/>
+      </memberdef>
+      <memberdef kind="function" id="mqtt_8cpp_1ad0630aec62807d4c5e88f3720ab92bc7" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void EnsureAckInit</definition>
+        <argsstring>(MqttClient &amp;client, const char *topicPrefix, const char *sensorType, const char *sensorId)</argsstring>
+        <name>EnsureAckInit</name>
+        <param>
+          <type>MqttClient &amp;</type>
+          <declname>client</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>topicPrefix</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>sensorType</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>sensorId</declname>
+        </param>
+        <briefdescription>
+<para>Initializes ACK/Echo handling and subscribes to the publish MQTT_TOPIC. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Sets up the publish MQTT_TOPIC and registers the MQTT message callback for echo detection. Ensures the callback is registered only once, and re-subscribes to the MQTT_TOPIC after each reconnect.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>client</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the MQTT client </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>topicPrefix</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Topic prefix for MQTT publishing </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sensor type string </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorId</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unique sensor identifier </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="122" column="13" bodyfile="src/mqtt.cpp" bodystart="122" bodyend="138"/>
+      </memberdef>
+      <memberdef kind="function" id="mqtt_8cpp_1a6ef5b8e2eb44288d4294967dd9c978bc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void CreateFullTopic</definition>
+        <argsstring>(char *buffer, size_t bufferSize, const char *topicPrefix, const char *sensorType, const char *sensorId, const char *suffix)</argsstring>
+        <name>CreateFullTopic</name>
+        <param>
+          <type>char *</type>
+          <declname>buffer</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>bufferSize</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>topicPrefix</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>sensorType</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>sensorId</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>suffix</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="142" column="6" bodyfile="src/mqtt.cpp" bodystart="142" bodyend="149"/>
+      </memberdef>
+      <memberdef kind="function" id="mqtt_8cpp_1aa85ccfd4bec75d36415a21ab5696deef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SendTempToMqtt</definition>
+        <argsstring>(MqttClient &amp;mqttClient, const char *topicPrefix, const char *sensorType, const char *sensorId, float celsius, const DateTime &amp;now, int sequence)</argsstring>
+        <name>SendTempToMqtt</name>
+        <param>
+          <type>MqttClient &amp;</type>
+          <declname>mqttClient</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>topicPrefix</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>sensorType</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>sensorId</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>celsius</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>sequence</declname>
+        </param>
+        <briefdescription>
+<para>Publishes real-time sensor data to the MQTT broker with QoS 1 delivery. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function builds a JSON payload from the provided sensor data and publishes it to the specified MQTT topic. After publishing, it waits briefly for a PUBACK handshake from the broker to confirm delivery. If no acknowledgment is received within the timeout window, the data is saved to a CSV file for later recovery.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mqttClient</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the MQTT client instance </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>topicPrefix</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Topic prefix for MQTT publishing (e.g., &quot;dhbw/ai/si2023/2/&quot;) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sensor type string (e.g., &quot;temp&quot;) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorId</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unique sensor identifier </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>celsius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Measured temperature value in Celsius </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current timestamp (DateTime) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sequence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sequence number for the measurement </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if published and acknowledged by broker, false if fallback to CSV</para>
+</simplesect>
+<simplesect kind="note"><para>Uses QoS 1 for reliable delivery. If broker does not echo/PUBACK within the timeout, data is persisted for later transmission. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="175" column="6" bodyfile="src/mqtt.cpp" bodystart="175" bodyend="230"/>
+      </memberdef>
+      <memberdef kind="function" id="mqtt_8cpp_1a7eff2f450ca7353750649b94936d6cee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SendPendingDataToMqtt</definition>
+        <argsstring>(MqttClient &amp;mqttClient, const char *topicPrefix, const char *sensorType, const char *sensorId, const DateTime &amp;now)</argsstring>
+        <name>SendPendingDataToMqtt</name>
+        <param>
+          <type>MqttClient &amp;</type>
+          <declname>mqttClient</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>topicPrefix</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>sensorType</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>sensorId</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <briefdescription>
+<para>Processes and transmits pending CSV files from offline periods to the MQTT broker. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function scans the SD card for CSV files containing unsent sensor data from previous offline periods. Each file is converted to a JSON payload and published to the MQTT topic &lt;topic&gt;/recovered with QoS 1. After publishing, it waits briefly for a PUBACK handshake from the broker to confirm delivery. If the PUBACK is not received within the timeout period, the file is saved for later transmission. Files are only deleted if the publish operation succeeds. Files older than 24 hours or with invalid data are skipped.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mqttClient</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the MQTT client instance </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>topicPrefix</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Topic prefix for MQTT publishing (e.g., &quot;dhbw/ai/si2023/2/&quot;) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sensor type string (e.g., &quot;temp&quot;) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensorId</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unique sensor identifier </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current timestamp (DateTime) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if all valid files were published and deleted, false if any files remain or errors occurred</para>
+</simplesect>
+<simplesect kind="note"><para>Uses QoS 1 for reliable delivery. Skips files older than 24 hours or with invalid content. Aborts if recovery exceeds time limit. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/mqtt.cpp" line="254" column="6" bodyfile="src/mqtt.cpp" bodystart="254" bodyend="384"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="mqtt_8h" kindref="compound">mqtt.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="storage_8h" kindref="compound">storage.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/>BUFFER<sp/>SIZE<sp/>CONSTANTS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kindref="member">SMALL_BUFFER_SIZE</ref><sp/>=<sp/>128;</highlight></codeline>
+<codeline lineno="11"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" kindref="member">LARGE_BUFFER_SIZE</ref><sp/>=<sp/>2048;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1aa4d6a09459b76d7be490a8804e8bffe4" kindref="member">FILE_NAME_BUFFER_SIZE</ref><sp/>=<sp/>64;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1a407875f5e946a88244a5d566c3d29d03" kindref="member">MAX_RECOVERY_FILES_PER_LOOP</ref><sp/>=<sp/>3;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//<sp/>FILE<sp/>SYSTEM<sp/>AND<sp/>TIMING<sp/>CONSTANTS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1a633b6d91d2a6b9fe94d49679bf76cf8d" kindref="member">FOLDER_NAME_BUFFER_SIZE</ref><sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1ac89604b3a86db0dabb5538b2f3a5cdd6" kindref="member">FULL_PATH_BUFFER_SIZE</ref><sp/>=<sp/>64;</highlight></codeline>
+<codeline lineno="22"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1abb1c8ff7f876cef50bab38d6ac9a4d10" kindref="member">LINE_BUFFER_SIZE</ref><sp/>=<sp/>64;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint32_t<sp/><ref refid="mqtt_8cpp_1a700fb0855fc0d557992d5068df21e937" kindref="member">SECONDS_IN_24_HOURS</ref><sp/>=<sp/>86400;</highlight></codeline>
+<codeline lineno="25"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1a8fa547868639ebfd54dcfd92dc6f0dc7" kindref="member">RECOVERY_TIMEOUT_MS</ref><sp/>=<sp/>60000;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1aba2b7ae1d49c468937bdcded3695352b" kindref="member">ACK_TIMEOUT_MS</ref><sp/>=<sp/>5000;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1ad1462ad318bc6cd52a0b6ce826ca946c" kindref="member">RECOVERY_ACK_TIMEOUT_MS</ref><sp/><sp/>=<sp/>10000;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1ac4ded6926a35bdbecaf8318908797a51" kindref="member">DELAY_POLLING_LOOP_MS</ref><sp/>=<sp/>10;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="comment">//<sp/>ACK/ECHO-HANDLING<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">volatile</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><sp/><ref refid="mqtt_8cpp_1ad5cdeb03df0da73c08309eb1693816f4" kindref="member">s_ackSeen</ref><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">volatile</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><sp/><ref refid="mqtt_8cpp_1af87e53fea3cf7b797a5bd30588380511" kindref="member">s_ackSeq</ref><sp/><sp/><sp/><sp/>=<sp/>-1;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>String<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mqtt_8cpp_1a365552749e351abf6c38ffb0946ae993" kindref="member">s_pubTopic</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>z.<sp/>B.<sp/>&quot;&lt;prefix&gt;temp/Sensor_Two&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mqtt_8cpp_1a8671bf831d0fbe6895dfdf718ba4ca1c" kindref="member">s_ackInit</ref><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1a3b3cc778b2593946d67d627e9e2b4aa5" kindref="member">ExtractSequence</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>json,<sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal">&amp;<sp/>outSeq)<sp/>{</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>p<sp/>=<sp/>strstr(json,<sp/></highlight><highlight class="stringliteral">&quot;\&quot;sequence\&quot;:&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!p)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/>p<sp/>+=<sp/>11;<sp/></highlight><highlight class="comment">//<sp/>length<sp/>of<sp/>&quot;\&quot;sequence\&quot;:&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Skip<sp/>whitespace</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(*p<sp/>==<sp/></highlight><highlight class="charliteral">&apos;<sp/>&apos;</highlight><highlight class="normal"><sp/>||<sp/>*p<sp/>==<sp/></highlight><highlight class="charliteral">&apos;\t&apos;</highlight><highlight class="normal">)<sp/>++p;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Support<sp/>null<sp/>(Recovery<sp/>may<sp/>have<sp/>sequence:null)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strncmp(p,<sp/></highlight><highlight class="stringliteral">&quot;null&quot;</highlight><highlight class="normal">,<sp/>4)<sp/>==<sp/>0)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/>outSeq<sp/>=<sp/>strtol(p,<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">,<sp/>10);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1ab2487e7989185134f386a99d2f543323" kindref="member">OnMqttEchoMessage</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>messageSize)<sp/>{</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/>(void)messageSize;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.messageTopic()<sp/>!=<sp/><ref refid="mqtt_8cpp_1a365552749e351abf6c38ffb0946ae993" kindref="member">s_pubTopic</ref>)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.messageRetain())<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>buf[<ref refid="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kindref="member">SMALL_BUFFER_SIZE</ref><sp/>*<sp/>2];</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(<ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.available()<sp/>&amp;&amp;<sp/>n<sp/>&lt;<sp/>(int)</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(buf)<sp/>-<sp/>1)<sp/>{</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>buf[n++]<sp/>=<sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.read();</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/>buf[n]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>seq;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="mqtt_8cpp_1a3b3cc778b2593946d67d627e9e2b4aa5" kindref="member">ExtractSequence</ref>(buf,<sp/>seq))<sp/>{</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mqtt_8cpp_1af87e53fea3cf7b797a5bd30588380511" kindref="member">s_ackSeq</ref><sp/><sp/>=<sp/>seq;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mqtt_8cpp_1ad5cdeb03df0da73c08309eb1693816f4" kindref="member">s_ackSeen</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="109"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1ad0630aec62807d4c5e88f3720ab92bc7" kindref="member">EnsureAckInit</ref>(MqttClient&amp;<sp/>client,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorType,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId)<sp/>{</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="mqtt_8cpp_1a8671bf831d0fbe6895dfdf718ba4ca1c" kindref="member">s_ackInit</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>fullTopic[<ref refid="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kindref="member">SMALL_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sensorType<sp/>&amp;&amp;<sp/>sensorId)<sp/>{</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>snprintf(fullTopic,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(fullTopic),<sp/></highlight><highlight class="stringliteral">&quot;%s%s/%s&quot;</highlight><highlight class="normal">,<sp/>topicPrefix,<sp/>sensorType,<sp/>sensorId);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mqtt_8cpp_1a365552749e351abf6c38ffb0946ae993" kindref="member">s_pubTopic</ref><sp/>=<sp/>fullTopic;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mqtt_8cpp_1a8671bf831d0fbe6895dfdf718ba4ca1c" kindref="member">s_ackInit</ref><sp/><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;<sp/></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/>client.onMessage(<ref refid="mqtt_8cpp_1ab2487e7989185134f386a99d2f543323" kindref="member">OnMqttEchoMessage</ref>);<sp/></highlight><highlight class="comment">//<sp/>Callback<sp/>register</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(client.connected())<sp/>{</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/>client.subscribe(<ref refid="mqtt_8cpp_1a365552749e351abf6c38ffb0946ae993" kindref="member">s_pubTopic</ref>.c_str());</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="138"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1a6ef5b8e2eb44288d4294967dd9c978bc" kindref="member">CreateFullTopic</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>buffer,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>bufferSize,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorType,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>suffix)<sp/>{</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(suffix<sp/>&amp;&amp;<sp/>strlen(suffix)<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>snprintf(buffer,<sp/>bufferSize,<sp/></highlight><highlight class="stringliteral">&quot;%s%s/%s/%s&quot;</highlight><highlight class="normal">,<sp/>topicPrefix,<sp/>sensorType,<sp/>sensorId,<sp/>suffix);</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/>snprintf(buffer,<sp/>bufferSize,<sp/></highlight><highlight class="stringliteral">&quot;%s%s/%s&quot;</highlight><highlight class="normal">,<sp/>topicPrefix,<sp/>sensorType,<sp/>sensorId);</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="149"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"></highlight><highlight class="comment">//<sp/>REAL-TIME<sp/>DATA<sp/>TRANSMISSION<sp/>FUNCTIONS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1aa85ccfd4bec75d36415a21ab5696deef" kindref="member">SendTempToMqtt</ref>(MqttClient&amp;<sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorType,</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence)<sp/>{</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><ref refid="mqtt_8cpp_1ad0630aec62807d4c5e88f3720ab92bc7" kindref="member">EnsureAckInit</ref>(<ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>,<sp/>topicPrefix,<sp/>sensorType,<sp/>sensorId);</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.poll();</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>fullTopic[<ref refid="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kindref="member">SMALL_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><ref refid="mqtt_8cpp_1a6ef5b8e2eb44288d4294967dd9c978bc" kindref="member">CreateFullTopic</ref>(fullTopic,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(fullTopic),<sp/>topicPrefix,<sp/>sensorType,<sp/>sensorId);</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"></highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/>StaticJsonDocument&lt;SMALL_BUFFER_SIZE&gt;<sp/>jsonDoc;</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><ref refid="storage_8h_1a55c16a7ff3a0de78ba9d9544ae6b817e" kindref="member">BuildJson</ref>(jsonDoc,<sp/>celsius,<sp/>now,<sp/>sequence);</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"></highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>payload[<ref refid="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kindref="member">SMALL_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/>serializeJson(jsonDoc,<sp/>payload,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(payload));</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Reset<sp/>ACK-Flags</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><ref refid="mqtt_8cpp_1ad5cdeb03df0da73c08309eb1693816f4" kindref="member">s_ackSeen</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><ref refid="mqtt_8cpp_1af87e53fea3cf7b797a5bd30588380511" kindref="member">s_ackSeq</ref><sp/><sp/>=<sp/>-1;</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"></highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.beginMessage(fullTopic,<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">,<sp/>1))<sp/>{</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.print(payload);</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.endMessage())<sp/>{</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>endMessage()<sp/>failed<sp/>→<sp/>saving<sp/>to<sp/>CSV.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="storage_8h_1a96fdb72e162a1db39c1bbd4c4409fa30" kindref="member">SaveTempToBatchCsv</ref>(now,<sp/>celsius,<sp/>sequence);</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>delay<sp/>for<sp/>a<sp/>short<sp/>window<sp/>to<sp/>allow<sp/>poll()<sp/>to<sp/>process<sp/>the<sp/>PUBACK/echo</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>startTime<sp/>=<sp/>millis();</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>ackOk<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(millis()<sp/>-<sp/>startTime<sp/>&lt;<sp/><ref refid="mqtt_8cpp_1aba2b7ae1d49c468937bdcded3695352b" kindref="member">ACK_TIMEOUT_MS</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.poll();</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="mqtt_8cpp_1ad5cdeb03df0da73c08309eb1693816f4" kindref="member">s_ackSeen</ref><sp/>&amp;&amp;<sp/><ref refid="mqtt_8cpp_1af87e53fea3cf7b797a5bd30588380511" kindref="member">s_ackSeq</ref><sp/>==<sp/>sequence)<sp/>{</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ackOk<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>delay(<ref refid="mqtt_8cpp_1ac4ded6926a35bdbecaf8318908797a51" kindref="member">DELAY_POLLING_LOOP_MS</ref>);</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"></highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!ackOk)<sp/>{</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;No<sp/>Echo/PUBACK<sp/>within<sp/>timeout<sp/>→<sp/>saving<sp/>to<sp/>CSV.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="storage_8h_1a96fdb72e162a1db39c1bbd4c4409fa30" kindref="member">SaveTempToBatchCsv</ref>(now,<sp/>celsius,<sp/>sequence);</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Published<sp/>to<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(fullTopic);</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(payload);</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>beginMessage()<sp/>failed<sp/>→<sp/>saving<sp/>to<sp/>CSV.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="storage_8h_1a96fdb72e162a1db39c1bbd4c4409fa30" kindref="member">SaveTempToBatchCsv</ref>(now,<sp/>celsius,<sp/>sequence);</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="230"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"></highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="233"><highlight class="normal"></highlight><highlight class="comment">//<sp/>DATA<sp/>RECOVERY<sp/>AND<sp/>OFFLINE<sp/>TRANSMISSION<sp/>FUNCTIONS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="234"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="235"><highlight class="normal"></highlight></codeline>
+<codeline lineno="254"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="mqtt_8cpp_1a7eff2f450ca7353750649b94936d6cee" kindref="member">SendPendingDataToMqtt</ref>(MqttClient&amp;<sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>topicPrefix,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorType,</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensorId,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Looking<sp/>for<sp/>pending<sp/>CSV<sp/>files...&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"></highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Track<sp/>processing<sp/>time<sp/>to<sp/>prevent<sp/>infinite<sp/>loops</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>startMillis<sp/>=<sp/>millis();</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>allFilesSent<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"></highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Open<sp/>the<sp/>current<sp/>date<sp/>folder</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>folder[<ref refid="mqtt_8cpp_1a633b6d91d2a6b9fe94d49679bf76cf8d" kindref="member">FOLDER_NAME_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/>strncpy(folder,<sp/><ref refid="storage_8h_1a1ea8a9f706d44d99bb53ea2993816412" kindref="member">CreateFolderName</ref>(now),<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(folder));</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/>File<sp/>root<sp/>=<sp/><ref refid="platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>.open(folder);</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!root)<sp/>{</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;No<sp/>folder<sp/>found<sp/>for<sp/>pending<sp/>data.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"></highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Initialize<sp/>processing<sp/>counters</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sentCount<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>checkedFiles<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>skippedEmptyFiles<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"></highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/>File<sp/>entry;</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>((entry<sp/>=<sp/>root.openNextFile()))<sp/>{</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(entry.isDirectory())<sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"></highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>filename[<ref refid="mqtt_8cpp_1aa4d6a09459b76d7be490a8804e8bffe4" kindref="member">FILE_NAME_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/>entry.getName(filename,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(filename));</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/>entry.close();</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"></highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/>String<sp/>nameStr(filename);</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!nameStr.endsWith(</highlight><highlight class="stringliteral">&quot;.csv&quot;</highlight><highlight class="normal">))<sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"></highlight></codeline>
+<codeline lineno="287"><highlight class="normal"><sp/><sp/><sp/><sp/>checkedFiles++;</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"></highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Validate<sp/>file<sp/>age<sp/>(skip<sp/>files<sp/>older<sp/>than<sp/>24<sp/>hours)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>fullPath[<ref refid="mqtt_8cpp_1ac89604b3a86db0dabb5538b2f3a5cdd6" kindref="member">FULL_PATH_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="291"><highlight class="normal"><sp/><sp/><sp/><sp/>snprintf(fullPath,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(fullPath),<sp/></highlight><highlight class="stringliteral">&quot;%s/%s&quot;</highlight><highlight class="normal">,<sp/>folder,<sp/>filename);</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"><sp/><sp/><sp/><sp/>File<sp/>tsFile<sp/>=<sp/><ref refid="platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>.open(fullPath,<sp/>FILE_READ);</highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(tsFile)<sp/>{</highlight></codeline>
+<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>line[<ref refid="mqtt_8cpp_1abb1c8ff7f876cef50bab38d6ac9a4d10" kindref="member">LINE_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(tsFile.fgets(line,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(line))<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="296"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>p<sp/>=<sp/>strtok(line,<sp/></highlight><highlight class="stringliteral">&quot;,&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(p)<sp/>{</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Malformed<sp/>CSV<sp/>line<sp/>(no<sp/>timestamp):<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="299"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(line);</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint32_t<sp/>ts<sp/>=<sp/>atol(p);</highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(now.unixtime()<sp/>-<sp/>ts<sp/>&gt;<sp/><ref refid="mqtt_8cpp_1a700fb0855fc0d557992d5068df21e937" kindref="member">SECONDS_IN_24_HOURS</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Skipping<sp/>old<sp/>CSV<sp/>file<sp/>(&gt;24h):<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(nameStr);</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>tsFile.close();</highlight></codeline>
+<codeline lineno="305"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="307"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="308"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="309"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>tsFile.close();</highlight></codeline>
+<codeline lineno="310"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="311"><highlight class="normal"></highlight></codeline>
+<codeline lineno="312"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Convert<sp/>CSV<sp/>content<sp/>to<sp/>JSON<sp/>format</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="313"><highlight class="normal"><sp/><sp/><sp/><sp/>StaticJsonDocument&lt;LARGE_BUFFER_SIZE&gt;<sp/>doc;</highlight></codeline>
+<codeline lineno="314"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="storage_8h_1acb2bae059bb1334c97c002103b23496a" kindref="member">BuildRecoveryJsonFromBatchCsv</ref>(doc,<sp/>fullPath,<sp/>now);</highlight></codeline>
+<codeline lineno="315"><highlight class="normal"></highlight></codeline>
+<codeline lineno="316"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Validate<sp/>that<sp/>the<sp/>file<sp/>contains<sp/>usable<sp/>data</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="317"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!doc[</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">].is&lt;JsonObject&gt;()<sp/>||<sp/>doc[</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">].size()<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="318"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;No<sp/>valid<sp/>data<sp/>in:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>nameStr);</highlight></codeline>
+<codeline lineno="319"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>skippedEmptyFiles++;</highlight></codeline>
+<codeline lineno="320"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="321"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="322"><highlight class="normal"></highlight></codeline>
+<codeline lineno="323"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Serialize<sp/>JSON<sp/>and<sp/>check<sp/>payload<sp/>size</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="324"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>payload[<ref refid="mqtt_8cpp_1abafcc50ab7d3b296d64e26083a1a876e" kindref="member">LARGE_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="325"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len<sp/>=<sp/>serializeJson(doc,<sp/>payload,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(payload));</highlight></codeline>
+<codeline lineno="326"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(len<sp/>&gt;=<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(payload))<sp/>{</highlight></codeline>
+<codeline lineno="327"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Payload<sp/>too<sp/>large,<sp/>skipping<sp/>file:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>nameStr);</highlight></codeline>
+<codeline lineno="328"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>allFilesSent<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="329"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="330"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="331"><highlight class="normal"></highlight></codeline>
+<codeline lineno="332"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>fullTopic[<ref refid="mqtt_8cpp_1a01d5af4481e953ac242d59bd4c22765f" kindref="member">SMALL_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="333"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mqtt_8cpp_1a6ef5b8e2eb44288d4294967dd9c978bc" kindref="member">CreateFullTopic</ref>(fullTopic,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(fullTopic),<sp/>topicPrefix,<sp/>sensorType,<sp/>sensorId,<sp/></highlight><highlight class="stringliteral">&quot;recovered&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="334"><highlight class="normal"></highlight></codeline>
+<codeline lineno="335"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Publishing<sp/>recovered<sp/>CSV:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="336"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(nameStr);</highlight></codeline>
+<codeline lineno="337"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;MQTT<sp/>payload:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="338"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(payload);</highlight></codeline>
+<codeline lineno="339"><highlight class="normal"></highlight></codeline>
+<codeline lineno="340"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>published<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="341"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.beginMessage(fullTopic,<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">,<sp/>1))<sp/>{</highlight></codeline>
+<codeline lineno="342"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.print(payload);</highlight></codeline>
+<codeline lineno="343"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.endMessage())<sp/>{</highlight></codeline>
+<codeline lineno="344"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>wait<sp/>for<sp/>echo/PUBACK<sp/>handshake</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="345"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>startTime<sp/>=<sp/>millis();</highlight></codeline>
+<codeline lineno="346"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(millis()<sp/>-<sp/>startTime<sp/>&lt;<sp/><ref refid="mqtt_8cpp_1ad1462ad318bc6cd52a0b6ce826ca946c" kindref="member">RECOVERY_ACK_TIMEOUT_MS</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="347"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mqtt_8h_1aaf73b36dfdb5cafe8dbb8ca7563f7e56" kindref="member">mqttClient</ref>.poll();</highlight></codeline>
+<codeline lineno="348"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>delay(<ref refid="mqtt_8cpp_1ac4ded6926a35bdbecaf8318908797a51" kindref="member">DELAY_POLLING_LOOP_MS</ref>);</highlight></codeline>
+<codeline lineno="349"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="350"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>published<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="351"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="352"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="353"><highlight class="normal"></highlight></codeline>
+<codeline lineno="354"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(published)<sp/>{</highlight></codeline>
+<codeline lineno="355"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Published<sp/>and<sp/>deleting<sp/>file.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="356"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="storage_8h_1af573256ad73f9915cd6e946f4de1a68b" kindref="member">DeleteCsvFile</ref>(fullPath);</highlight></codeline>
+<codeline lineno="357"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>sentCount++;</highlight></codeline>
+<codeline lineno="358"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="359"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Failed<sp/>to<sp/>publish.<sp/>Keeping<sp/>file:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>nameStr);</highlight></codeline>
+<codeline lineno="360"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>allFilesSent<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="361"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="362"><highlight class="normal"></highlight></codeline>
+<codeline lineno="363"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Check<sp/>for<sp/>overall<sp/>timeout<sp/>to<sp/>prevent<sp/>blocking<sp/>too<sp/>long</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="364"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(millis()<sp/>-<sp/>startMillis<sp/>&gt;<sp/><ref refid="mqtt_8cpp_1a8fa547868639ebfd54dcfd92dc6f0dc7" kindref="member">RECOVERY_TIMEOUT_MS</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="365"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Aborting<sp/>recovery:<sp/>60s<sp/>time<sp/>limit<sp/>exceeded.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="366"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>allFilesSent<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="367"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="368"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="369"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="370"><highlight class="normal"></highlight></codeline>
+<codeline lineno="371"><highlight class="normal"><sp/><sp/>root.close();</highlight></codeline>
+<codeline lineno="372"><highlight class="normal"></highlight></codeline>
+<codeline lineno="373"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Provide<sp/>summary<sp/>of<sp/>recovery<sp/>operation</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="374"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(checkedFiles<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="375"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;No<sp/>CSV<sp/>recovery<sp/>files<sp/>found.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="376"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sentCount<sp/>==<sp/>0<sp/>&amp;&amp;<sp/>skippedEmptyFiles<sp/>==<sp/>checkedFiles)<sp/>{</highlight></codeline>
+<codeline lineno="377"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;All<sp/>found<sp/>recovery<sp/>files<sp/>were<sp/>empty,<sp/>too<sp/>old,<sp/>or<sp/>invalid.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="378"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="379"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Recovered<sp/>files<sp/>sent<sp/>this<sp/>loop:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="380"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(sentCount);</highlight></codeline>
+<codeline lineno="381"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="382"><highlight class="normal"></highlight></codeline>
+<codeline lineno="383"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>allFilesSent;</highlight></codeline>
+<codeline lineno="384"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/mqtt.cpp"/>
+  </compounddef>
+</doxygen>

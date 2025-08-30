@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="group___ack_echo_handling" kind="group">
+    <compoundname>AckEchoHandling</compoundname>
+    <title>MQTT ACK/Echo Handling</title>
+    <briefdescription>
+<para>Implements publish acknowledgment and echo logic for reliable MQTT delivery. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This section manages the detection and processing of MQTT PUBACK or echo messages from the broker. It tracks acknowledgment state, extracts sequence numbers from echoed JSON payloads, and ensures that published messages are confirmed before considering them delivered. If no acknowledgment is received, data is saved for later recovery.</para>
+<para><itemizedlist>
+<listitem><para>Uses topic-based filtering to only process echoes for the current publish topic</para>
+</listitem><listitem><para>Handles retained messages and ignores them for acknowledgment</para>
+</listitem><listitem><para>Extracts sequence numbers from JSON payloads for matching</para>
+</listitem><listitem><para>Registers a callback for incoming MQTT messages to detect PUBACK/echo</para>
+</listitem><listitem><para>Uses topic-based filtering to only process echoes for the current publish topic</para>
+</listitem><listitem><para>Handles retained messages and ignores them for acknowledgment</para>
+</listitem><listitem><para>Extracts sequence numbers from JSON payloads for matching</para>
+</listitem><listitem><para>Registers a callback for incoming MQTT messages to detect PUBACK/echo</para>
+</listitem><listitem><para>Re-subscribes to the publish topic after each reconnect</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="note"><para>This logic is critical for QoS 1 delivery and robust offline recovery. </para>
+</simplesect>
+</para>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

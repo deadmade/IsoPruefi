@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_68267d1309a1af8e8297ef4c3efbcdba" kind="dir">
+    <compoundname>src</compoundname>
+    <innerfile refid="core_8cpp">core.cpp</innerfile>
+    <innerfile refid="main_8cpp">main.cpp</innerfile>
+    <innerfile refid="mock__globals_8cpp">mock_globals.cpp</innerfile>
+    <innerfile refid="mqtt_8cpp">mqtt.cpp</innerfile>
+    <innerfile refid="network_8cpp">network.cpp</innerfile>
+    <innerfile refid="sensor_8cpp">sensor.cpp</innerfile>
+    <innerfile refid="storage_8cpp">storage.cpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/"/>
+  </compounddef>
+</doxygen>

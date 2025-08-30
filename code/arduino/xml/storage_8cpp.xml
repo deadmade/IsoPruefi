@@ -1,0 +1,608 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="storage_8cpp" kind="file" language="C++">
+    <compoundname>storage.cpp</compoundname>
+    <includes refid="storage_8h" local="yes">storage.h</includes>
+    <incdepgraph>
+      <node id="3">
+        <label>platform.h</label>
+        <link refid="platform_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>storage.h</label>
+        <link refid="storage_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>src/storage.cpp</label>
+        <link refid="storage_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>Adafruit_ADT7410.h</label>
+      </node>
+      <node id="4">
+        <label>Arduino.h</label>
+      </node>
+      <node id="9">
+        <label>ArduinoJson.h</label>
+      </node>
+      <node id="10">
+        <label>ArduinoMqttClient.h</label>
+      </node>
+      <node id="7">
+        <label>RTClib.h</label>
+      </node>
+      <node id="6">
+        <label>SdFat.h</label>
+      </node>
+      <node id="5">
+        <label>Wire.h</label>
+      </node>
+      <node id="11">
+        <label>cstdio</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="storage_8cpp_1a633b6d91d2a6b9fe94d49679bf76cf8d" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t FOLDER_NAME_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>FOLDER_NAME_BUFFER_SIZE</name>
+        <initializer>= 8</initializer>
+        <briefdescription>
+<para>Buffer size for folder names (e.g., &quot;2025&quot;) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="8" column="21" bodyfile="src/storage.cpp" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="storage_8cpp_1a82c6a24dff83f73f64ebefbce62f03c1" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t CURRENT_FILENAME_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>CURRENT_FILENAME_BUFFER_SIZE</name>
+        <initializer>= 32</initializer>
+        <briefdescription>
+<para>Buffer size for storing the current active CSV filename. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="10" column="21" bodyfile="src/storage.cpp" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="storage_8cpp_1ad779ef8fe37c1e5b281818b8a1a9c4e7" prot="public" static="yes" mutable="no">
+        <type>const size_t</type>
+        <definition>const size_t CSV_LINE_BUFFER_SIZE</definition>
+        <argsstring></argsstring>
+        <name>CSV_LINE_BUFFER_SIZE</name>
+        <initializer>= 64</initializer>
+        <briefdescription>
+<para>Buffer size for reading individual CSV lines. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="12" column="21" bodyfile="src/storage.cpp" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="storage_8cpp_1a58a44f18fcb1ee66a6ffec02016568a3" prot="public" static="yes" mutable="no">
+        <type>const int</type>
+        <definition>const int MAX_LINES_PER_CSV_FILE</definition>
+        <argsstring></argsstring>
+        <name>MAX_LINES_PER_CSV_FILE</name>
+        <initializer>= 5</initializer>
+        <briefdescription>
+<para>Maximum number of sensor readings per CSV batch file. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="14" column="18" bodyfile="src/storage.cpp" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977" prot="public" static="yes" mutable="no">
+        <type>char</type>
+        <definition>char currentFilename[CURRENT_FILENAME_BUFFER_SIZE]</definition>
+        <argsstring>[CURRENT_FILENAME_BUFFER_SIZE]</argsstring>
+        <name>currentFilename</name>
+        <initializer>= &quot;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="15" column="13" bodyfile="src/storage.cpp" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="storage_8cpp_1aec9be327bdba67f54696d8adb23520cd" prot="public" static="yes" mutable="no">
+        <type>int</type>
+        <definition>int linesInFile</definition>
+        <argsstring></argsstring>
+        <name>linesInFile</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+<para>Static variable to track the number of lines in the current CSV file. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="17" column="12" bodyfile="src/storage.cpp" bodystart="17" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="storage_8cpp_1a96fdb72e162a1db39c1bbd4c4409fa30" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SaveTempToBatchCsv</definition>
+        <argsstring>(const DateTime &amp;now, float celsius, int sequence)</argsstring>
+        <name>SaveTempToBatchCsv</name>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>celsius</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>sequence</declname>
+        </param>
+        <briefdescription>
+<para>Saves sensor data to CSV files in batch mode during network outages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function implements intelligent batch CSV storage that creates new files when needed and manages file rotation. It&apos;s designed as a fallback mechanism when MQTT transmission is unavailable due to network connectivity issues.</para>
+<para>**Batch Management:**<itemizedlist>
+<listitem><para>Maintains a static filename for the current active CSV file</para>
+</listitem><listitem><para>Creates new files when the current file reaches maximum line limit</para>
+</listitem><listitem><para>Uses timestamp-based filenames for uniqueness and organization</para>
+</listitem></itemizedlist>
+</para>
+<para>**File Organization:**<itemizedlist>
+<listitem><para>Creates date-based folders automatically (e.g., &quot;2025/&quot;)</para>
+</listitem><listitem><para>Stores files with minute-precision timestamps in filename</para>
+</listitem><listitem><para>Format: &quot;YYYY/MMDDHHMM.csv&quot; (e.g., &quot;2025/08051430.csv&quot;)</para>
+</listitem></itemizedlist>
+</para>
+<para>**Data Format:**<itemizedlist>
+<listitem><para>CSV format: timestamp,temperature,sequence</para>
+</listitem><listitem><para>Temperature precision: 5 decimal places</para>
+</listitem><listitem><para>Unix timestamp for absolute time reference</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current timestamp for folder creation and data logging </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">celsius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Temperature reading in Celsius (stored with 5 decimal precision) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">sequence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sequence number for the measurement</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>This function uses static variables to maintain state across calls </para>
+</simplesect>
+<simplesect kind="note"><para>Files are automatically rotated after MAX_LINES_PER_CSV_FILE entries </para>
+</simplesect>
+<simplesect kind="see"><para>createFolderName() for folder naming convention </para>
+</simplesect>
+<simplesect kind="see"><para>createFilename() for CSV filename generation </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="54" column="6" bodyfile="src/storage.cpp" bodystart="54" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="storage_8cpp_1a55c16a7ff3a0de78ba9d9544ae6b817e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void BuildJson</definition>
+        <argsstring>(JsonDocument &amp;doc, float celsius, const DateTime &amp;now, int sequence)</argsstring>
+        <name>BuildJson</name>
+        <param>
+          <type>JsonDocument &amp;</type>
+          <declname>doc</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>celsius</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>sequence</declname>
+        </param>
+        <briefdescription>
+<para>Builds a JSON document from live sensor data for real-time transmission. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function creates a properly formatted JSON document containing current sensor readings for immediate MQTT transmission. The JSON structure follows a standardized format for IoT temperature monitoring systems with metadata support.</para>
+<para>**JSON Structure:** ```json { &quot;timestamp&quot;: 1737024000, &quot;value&quot;: [25.12345], &quot;sequence&quot;: 42, &quot;meta&quot;: {} } ```</para>
+<para>**Data Precision:**<itemizedlist>
+<listitem><para>Temperature: 5 decimal places for high precision monitoring</para>
+</listitem><listitem><para>Timestamp: Unix timestamp (seconds since epoch)</para>
+</listitem><listitem><para>Sequence: Integer measurement counter</para>
+</listitem><listitem><para>Value array: Supports multiple sensor readings</para>
+</listitem></itemizedlist>
+</para>
+<para>**Performance Considerations:**<itemizedlist>
+<listitem><para>Modifies existing JsonDocument for memory efficiency</para>
+</listitem><listitem><para>Clears previous data to prevent accumulation</para>
+</listitem><listitem><para>Optimized for embedded systems with limited memory</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="out">doc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>JsonDocument reference to populate (cleared before use) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">celsius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Temperature reading in Celsius (stored with 5 decimal precision) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current timestamp for the measurement </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">sequence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sequence number for the measurement</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>The function clears the document before populating new data </para>
+</simplesect>
+<simplesect kind="see"><para>buildRecoveredJsonFromCsv() for batch recovery JSON format </para>
+</simplesect>
+<simplesect kind="see"><para>saveToCsvBatch() for CSV fallback storage format </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="124" column="6" bodyfile="src/storage.cpp" bodystart="124" bodyend="131"/>
+      </memberdef>
+      <memberdef kind="function" id="storage_8cpp_1acb2bae059bb1334c97c002103b23496a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void BuildRecoveryJsonFromBatchCsv</definition>
+        <argsstring>(JsonDocument &amp;doc, const char *filepath, const DateTime &amp;now)</argsstring>
+        <name>BuildRecoveryJsonFromBatchCsv</name>
+        <param>
+          <type>JsonDocument &amp;</type>
+          <declname>doc</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>filepath</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <briefdescription>
+<para>Builds a JSON document from CSV batch data for recovery transmission. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function processes stored CSV data files and converts them into JSON format for batch transmission when network connectivity is restored. It handles multiple measurements in a metadata array structure for efficient network utilization during recovery operations.</para>
+<para>**Recovery JSON Structure:** ```json { &quot;timestamp&quot;: 1737024000, &quot;sequence&quot;: null, &quot;value&quot;: [null], &quot;meta&quot;: { &quot;t&quot;: [1737024000, 1737024060, ..], &quot;v&quot;: [25.12345, 25.12567, ...], &quot;s&quot;: [42, 43, ...] } } ```</para>
+<para>**Processing Logic:**<itemizedlist>
+<listitem><para>Reads each line from the specified CSV file using secure fgets()</para>
+</listitem><listitem><para>Parses CSV format: timestamp,temperature,sequence using strtok()</para>
+</listitem><listitem><para>Creates individual JSON objects for each measurement in meta array</para>
+</listitem><listitem><para>Uses null placeholders for top-level value and sequence fields</para>
+</listitem></itemizedlist>
+</para>
+<para>**Error Handling:**<itemizedlist>
+<listitem><para>Returns early if file cannot be opened</para>
+</listitem><listitem><para>Skips malformed lines during CSV parsing</para>
+</listitem><listitem><para>Continues processing even if some lines fail</para>
+</listitem><listitem><para>Reports total number of successfully recovered entries</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="out">doc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>JsonDocument reference to populate (cleared before use) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">filepath</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Path to the CSV file containing batch sensor data </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current timestamp for the recovery operation</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Uses strtok() for safe CSV parsing with buffer protection </para>
+</simplesect>
+<simplesect kind="note"><para>Clears the document before populating new batch data </para>
+</simplesect>
+<simplesect kind="see"><para>saveToCsvBatch() for CSV storage format details </para>
+</simplesect>
+<simplesect kind="see"><para>sendPendingData() in <ref refid="mqtt_8cpp" kindref="compound">mqtt.cpp</ref> for recovery transmission </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="177" column="6" bodyfile="src/storage.cpp" bodystart="177" bodyend="244"/>
+      </memberdef>
+      <memberdef kind="function" id="storage_8cpp_1af573256ad73f9915cd6e946f4de1a68b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void DeleteCsvFile</definition>
+        <argsstring>(const char *filepath)</argsstring>
+        <name>DeleteCsvFile</name>
+        <param>
+          <type>const char *</type>
+          <declname>filepath</declname>
+        </param>
+        <briefdescription>
+<para>Deletes a CSV file from the SD card storage system. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function provides safe file deletion with error handling and logging. It&apos;s primarily used during the data recovery process to clean up CSV files after they have been successfully transmitted via MQTT.</para>
+<para>**Safety Features:**<itemizedlist>
+<listitem><para>Checks file existence before attempting deletion</para>
+</listitem><listitem><para>Provides detailed success/failure logging</para>
+</listitem><listitem><para>Handles SD card filesystem errors gracefully</para>
+</listitem></itemizedlist>
+</para>
+<para>**Use Cases:**<itemizedlist>
+<listitem><para>Cleanup after successful batch data transmission</para>
+</listitem><listitem><para>Manual file management during storage maintenance</para>
+</listitem><listitem><para>Recovery process completion in data transmission pipeline</para>
+</listitem></itemizedlist>
+</para>
+<para>**Error Scenarios:**<itemizedlist>
+<listitem><para>File does not exist (silently ignored)</para>
+</listitem><listitem><para>SD card write protection or filesystem errors</para>
+</listitem><listitem><para>Insufficient permissions or corrupted filesystem</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">filepath</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Complete path to the CSV file to be deleted</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Function silently ignores attempts to delete non-existent files </para>
+</simplesect>
+<simplesect kind="note"><para>All operations are logged to Serial for debugging and monitoring </para>
+</simplesect>
+<simplesect kind="see"><para>buildRecoveredJsonFromCsv() for file processing before deletion </para>
+</simplesect>
+<simplesect kind="see"><para>sendPendingData() in <ref refid="mqtt_8cpp" kindref="compound">mqtt.cpp</ref> for recovery workflow integration </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/storage.cpp" line="279" column="6" bodyfile="src/storage.cpp" bodystart="279" bodyend="294"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="storage_8h" kindref="compound">storage.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/>CSV<sp/>PROCESSING<sp/>CONSTANTS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="storage_8cpp_1a633b6d91d2a6b9fe94d49679bf76cf8d" kindref="member">FOLDER_NAME_BUFFER_SIZE</ref><sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="10"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="storage_8cpp_1a82c6a24dff83f73f64ebefbce62f03c1" kindref="member">CURRENT_FILENAME_BUFFER_SIZE</ref><sp/>=<sp/>32;</highlight></codeline>
+<codeline lineno="12"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="storage_8cpp_1ad779ef8fe37c1e5b281818b8a1a9c4e7" kindref="member">CSV_LINE_BUFFER_SIZE</ref><sp/>=<sp/>64;</highlight></codeline>
+<codeline lineno="14"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="storage_8cpp_1a58a44f18fcb1ee66a6ffec02016568a3" kindref="member">MAX_LINES_PER_CSV_FILE</ref><sp/>=<sp/>5;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977" kindref="member">currentFilename</ref>[<ref refid="storage_8cpp_1a82c6a24dff83f73f64ebefbce62f03c1" kindref="member">CURRENT_FILENAME_BUFFER_SIZE</ref>]<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="17"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="storage_8cpp_1aec9be327bdba67f54696d8adb23520cd" kindref="member">linesInFile</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//<sp/>CSV<sp/>BATCH<sp/>STORAGE<sp/>FUNCTIONS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="storage_8cpp_1a96fdb72e162a1db39c1bbd4c4409fa30" kindref="member">SaveTempToBatchCsv</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence)<sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>folder[<ref refid="storage_8cpp_1a633b6d91d2a6b9fe94d49679bf76cf8d" kindref="member">FOLDER_NAME_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/>strncpy(folder,<sp/><ref refid="storage_8h_1a1ea8a9f706d44d99bb53ea2993816412" kindref="member">CreateFolderName</ref>(now),<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(folder));</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>.exists(folder))<sp/>{</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>.mkdir(folder);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Create<sp/>new<sp/>file<sp/>if<sp/>needed</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strlen(<ref refid="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977" kindref="member">currentFilename</ref>)<sp/>==<sp/>0<sp/>||<sp/><ref refid="storage_8cpp_1aec9be327bdba67f54696d8adb23520cd" kindref="member">linesInFile</ref><sp/>&gt;=<sp/><ref refid="storage_8cpp_1a58a44f18fcb1ee66a6ffec02016568a3" kindref="member">MAX_LINES_PER_CSV_FILE</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="storage_8h_1ae16badf43b6a83c6020bc477a3c6e900" kindref="member">CreateCsvFilename</ref>(<ref refid="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977" kindref="member">currentFilename</ref>,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977" kindref="member">currentFilename</ref>),<sp/>now);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="storage_8cpp_1aec9be327bdba67f54696d8adb23520cd" kindref="member">linesInFile</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Write<sp/>the<sp/>sensor<sp/>data<sp/>to<sp/>the<sp/>current<sp/>CSV<sp/>file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/>File<sp/>file<sp/>=<sp/><ref refid="platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>.open(<ref refid="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977" kindref="member">currentFilename</ref>,<sp/>FILE_WRITE);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(file)<sp/>{</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>line[<ref refid="storage_8cpp_1ad779ef8fe37c1e5b281818b8a1a9c4e7" kindref="member">CSV_LINE_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>snprintf(line,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(line),<sp/></highlight><highlight class="stringliteral">&quot;%lu,%.5f,%d\n&quot;</highlight><highlight class="normal">,<sp/>now.unixtime(),<sp/>celsius,<sp/>sequence);</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>file.print(line);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>file.close();</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="storage_8cpp_1aec9be327bdba67f54696d8adb23520cd" kindref="member">linesInFile</ref>++;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Saved<sp/>CSV<sp/>fallback:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(<ref refid="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977" kindref="member">currentFilename</ref>);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Failed<sp/>to<sp/>write<sp/>CSV<sp/>fallback.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="81"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight><highlight class="comment">//<sp/>JSON<sp/>DOCUMENT<sp/>CREATION<sp/>FUNCTIONS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="storage_8cpp_1a55c16a7ff3a0de78ba9d9544ae6b817e" kindref="member">BuildJson</ref>(JsonDocument&amp;<sp/>doc,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence)<sp/>{</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/>doc.clear();</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/>doc[</highlight><highlight class="stringliteral">&quot;timestamp&quot;</highlight><highlight class="normal">]<sp/>=<sp/>now.unixtime();</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/>JsonArray<sp/>val<sp/>=<sp/>doc[</highlight><highlight class="stringliteral">&quot;value&quot;</highlight><highlight class="normal">].to&lt;JsonArray&gt;();</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/>val.add(celsius);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/>doc[</highlight><highlight class="stringliteral">&quot;sequence&quot;</highlight><highlight class="normal">]<sp/>=<sp/>sequence;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/>JsonObject<sp/>meta<sp/>=<sp/>doc[</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">].to&lt;JsonObject&gt;();</highlight></codeline>
+<codeline lineno="131"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="storage_8cpp_1acb2bae059bb1334c97c002103b23496a" kindref="member">BuildRecoveryJsonFromBatchCsv</ref>(JsonDocument&amp;<sp/>doc,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>filepath,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/>File<sp/>file<sp/>=<sp/><ref refid="platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>.open(filepath,<sp/>FILE_READ);</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!file)<sp/>{</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;CSV<sp/>not<sp/>found:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/>Serial.println(filepath);</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"></highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/>doc.clear();</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/>doc[</highlight><highlight class="stringliteral">&quot;timestamp&quot;</highlight><highlight class="normal">]<sp/>=<sp/>now.unixtime();</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/>doc[</highlight><highlight class="stringliteral">&quot;sequence&quot;</highlight><highlight class="normal">]<sp/>=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/>JsonArray<sp/>val<sp/>=<sp/>doc[</highlight><highlight class="stringliteral">&quot;value&quot;</highlight><highlight class="normal">].to&lt;JsonArray&gt;();</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/>val.add(</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);<sp/><sp/></highlight><highlight class="comment">//<sp/>Dummy<sp/>value<sp/>for<sp/>compatibility</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/>JsonObject<sp/>meta<sp/>=<sp/>doc[</highlight><highlight class="stringliteral">&quot;meta&quot;</highlight><highlight class="normal">].to&lt;JsonObject&gt;();</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/>JsonArray<sp/>tArr<sp/>=<sp/>meta[</highlight><highlight class="stringliteral">&quot;t&quot;</highlight><highlight class="normal">].to&lt;JsonArray&gt;();<sp/><sp/></highlight><highlight class="comment">//<sp/>timestamp</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/>JsonArray<sp/>vArr<sp/>=<sp/>meta[</highlight><highlight class="stringliteral">&quot;v&quot;</highlight><highlight class="normal">].to&lt;JsonArray&gt;();<sp/><sp/></highlight><highlight class="comment">//<sp/>value</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/>JsonArray<sp/>sArr<sp/>=<sp/>meta[</highlight><highlight class="stringliteral">&quot;s&quot;</highlight><highlight class="normal">].to&lt;JsonArray&gt;();<sp/><sp/></highlight><highlight class="comment">//<sp/>sequence</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>line[<ref refid="storage_8cpp_1ad779ef8fe37c1e5b281818b8a1a9c4e7" kindref="member">CSV_LINE_BUFFER_SIZE</ref>];</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>added<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Process<sp/>each<sp/>line<sp/>of<sp/>the<sp/>CSV<sp/>file<sp/>safely</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(file.available())<sp/>{</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len<sp/>=<sp/>file.fgets(line,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(line));</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(len<sp/>==<sp/>0)<sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Parse<sp/>CSV<sp/>format:<sp/>timestamp,temperature,sequence</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>p<sp/>=<sp/>strtok(line,<sp/></highlight><highlight class="stringliteral">&quot;,&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!p)<sp/>{</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Malformed<sp/>CSV<sp/>line<sp/>(no<sp/>timestamp):<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(line);</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>uint32_t<sp/>ts<sp/>=<sp/>atol(p);</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>p<sp/>=<sp/>strtok(</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;,&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!p)<sp/>{</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Malformed<sp/>CSV<sp/>line<sp/>(no<sp/>temperature):<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(line);</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>temp<sp/>=<sp/>atof(p);</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>p<sp/>=<sp/>strtok(</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;,&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!p)<sp/>{</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Malformed<sp/>CSV<sp/>line<sp/>(no<sp/>sequence):<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(line);</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>seq<sp/>=<sp/>atoi(p);</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"></highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>tArr.add(ts);</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>vArr.add(temp);</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>sArr.add(seq);</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>added++;</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"></highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/>file.close();</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"></highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Report<sp/>recovery<sp/>statistics</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Recovered<sp/>entries<sp/>added<sp/>from<sp/>CSV:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/>Serial.print(String(added));</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;<sp/>(&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/>Serial.print(filepath);</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;)&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="244"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"></highlight></codeline>
+<codeline lineno="246"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="247"><highlight class="normal"></highlight><highlight class="comment">//<sp/>FILE<sp/>MANAGEMENT<sp/>FUNCTIONS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="248"><highlight class="normal"></highlight><highlight class="comment">//<sp/>=============================================================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="249"><highlight class="normal"></highlight></codeline>
+<codeline lineno="279"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="storage_8cpp_1af573256ad73f9915cd6e946f4de1a68b" kindref="member">DeleteCsvFile</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>filepath)<sp/>{</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>.exists(filepath))<sp/>{</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="platform_8h_1a15e6b7e1f0fb2d1e0fe1654721bb5302" kindref="member">sd</ref>.remove(filepath))<sp/>{</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Deleted<sp/>CSV<sp/>file:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(filepath);</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(filepath,<sp/><ref refid="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977" kindref="member">currentFilename</ref>)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="storage_8cpp_1a03d41aa3d99b4ac003b16bdfc0155977" kindref="member">currentFilename</ref>[0]<sp/>=<sp/></highlight><highlight class="charliteral">&apos;\0&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="storage_8cpp_1aec9be327bdba67f54696d8adb23520cd" kindref="member">linesInFile</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(</highlight><highlight class="stringliteral">&quot;Reset<sp/>currentFilename<sp/>after<sp/>deletion.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.print(</highlight><highlight class="stringliteral">&quot;Failed<sp/>to<sp/>delete<sp/>CSV<sp/>file:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="291"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Serial.println(filepath);</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="294"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/storage.cpp"/>
+  </compounddef>
+</doxygen>

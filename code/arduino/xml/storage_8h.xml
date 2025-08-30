@@ -1,0 +1,456 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="storage_8h" kind="file" language="C++">
+    <compoundname>storage.h</compoundname>
+    <includes refid="platform_8h" local="yes">platform.h</includes>
+    <includes local="no">cstdio</includes>
+    <includedby refid="core_8cpp" local="yes">src/core.cpp</includedby>
+    <includedby refid="mqtt_8cpp" local="yes">src/mqtt.cpp</includedby>
+    <includedby refid="storage_8cpp" local="yes">src/storage.cpp</includedby>
+    <incdepgraph>
+      <node id="2">
+        <label>platform.h</label>
+        <link refid="platform_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>include/storage.h</label>
+        <link refid="storage_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>Adafruit_ADT7410.h</label>
+      </node>
+      <node id="3">
+        <label>Arduino.h</label>
+      </node>
+      <node id="8">
+        <label>ArduinoJson.h</label>
+      </node>
+      <node id="9">
+        <label>ArduinoMqttClient.h</label>
+      </node>
+      <node id="6">
+        <label>RTClib.h</label>
+      </node>
+      <node id="5">
+        <label>SdFat.h</label>
+      </node>
+      <node id="4">
+        <label>Wire.h</label>
+      </node>
+      <node id="10">
+        <label>cstdio</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>include/storage.h</label>
+        <link refid="storage_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>src/core.cpp</label>
+        <link refid="core_8cpp"/>
+      </node>
+      <node id="3">
+        <label>src/mqtt.cpp</label>
+        <link refid="mqtt_8cpp"/>
+      </node>
+      <node id="4">
+        <label>src/storage.cpp</label>
+        <link refid="storage_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="storage_8h_1a96fdb72e162a1db39c1bbd4c4409fa30" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SaveTempToBatchCsv</definition>
+        <argsstring>(const DateTime &amp;now, float celsius, int sequence)</argsstring>
+        <name>SaveTempToBatchCsv</name>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>celsius</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>sequence</declname>
+        </param>
+        <briefdescription>
+<para>Saves sensor data to CSV files in batch mode during network outages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function implements intelligent batch CSV storage that creates new files when needed and manages file rotation. It&apos;s designed as a fallback mechanism when MQTT transmission is unavailable due to network connectivity issues.</para>
+<para>**Batch Management:**<itemizedlist>
+<listitem><para>Maintains a static filename for the current active CSV file</para>
+</listitem><listitem><para>Creates new files when the current file reaches maximum line limit</para>
+</listitem><listitem><para>Uses timestamp-based filenames for uniqueness and organization</para>
+</listitem></itemizedlist>
+</para>
+<para>**File Organization:**<itemizedlist>
+<listitem><para>Creates date-based folders automatically (e.g., &quot;2025/&quot;)</para>
+</listitem><listitem><para>Stores files with minute-precision timestamps in filename</para>
+</listitem><listitem><para>Format: &quot;YYYY/MMDDHHMM.csv&quot; (e.g., &quot;2025/08051430.csv&quot;)</para>
+</listitem></itemizedlist>
+</para>
+<para>**Data Format:**<itemizedlist>
+<listitem><para>CSV format: timestamp,temperature,sequence</para>
+</listitem><listitem><para>Temperature precision: 5 decimal places</para>
+</listitem><listitem><para>Unix timestamp for absolute time reference</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current timestamp for folder creation and data logging </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">celsius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Temperature reading in Celsius (stored with 5 decimal precision) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">sequence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sequence number for the measurement</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>This function uses static variables to maintain state across calls </para>
+</simplesect>
+<simplesect kind="note"><para>Files are automatically rotated after MAX_LINES_PER_CSV_FILE entries </para>
+</simplesect>
+<simplesect kind="see"><para>createFolderName() for folder naming convention </para>
+</simplesect>
+<simplesect kind="see"><para>createFilename() for CSV filename generation </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/storage.h" line="6" column="6" bodyfile="src/storage.cpp" bodystart="54" bodyend="81" declfile="include/storage.h" declline="6" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="storage_8h_1af573256ad73f9915cd6e946f4de1a68b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void DeleteCsvFile</definition>
+        <argsstring>(const char *filepath)</argsstring>
+        <name>DeleteCsvFile</name>
+        <param>
+          <type>const char *</type>
+          <declname>filepath</declname>
+        </param>
+        <briefdescription>
+<para>Deletes a CSV file from the SD card storage system. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function provides safe file deletion with error handling and logging. It&apos;s primarily used during the data recovery process to clean up CSV files after they have been successfully transmitted via MQTT.</para>
+<para>**Safety Features:**<itemizedlist>
+<listitem><para>Checks file existence before attempting deletion</para>
+</listitem><listitem><para>Provides detailed success/failure logging</para>
+</listitem><listitem><para>Handles SD card filesystem errors gracefully</para>
+</listitem></itemizedlist>
+</para>
+<para>**Use Cases:**<itemizedlist>
+<listitem><para>Cleanup after successful batch data transmission</para>
+</listitem><listitem><para>Manual file management during storage maintenance</para>
+</listitem><listitem><para>Recovery process completion in data transmission pipeline</para>
+</listitem></itemizedlist>
+</para>
+<para>**Error Scenarios:**<itemizedlist>
+<listitem><para>File does not exist (silently ignored)</para>
+</listitem><listitem><para>SD card write protection or filesystem errors</para>
+</listitem><listitem><para>Insufficient permissions or corrupted filesystem</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">filepath</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Complete path to the CSV file to be deleted</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Function silently ignores attempts to delete non-existent files </para>
+</simplesect>
+<simplesect kind="note"><para>All operations are logged to Serial for debugging and monitoring </para>
+</simplesect>
+<simplesect kind="see"><para>buildRecoveredJsonFromCsv() for file processing before deletion </para>
+</simplesect>
+<simplesect kind="see"><para>sendPendingData() in <ref refid="mqtt_8cpp" kindref="compound">mqtt.cpp</ref> for recovery workflow integration </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/storage.h" line="7" column="6" bodyfile="src/storage.cpp" bodystart="279" bodyend="294" declfile="include/storage.h" declline="7" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="storage_8h_1a55c16a7ff3a0de78ba9d9544ae6b817e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void BuildJson</definition>
+        <argsstring>(JsonDocument &amp;doc, float celsius, const DateTime &amp;now, int sequence)</argsstring>
+        <name>BuildJson</name>
+        <param>
+          <type>JsonDocument &amp;</type>
+          <declname>doc</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>celsius</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>sequence</declname>
+        </param>
+        <briefdescription>
+<para>Builds a JSON document from live sensor data for real-time transmission. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function creates a properly formatted JSON document containing current sensor readings for immediate MQTT transmission. The JSON structure follows a standardized format for IoT temperature monitoring systems with metadata support.</para>
+<para>**JSON Structure:** ```json { &quot;timestamp&quot;: 1737024000, &quot;value&quot;: [25.12345], &quot;sequence&quot;: 42, &quot;meta&quot;: {} } ```</para>
+<para>**Data Precision:**<itemizedlist>
+<listitem><para>Temperature: 5 decimal places for high precision monitoring</para>
+</listitem><listitem><para>Timestamp: Unix timestamp (seconds since epoch)</para>
+</listitem><listitem><para>Sequence: Integer measurement counter</para>
+</listitem><listitem><para>Value array: Supports multiple sensor readings</para>
+</listitem></itemizedlist>
+</para>
+<para>**Performance Considerations:**<itemizedlist>
+<listitem><para>Modifies existing JsonDocument for memory efficiency</para>
+</listitem><listitem><para>Clears previous data to prevent accumulation</para>
+</listitem><listitem><para>Optimized for embedded systems with limited memory</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="out">doc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>JsonDocument reference to populate (cleared before use) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">celsius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Temperature reading in Celsius (stored with 5 decimal precision) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current timestamp for the measurement </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">sequence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sequence number for the measurement</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>The function clears the document before populating new data </para>
+</simplesect>
+<simplesect kind="see"><para>buildRecoveredJsonFromCsv() for batch recovery JSON format </para>
+</simplesect>
+<simplesect kind="see"><para>saveToCsvBatch() for CSV fallback storage format </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/storage.h" line="9" column="6" bodyfile="src/storage.cpp" bodystart="124" bodyend="131" declfile="include/storage.h" declline="9" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="storage_8h_1acb2bae059bb1334c97c002103b23496a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void BuildRecoveryJsonFromBatchCsv</definition>
+        <argsstring>(JsonDocument &amp;doc, const char *filepath, const DateTime &amp;now)</argsstring>
+        <name>BuildRecoveryJsonFromBatchCsv</name>
+        <param>
+          <type>JsonDocument &amp;</type>
+          <declname>doc</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>filepath</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <briefdescription>
+<para>Builds a JSON document from CSV batch data for recovery transmission. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function processes stored CSV data files and converts them into JSON format for batch transmission when network connectivity is restored. It handles multiple measurements in a metadata array structure for efficient network utilization during recovery operations.</para>
+<para>**Recovery JSON Structure:** ```json { &quot;timestamp&quot;: 1737024000, &quot;sequence&quot;: null, &quot;value&quot;: [null], &quot;meta&quot;: { &quot;t&quot;: [1737024000, 1737024060, ..], &quot;v&quot;: [25.12345, 25.12567, ...], &quot;s&quot;: [42, 43, ...] } } ```</para>
+<para>**Processing Logic:**<itemizedlist>
+<listitem><para>Reads each line from the specified CSV file using secure fgets()</para>
+</listitem><listitem><para>Parses CSV format: timestamp,temperature,sequence using strtok()</para>
+</listitem><listitem><para>Creates individual JSON objects for each measurement in meta array</para>
+</listitem><listitem><para>Uses null placeholders for top-level value and sequence fields</para>
+</listitem></itemizedlist>
+</para>
+<para>**Error Handling:**<itemizedlist>
+<listitem><para>Returns early if file cannot be opened</para>
+</listitem><listitem><para>Skips malformed lines during CSV parsing</para>
+</listitem><listitem><para>Continues processing even if some lines fail</para>
+</listitem><listitem><para>Reports total number of successfully recovered entries</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="out">doc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>JsonDocument reference to populate (cleared before use) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">filepath</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Path to the CSV file containing batch sensor data </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">now</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current timestamp for the recovery operation</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Uses strtok() for safe CSV parsing with buffer protection </para>
+</simplesect>
+<simplesect kind="note"><para>Clears the document before populating new batch data </para>
+</simplesect>
+<simplesect kind="see"><para>saveToCsvBatch() for CSV storage format details </para>
+</simplesect>
+<simplesect kind="see"><para>sendPendingData() in <ref refid="mqtt_8cpp" kindref="compound">mqtt.cpp</ref> for recovery transmission </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/storage.h" line="10" column="6" bodyfile="src/storage.cpp" bodystart="177" bodyend="244" declfile="include/storage.h" declline="10" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="storage_8h_1a1ea8a9f706d44d99bb53ea2993816412" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>const char *</type>
+        <definition>const char * CreateFolderName</definition>
+        <argsstring>(const DateTime &amp;now)</argsstring>
+        <name>CreateFolderName</name>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/storage.h" line="13" column="19" bodyfile="include/storage.h" bodystart="13" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="storage_8h_1ae16badf43b6a83c6020bc477a3c6e900" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CreateCsvFilename</definition>
+        <argsstring>(char *buffer, size_t bufferSize, const DateTime &amp;now)</argsstring>
+        <name>CreateCsvFilename</name>
+        <param>
+          <type>char *</type>
+          <declname>buffer</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>bufferSize</declname>
+        </param>
+        <param>
+          <type>const DateTime &amp;</type>
+          <declname>now</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/storage.h" line="19" column="13" bodyfile="include/storage.h" bodystart="19" bodyend="23"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="platform_8h" kindref="compound">platform.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdio&gt;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="storage_8h_1a96fdb72e162a1db39c1bbd4c4409fa30" kindref="member">SaveTempToBatchCsv</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence);</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="storage_8h_1af573256ad73f9915cd6e946f4de1a68b" kindref="member">DeleteCsvFile</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>filepath);</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="storage_8h_1a55c16a7ff3a0de78ba9d9544ae6b817e" kindref="member">BuildJson</ref>(JsonDocument&amp;<sp/>doc,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>celsius,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sequence);</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="storage_8h_1acb2bae059bb1334c97c002103b23496a" kindref="member">BuildRecoveryJsonFromBatchCsv</ref>(JsonDocument&amp;<sp/>doc,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>filepath,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now);</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/>---<sp/>Inline<sp/>helper<sp/>functions<sp/>---</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="storage_8h_1a1ea8a9f706d44d99bb53ea2993816412" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="storage_8h_1a1ea8a9f706d44d99bb53ea2993816412" kindref="member">CreateFolderName</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>folderName[8];</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>std::snprintf(folderName,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(folderName),<sp/></highlight><highlight class="stringliteral">&quot;%04d&quot;</highlight><highlight class="normal">,<sp/>now.year());</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>folderName;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="storage_8h_1ae16badf43b6a83c6020bc477a3c6e900" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="storage_8h_1ae16badf43b6a83c6020bc477a3c6e900" kindref="member">CreateCsvFilename</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>buffer,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>bufferSize,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>DateTime&amp;<sp/>now)<sp/>{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>std::snprintf(buffer,<sp/>bufferSize,<sp/></highlight><highlight class="stringliteral">&quot;%s/%02d%02d%02d%02d.csv&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="storage_8h_1a1ea8a9f706d44d99bb53ea2993816412" kindref="member">CreateFolderName</ref>(now),</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>now.month(),<sp/>now.day(),<sp/>now.hour(),<sp/>now.minute());</highlight></codeline>
+<codeline lineno="23"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="include/storage.h"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_d44c64559bbebec7f509842c48db8b23" kind="dir">
+    <compoundname>include</compoundname>
+    <innerfile refid="core_8h">core.h</innerfile>
+    <innerfile refid="mock__datetime_8h">mock_datetime.h</innerfile>
+    <innerfile refid="mqtt_8h">mqtt.h</innerfile>
+    <innerfile refid="network_8h">network.h</innerfile>
+    <innerfile refid="platform_8h">platform.h</innerfile>
+    <innerfile refid="secrets__example_8h">secrets_example.h</innerfile>
+    <innerfile refid="sensor_8h">sensor.h</innerfile>
+    <innerfile refid="storage_8h">storage.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/"/>
+  </compounddef>
+</doxygen>

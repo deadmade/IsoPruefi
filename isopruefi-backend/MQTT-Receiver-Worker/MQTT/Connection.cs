@@ -15,13 +15,44 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// </summary>
 public class Connection : IConnection
 {
+    /// <summary>
+    /// ServiceProvider for accessing the application's services.
+    /// </summary>
     private readonly IServiceProvider _serviceProvider;
+    
+    /// <summary>
+    /// Options used to configure the MQTT client.
+    /// </summary>
     private readonly MqttClientOptions _options;
+    
+    /// <summary>
+    /// MQTT Client used to communicate.
+    /// </summary>
     private IMqttClient? _mqttClient;
+    
+    /// <summary>
+    /// Logger used to document diagnostics.
+    /// </summary>
     private readonly ILogger<Connection> _logger;
+    
+    /// <summary>
+    /// Configuration used to retrieve settings.
+    /// </summary>
     private readonly IConfiguration _configuration;
+    
+    /// <summary>
+    /// JSON Serializer options for messages.
+    /// </summary>
     private readonly JsonSerializerOptions _jsonSerializerOptions;
+    
+    /// <summary>
+    /// Semaphore to ensure a single connection attempt.
+    /// </summary>
     private readonly SemaphoreSlim _connectionSemaphore = new(1, 1);
+    
+    /// <summary>
+    /// Indicates wether there is a connection.
+    /// </summary>
     private bool _isConnected = false;
 
     /// <summary>
@@ -32,7 +63,7 @@ public class Connection : IConnection
     /// <summary>
     /// Initializes a new instance of the <see cref="Connection"/> class.
     /// </summary>
-    /// <param name="serviceProvider"></param>
+    /// <param name="serviceProvider">Service Provider for services.</param>
     /// <param name="logger">Logger for recording connection events</param>
     /// <param name="configuration">Configuration for MQTT settings</param>
     public Connection(ILogger<Connection> logger, IServiceProvider serviceProvider, IConfiguration configuration)
@@ -148,6 +179,10 @@ public class Connection : IConnection
         }
     }
 
+    /// <summary>
+    /// Handles the disconnection of the MQTT client from the broker und updates the connection status.
+    /// </summary>
+    /// <param name="e">Event arguments containing disconnection information.</param>
     private async Task Disconnected(MqttClientDisconnectedEventArgs e)
     {
         _isConnected = false;
@@ -156,6 +191,11 @@ public class Connection : IConnection
         // Don't immediately reconnect here - let the worker handle it with proper timing
     }
 
+    /// <summary>
+    /// Processing received messages.
+    /// </summary>
+    /// <param name="e">Event arguments containing information about the received message.</param>
+    /// <returns>An asynchronous task.</returns>
     private async Task<Task> ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
     {
         try
@@ -203,6 +243,13 @@ public class Connection : IConnection
         return Task.FromResult(Task.CompletedTask);
     }
 
+    /// <summary>
+    /// Processing the sensor reading contained in the message.
+    /// </summary>
+    /// <param name="tempSensorReading">Reading contained in the message.</param>
+    /// <param name="sensorName">Sensor name.</param>
+    /// <param name="influxRepo">Instance of the InfluxRepo</param>
+    /// <returns>An asynchronous task.</returns>
     private async Task<Task> ProcessSensorReading(TempSensorReading tempSensorReading, string sensorName,
         IInfluxRepo influxRepo)
     {
@@ -244,6 +291,13 @@ public class Connection : IConnection
         return Task.FromResult(Task.CompletedTask);
     }
 
+    /// <summary>
+    /// Batch process recovered sensor readings.
+    /// </summary>
+    /// <param name="tempSensorReading">Reading contained in the message</param>
+    /// <param name="sensorName">Sensorname</param>
+    /// <param name="influxRepo">Instance of the InfluxRepo</param>
+    /// <returns>An asynchronous task</returns>
     private async Task<Task> ProcessBatchSensorReading(TempSensorReading tempSensorReading, string sensorName,
         IInfluxRepo influxRepo)
     {

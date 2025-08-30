@@ -12,8 +12,19 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// </summary>
 public class Receiver : IReceiver
 {
+    /// <summary>
+    /// Service provider for accessing the application's services.
+    /// </summary>
     private readonly IServiceProvider _serviceProvider;
+    
+    /// <summary>
+    /// Connection instance for receiving messages.
+    /// </summary>
     private readonly IConnection _connection;
+    
+    /// <summary>
+    /// Logger instance for documenting diagnostics.
+    /// </summary>
     private readonly ILogger<Receiver> _logger;
 
     /// <summary>
@@ -80,6 +91,12 @@ public class Receiver : IReceiver
         }
     }
 
+    /// <summary>
+    /// Subscribes the client to the specified topic.
+    /// </summary>
+    /// <param name="topic">Specified topic</param>
+    /// <param name="mqttClient">Client used for subscription</param>
+    /// <param name="hasRecovery">Includes recovery topic</param>
     private async Task SubscribeToTopic(string topic, IMqttClient mqttClient, bool hasRecovery)
     {
         try

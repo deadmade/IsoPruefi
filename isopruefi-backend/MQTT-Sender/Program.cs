@@ -4,8 +4,15 @@ using MQTTnet;
 
 namespace MQTT_Sender;
 
+/// <summary>
+/// This class is the entry point for the MQTT Sender application.
+/// </summary>
 internal class Program
 {
+    /// <summary>
+    /// Entry point for the Sender application.
+    /// </summary>
+    /// <param name="args">Arguments passed to the application.</param>
     private static async Task Main(string[] args)
     {
         var client = await Connection.GetConnection();

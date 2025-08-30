@@ -20,7 +20,7 @@ public class Program
     /// <summary>
     /// Entry point for the MQTT Receiver Worker application.
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Arguments passed to the application.</param>
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);

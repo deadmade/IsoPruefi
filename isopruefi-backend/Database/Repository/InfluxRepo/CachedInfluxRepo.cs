@@ -153,19 +153,16 @@ public class CachedInfluxRepo : IInfluxRepo
 
         if (timespan.TotalHours < 24)
         {
-            Console.WriteLine("Case1");
             query =
                 $"SELECT MEAN(value) FROM temperature where sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
         }
         else if (timespan.TotalDays < 30)
         {
-            Console.WriteLine("Case2");
             query =
                 $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h) fill(none)";
         }
         else
         {
-            Console.WriteLine("Case3");
             query =
                 $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d) fill(none)";
         }

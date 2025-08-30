@@ -190,6 +190,21 @@ services:
           isDefault: true
           version: 1
           editable: false
+        - name: InfluxDB
+          type: influxdb
+          access: proxy
+          orgId: 1
+          url: http://influxdb3:8181
+          jsonData:
+            version: Flux
+            organization: my-org
+            defaultBucket: isopruefi
+          secureJsonData:
+            token:
+          basicAuth: false
+          isDefault: false
+          version: 1
+          editable: false
         EOF
         /run.sh
 

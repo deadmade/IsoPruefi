@@ -51,7 +51,40 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 navigate("/signin");
             }
         } catch (err: any) {
-            setError(err.message || "Something went wrong.");
+            console.error('Auth error:', err);
+            
+            // Handle API exceptions with detailed server errors
+            let errorMessage = "Something went wrong.";
+            
+            if (err.result) {
+                // Check for detailed error message
+                if (err.result.detail) {
+                    errorMessage = err.result.detail;
+                } else if (err.result.title) {
+                    errorMessage = err.result.title;
+                } else if (err.result.status === 500) {
+                    errorMessage = "Internal server error. Please try again later.";
+                }
+            } else if (err.response) {
+                // Try to parse response text for additional error info
+                try {
+                    const responseData = JSON.parse(err.response);
+                    if (responseData.detail) {
+                        errorMessage = responseData.detail;
+                    } else if (responseData.title) {
+                        errorMessage = responseData.title;
+                    }
+                } catch {
+                    // If parsing fails, use the original message
+                }
+            }
+            
+            // Fallback to basic error message
+            if (errorMessage === "Something went wrong." && err.message) {
+                errorMessage = err.message;
+            }
+            
+            setError(errorMessage);
         }
     };
 
@@ -104,7 +137,11 @@ return (
       {mode === "signin" ? "Login" : "Register"}
     </button>
 
-    {error && <p className="text-red-600 text-sm mt-2 text-center">{error}</p>}
+    {error && (
+      <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+        <p className="text-red-700 text-sm text-center">{error}</p>
+      </div>
+    )}
   </form>
 );
 }

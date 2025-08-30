@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Database.EntityFramework.Enums;
 using Database.EntityFramework.Models;
 using Database.Repository.SettingsRepo;
 using Microsoft.AspNetCore.Authorization;
@@ -83,6 +84,26 @@ public class TopicController : ControllerBase
         {
             return StatusCode(StatusCodes.Status500InternalServerError,
                 new { message = "An error occurred while retrieving topics", error = ex.Message });
+        }
+    }
+    
+    [HttpGet]
+    [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //[Authorize(Policy = "AdminOnly")]
+    public ActionResult<List<string>> GetAllSensorTypes()
+    {
+        try
+        {
+            var types = Enum.GetNames(typeof(SensorType)).ToList();
+            return Ok(types);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                new { message = "An error occurred while retrieving sensor types", error = ex.Message });
         }
     }
 
@@ -206,4 +227,6 @@ public class TopicController : ControllerBase
                 new { message = "An error occurred while creating the topic", error = ex.Message });
         }
     }
+    
+    
 }

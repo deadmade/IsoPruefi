@@ -399,6 +399,52 @@
         ]
       }
     },
+    "/api/v1/Topic/GetAllSensorTypes": {
+      "get": {
+        "tags": [
+          "Topic"
+        ],
+        "operationId": "Topic_GetAllSensorTypes",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/Topic/CreateTopic": {
       "post": {
         "tags": [

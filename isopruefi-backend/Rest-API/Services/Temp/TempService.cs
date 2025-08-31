@@ -80,7 +80,7 @@ public class TempService : ITempService
                             var postalCodeLocation = new CoordinateMapping
                             {
                                 PostalCode = postalCode,
-                                Location = locationName,
+                                Location = locationName.Trim(),
                                 Latitude = latDouble,
                                 Longitude = lonDouble
                             };

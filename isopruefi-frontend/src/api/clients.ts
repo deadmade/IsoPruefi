@@ -3,7 +3,7 @@ import {getToken} from "../utils/tokenHelpers";
 import {
     ApiException,
     AuthenticationClient,
-    TempClient,
+    LocationClient,
     TemperatureDataClient,
     TopicClient,
     TopicSetting,
@@ -26,7 +26,7 @@ function authFetch(input: RequestInfo, init: RequestInit = {}) {
 // Export ready-to-use, typed clients
 export const authClient = new AuthenticationClient(BASE, {fetch: authFetch});
 export const tempClient = new TemperatureDataClient(BASE, {fetch: authFetch});
-export const locationClient = new TempClient(BASE, {fetch: authFetch});
+export const locationClient = new LocationClient(BASE, {fetch: authFetch});
 export const topicClient = new TopicClient(BASE, {fetch: authFetch});
 
 // Export helper functions for managing locations

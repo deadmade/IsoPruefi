@@ -4,8 +4,7 @@ import {ApiException, getStoredLocationName, tempClient} from "../api/clients";
 
 export type WeatherEntry = {
     timestamp: string;
-    tempSouth: number;
-    tempNorth: number;
+    [key: string]: number | string; // Dynamic keys for different sensors
     tempOutside: number;
 };
 
@@ -19,6 +18,7 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
     const [filter, setFilter] = useState<"all" | "hour" | "day" | "week">("all");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [sensorKeys, setSensorKeys] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -43,33 +43,59 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
                     return;
                 }
 
-                const south = data.temperatureSouth || [];
-                const north = data.temperatureNord || [];
+                const sensorData = data.sensorData || [];
                 const outside = data.temperatureOutside || [];
 
-                console.log('South data length:', south.length);
-                console.log('North data length:', north.length);
+                console.log('Sensor data:', sensorData.length, 'sensors');
                 console.log('Outside data length:', outside.length);
                 console.log('Outside data sample:', outside.slice(0, 3));
 
-                const maxLen = Math.max(south.length, north.length, outside.length);
+                // Group sensor data by timestamp to create unified data points
+                const timestampMap = new Map<string, any>();
+                const discoveredSensorKeys = new Set<string>();
 
-                const toIso = (t: unknown) =>
-                    t ? (t instanceof Date ? t.toISOString() : new Date(t as any).toISOString()) : "";
-
-                const formatted: WeatherEntry[] = Array.from({length: maxLen}, (_, i) => {
-                    const anyTs = north[i]?.timestamp ?? south[i]?.timestamp ?? outside[i]?.timestamp ?? null;
-                    const outsideTemp = outside[i]?.temperature ?? 0;
-                    console.log(`Data point ${i}: outside temp = ${outsideTemp}, timestamp = ${anyTs}`);
-                    return {
-                        timestamp: toIso(anyTs),
-                        tempSouth: south[i]?.temperature ?? 0,
-                        tempNorth: north[i]?.temperature ?? 0,
-                        tempOutside: outsideTemp,
-                    };
+                // Process sensor data
+                sensorData.forEach((sensor: any) => {
+                    const sensorName = sensor.sensorName || 'Unknown';
+                    const location = sensor.location || '';
+                    const tempData = sensor.temperatureDatas || [];
+                    const sensorKey = `temp_${sensorName}_${location}`.replace(/\s+/g, '_');
+                    discoveredSensorKeys.add(sensorKey);
+                    
+                    tempData.forEach((temp: any) => {
+                        const timestamp = temp.timestamp;
+                        const isoTimestamp = timestamp ? 
+                            (timestamp instanceof Date ? timestamp.toISOString() : new Date(timestamp).toISOString()) : '';
+                        
+                        if (!timestampMap.has(isoTimestamp)) {
+                            timestampMap.set(isoTimestamp, { timestamp: isoTimestamp, tempOutside: 0 });
+                        }
+                        
+                        const entry = timestampMap.get(isoTimestamp);
+                        entry[sensorKey] = temp.temperature || 0;
+                    });
                 });
 
+                // Process outside data
+                outside.forEach((temp: any) => {
+                    const timestamp = temp.timestamp;
+                    const isoTimestamp = timestamp ? 
+                        (timestamp instanceof Date ? timestamp.toISOString() : new Date(timestamp).toISOString()) : '';
+                    
+                    if (!timestampMap.has(isoTimestamp)) {
+                        timestampMap.set(isoTimestamp, { timestamp: isoTimestamp, tempOutside: 0 });
+                    }
+                    
+                    const entry = timestampMap.get(isoTimestamp);
+                    entry.tempOutside = temp.temperature || 0;
+                });
+
+                const formatted: WeatherEntry[] = Array.from(timestampMap.values())
+                    .filter(entry => entry.timestamp)
+                    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
                 setWeatherData(formatted);
+                setSensorKeys(Array.from(discoveredSensorKeys));
             } catch (err) {
                 console.error("Failed to fetch temperature data", err);
                 if (ApiException.isApiException(err)) setError(`API Error (${err.status}): ${err.message}`);
@@ -125,7 +151,7 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
         </div>
     );
 
-    const lastVal = (arr: WeatherEntry[], key: "tempSouth" | "tempNorth" | "tempOutside") => {
+    const lastVal = (arr: WeatherEntry[], key: string) => {
         for (let i = arr.length - 1; i >= 0; i--) {
             const v = arr[i][key];
             if (typeof v === "number" && !Number.isNaN(v)) return v;
@@ -133,10 +159,18 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
         return null;
     };
 
-    const vSouth = lastVal(weatherData, "tempSouth");
-    const vNorth = lastVal(weatherData, "tempNorth");
+    const convertTemp = (temp: number) => {
+        if (isFahrenheit) {
+            return (temp * 9/5) + 32;
+        }
+        return temp;
+    };
+
     const vOut = lastVal(weatherData, "tempOutside");
-    const fmt = (v: number | null) => (v == null ? "—" : `${v.toFixed(1)}°C`);
+    const fmt = (v: number | null) => (v == null ? "—" : `${convertTemp(v || 0).toFixed(1)}°${isFahrenheit ? 'F' : 'C'}`);
+
+    // Generate colors for sensor lines
+    const colors = ["#d3546c", "#84d8d2", "#82ca9d", "#ffc658", "#ff7c7c", "#8884d8"];
 
     return (
         <div className="flex w-full gap-6">
@@ -170,23 +204,40 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
                         <YAxis/>
                         <Tooltip/>
                         <Legend verticalAlign="bottom" align="center" wrapperStyle={{paddingTop: 8}}/>
-                        <Line type="monotone" dataKey="tempSouth" name="South" stroke="#d3546c" activeDot={{r: 1}}/>
-                        <Line type="monotone" dataKey="tempNorth" name="North" stroke="#84d8d2" activeDot={{r: 1}}/>
-                        <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#82ca9d" activeDot={{r: 1}}/>
+                        
+                        {/* Dynamic sensor lines */}
+                        {sensorKeys.map((sensorKey, index) => (
+                            <Line 
+                                key={sensorKey}
+                                type="monotone" 
+                                dataKey={sensorKey} 
+                                name={sensorKey.replace(/temp_|_/g, ' ').replace(/^\s+/, '')} 
+                                stroke={colors[index % colors.length]} 
+                                activeDot={{r: 1}}
+                            />
+                        ))}
+                        
+                        {/* Outside temperature line */}
+                        <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#3fbf86" activeDot={{r: 1}}/>
                     </LineChart>
                 </ResponsiveContainer>
             </div>
 
             {/* RIGHT: tiles */}
             <div className="w-64 flex flex-col gap-4">
-                <div className="rounded-xl bg-white shadow px-5 py-4 border border-gray-300">
-                    <div className="text-sm text-gray-500">South</div>
-                    <div className="mt-1 text-3xl font-bold text-[#d3546c]">{fmt(vSouth)}</div>
-                </div>
-                <div className="rounded-xl bg-white shadow px-5 py-4 border border-gray-300">
-                    <div className="text-sm text-gray-500">North</div>
-                    <div className="mt-1 text-3xl font-bold text-[#3bbfba]">{fmt(vNorth)}</div>
-                </div>
+                {/* Dynamic sensor tiles */}
+                {sensorKeys.map((sensorKey, index) => {
+                    const value = lastVal(weatherData, sensorKey);
+                    const displayName = sensorKey.replace(/temp_|_/g, ' ').replace(/^\s+/, '');
+                    return (
+                        <div key={sensorKey} className="rounded-xl bg-white shadow px-5 py-4 border border-gray-300">
+                            <div className="text-sm text-gray-500">{displayName}</div>
+                            <div className="mt-1 text-3xl font-bold" style={{color: colors[index % colors.length]}}>{fmt(value)}</div>
+                        </div>
+                    );
+                })}
+                
+                {/* Outside tile */}
                 <div className="rounded-xl bg-white shadow px-5 py-4 border border-gray-300">
                     <div className="text-sm text-gray-500">Outside</div>
                     <div className="mt-1 text-3xl font-bold text-[#3fbf86]">{fmt(vOut)}</div>
@@ -194,5 +245,4 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
             </div>
         </div>
     );
-
 }

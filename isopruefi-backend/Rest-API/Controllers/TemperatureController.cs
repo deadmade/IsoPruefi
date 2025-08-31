@@ -5,6 +5,7 @@ using Database.EntityFramework.Enums;
 using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rest_API.Models;
 
@@ -94,7 +95,7 @@ public class TemperatureDataController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    //[Authorize(Policy = "UserOrAdmin")]
+    [Authorize(Policy = "UserOrAdmin")]
     public async Task<IActionResult> GetTemperature([FromQuery] DateTime start, [FromQuery] DateTime end,
         [FromQuery] string place, [FromQuery] bool isFahrenheit = false)
     {
@@ -185,8 +186,10 @@ public class TemperatureDataController : ControllerBase
                 _logger.LogWarning(warning);
 
                 sensorData[i].Plausibility += "\n" + warning;
-                sensorData[i].Temperature = tempConverter(sensorData[i].Temperature);
+               
             }
+            
+            sensorData[i].Temperature = tempConverter(sensorData[i].Temperature);
         }
 
         return sensorData;

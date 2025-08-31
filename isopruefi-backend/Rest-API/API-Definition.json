@@ -343,7 +343,12 @@
           "500": {
             "description": "Internal server error. Possible issues with database connection or external weather service."
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/api/v1/Topic/GetAllTopics": {

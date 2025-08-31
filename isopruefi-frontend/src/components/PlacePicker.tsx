@@ -29,8 +29,9 @@ export const PlacePicker: React.FC<Props> = ({
 
                 setOpts(rows);
 
+                // Only set default value if no value is currently selected
                 const current = (value ?? "").trim();
-                if (!current) {
+                if (!current && rows.length > 0) {
                     const preferred = rows.find((r: PostalLocation) => /heidenheim/i.test(r.locationName)) ?? rows[0];
                     if (preferred?.locationName) onChange(preferred.locationName);
                 }
@@ -42,23 +43,32 @@ export const PlacePicker: React.FC<Props> = ({
         return () => {
             alive = false;
         };
-    }, [refreshKey]);
+    }, [refreshKey, onChange, value]);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const next = e.target.value;
+        console.log('PlacePicker: Location changed to:', next);
         if (next) onChange(next); // never propagate ""
     };
 
     const current = (value ?? "").trim();
+    
+    console.log('PlacePicker render - current value:', current, 'available options:', opts.map(o => o.locationName));
+
+    // Ensure the selected value exists in options or add it if it's the default
+    const hasCurrentOption = current === "" || opts.some(o => o.locationName === current) || current === DEFAULT_PLACE;
+    const selectValue = hasCurrentOption ? current : "";
+    
+    console.log('PlacePicker - selectValue:', selectValue, 'hasCurrentOption:', hasCurrentOption);
 
     return (
         <select
-            value={current}
+            value={selectValue}
             onChange={handleChange}
             disabled={loading || opts.length === 0}
             className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100 disabled:text-gray-400"
         >
-            {current === "" && (
+            {selectValue === "" && (
                 <option value="" disabled>
                     {placeholder}
                 </option>

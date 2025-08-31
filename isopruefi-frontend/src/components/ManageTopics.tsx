@@ -1,16 +1,17 @@
 import {useEffect, useMemo, useState} from "react";
-import {createTopic, deleteTopic, getAllTopics, updateTopic,} from "../api/clients";
-import {TopicSetting} from "../api/api-client";
+import {createTopic, deleteTopic, getAllTopics, updateTopic, fetchPostalLocations, type PostalLocation} from "../api/clients";
+import {TopicSetting, SensorType} from "../api/api-client";
 
 // Keep table state as a plain shape
 type Row = {
     topicSettingId?: number;
     sensorName?: string;
     sensorLocation?: string;
-    sensorType?: string;
+    sensorTypeEnum?: SensorType;
     defaultTopicPath?: string;
     groupId?: number;
     hasRecovery?: boolean;
+    coordinateMappingId?: number;
     _editing?: boolean;
 };
 
@@ -18,14 +19,16 @@ export default function ManageTopics() {
     const [rows, setRows] = useState<Row[]>([]);
     const [busy, setBusy] = useState(false);
     const [msg, setMsg] = useState<string | null>(null);
+    const [locations, setLocations] = useState<PostalLocation[]>([]);
 
     // create form state
     const [sensorName, setSensorName] = useState("");
     const [sensorLocation, setSensorLocation] = useState("");
-    const [sensorType, setSensorType] = useState("");
+    const [sensorTypeEnum, setSensorTypeEnum] = useState<SensorType>(SensorType.Temp);
     const [defaultTopicPath, setDefaultTopicPath] = useState("");
     const [groupId, setGroupId] = useState<string>("");
     const [hasRecovery, setHasRecovery] = useState(false);
+    const [coordinateMappingId, setCoordinateMappingId] = useState<string>("");
 
     const canCreate = useMemo(
         () => sensorName.trim() !== "" && sensorLocation.trim() !== "",
@@ -42,10 +45,11 @@ export default function ManageTopics() {
                 topicSettingId: t.topicSettingId ?? t.id,
                 sensorName: t.sensorName,
                 sensorLocation: t.sensorLocation,
-                sensorType: t.sensorType,
+                sensorTypeEnum: t.sensorTypeEnum,
                 defaultTopicPath: t.defaultTopicPath,
                 groupId: t.groupId,
                 hasRecovery: t.hasRecovery,
+                coordinateMappingId: t.coordinateMappingId,
             }));
             setRows(mapped);
         } catch (e: any) {
@@ -57,7 +61,17 @@ export default function ManageTopics() {
 
     useEffect(() => {
         void load();
+        void loadLocations();
     }, []);
+
+    async function loadLocations() {
+        try {
+            const locs = await fetchPostalLocations();
+            setLocations(locs);
+        } catch (error) {
+            console.error('Error loading locations:', error);
+        }
+    }
 
     async function onCreate() {
         if (!canCreate) return;
@@ -67,17 +81,19 @@ export default function ManageTopics() {
             const payload = new TopicSetting();
             payload.sensorName = sensorName.trim();
             payload.sensorLocation = sensorLocation.trim();
-            if (sensorType.trim()) payload.sensorType = sensorType.trim();
+            payload.sensorTypeEnum = sensorTypeEnum;
             if (defaultTopicPath.trim()) payload.defaultTopicPath = defaultTopicPath.trim();
             if (groupId) payload.groupId = Number(groupId);
+            if (coordinateMappingId) payload.coordinateMappingId = Number(coordinateMappingId);
             payload.hasRecovery = hasRecovery;
 
             await createTopic(payload);
             setSensorName("");
             setSensorLocation("");
-            setSensorType("");
+            setSensorTypeEnum(SensorType.Temp);
             setDefaultTopicPath("");
             setGroupId("");
+            setCoordinateMappingId("");
             setHasRecovery(false);
             await load();
             setMsg("Topic created.");
@@ -113,7 +129,7 @@ export default function ManageTopics() {
             payload.topicSettingId = r.topicSettingId;
             if (r.sensorName !== undefined) payload.sensorName = r.sensorName.trim();
             if (r.sensorLocation !== undefined) payload.sensorLocation = r.sensorLocation.trim();
-            if (r.sensorType !== undefined) payload.sensorType = r.sensorType?.trim();
+            if (r.sensorTypeEnum !== undefined) payload.sensorTypeEnum = r.sensorTypeEnum;
             if (r.defaultTopicPath !== undefined) payload.defaultTopicPath = r.defaultTopicPath?.trim();
             if (r.groupId !== undefined) payload.groupId = r.groupId;
             payload.hasRecovery = !!r.hasRecovery;
@@ -178,13 +194,19 @@ export default function ManageTopics() {
                 </div>
                 <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">Sensor Type</label>
-                    <input
-                        placeholder="Sensor type (optional)"
-                        value={sensorType}
-                        onChange={e => setSensorType(e.target.value)}
-                        disabled={busy}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
-                    />
+                        <select
+                            value={sensorTypeEnum}
+                            onChange={e => setSensorTypeEnum(Number(e.target.value) as SensorType)}
+                            disabled={busy}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
+                        >
+                            <option value={SensorType.Temp}>Temperature</option>
+                            <option value={SensorType.Spl}>SPL</option>
+                            <option value={SensorType.Hum}>Humidity</option>
+                            <option value={SensorType.Ikea}>IKEA</option>
+                            <option value={SensorType.Co2}>CO2</option>
+                            <option value={SensorType.Mic}>Microphone</option>
+                        </select>
                 </div>
                 <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">Topic Path</label>
@@ -206,6 +228,22 @@ export default function ManageTopics() {
                         disabled={busy}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
                     />
+                </div>
+                <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Location</label>
+                    <select
+                        value={coordinateMappingId}
+                        onChange={e => setCoordinateMappingId(e.target.value)}
+                        disabled={busy}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
+                    >
+                        <option value="">Select Location (optional)</option>
+                        {locations.map((location) => (
+                            <option key={location.postalCode} value={location.postalCode.toString()}>
+                                {location.locationName}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div className="flex items-center gap-2">
                     <label className="flex items-center gap-2 cursor-pointer">
@@ -241,6 +279,7 @@ export default function ManageTopics() {
                             Topic Path
                         </th>
                         <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Group</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Coord Mapping</th>
                         <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Recovery</th>
                         <th className="px-3 py-2 border-b border-gray-200">Actions</th>
                     </tr>
@@ -276,13 +315,20 @@ export default function ManageTopics() {
 
                             <td className="px-3 py-2">
                                 {r._editing ? (
-                                    <input
-                                        value={r.sensorType ?? ""}
-                                        onChange={e => patch(i, {sensorType: e.target.value})}
+                                    <select
+                                        value={r.sensorTypeEnum ?? SensorType.Temp}
+                                        onChange={e => patch(i, {sensorTypeEnum: Number(e.target.value) as SensorType})}
                                         className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-pink-300"
-                                    />
+                                    >
+                                        <option value={SensorType.Temp}>Temperature</option>
+                                        <option value={SensorType.Spl}>SPL</option>
+                                        <option value={SensorType.Hum}>Humidity</option>
+                                        <option value={SensorType.Ikea}>IKEA</option>
+                                        <option value={SensorType.Co2}>CO2</option>
+                                        <option value={SensorType.Mic}>Microphone</option>
+                                    </select>
                                 ) : (
-                                    <span className="text-sm text-gray-900">{r.sensorType ?? "—"}</span>
+                                    <span className="text-sm text-gray-900">{r.sensorTypeEnum !== undefined ? SensorType[r.sensorTypeEnum] : "—"}</span>
                                 )}
                             </td>
 
@@ -308,6 +354,19 @@ export default function ManageTopics() {
                                     />
                                 ) : (
                                     <span className="text-sm text-gray-900">{r.groupId ?? "—"}</span>
+                                )}
+                            </td>
+
+                            <td className="px-3 py-2">
+                                {r._editing ? (
+                                    <input
+                                        inputMode="numeric"
+                                        value={r.coordinateMappingId?.toString() ?? ""}
+                                        onChange={e => patch(i, {coordinateMappingId: e.target.value ? Number(e.target.value) : undefined})}
+                                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-pink-300"
+                                    />
+                                ) : (
+                                    <span className="text-sm text-gray-900">{r.coordinateMappingId ?? "—"}</span>
                                 )}
                             </td>
 
@@ -365,7 +424,7 @@ export default function ManageTopics() {
                     ))}
                     {rows.length === 0 && (
                         <tr>
-                            <td colSpan={8} className="px-3 py-4 text-center text-sm text-gray-500">
+                            <td colSpan={9} className="px-3 py-4 text-center text-sm text-gray-500">
                                 No topics configured.
                             </td>
                         </tr>

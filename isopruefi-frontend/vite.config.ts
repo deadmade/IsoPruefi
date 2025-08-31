@@ -7,8 +7,8 @@ export default defineConfig({
     server: {
         port: 5173,
         proxy: {
-            "/v1": {target: "https://localhost:7240", changeOrigin: true, secure: false},
-            "/api": {target: "https://localhost:7240", changeOrigin: true, secure: false},
+            "/v1": {target: "https://aicon.dhbw-heidenheim.de:5001/backend", changeOrigin: true, secure: false},
+            "/api": {target: "https://aicon.dhbw-heidenheim.de:5001/backend", changeOrigin: true, secure: false},
         },
     },
 });

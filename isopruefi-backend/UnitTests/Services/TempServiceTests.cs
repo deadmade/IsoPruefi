@@ -83,7 +83,7 @@ public class TempServiceTests
             c.PostalCode == postalCode &&
             c.Latitude == 52.5 &&
             c.Longitude == 13.4 &&
-            c.Location == " Region"
+            c.Location == "Region"
         )), Times.Once);
     }
 

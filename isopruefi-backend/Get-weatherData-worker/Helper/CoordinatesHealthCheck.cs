@@ -5,8 +5,8 @@ namespace Get_weatherData_worker.Helper;
 
 public class CoordinatesHealthCheck : IHealthCheck
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<CoordinatesHealthCheck> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
     public CoordinatesHealthCheck(IServiceProvider serviceProvider, ILogger<CoordinatesHealthCheck> logger)
     {
@@ -27,8 +27,7 @@ public class CoordinatesHealthCheck : IHealthCheck
 
             if (canConnect)
                 return HealthCheckResult.Healthy("Database is reachable for coordinates service");
-            else
-                return HealthCheckResult.Unhealthy("Cannot connect to database for coordinates service");
+            return HealthCheckResult.Unhealthy("Cannot connect to database for coordinates service");
         }
         catch (Exception ex)
         {

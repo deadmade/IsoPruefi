@@ -43,7 +43,7 @@ jobs:
       - name: Generate MQTT-Receiver-Worker Documentation
         working-directory: ./isopruefi-backend/MQTT-Receiver-Worker
         run: dotnet xmldoc2md ./bin/Debug/net9.0/MQTT-Receiver-Worker.dll ../../isopruefi-docs/docs/code/MQTT-Receiver-Worker
-      
+
       - name: Generate MQTT-Sender Documentation
         working-directory: ./isopruefi-backend/MQTT-Sender
         run: dotnet xmldoc2md ./bin/Debug/net9.0/MQTT-Sender.dll ../../isopruefi-docs/docs/code/MQTT-Sender
@@ -66,10 +66,10 @@ jobs:
       - name: Generate Arduino Documentation
         working-directory: ./isopruefi-arduino
         run: doxygen Doxyfile
-        
+
       - name: Install npm dependencies
         run: npm ci
-       
+
       - name: Generate Arduino Documentation
         working-directory: ./isopruefi-docs/docs/code/arduino
         run: npx seaborg xml md

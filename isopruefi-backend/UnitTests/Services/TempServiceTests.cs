@@ -11,19 +11,13 @@ using Rest_API.Services.Temp;
 namespace UnitTests.Services;
 
 /// <summary>
-/// Unit tests for the TempService class, verifying temperature operations.
+///     Unit tests for the TempService class, verifying temperature operations.
 /// </summary>
 [TestFixture]
 public class TempServiceTests
 {
-    private Mock<ILogger<TempService>> _mockLogger;
-    private Mock<IHttpClientFactory> _mockHttpClientFactory;
-    private Mock<ICoordinateRepo> _mockCoordinateRepo;
-    private Mock<IConfiguration> _mockConfiguration;
-    private TempService _tempService;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -45,11 +39,14 @@ public class TempServiceTests
         );
     }
 
-
-    #region Get Coordinates Test
+    private Mock<ILogger<TempService>> _mockLogger;
+    private Mock<IHttpClientFactory> _mockHttpClientFactory;
+    private Mock<ICoordinateRepo> _mockCoordinateRepo;
+    private Mock<IConfiguration> _mockConfiguration;
+    private TempService _tempService;
 
     /// <summary>
-    /// Tests that the GetCoordinates function calls the api when there is no existing entry in the database.
+    ///     Tests that the GetCoordinates function calls the api when there is no existing entry in the database.
     /// </summary>
     [Test]
     public async Task GetCoordinates_WhenNoExistingEntry_ShouldCallApi()
@@ -86,12 +83,12 @@ public class TempServiceTests
             c.PostalCode == postalCode &&
             c.Latitude == 52.5 &&
             c.Longitude == 13.4 &&
-            c.Location == " Region"
+            c.Location == "Region"
         )), Times.Once);
     }
 
     /// <summary>
-    /// Tests that the GetCoordinates function does not call the api when there is an entry in the database.
+    ///     Tests that the GetCoordinates function does not call the api when there is an entry in the database.
     /// </summary>
     [Test]
     public async Task GetCoordinates_WhenExistingEntry_ShouldNotCallAPi()
@@ -115,7 +112,8 @@ public class TempServiceTests
     }
 
     /// <summary>
-    /// Tests that the GetCoordinates function does not insert anything into the database, when there are missing fields in the JSON response.
+    ///     Tests that the GetCoordinates function does not insert anything into the database, when there are missing fields in
+    ///     the JSON response.
     /// </summary>
     [Test]
     public async Task GetCoordinates_WhenMissingFields_ShouldNotInsert()
@@ -159,7 +157,7 @@ public class TempServiceTests
     }
 
     /// <summary>
-    /// Tests that the GetCoordinate function does not insert anything if the api returns a message with an error code.
+    ///     Tests that the GetCoordinate function does not insert anything if the api returns a message with an error code.
     /// </summary>
     [Test]
     public async Task GetCoordinates_ApiErrorCode_ShouldNotInsert()
@@ -210,12 +208,8 @@ public class TempServiceTests
             Times.Once);
     }
 
-    #endregion
-
-    #region ShowAvailableLocations Tests
-
     /// <summary>
-    /// Tests that ShowAvailableLocations returns locations when data exists.
+    ///     Tests that ShowAvailableLocations returns locations when data exists.
     /// </summary>
     [Test]
     public async Task ShowAvailableLocations_WithValidData_ShouldReturnLocations()
@@ -240,7 +234,7 @@ public class TempServiceTests
     }
 
     /// <summary>
-    /// Tests that ShowAvailableLocations returns null when exception occurs.
+    ///     Tests that ShowAvailableLocations returns null when exception occurs.
     /// </summary>
     [Test]
     public async Task ShowAvailableLocations_WithException_ShouldReturnNull()
@@ -267,7 +261,7 @@ public class TempServiceTests
     }
 
     /// <summary>
-    /// Tests that ShowAvailableLocations returns empty list when no data exists.
+    ///     Tests that ShowAvailableLocations returns empty list when no data exists.
     /// </summary>
     [Test]
     public async Task ShowAvailableLocations_WithEmptyData_ShouldReturnEmptyList()
@@ -285,12 +279,8 @@ public class TempServiceTests
         result.Should().BeEmpty();
     }
 
-    #endregion
-
-    #region Constructor Tests
-
     /// <summary>
-    /// Tests that constructor throws InvalidOperationException when configuration is missing.
+    ///     Tests that constructor throws InvalidOperationException when configuration is missing.
     /// </summary>
     [Test]
     public void Constructor_WithMissingConfiguration_ShouldThrowInvalidOperationException()
@@ -310,12 +300,8 @@ public class TempServiceTests
             .WithMessage("Weather:NominatimApiUrl configuration is missing");
     }
 
-    #endregion
-
-    #region API Error Handling Tests
-
     /// <summary>
-    /// Tests that GetCoordinates handles null HTTP response gracefully.
+    ///     Tests that GetCoordinates handles null HTTP response gracefully.
     /// </summary>
     [Test]
     public async Task GetCoordinates_WithNullHttpResponse_ShouldHandleGracefully()
@@ -353,7 +339,7 @@ public class TempServiceTests
     }
 
     /// <summary>
-    /// Tests that GetCoordinates handles empty JSON array response.
+    ///     Tests that GetCoordinates handles empty JSON array response.
     /// </summary>
     [Test]
     public async Task GetCoordinates_WithEmptyJsonArray_ShouldThrowInvalidOperationException()
@@ -386,6 +372,4 @@ public class TempServiceTests
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage("The plz does not exist or is invalid.");
     }
-
-    #endregion
 }

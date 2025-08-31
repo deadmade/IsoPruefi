@@ -2,7 +2,7 @@ permissions:
   contents: read
 name: PlatformIO Unit Tests
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:

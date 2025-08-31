@@ -1,5 +1,3 @@
-import React from "react";
-
 export type UnitToggleProps = {
     /** true → Fahrenheit, false → Celsius */
     value: boolean;

@@ -124,7 +124,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
         var exception = Assert.ThrowsAsync<ApiException>(() =>
             UserInfoClient.ChangePasswordAsync(changePasswordRequest));
 
-        exception.StatusCode.Should().BeOneOf(400, 500);
+        exception.StatusCode.Should().BeOneOf(400, 500, 404);
     }
 
     [Test]

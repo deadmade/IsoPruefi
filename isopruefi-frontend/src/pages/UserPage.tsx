@@ -4,17 +4,26 @@ import { PlacePicker } from "../components/PlacePicker.tsx";
 import { UnitToggle } from "../components/UnitToggle.tsx";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../utils/tokenHelpers.ts";
-import ManageLocations from "../components/ManageLocations.tsx";
 
+/**
+ * UserPage component for viewing weather data and managing user preferences.
+ * Provides controls for selecting location and temperature units, displays a weather chart,
+ * and includes a logout button to clear authentication and redirect to the welcome page.
+ *
+ * @returns {JSX.Element} The rendered user page.
+ */
 export default function UserPage() {
     const navigate = useNavigate();
     const [place, setPlace] = useState("Heidenheim an der Brenz");
     const [isF, setIsF] = useState(false);
-    const [locVersion, setLocVersion] = useState(0);
+    const [locVersion] = useState(0);
 
+    /**
+     * Handles logout by clearing authentication tokens and navigating to the welcome page.
+     */
     const handleLogout = () => {
         clearToken();
-        navigate("/signin");
+        navigate("/");
     };
 
     return (
@@ -44,13 +53,6 @@ export default function UserPage() {
                     Weather Chart
                 </h2>
                 <TempChart place={place} isFahrenheit={isF} />
-            </div>
-
-            {/* User Management Section - visible for enhanced functionality */}
-            <div className="max-w-6xl mx-auto mt-6">
-                <div className="bg-white rounded-xl shadow p-6">
-                    <ManageLocations onChanged={() => setLocVersion(v => v + 1)} />
-                </div>
             </div>
 
             {/* Logout Button */}

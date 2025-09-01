@@ -8,7 +8,6 @@ Temperature data must be reliably and permanently stored in the database, even i
 
 - **Data Loss Rate:** A maximum of **0.1%** of all recorded measurements may be lost.
 - **Successful Write Operations:** At least **99.9%** of all database write operations must be completed without error.
-- **Time to Final Persistence:** Temperature data must be permanently stored in the database within **5 seconds** after being recorded under the condition that there is a working connection.
 - **Fallback Storage:** In case of missing connectivity, temperature data is written to the local SD card for up to 24h and synchronized once the connection is restored.
 - **Retry and Confirmation:** Failed write operations to the central database are retried until confirmation is received.
 
@@ -17,6 +16,7 @@ Temperature data must be reliably and permanently stored in the database, even i
 - Disconnect the system from the internet in a controlled way and verify that data is buffered on the SD card and later persisted in the database.
 - Simulate database outages to check retry logic and final persistence.
 - Run long-term operation tests with daily storage cycles (e.g., multiple days) to verify absence of data loss.
+- Use SQL queries to compare the expected number of measurements with the actual count in the database, and to calculate the percentage of successful write operations, ensuring compliance with the defined thresholds.
 
 ---
 

@@ -10,16 +10,11 @@ using Rest_API.Models;
 namespace IntegrationTests.Infrastructure;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public abstract class IntegrationTestBase
 {
-    protected IntegrationTestWebApplicationFactory Factory { get; private set; } = null!;
-    protected HttpClient Client { get; private set; } = null!;
-    
-    private readonly JsonSerializerOptions _jsonOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-    };
-
+    private static readonly object LockObject = new();
+    private static long _counter = 0;
     [OneTimeSetUp]
     public virtual async Task OneTimeSetUp()
     {
@@ -35,14 +30,28 @@ public abstract class IntegrationTestBase
         Factory?.Dispose();
     }
 
+    [SetUp]
+    public virtual void SetUp()
+    {
+        Client.DefaultRequestHeaders.Authorization = null;
+    }
+
+    protected IntegrationTestWebApplicationFactory Factory { get; private set; } = null!;
+    protected HttpClient Client { get; private set; } = null!;
+
+    private readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
     protected async Task<T?> SendAsync<T>(HttpRequestMessage request)
     {
         var response = await Client.SendAsync(request);
         var content = await response.Content.ReadAsStringAsync();
-        
+
         if (string.IsNullOrEmpty(content))
             return default;
-            
+
         return JsonSerializer.Deserialize<T>(content, _jsonOptions);
     }
 
@@ -52,20 +61,29 @@ public abstract class IntegrationTestBase
         return new StringContent(json, Encoding.UTF8, "application/json");
     }
 
-    protected async Task<string> GetJwtTokenAsync(string username = "admin", string password = "Admin123!")
+    protected async Task<string> GetJwtTokenAsync(string baseUsername = "admin", string password = "Admin123!")
     {
-        await SeedTestUserAsync(username, password);
-        
+        var uniqueUsername = GenerateUniqueUsername(baseUsername);
+        await SeedTestUserAsync(uniqueUsername, password, baseUsername);
+
         var loginRequest = new HttpRequestMessage(HttpMethod.Post, "/v1/Authentication/Login")
         {
-            Content = CreateJsonContent(new Login { UserName = username, Password = password })
+            Content = CreateJsonContent(new Login { UserName = uniqueUsername, Password = password })
         };
 
         var response = await Client.SendAsync(loginRequest);
         var content = await response.Content.ReadAsStringAsync();
-        var loginResponse = JsonSerializer.Deserialize<JwtToken>(content, _jsonOptions);
-        
-        return loginResponse?.Token ?? throw new InvalidOperationException("Failed to get JWT token");
+
+        if (!response.IsSuccessStatusCode)
+            throw new InvalidOperationException(
+                $"Failed to get JWT token. Status: {response.StatusCode}, Content: {content}");
+
+        var loginResponse = string.IsNullOrEmpty(content)
+            ? null
+            : JsonSerializer.Deserialize<JwtToken>(content, _jsonOptions);
+
+        return loginResponse?.Token ??
+               throw new InvalidOperationException("Failed to deserialize JWT token from response");
     }
 
     protected void SetAuthorizationHeader(string token)
@@ -73,19 +91,19 @@ public abstract class IntegrationTestBase
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
-    private async Task SeedTestUserAsync(string username, string password)
+    private async Task SeedTestUserAsync(string username, string password, string baseUsername = "admin")
     {
         using var scope = Factory.Services.CreateScope();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApiUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
         // Ensure roles exist
-        var adminRole = Rest_API.Models.Roles.Admin;
-        var userRole = Rest_API.Models.Roles.User;
-        
+        var adminRole = Roles.Admin;
+        var userRole = Roles.User;
+
         if (!await roleManager.RoleExistsAsync(adminRole))
             await roleManager.CreateAsync(new IdentityRole(adminRole));
-        
+
         if (!await roleManager.RoleExistsAsync(userRole))
             await roleManager.CreateAsync(new IdentityRole(userRole));
 
@@ -94,25 +112,43 @@ public abstract class IntegrationTestBase
 
         var user = new ApiUser { UserName = username, Email = $"{username}@test.com" };
         var result = await userManager.CreateAsync(user, password);
-        
+
         if (result.Succeeded)
         {
-            var role = username == "admin" ? adminRole : userRole;
+            var role = baseUsername == "admin" ? adminRole : userRole;
             await userManager.AddToRoleAsync(user, role);
         }
         else
         {
-            throw new InvalidOperationException($"Failed to create test user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            throw new InvalidOperationException(
+                $"Failed to create test user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
         }
+    }
+
+    protected string GenerateUniqueUsername(string baseUsername)
+    {
+        long counter;
+        lock (LockObject)
+        {
+            counter = ++_counter;
+        }
+
+        var timestamp = DateTimeOffset.UtcNow.Ticks;
+        return $"{baseUsername}_{timestamp}_{counter}";
     }
 
     protected async Task CleanupDatabaseAsync()
     {
         using var scope = Factory.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        
-        context.Users.RemoveRange(context.Users);
-        context.UserRoles.RemoveRange(context.UserRoles);
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApiUser>>();
+
+        var testUsers = userManager.Users.Where(u => u.Email.EndsWith("@test.com")).ToList();
+        foreach (var user in testUsers)
+        {
+            await userManager.DeleteAsync(user);
+        }
+
         await context.SaveChangesAsync();
     }
 }

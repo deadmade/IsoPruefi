@@ -5,6 +5,7 @@ using IntegrationTests.Infrastructure;
 namespace IntegrationTests;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class HealthCheckIntegrationTests : IntegrationTestBase
 {
     [Test]

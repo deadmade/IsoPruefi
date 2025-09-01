@@ -5,6 +5,7 @@ using IntegrationTests.Infrastructure;
 namespace IntegrationTests.Controllers;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class LocationControllerIntegrationTests : IntegrationTestBase
 {
     [Test]
@@ -21,7 +22,7 @@ public class LocationControllerIntegrationTests : IntegrationTestBase
     [Test]
     public async Task GetAllPostalcodes_WithAdminToken_ReturnsOk()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var response = await Client.GetAsync("/api/v1/Location/GetAllPostalcodes");
@@ -40,7 +41,7 @@ public class LocationControllerIntegrationTests : IntegrationTestBase
     [Test]
     public async Task InsertLocation_WithAdminToken_ReturnsOk()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var postalCode = 10115; // Berlin postal code for testing
@@ -83,7 +84,8 @@ public class LocationControllerIntegrationTests : IntegrationTestBase
 
         var response = await Client.DeleteAsync($"/api/v1/Location/RemovePostalcode?postalCode={postalCode}");
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError, HttpStatusCode.NotFound);
+        response.StatusCode.Should()
+            .BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError, HttpStatusCode.NotFound);
     }
 
     [Test]

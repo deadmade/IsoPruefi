@@ -6,11 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Rest_API;
+using Rest_API.Models;
 using Testcontainers.PostgreSql;
 
 namespace IntegrationTests.Infrastructure;
 
-public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Rest_API.Program>
+public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
         .WithImage("postgres:15")
@@ -28,7 +30,8 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Rest_A
 
         builder.ConfigureServices(services =>
         {
-            var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+            var descriptor =
+                services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
             if (descriptor != null)
                 services.Remove(descriptor);
 
@@ -37,10 +40,7 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Rest_A
                 options.UseNpgsql(_dbContainer.GetConnectionString());
             });
 
-            services.Configure<LoggerFilterOptions>(options =>
-            {
-                options.MinLevel = LogLevel.Warning;
-            });
+            services.Configure<LoggerFilterOptions>(options => { options.MinLevel = LogLevel.Warning; });
         });
 
         builder.UseEnvironment("Testing");
@@ -49,28 +49,23 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Rest_A
     public async Task StartAsync()
     {
         await _dbContainer.StartAsync();
-        
+
         using var scope = Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await context.Database.EnsureCreatedAsync();
-        
+
         // Seed roles
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-        var roles = new[] { Rest_API.Models.Roles.Admin, Rest_API.Models.Roles.User };
-        
+        var roles = new[] { Roles.Admin, Roles.User };
+
         foreach (var role in roles)
-        {
             if (!await roleManager.RoleExistsAsync(role))
-            {
                 await roleManager.CreateAsync(new IdentityRole(role));
-            }
-        }
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
-        {
             try
             {
                 _dbContainer?.StopAsync().GetAwaiter().GetResult();
@@ -80,7 +75,7 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Rest_A
             {
                 // Container already disposed, ignore
             }
-        }
+
         base.Dispose(disposing);
     }
 }

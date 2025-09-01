@@ -1,20 +1,21 @@
 using System.Net;
+using Database.EntityFramework.Models;
 using FluentAssertions;
 using IntegrationTests.Infrastructure;
-using Rest_API.Models;
-using Database.EntityFramework.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Rest_API.Models;
 
 namespace IntegrationTests.Controllers;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class UserInfoControllerIntegrationTests : IntegrationTestBase
 {
     [Test]
     public async Task GetAllUsers_WithAdminToken_ReturnsOk()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var response = await Client.GetAsync("/api/v1/UserInfo/GetAllUsers");
@@ -52,7 +53,8 @@ public class UserInfoControllerIntegrationTests : IntegrationTestBase
 
         var response = await Client.GetAsync($"/api/v1/UserInfo/GetUserById?userId={testUserId}");
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.InternalServerError);
+        response.StatusCode.Should()
+            .BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.InternalServerError);
     }
 
     [Test]
@@ -92,9 +94,11 @@ public class UserInfoControllerIntegrationTests : IntegrationTestBase
             NewPassword = "NewPassword123!"
         };
 
-        var response = await Client.PostAsync("/api/v1/UserInfo/ChangePassword", CreateJsonContent(changePasswordRequest));
+        var response =
+            await Client.PostAsync("/api/v1/UserInfo/ChangePassword", CreateJsonContent(changePasswordRequest));
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.NotFound,
+            HttpStatusCode.InternalServerError);
     }
 
     [Test]
@@ -111,7 +115,8 @@ public class UserInfoControllerIntegrationTests : IntegrationTestBase
             NewPassword = "NewPassword123!"
         };
 
-        var response = await Client.PostAsync("/api/v1/UserInfo/ChangePassword", CreateJsonContent(changePasswordRequest));
+        var response =
+            await Client.PostAsync("/api/v1/UserInfo/ChangePassword", CreateJsonContent(changePasswordRequest));
 
         response.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.InternalServerError);
     }
@@ -126,7 +131,8 @@ public class UserInfoControllerIntegrationTests : IntegrationTestBase
             NewPassword = "NewPassword123!"
         };
 
-        var response = await Client.PostAsync("/api/v1/UserInfo/ChangePassword", CreateJsonContent(changePasswordRequest));
+        var response =
+            await Client.PostAsync("/api/v1/UserInfo/ChangePassword", CreateJsonContent(changePasswordRequest));
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -134,7 +140,7 @@ public class UserInfoControllerIntegrationTests : IntegrationTestBase
     [Test]
     public async Task ChangeUser_WithAdminToken_ReturnsOk()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var testUser = new ApiUser
@@ -146,7 +152,8 @@ public class UserInfoControllerIntegrationTests : IntegrationTestBase
 
         var response = await Client.PutAsync("/api/v1/UserInfo/ChangeUser", CreateJsonContent(testUser));
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.InternalServerError);
+        response.StatusCode.Should()
+            .BeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.InternalServerError);
     }
 
     [Test]
@@ -170,7 +177,7 @@ public class UserInfoControllerIntegrationTests : IntegrationTestBase
     [Test]
     public async Task DeleteUser_WithAdminToken_ReturnsOk()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         // Create a user to delete
@@ -178,7 +185,8 @@ public class UserInfoControllerIntegrationTests : IntegrationTestBase
 
         var response = await Client.DeleteAsync($"/api/v1/UserInfo/DeleteUser?userId={userIdToDelete}");
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.InternalServerError);
+        response.StatusCode.Should()
+            .BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.InternalServerError);
     }
 
     [Test]
@@ -195,7 +203,7 @@ public class UserInfoControllerIntegrationTests : IntegrationTestBase
     [Test]
     public async Task DeleteUser_WithNonExistentUserId_ReturnsNotFound()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var nonExistentUserId = "00000000-0000-0000-0000-000000000000";
@@ -217,17 +225,18 @@ public class UserInfoControllerIntegrationTests : IntegrationTestBase
     {
         using var scope = Factory.Services.CreateScope();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApiUser>>();
-        
+
+        var uniqueUsername = GenerateUniqueUsername("user_to_delete");
         var testUser = new ApiUser
         {
-            UserName = "user_to_delete",
-            Email = "delete@test.com"
+            UserName = uniqueUsername,
+            Email = $"{uniqueUsername}@test.com"
         };
 
         var result = await userManager.CreateAsync(testUser, "DeleteMe123!");
         if (result.Succeeded)
         {
-            await userManager.AddToRoleAsync(testUser, Rest_API.Models.Roles.User);
+            await userManager.AddToRoleAsync(testUser, Roles.User);
             return testUser.Id;
         }
 

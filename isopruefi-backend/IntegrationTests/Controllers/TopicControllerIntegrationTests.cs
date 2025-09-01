@@ -1,18 +1,19 @@
 using System.Net;
+using Database.EntityFramework.Enums;
+using Database.EntityFramework.Models;
 using FluentAssertions;
 using IntegrationTests.Infrastructure;
-using Database.EntityFramework.Models;
-using Database.EntityFramework.Enums;
 
 namespace IntegrationTests.Controllers;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class TopicControllerIntegrationTests : IntegrationTestBase
 {
     [Test]
     public async Task GetAllTopics_WithAdminToken_ReturnsOk()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var response = await Client.GetAsync("/api/v1/Topic/GetAllTopics");
@@ -51,7 +52,7 @@ public class TopicControllerIntegrationTests : IntegrationTestBase
     [Test]
     public async Task CreateTopic_WithAdminToken_AndValidData_ReturnsCreated()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var topicSetting = new TopicSetting
@@ -67,7 +68,8 @@ public class TopicControllerIntegrationTests : IntegrationTestBase
 
         var response = await Client.PostAsync("/api/v1/Topic/CreateTopic", CreateJsonContent(topicSetting));
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.Created, HttpStatusCode.InternalServerError, HttpStatusCode.BadRequest);
+        response.StatusCode.Should().BeOneOf(HttpStatusCode.Created, HttpStatusCode.InternalServerError,
+            HttpStatusCode.BadRequest);
     }
 
     [Test]
@@ -114,7 +116,7 @@ public class TopicControllerIntegrationTests : IntegrationTestBase
     [Test]
     public async Task CreateTopic_WithInvalidData_ReturnsBadRequest()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var response = await Client.PostAsync("/api/v1/Topic/CreateTopic", CreateJsonContent((object?)null));
@@ -125,7 +127,7 @@ public class TopicControllerIntegrationTests : IntegrationTestBase
     [Test]
     public async Task UpdateTopic_WithAdminToken_ReturnsOk()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var topicSetting = new TopicSetting
@@ -142,7 +144,8 @@ public class TopicControllerIntegrationTests : IntegrationTestBase
 
         var response = await Client.PutAsync("/api/v1/Topic/UpdateTopic", CreateJsonContent(topicSetting));
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError, HttpStatusCode.BadRequest);
+        response.StatusCode.Should()
+            .BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError, HttpStatusCode.BadRequest);
     }
 
     [Test]
@@ -171,7 +174,7 @@ public class TopicControllerIntegrationTests : IntegrationTestBase
     [Test]
     public async Task DeleteTopic_WithAdminToken_ReturnsOk()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var topicSetting = new TopicSetting
@@ -191,7 +194,8 @@ public class TopicControllerIntegrationTests : IntegrationTestBase
             Content = CreateJsonContent(topicSetting)
         });
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError, HttpStatusCode.BadRequest);
+        response.StatusCode.Should()
+            .BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError, HttpStatusCode.BadRequest);
     }
 
     [Test]

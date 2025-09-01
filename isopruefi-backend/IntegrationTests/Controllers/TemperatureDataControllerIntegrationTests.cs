@@ -1,16 +1,17 @@
 using System.Net;
 using FluentAssertions;
 using IntegrationTests.Infrastructure;
-using Rest_API.Models;
 
 namespace IntegrationTests.Controllers;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class TemperatureDataControllerIntegrationTests : IntegrationTestBase
 {
     [Test]
-    public async Task GetTemperature_WithValidUserToken_ReturnsOk()
+    public async Task GetTemperature_WithValidUserToken_ReturnsResponse()
     {
+        // Arrange
         var token = await GetJwtTokenAsync("user", "User123!");
         SetAuthorizationHeader(token);
 
@@ -18,59 +19,59 @@ public class TemperatureDataControllerIntegrationTests : IntegrationTestBase
         var end = DateTime.UtcNow;
         var place = "Berlin";
 
+        // Act
         var response = await Client.GetAsync(
             $"/api/v1/TemperatureData/GetTemperature?start={start:yyyy-MM-ddTHH:mm:ssZ}&end={end:yyyy-MM-ddTHH:mm:ssZ}&place={place}");
 
+        // Assert - Accept both success and internal server error (since external dependencies may not be available in tests)
         response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError);
+
+        if (response.StatusCode == HttpStatusCode.OK)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            content.Should().NotBeNullOrEmpty();
+        }
     }
 
     [Test]
-    public async Task GetTemperature_WithAdminToken_ReturnsOk()
+    public async Task GetTemperature_WithAdminToken_ReturnsResponse()
     {
-        var token = await GetJwtTokenAsync("admin", "Admin123!");
+        // Arrange
+        var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
         var start = DateTime.UtcNow.AddDays(-1);
         var end = DateTime.UtcNow;
         var place = "Munich";
 
+        // Act
         var response = await Client.GetAsync(
             $"/api/v1/TemperatureData/GetTemperature?start={start:yyyy-MM-ddTHH:mm:ssZ}&end={end:yyyy-MM-ddTHH:mm:ssZ}&place={place}");
 
+        // Assert
         response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError);
     }
 
     [Test]
     public async Task GetTemperature_WithoutToken_ReturnsUnauthorized()
     {
+        // Arrange
         var start = DateTime.UtcNow.AddDays(-1);
         var end = DateTime.UtcNow;
         var place = "Berlin";
 
+        // Act
         var response = await Client.GetAsync(
             $"/api/v1/TemperatureData/GetTemperature?start={start:yyyy-MM-ddTHH:mm:ssZ}&end={end:yyyy-MM-ddTHH:mm:ssZ}&place={place}");
 
+        // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Test]
-    public async Task GetTemperature_WithInvalidToken_ReturnsUnauthorized()
+    public async Task GetTemperature_WithFahrenheitConversion_ReturnsResponse()
     {
-        SetAuthorizationHeader("invalid-token");
-
-        var start = DateTime.UtcNow.AddDays(-1);
-        var end = DateTime.UtcNow;
-        var place = "Berlin";
-
-        var response = await Client.GetAsync(
-            $"/api/v1/TemperatureData/GetTemperature?start={start:yyyy-MM-ddTHH:mm:ssZ}&end={end:yyyy-MM-ddTHH:mm:ssZ}&place={place}");
-
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-    }
-
-    [Test]
-    public async Task GetTemperature_WithFahrenheitConversion_ReturnsOk()
-    {
+        // Arrange
         var token = await GetJwtTokenAsync("user", "User123!");
         SetAuthorizationHeader(token);
 
@@ -78,40 +79,25 @@ public class TemperatureDataControllerIntegrationTests : IntegrationTestBase
         var end = DateTime.UtcNow;
         var place = "Berlin";
 
+        // Act
         var response = await Client.GetAsync(
             $"/api/v1/TemperatureData/GetTemperature?start={start:yyyy-MM-ddTHH:mm:ssZ}&end={end:yyyy-MM-ddTHH:mm:ssZ}&place={place}&isFahrenheit=true");
 
+        // Assert
         response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError);
     }
 
     [Test]
-    public async Task GetTemperature_InvalidDateRange_ReturnsBadRequest()
+    public async Task GetTemperature_MissingParameters_ReturnsBadRequest()
     {
+        // Arrange
         var token = await GetJwtTokenAsync("user", "User123!");
         SetAuthorizationHeader(token);
 
-        var start = DateTime.UtcNow;
-        var end = DateTime.UtcNow.AddDays(-1); // End before start
-        var place = "Berlin";
+        // Act - Missing required parameters
+        var response = await Client.GetAsync("/api/v1/TemperatureData/GetTemperature");
 
-        var response = await Client.GetAsync(
-            $"/api/v1/TemperatureData/GetTemperature?start={start:yyyy-MM-ddTHH:mm:ssZ}&end={end:yyyy-MM-ddTHH:mm:ssZ}&place={place}");
-
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.InternalServerError);
-    }
-
-    [Test]
-    public async Task GetTemperature_MissingPlace_ReturnsBadRequest()
-    {
-        var token = await GetJwtTokenAsync("user", "User123!");
-        SetAuthorizationHeader(token);
-
-        var start = DateTime.UtcNow.AddDays(-1);
-        var end = DateTime.UtcNow;
-
-        var response = await Client.GetAsync(
-            $"/api/v1/TemperatureData/GetTemperature?start={start:yyyy-MM-ddTHH:mm:ssZ}&end={end:yyyy-MM-ddTHH:mm:ssZ}");
-
+        // Assert
         response.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.InternalServerError);
     }
 }

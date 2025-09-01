@@ -5,6 +5,7 @@ using IntegrationTests.Infrastructure;
 namespace IntegrationTests;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class StartupIntegrationTests : IntegrationTestBase
 {
     [Test]
@@ -18,7 +19,7 @@ public class StartupIntegrationTests : IntegrationTestBase
     public async Task Swagger_IsAccessible_InTestEnvironment()
     {
         var response = await Client.GetAsync("/swagger/v1/swagger.json");
-        
+
         response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 }

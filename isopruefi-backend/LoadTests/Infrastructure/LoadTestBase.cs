@@ -38,8 +38,6 @@ public abstract class LoadTestBase
             $"API Base URL: {Factory.Services.GetRequiredService<IConfiguration>()["BaseUrl"] ?? "http://localhost"}");
         Console.WriteLine($"Database: {Factory.DatabaseConnectionString}");
         Console.WriteLine($"InfluxDB: {Factory.InfluxDbUrl} (Token: {Factory.InfluxDbToken})");
-        Console.WriteLine($"MQTT: {Factory.MqttHost}:{Factory.MqttHost}");
-        Console.WriteLine($"RabbitMQ: {Factory.RabbitMqConnectionString}");
     }
 
     [OneTimeTearDown]

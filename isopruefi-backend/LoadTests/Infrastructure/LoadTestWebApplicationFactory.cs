@@ -16,7 +16,6 @@ using MQTT_Receiver_Worker.MQTT;
 using MQTT_Receiver_Worker.MQTT.Interfaces;
 using Rest_API;
 using Testcontainers.PostgreSql;
-using Testcontainers.RabbitMq;
 
 namespace LoadTests.Infrastructure;
 
@@ -27,7 +26,7 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly PostgreSqlContainer _dbContainer;
     private readonly IContainer _influxDbContainer;
-    private readonly RabbitMqContainer _rabbitMqContainer;
+    private readonly IContainer _mosquittoContainer;
 
     public LoadTestWebApplicationFactory()
     {
@@ -41,27 +40,45 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
         _influxDbContainer = new ContainerBuilder()
             .WithImage("influxdb:3.2.1-core")
             .WithPortBinding(8181, true)
-            .WithEnvironment("INFLUXDB_DATABASE", "IsoPruefi")
-            .WithVolumeMount("influxdb_data_loadtest", "/var/lib/influxdb3")
+            .WithVolumeMount(Guid.NewGuid().ToString(), "/var/lib/influxdb3")
             .WithCommand("influxdb3", "serve", "--node-id=node0", "--object-store=file",
                 "--data-dir=/var/lib/influxdb3")
             .WithWaitStrategy(Wait.ForUnixContainer()
                 .UntilInternalTcpPortIsAvailable(8181))
             .WithCleanUp(true)
+            .WithAutoRemove(true)
             .Build();
 
 
-        _rabbitMqContainer = new RabbitMqBuilder()
-            .WithImage("rabbitmq:3.11")
+        _mosquittoContainer = new ContainerBuilder()
+            .WithImage("eclipse-mosquitto")
+            .WithPortBinding(1883, true)
+            .WithPortBinding(9001, true)
+            .WithBindMount(CreateMosquittoConfigFile(), "/mosquitto/config/mosquitto.conf")
+            .WithVolumeMount("mosquitto", "/etc/mosquitto")
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                .UntilInternalTcpPortIsAvailable(1883))
+            .WithCleanUp(true)
             .Build();
     }
+
 
     public string DatabaseConnectionString => _dbContainer.GetConnectionString();
     public string InfluxDbUrl => $"http://localhost:{_influxDbContainer.GetMappedPublicPort(8181)}";
     public string InfluxDbToken { get; private set; } = string.Empty;
 
-    public string MqttHost => _rabbitMqContainer.Hostname;
-    public string RabbitMqConnectionString => _rabbitMqContainer.GetConnectionString();
+    public int MqttPort => _mosquittoContainer.GetMappedPublicPort(1883);
+
+    private string CreateMosquittoConfigFile()
+    {
+        var configPath = Path.Combine(Path.GetTempPath(), "mosquitto_loadtest.conf");
+        var configContent = @"listener 1883
+    allow_anonymous true
+    ";
+
+        File.WriteAllText(configPath, configContent);
+        return configPath;
+    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -74,13 +91,12 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
                 ["Admin:Email"] = "loadtestadmin@loadtest.com",
                 ["Admin:Password"] = "LoadTestAdmin123!",
                 ["ConnectionStrings:DefaultConnection"] = _dbContainer.GetConnectionString(),
-                ["InfluxDB:Url"] = $"http://localhost:{_influxDbContainer.GetMappedPublicPort(8181)}",
-                ["InfluxDB:Token"] = InfluxDbToken,
-                ["MQTT:Server"] = _rabbitMqContainer.Hostname,
+                ["Influx:InfluxDBHost"] = $"http://localhost:{_influxDbContainer.GetMappedPublicPort(8181)}",
+                ["Influx:InfluxDBToken"] = InfluxDbToken,
+                ["MQTT:Server"] = _mosquittoContainer.Hostname,
                 ["MQTT:Port"] = 1883.ToString(),
                 ["MQTT:Username"] = "",
-                ["MQTT:Password"] = "",
-                ["RabbitMQ:ConnectionString"] = _rabbitMqContainer.GetConnectionString()
+                ["MQTT:Password"] = ""
             });
 
             config.AddJsonFile("appsettings.loadtest.json", true);
@@ -137,7 +153,7 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
         {
             _dbContainer.StartAsync(),
             _influxDbContainer.StartAsync(),
-            _rabbitMqContainer.StartAsync()
+            _mosquittoContainer.StartAsync()
         };
 
         await Task.WhenAll(tasks);
@@ -154,8 +170,8 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
         var result = await _influxDbContainer.ExecAsync(command, CancellationToken.None);
         InfluxDbToken = ParseTokenFromOutput(result.Stdout);
 
-        // Initialize database
         using var scope = Services.CreateScope();
+
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await context.Database.EnsureCreatedAsync();
     }
@@ -188,9 +204,9 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
 
         if (_influxDbContainer != null) tasks.Add(_influxDbContainer.StopAsync());
 
-        if (_rabbitMqContainer != null) tasks.Add(_rabbitMqContainer.StopAsync());
+        if (_mosquittoContainer != null) tasks.Add(_mosquittoContainer.StopAsync());
 
-        if (_rabbitMqContainer != null) tasks.Add(_rabbitMqContainer.StopAsync());
+        if (_mosquittoContainer != null) tasks.Add(_mosquittoContainer.StopAsync());
 
         await Task.WhenAll(tasks);
     }
@@ -204,7 +220,7 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
 
                 _dbContainer?.DisposeAsync().GetAwaiter().GetResult();
                 _influxDbContainer?.DisposeAsync().GetAwaiter().GetResult();
-                _rabbitMqContainer?.DisposeAsync().GetAwaiter().GetResult();
+                _mosquittoContainer?.DisposeAsync().GetAwaiter().GetResult();
             }
             catch (ObjectDisposedException)
             {

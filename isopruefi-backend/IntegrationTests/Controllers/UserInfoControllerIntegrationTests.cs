@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Rest_API.Models;
 using ApiChangePassword = IntegrationTests.ApiClient.ChangePassword;
 using DomainApiUser = Database.EntityFramework.Models.ApiUser;
-using ApiUser = IntegrationTests.ApiClient.ApiUser;
 
 namespace IntegrationTests.Controllers;
 

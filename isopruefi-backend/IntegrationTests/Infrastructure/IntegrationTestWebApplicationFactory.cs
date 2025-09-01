@@ -14,7 +14,6 @@ using MQTT_Receiver_Worker.MQTT;
 using MQTT_Receiver_Worker.MQTT.Interfaces;
 using Rest_API;
 using Rest_API.Models;
-using Testcontainers.InfluxDb;
 using Testcontainers.PostgreSql;
 
 namespace IntegrationTests.Infrastructure;
@@ -27,6 +26,7 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Progra
         .WithUsername("test")
         .WithPassword("test")
         .Build();
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureAppConfiguration((context, config) =>

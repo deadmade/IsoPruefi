@@ -15,7 +15,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "concurrently": "^9.2.0",
+    "concurrently": "^9.2.1",
     "gitleaks-secret-scanner": "^1.2.2",
     "husky": "^9.0.0",
     "@seaborg/cli": "0.6.2",

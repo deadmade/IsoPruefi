@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rest-API", "Rest-API\Rest-API.csproj", "{B3312569-BC50-4E62-BA4C-9E80FADB2F80}"
 EndProject
@@ -11,6 +11,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{CA7FD8F4-B302-40BC-B4E1-62DC5E216BC7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Get-weatherData-worker", "Get-weatherData-worker\Get-weatherData-worker.csproj", "{EFBC7FC9-77FA-46A2-9567-737B03D6387E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{2F8A3C41-9B7E-4D6F-A8E5-3C9D7B5E2F84}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A7F9BF79-5907-468D-9B6D-183CEA054AAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +46,13 @@ Global
 		{EFBC7FC9-77FA-46A2-9567-737B03D6387E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFBC7FC9-77FA-46A2-9567-737B03D6387E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFBC7FC9-77FA-46A2-9567-737B03D6387E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F8A3C41-9B7E-4D6F-A8E5-3C9D7B5E2F84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F8A3C41-9B7E-4D6F-A8E5-3C9D7B5E2F84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F8A3C41-9B7E-4D6F-A8E5-3C9D7B5E2F84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F8A3C41-9B7E-4D6F-A8E5-3C9D7B5E2F84}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2F8A3C41-9B7E-4D6F-A8E5-3C9D7B5E2F84} = {A7F9BF79-5907-468D-9B6D-183CEA054AAF}
+		{CA7FD8F4-B302-40BC-B4E1-62DC5E216BC7} = {A7F9BF79-5907-468D-9B6D-183CEA054AAF}
 	EndGlobalSection
 EndGlobal

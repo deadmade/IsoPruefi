@@ -1,12 +1,13 @@
 using System.Net.Http.Headers;
+using System.Text.Json;
 using IntegrationTests.ApiClient;
 
 namespace LoadTests.Infrastructure;
 
 public class AuthHelper
 {
-    private readonly HttpClient _httpClient;
     private readonly string _baseUrl;
+    private readonly HttpClient _httpClient;
 
     public AuthHelper(string baseUrl)
     {
@@ -20,7 +21,7 @@ public class AuthHelper
         try
         {
             var authClient = new AuthenticationClient(_baseUrl, _httpClient);
-            
+
             // Using a test user - you might need to adjust these credentials
             var loginRequest = new Login
             {
@@ -29,18 +30,16 @@ public class AuthHelper
             };
 
             var response = await authClient.LoginAsync(loginRequest);
-            
+
             // The response is a FileResponse, we need to read the content as JSON
             using var reader = new StreamReader(response.Stream);
             var jsonContent = await reader.ReadToEndAsync();
-            
+
             // Parse the JSON to extract the token
-            var tokenData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(jsonContent);
+            var tokenData = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonContent);
             if (tokenData != null && tokenData.TryGetValue("accessToken", out var token))
-            {
                 return token.ToString() ?? throw new InvalidOperationException("Token is null");
-            }
-            
+
             throw new InvalidOperationException("No token found in response");
         }
         catch (ApiException ex)

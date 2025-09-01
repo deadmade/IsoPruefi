@@ -6,7 +6,9 @@ public class TestDataGenerator
 {
     private static readonly Random Random = new();
     private static readonly string[] Locations = { "Berlin", "Munich", "Hamburg", "Frankfurt", "Stuttgart" };
-    private static readonly string[] SensorNames = { "temp_sensor_north", "temp_sensor_south", "temp_sensor_east", "temp_sensor_west" };
+
+    private static readonly string[] SensorNames =
+        { "temp_sensor_north", "temp_sensor_south", "temp_sensor_east", "temp_sensor_west" };
 
     public static string GenerateRandomLocation()
     {
@@ -54,6 +56,20 @@ public class TestDataGenerator
     public static string GenerateUniqueSensorId(int instanceId)
     {
         return $"sensor_{instanceId:D6}_{Random.Next(1000, 9999)}";
+    }
+
+    public static object GenerateRandomSensorData()
+    {
+        return new
+        {
+            SensorId = GenerateRandomSensorName(),
+            Temperature = GenerateRandomTemperature(),
+            Humidity = Math.Round(Random.NextDouble() * 100, 2),
+            Timestamp = DateTime.UtcNow,
+            Location = GenerateRandomLocation(),
+            BatteryLevel = Random.Next(20, 100),
+            SignalStrength = Random.Next(-80, -30)
+        };
     }
 
     public static (DateTime start, DateTime end) GenerateRandomDateRange(int maxDaysBack = 7, int maxRangeHours = 24)

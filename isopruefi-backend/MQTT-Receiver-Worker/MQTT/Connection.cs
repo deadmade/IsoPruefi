@@ -119,7 +119,7 @@ public class Connection : IConnection
             if (_mqttClient?.IsConnected == true)
             {
                 _logger.LogInformation("Disconnecting from MQTT broker");
-                await _mqttClient.DisconnectAsync();
+                await _mqttClient.DisconnectAsync(new MqttClientDisconnectOptions());
             }
 
             _isConnected = false;

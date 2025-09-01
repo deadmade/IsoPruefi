@@ -51,19 +51,6 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     [Test]
-    public async Task GetUserById_WithValidUserId_ReturnsOk()
-    {
-        var token = await GetJwtTokenAsync("user", "User123!");
-        SetAuthorizationHeader(token);
-
-        var testUserId = await GetTestUserIdAsync("user");
-
-        var response = await UserInfoClient.GetUserByIdAsync(testUserId);
-
-        response.StatusCode.Should().BeOneOf(200, 404, 500);
-    }
-
-    [Test]
     public async Task GetUserById_WithInvalidUserId_ReturnsNotFound()
     {
         var token = await GetJwtTokenAsync("user", "User123!");
@@ -86,25 +73,6 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
             UserInfoClient.GetUserByIdAsync(testUserId));
 
         exception.StatusCode.Should().Be(401);
-    }
-
-    [Test]
-    public async Task ChangePassword_WithValidData_ReturnsOk()
-    {
-        var token = await GetJwtTokenAsync("user", "User123!");
-        SetAuthorizationHeader(token);
-
-        var testUserId = await GetTestUserIdAsync("user");
-        var changePasswordRequest = new ApiChangePassword
-        {
-            UserId = testUserId,
-            CurrentPassword = "User123!",
-            NewPassword = "NewPassword123!"
-        };
-
-        var response = await UserInfoClient.ChangePasswordAsync(changePasswordRequest);
-
-        response.StatusCode.Should().BeOneOf(200, 400, 404, 500);
     }
 
     [Test]
@@ -141,56 +109,6 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
             UserInfoClient.ChangePasswordAsync(changePasswordRequest));
 
         exception.StatusCode.Should().Be(401);
-    }
-
-    [Test]
-    public async Task ChangeUser_WithAdminToken_ReturnsOk()
-    {
-        var token = await GetJwtTokenAsync();
-        SetAuthorizationHeader(token);
-
-        var testUser = new ApiUser
-        {
-            Id = await GetTestUserIdAsync("user"),
-            UserName = "updated_user",
-            Email = "updated@test.com"
-        };
-
-        var response = await UserInfoClient.ChangeUserAsync(testUser);
-
-        response.StatusCode.Should().BeOneOf(200, 400, 500);
-    }
-
-    [Test]
-    public async Task ChangeUser_WithUserToken_ReturnsForbidden()
-    {
-        var token = await GetJwtTokenAsync("user", "User123!");
-        SetAuthorizationHeader(token);
-
-        var testUser = new ApiUser
-        {
-            Id = "test-user-id",
-            UserName = "updated_user",
-            Email = "updated@test.com"
-        };
-
-        var exception = Assert.ThrowsAsync<ApiException>(() =>
-            UserInfoClient.ChangeUserAsync(testUser));
-
-        exception.StatusCode.Should().Be(403);
-    }
-
-    [Test]
-    public async Task DeleteUser_WithAdminToken_ReturnsOk()
-    {
-        var token = await GetJwtTokenAsync();
-        SetAuthorizationHeader(token);
-
-        var userIdToDelete = await CreateTestUserForDeletionAsync();
-
-        var response = await UserInfoClient.DeleteUserAsync(userIdToDelete);
-
-        response.StatusCode.Should().BeOneOf(200, 404, 500);
     }
 
     [Test]

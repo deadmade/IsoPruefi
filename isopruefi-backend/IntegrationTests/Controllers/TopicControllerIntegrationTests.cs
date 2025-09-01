@@ -203,12 +203,4 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
         // This test is commented out until the API endpoint is properly exposed
         Assert.Inconclusive("DeleteTopic operation not available in current API client");
     }
-
-    [Test]
-    public async Task DeleteTopic_WithUserToken_ReturnsForbidden()
-    {
-        // Note: DeleteTopic operation is not currently available in the generated API client
-        // This test is commented out until the API endpoint is properly exposed
-        Assert.Inconclusive("DeleteTopic operation not available in current API client");
-    }
 }

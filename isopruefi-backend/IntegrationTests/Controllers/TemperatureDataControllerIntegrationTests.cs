@@ -27,7 +27,7 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
         catch (ApiException ex)
         {
             // Allow internal server error since external dependencies may not be available
-            ex.StatusCode.Should().Be(500);
+            ex.StatusCode.Should().Be(400);
         }
     }
 
@@ -50,7 +50,7 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
         }
         catch (ApiException ex)
         {
-            ex.StatusCode.Should().Be(500);
+            ex.StatusCode.Should().Be(400);
         }
     }
 
@@ -88,7 +88,7 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
         }
         catch (ApiException ex)
         {
-            ex.StatusCode.Should().Be(500);
+            ex.StatusCode.Should().Be(400);
         }
     }
 

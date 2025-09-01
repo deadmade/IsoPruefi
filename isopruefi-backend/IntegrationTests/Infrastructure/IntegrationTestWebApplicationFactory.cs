@@ -27,15 +27,6 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Progra
         .WithUsername("test")
         .WithPassword("test")
         .Build();
-
-    private readonly InfluxDbContainer _influxDbContainer = new InfluxDbBuilder()
-        .WithImage("influxdb:3.2.1")
-        .WithUsername("test")
-        .WithPassword("test")
-        .WithOrganization("isopruefi_org")
-        .WithBucket("isopruefi_bucket")
-        .Build();
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureAppConfiguration((context, config) =>

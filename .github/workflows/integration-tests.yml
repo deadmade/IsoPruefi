@@ -49,6 +49,7 @@ jobs:
         continue-on-error: false
 
       - name: Run integration tests
+        working-directory: ./isopruefi-backend/IntegrationTests
         run: dotnet test IntegrationTests/IntegrationTests.csproj --no-build --verbosity normal --logger "trx;LogFileName=integration_tests.trx"
         env:
           ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=isopruefi_integration_test;Username=test;Password=test"
@@ -60,5 +61,4 @@ jobs:
         with:
           name: test-results
           path: |
-            isopruefi-backend/UnitTests/TestResults/unit_tests.trx
             isopruefi-backend/IntegrationTests/TestResults/integration_tests.trx

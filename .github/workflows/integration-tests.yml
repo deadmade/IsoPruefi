@@ -1,13 +1,11 @@
-name: Run Integration Tests
+name: Run C# Integration Tests
 permissions:
   contents: read
 
 on:
   push:
-    branches: [ main, develop ]
   pull_request:
-    branches: [ main, develop ]
-
+    
 jobs:
   integration-tests:
     runs-on: ubuntu-latest

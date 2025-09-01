@@ -1,12 +1,11 @@
-using System.Net;
 using FluentAssertions;
+using IntegrationTests.ApiClient;
 using IntegrationTests.Infrastructure;
 
 namespace IntegrationTests.Controllers;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
-public class LocationControllerIntegrationTests : IntegrationTestBase
+public class LocationControllerIntegrationTests : ApiClientTestBase
 {
     [Test]
     public async Task GetAllPostalcodes_WithValidUserToken_ReturnsOk()
@@ -14,9 +13,9 @@ public class LocationControllerIntegrationTests : IntegrationTestBase
         var token = await GetJwtTokenAsync("user", "User123!");
         SetAuthorizationHeader(token);
 
-        var response = await Client.GetAsync("/api/v1/Location/GetAllPostalcodes");
+        var response = await LocationClient.GetAllPostalcodesAsync();
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().BeOneOf(200, 500);
     }
 
     [Test]
@@ -25,17 +24,18 @@ public class LocationControllerIntegrationTests : IntegrationTestBase
         var token = await GetJwtTokenAsync();
         SetAuthorizationHeader(token);
 
-        var response = await Client.GetAsync("/api/v1/Location/GetAllPostalcodes");
+        var response = await LocationClient.GetAllPostalcodesAsync();
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().BeOneOf(200, 500);
     }
 
     [Test]
-    public async Task GetAllPostalcodes_WithoutToken_ReturnsUnauthorized()
+    public async Task GetAllPostalcodes_WithoutToken_ThrowsUnauthorizedException()
     {
-        var response = await Client.GetAsync("/api/v1/Location/GetAllPostalcodes");
+        var exception = Assert.ThrowsAsync<ApiException>(() =>
+            LocationClient.GetAllPostalcodesAsync());
 
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        exception.StatusCode.Should().Be(401);
     }
 
     [Test]
@@ -46,55 +46,64 @@ public class LocationControllerIntegrationTests : IntegrationTestBase
 
         var postalCode = 10115; // Berlin postal code for testing
 
-        var response = await Client.PostAsync($"/api/v1/Location/InsertLocation?postalcode={postalCode}", null);
+        var response = await LocationClient.InsertLocationAsync(postalCode);
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().BeOneOf(200, 500);
     }
 
     [Test]
-    public async Task InsertLocation_WithUserToken_ReturnsForbidden()
+    public async Task InsertLocation_WithUserToken_ThrowsForbiddenException()
     {
         var token = await GetJwtTokenAsync("user", "User123!");
         SetAuthorizationHeader(token);
 
         var postalCode = 10115;
 
-        var response = await Client.PostAsync($"/api/v1/Location/InsertLocation?postalcode={postalCode}", null);
+        var exception = Assert.ThrowsAsync<ApiException>(() =>
+            LocationClient.InsertLocationAsync(postalCode));
 
-        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        exception.StatusCode.Should().Be(403);
     }
 
     [Test]
-    public async Task InsertLocation_WithoutToken_ReturnsUnauthorized()
+    public async Task InsertLocation_WithoutToken_ThrowsUnauthorizedException()
     {
         var postalCode = 10115;
 
-        var response = await Client.PostAsync($"/api/v1/Location/InsertLocation?postalcode={postalCode}", null);
+        var exception = Assert.ThrowsAsync<ApiException>(() =>
+            LocationClient.InsertLocationAsync(postalCode));
 
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        exception.StatusCode.Should().Be(401);
     }
 
     [Test]
-    public async Task RemovePostalcode_WithValidToken_ReturnsOk()
+    public async Task RemovePostalcode_WithValidToken_ReturnsOkOrNotFound()
     {
         var token = await GetJwtTokenAsync("user", "User123!");
         SetAuthorizationHeader(token);
 
         var postalCode = 12345; // Test postal code
 
-        var response = await Client.DeleteAsync($"/api/v1/Location/RemovePostalcode?postalCode={postalCode}");
-
-        response.StatusCode.Should()
-            .BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError, HttpStatusCode.NotFound);
+        try
+        {
+            await LocationClient.RemovePostalcodeAsync(postalCode);
+            Assert.Pass(); // Success case
+        }
+        catch (ApiException ex)
+        {
+            // Allow 404 Not Found or 500 Internal Server Error
+            ex.StatusCode.Should().BeOneOf(404, 500);
+        }
     }
 
     [Test]
-    public async Task RemovePostalcode_WithoutToken_ReturnsUnauthorized()
+    public async Task RemovePostalcode_WithoutToken_ThrowsUnauthorizedException()
     {
         var postalCode = 12345;
 
-        var response = await Client.DeleteAsync($"/api/v1/Location/RemovePostalcode?postalCode={postalCode}");
+        var exception = Assert.ThrowsAsync<ApiException>(() =>
+            LocationClient.RemovePostalcodeAsync(postalCode));
 
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        exception.StatusCode.Should().Be(401);
     }
 }

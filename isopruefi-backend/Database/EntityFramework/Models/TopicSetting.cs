@@ -10,8 +10,6 @@ namespace Database.EntityFramework.Models;
 // Represents the settings for a specific topic, including default path, group, and sensor information.
 public class TopicSetting
 {
-
-    
     /// <summary>
     ///     Gets or sets the unique identifier for the TopicSetting entity.
     /// </summary>
@@ -19,8 +17,8 @@ public class TopicSetting
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int TopicSettingId { get; set; }
 
-    public int CoordinateMappingId { get; set; }  
-    
+    public int CoordinateMappingId { get; set; }
+
     [ForeignKey(nameof(CoordinateMappingId))]
     public virtual CoordinateMapping? CoordinateMapping { get; set; }
 

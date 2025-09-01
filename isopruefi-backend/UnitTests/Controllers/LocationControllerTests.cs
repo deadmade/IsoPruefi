@@ -98,6 +98,9 @@ public class LocationControllerTests
 
         var problemDetails = (ProblemDetails)objectResult.Value!;
         problemDetails.Detail.Should().Be("Database connection failed");
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.6.1");
+        problemDetails.Title.Should().Be("Internal Server Error");
     }
 
     /// <summary>
@@ -143,7 +146,7 @@ public class LocationControllerTests
     ///     Tests that InsertLocation returns InternalServerError when InvalidOperationException is thrown.
     /// </summary>
     [Test]
-    public async Task InsertLocation_WithInvalidOperationException_ShouldReturnInternalServerError()
+    public async Task InsertLocation_WithInvalidOperationException_ShouldReturnBadRequest()
     {
         // Arrange
         const int postalCode = 12345;
@@ -155,13 +158,15 @@ public class LocationControllerTests
         var result = await _controller.InsertLocation(postalCode);
 
         // Assert
-        result.Should().BeOfType<ObjectResult>();
-        var objectResult = (ObjectResult)result;
-        objectResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
-        objectResult.Value.Should().BeOfType<ProblemDetails>();
+        result.Should().BeOfType<BadRequestObjectResult>();
+        var badRequestResult = (BadRequestObjectResult)result;
+        badRequestResult.Value.Should().BeOfType<ProblemDetails>();
 
-        var problemDetails = (ProblemDetails)objectResult.Value!;
+        var problemDetails = (ProblemDetails)badRequestResult.Value!;
         problemDetails.Detail.Should().Be("API limit exceeded");
+        problemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        problemDetails.Title.Should().Be("Bad Request");
     }
 
     /// <summary>
@@ -187,6 +192,9 @@ public class LocationControllerTests
 
         var problemDetails = (ProblemDetails)objectResult.Value!;
         problemDetails.Detail.Should().Be("Unexpected error");
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.6.1");
+        problemDetails.Title.Should().Be("Internal Server Error");
     }
 
     /// <summary>
@@ -204,9 +212,7 @@ public class LocationControllerTests
         var result = await _controller.RemovePostalcode(postalCode);
 
         // Assert
-        result.Should().BeOfType<StatusCodeResult>();
-        var statusResult = (StatusCodeResult)result;
-        statusResult.StatusCode.Should().Be(StatusCodes.Status200OK);
+        result.Should().BeOfType<OkResult>();
 
         _mockCoordinateRepo.Verify(x => x.DeletePostalCode(postalCode), Times.Once);
     }
@@ -234,6 +240,9 @@ public class LocationControllerTests
 
         var problemDetails = (ProblemDetails)objectResult.Value!;
         problemDetails.Detail.Should().Be("Database deletion failed");
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.6.1");
+        problemDetails.Title.Should().Be("Internal Server Error");
     }
 
     /// <summary>
@@ -281,7 +290,7 @@ public class LocationControllerTests
             x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Forbidden while inserting a new location")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Bad request while inserting a new location")),
                 It.Is<Exception>(ex => ex == exception),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
@@ -307,7 +316,7 @@ public class LocationControllerTests
             x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Error fetching all postalcodes")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Error deleting postalcode")),
                 It.Is<Exception>(ex => ex == exception),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

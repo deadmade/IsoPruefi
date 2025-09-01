@@ -10,11 +10,8 @@ using Rest_API.Models;
 namespace IntegrationTests.Infrastructure;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
 public abstract class IntegrationTestBase
 {
-    private static readonly object LockObject = new();
-    private static long _counter = 0;
     [OneTimeSetUp]
     public virtual async Task OneTimeSetUp()
     {
@@ -35,6 +32,9 @@ public abstract class IntegrationTestBase
     {
         Client.DefaultRequestHeaders.Authorization = null;
     }
+
+    private static readonly object LockObject = new();
+    private static long _counter;
 
     protected IntegrationTestWebApplicationFactory Factory { get; private set; } = null!;
     protected HttpClient Client { get; private set; } = null!;
@@ -144,11 +144,46 @@ public abstract class IntegrationTestBase
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApiUser>>();
 
         var testUsers = userManager.Users.Where(u => u.Email.EndsWith("@test.com")).ToList();
-        foreach (var user in testUsers)
-        {
-            await userManager.DeleteAsync(user);
-        }
+        foreach (var user in testUsers) await userManager.DeleteAsync(user);
 
         await context.SaveChangesAsync();
+    }
+
+    public async Task CreateTestUserAsync(string username, string password, string role)
+    {
+        using var scope = Factory.Services.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApiUser>>();
+
+        // Check if user already exists
+        var existingUser = await userManager.FindByNameAsync(username);
+        if (existingUser != null) return;
+
+        var user = new ApiUser
+        {
+            UserName = username,
+            Email = $"{username}@test.com"
+        };
+
+        var result = await userManager.CreateAsync(user, password);
+        if (result.Succeeded) await userManager.AddToRoleAsync(user, role);
+    }
+
+    public async Task<string> GetValidJwtTokenAsync(string username, string password)
+    {
+        var loginData = new Login { UserName = username, Password = password };
+        var json = JsonSerializer.Serialize(loginData, _jsonOptions);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await Client.PostAsync("/v1/Authentication/Login", content);
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            throw new InvalidOperationException($"Failed to login: {response.StatusCode}, {errorContent}");
+        }
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var tokenResponse = JsonSerializer.Deserialize<JwtToken>(responseContent, _jsonOptions);
+
+        return tokenResponse?.Token ?? throw new InvalidOperationException("No token received");
     }
 }

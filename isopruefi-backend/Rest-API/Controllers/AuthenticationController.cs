@@ -131,6 +131,7 @@ public class AuthenticationController(
     /// <response code="403">Access denied. Admin role required for user registration.</response>
     /// <response code="500">Internal server error occurred during registration.</response>
     [HttpPost]
+    [Microsoft.AspNetCore.Authorization.Authorize(Policy = "AdminOnly")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

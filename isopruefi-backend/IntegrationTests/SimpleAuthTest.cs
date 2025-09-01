@@ -1,27 +1,27 @@
-using System.Net;
-using System.Text;
-using System.Text.Json;
-using Database.EntityFramework.Models;
 using FluentAssertions;
+using IntegrationTests.ApiClient;
 using IntegrationTests.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Rest_API.Models;
+using ApiLogin = IntegrationTests.ApiClient.Login;
+using ApiJwtToken = IntegrationTests.ApiClient.JwtToken;
+using DomainApiUser = Database.EntityFramework.Models.ApiUser;
 
 namespace IntegrationTests;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
-public class SimpleAuthTest : IntegrationTestBase
+public class SimpleAuthTest : ApiClientTestBase
 {
     [Test]
     public async Task SimpleLogin_Test()
     {
         // Create a test user directly
         using var scope = Factory.Services.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApiUser>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<DomainApiUser>>();
 
-        var testUser = new ApiUser
+        var testUser = new DomainApiUser
         {
             UserName = "simpletest",
             Email = "simpletest@test.com"
@@ -30,21 +30,27 @@ public class SimpleAuthTest : IntegrationTestBase
         var result = await userManager.CreateAsync(testUser, "SimpleTest123!");
         if (result.Succeeded) await userManager.AddToRoleAsync(testUser, Roles.User);
 
-        // Try to login
-        var loginData = new { userName = "simpletest", password = "SimpleTest123!" };
-        var json = JsonSerializer.Serialize(loginData);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        // Try to login using NSwag client
+        var loginData = new ApiLogin { UserName = "simpletest", Password = "SimpleTest123!" };
 
-        var response = await Client.PostAsync("/v1/Authentication/Login", content);
+        try
+        {
+            var response = await AuthenticationClient.LoginAsync(loginData);
+            response.StatusCode.Should().Be(200);
 
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized);
+            // Read the response content
+            var jsonContent = await new StreamReader(response.Stream).ReadToEndAsync();
+            jsonContent.Should().NotBeNullOrEmpty();
 
-        var responseContent = await response.Content.ReadAsStringAsync();
-        Console.WriteLine($"Status: {response.StatusCode}");
-        Console.WriteLine($"Response: {responseContent}");
-
-        // This test is mainly to verify the infrastructure works
-        // We don't assert success, just that we get a response
-        responseContent.Should().NotBeNull();
+            var jwtResult = JsonConvert.DeserializeObject<ApiJwtToken>(jsonContent);
+            jwtResult.Should().NotBeNull();
+            jwtResult!.Token.Should().NotBeNullOrEmpty();
+        }
+        catch (ApiException ex)
+        {
+            ex.StatusCode.Should().BeOneOf(200, 400, 401);
+            Console.WriteLine($"Status: {ex.StatusCode}");
+            Console.WriteLine($"Response: {ex.Response}");
+        }
     }
 }

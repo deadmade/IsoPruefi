@@ -101,7 +101,12 @@
           "500": {
             "description": "Internal server error occurred during registration."
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/v1/Authentication/Refresh": {

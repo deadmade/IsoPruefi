@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Database.EntityFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -92,7 +92,13 @@ public class UserInfoController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error fetching all users");
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = e.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = e.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 
@@ -118,7 +124,13 @@ public class UserInfoController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error fetching user by ID: {UserId}", userId);
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = e.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = e.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 
@@ -136,7 +148,11 @@ public class UserInfoController : ControllerBase
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Invalid model state for ChangePassword");
-            return BadRequest(new ValidationProblemDetails(ModelState));
+            return BadRequest(new ValidationProblemDetails(ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Status = StatusCodes.Status400BadRequest
+            });
         }
 
         try
@@ -150,7 +166,13 @@ public class UserInfoController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error changing password for user: {UserId}", input.UserId);
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = e.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = e.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 
@@ -168,7 +190,11 @@ public class UserInfoController : ControllerBase
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Invalid model state for ChangeUser");
-            return BadRequest(new ValidationProblemDetails(ModelState));
+            return BadRequest(new ValidationProblemDetails(ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Status = StatusCodes.Status400BadRequest
+            });
         }
 
         try
@@ -179,7 +205,13 @@ public class UserInfoController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error changing user info for user: {UserId}", user.Id);
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = e.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = e.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 
@@ -203,12 +235,24 @@ public class UserInfoController : ControllerBase
             if (result)
                 return Ok();
             return StatusCode(StatusCodes.Status500InternalServerError,
-                new ProblemDetails { Detail = "Failed to delete user." });
+                new ProblemDetails
+                {
+                    Detail = "Failed to delete user.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                    Title = "Internal Server Error"
+                });
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error deleting user: {UserId}", userId);
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = e.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = e.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 }

@@ -93,6 +93,9 @@ public class UserInfoControllerTests
 
         var problemDetails = (ProblemDetails)objectResult.Value!;
         problemDetails.Detail.Should().Be("Database connection failed");
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.6.1");
+        problemDetails.Title.Should().Be("Internal Server Error");
     }
 
     /// <summary>
@@ -186,6 +189,9 @@ public class UserInfoControllerTests
 
         var problemDetails = (ProblemDetails)objectResult.Value!;
         problemDetails.Detail.Should().Be("Database connection failed");
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.6.1");
+        problemDetails.Title.Should().Be("Internal Server Error");
     }
 
     /// <summary>
@@ -454,6 +460,9 @@ public class UserInfoControllerTests
 
         var problemDetails = (ProblemDetails)objectResult.Value!;
         problemDetails.Detail.Should().Be("Failed to delete user.");
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.6.1");
+        problemDetails.Title.Should().Be("Internal Server Error");
     }
 
     /// <summary>

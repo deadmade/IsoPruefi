@@ -1,0 +1,1274 @@
+{
+  "x-generator": "NSwag v14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "IsoPruefi API",
+    "description": "Temperature monitoring API with JWT authentication",
+    "version": "v1"
+  },
+  "paths": {
+    "/v1/Authentication/Login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Authenticates a user and returns a JWT token for API access.",
+        "description": "This endpoint validates user credentials and returns a JWT access token and refresh token.\nThe returned tokens should be used for authenticating subsequent API requests.\nExample request:\n```json\n{\n\"userName\": \"admin\",\n\"password\": \"your-password\"\n}\n```\nExample response:\n```json\n{\n\"accessToken\": \"CakeIsNotALie.\",\n\"refreshToken\": \"refresh-token-here\",\n\"expiresIn\": 3600\n}\n```",
+        "operationId": "Authentication_Login",
+        "requestBody": {
+          "x-name": "input",
+          "description": "The login credentials containing username and password.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful. Returns JWT access token and refresh token.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/Authentication/Register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Registers a new user in the system. Admin access required.",
+        "description": "This endpoint allows administrators to create new user accounts in the system.\nOnly users with the \"Admin\" role can access this endpoint.\n**Authorization Required**: Bearer token with Admin role\nExample request:\n```json\n{\n\"userName\": \"newuser\",\n\"password\": \"secure-password\"\n}\n```\nThe new user will be created with the \"User\" role by default and can access\ntemperature data endpoints but cannot perform administrative functions.",
+        "operationId": "Authentication_Register",
+        "requestBody": {
+          "x-name": "input",
+          "description": "The registration data containing username and password for the new user.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "User registered successfully."
+          },
+          "400": {
+            "description": "Invalid registration data, missing fields, or username already exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required. No valid JWT token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin role required for user registration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error occurred during registration."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/Authentication/Refresh": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Refreshes an expired JWT access token using a valid refresh token.",
+        "description": "This endpoint allows clients to obtain a new access token without requiring\nthe user to log in again. The refresh token must be valid and not expired.\nUse this endpoint when your access token expires to maintain continuous\nauthentication without user intervention.\nExample request:\n```json\n{\n\"accessToken\": \"expired-access-token\",\n\"refreshToken\": \"valid-refresh-token\"\n}\n```\nExample response:\n```json\n{\n\"accessToken\": \"new-jwt-access-token\",\n\"refreshToken\": \"new-refresh-token\",\n\"expiresIn\": 3600\n}\n```",
+        "operationId": "Authentication_Refresh",
+        "requestBody": {
+          "x-name": "token",
+          "description": "The JWT token object containing both the expired access token and valid refresh token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JwtToken"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Token refresh successful. Returns new access and refresh tokens."
+          },
+          "400": {
+            "description": "Invalid token format or missing required fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Refresh token is invalid, expired, or has been revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error occurred during token refresh."
+          }
+        }
+      }
+    },
+    "/api/v1/Location/GetAllPostalcodes": {
+      "get": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Retrieves all saved locations.",
+        "operationId": "Location_GetAllPostalcodes",
+        "responses": {
+          "200": {
+            "description": "A list of all postalcodes; otherwise, NotFound.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/Location/InsertLocation": {
+      "post": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Checks for existence of location and if necessary inserts new location.",
+        "operationId": "Location_InsertLocation",
+        "parameters": [
+          {
+            "name": "postalcode",
+            "in": "query",
+            "description": "Defines the location.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok if successful; otherwise, an error response.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/Location/RemovePostalcode": {
+      "delete": {
+        "tags": [
+          "Location"
+        ],
+        "operationId": "Location_RemovePostalcode",
+        "parameters": [
+          {
+            "name": "postalCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/TemperatureData/GetTemperature": {
+      "get": {
+        "tags": [
+          "TemperatureData"
+        ],
+        "summary": "Retrieves comprehensive temperature data for a specified time range and location.",
+        "description": "This endpoint provides temperature readings from multiple sources:\n- **Indoor sensors**: North and South sensor locations\n- **External weather data**: Outside temperature for the specified location\n**Authorization Required**: Bearer token with User or Admin role\n**Time Range Requirements**:\n- Start date must be before end date\n- Maximum time range is recommended to be 30 days for optimal performance\n- Dates should be in ISO 8601 format (e.g., \"2024-01-15T10:30:00Z\")\n**Temperature Unit Conversion**:\n- Default: Celsius (°C)\n- Optional: Fahrenheit (°F) by setting `isFahrenheit=true`\n**Example Usage**:\n```\nGET /api/v1/TemperatureData/GetTemperature?start=2024-01-15T00:00:00Z&end=2024-01-16T00:00:00Z&place=Berlin\n&isFahrenheit=false\n```\n**Data Quality**:\n- Automatic plausibility checks are performed on all temperature readings\n- Suspicious readings (outside -30°C to 45°C for outdoor, -10°C to 35°C for indoor) are logged as warnings\n- Large temperature jumps (>10°C between consecutive readings) are flagged",
+        "operationId": "TemperatureData_GetTemperature",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date and time for the data range (ISO 8601 format).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date and time for the data range (ISO 8601 format).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "place",
+            "in": "query",
+            "description": "Location name for external weather data (e.g., \"Berlin\", \"Munich\").",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "isFahrenheit",
+            "in": "query",
+            "description": "Optional. If true, converts all temperatures to Fahrenheit. Default is false (Celsius).",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved temperature data. Returns comprehensive temperature overview.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemperatureDataOverview"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters. Check date format, ensure start is before end date, or verify location name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required. No valid JWT token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. User or Admin role required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Possible issues with database connection or external weather service."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/Topic/GetAllTopics": {
+      "get": {
+        "tags": [
+          "Topic"
+        ],
+        "summary": "Retrieves all configured MQTT topic settings from the system.",
+        "description": "This endpoint returns all MQTT topic configurations including:\n- Sensor names and their physical locations (North, South, etc.)\n- MQTT topic mappings for each sensor\n- Configuration metadata for the monitoring system\n**Authorization Required**: Bearer token with Admin role\nThis information is essential for:\n- System administration and configuration management\n- Troubleshooting sensor connectivity issues\n- Understanding the current sensor topology\n**Example Response**:\n```json\n[\n{\n\"id\": 1,\n\"sensorName\": \"TempSensor_01\",\n\"sensorLocation\": \"North\",\n\"mqttTopic\": \"sensors/temperature/north\",\n\"isActive\": true\n},\n{\n\"id\": 2,\n\"sensorName\": \"TempSensor_02\",\n\"sensorLocation\": \"South\",\n\"mqttTopic\": \"sensors/temperature/south\",\n\"isActive\": true\n}\n]\n```",
+        "operationId": "Topic_GetAllTopics",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all topic settings.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TopicSetting"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required. No valid JWT token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin role required to view topic configurations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Database connection issues or configuration service unavailable."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/Topic/GetAllSensorTypes": {
+      "get": {
+        "tags": [
+          "Topic"
+        ],
+        "operationId": "Topic_GetAllSensorTypes",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/Topic/CreateTopic": {
+      "post": {
+        "tags": [
+          "Topic"
+        ],
+        "summary": "Creates a new MQTT topic configuration for sensor monitoring.",
+        "description": "This endpoint allows administrators to add new sensor configurations to the monitoring system.\nEach topic setting maps a physical sensor to its MQTT topic and location within the building.\n**Authorization Required**: Bearer token with Admin role\n**Required Fields**:\n- `sensorName`: Unique identifier for the sensor (e.g., \"TempSensor_03\")\n- `sensorLocation`: Physical location (e.g., \"North\", \"South\", \"East\", \"West\", \"Center\")\n- `mqttTopic`: MQTT topic path for this sensor (e.g., \"sensors/temperature/east\")\n**Example Request**:\n```json\n{\n\"sensorName\": \"TempSensor_03\",\n\"sensorLocation\": \"East\",\n\"mqttTopic\": \"sensors/temperature/east\",\n\"isActive\": true,\n\"description\": \"Temperature sensor in the eastern section\"\n}\n```\n**Example Response**:\n```json\n{\n\"id\": 3,\n\"message\": \"Topic created successfully\"\n}\n```\n**Validation Rules**:\n- Sensor names must be unique across the system\n- MQTT topics should follow the pattern: `sensors/temperature/{location}`\n- Location names should be descriptive and consistent",
+        "operationId": "Topic_CreateTopic",
+        "requestBody": {
+          "x-name": "topicSetting",
+          "description": "The complete topic setting configuration to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopicSetting"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": "Topic setting created successfully. Returns the new topic ID.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid topic setting data, missing required fields, or duplicate sensor name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required. No valid JWT token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin role required to create topic configurations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Database connection issues or configuration service unavailable."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/Topic/UpdateTopic": {
+      "put": {
+        "tags": [
+          "Topic"
+        ],
+        "operationId": "Topic_UpdateTopic",
+        "requestBody": {
+          "x-name": "topicSetting",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopicSetting"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/Topic/DeleteTopic": {
+      "delete": {
+        "tags": [
+          "Topic"
+        ],
+        "operationId": "Topic_DeleteTopic",
+        "requestBody": {
+          "x-name": "topicSetting",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopicSetting"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UserInfo/GetUserById": {
+      "get": {
+        "tags": [
+          "UserInfo"
+        ],
+        "summary": "Retrieves a user by their unique identifier.",
+        "operationId": "UserInfo_GetUserById",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user.",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user information if found; otherwise, NotFound.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UserInfo/ChangePassword": {
+      "post": {
+        "tags": [
+          "UserInfo"
+        ],
+        "summary": "Changes the password for a user.",
+        "operationId": "UserInfo_ChangePassword",
+        "requestBody": {
+          "x-name": "input",
+          "description": "The change password request containing user ID, current password, and new password.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePassword"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Ok if successful; otherwise, an error response.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UserInfo/ChangeUser": {
+      "put": {
+        "tags": [
+          "UserInfo"
+        ],
+        "summary": "Updates user information.",
+        "operationId": "UserInfo_ChangeUser",
+        "requestBody": {
+          "x-name": "user",
+          "description": "The user object with updated information.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiUser"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Ok if successful; otherwise, an error response.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UserInfo/DeleteUser": {
+      "delete": {
+        "tags": [
+          "UserInfo"
+        ],
+        "summary": "Deletes a user by their unique identifier.",
+        "operationId": "UserInfo_DeleteUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user to delete.",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok if successful; otherwise, an error response.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "description": "Represents the login credentials for a user.\n            ",
+        "additionalProperties": false,
+        "required": [
+          "userName",
+          "password"
+        ],
+        "properties": {
+          "userName": {
+            "type": "string",
+            "description": "Gets or sets the username of the user.\n            ",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "description": "Gets or sets the password of the user.\n            ",
+            "minLength": 1
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Register": {
+        "type": "object",
+        "description": "Represents the registration credentials for a new user.\n            ",
+        "additionalProperties": false,
+        "required": [
+          "userName",
+          "password"
+        ],
+        "properties": {
+          "userName": {
+            "type": "string",
+            "description": "Gets or sets the username for the new user.\n            ",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "description": "Gets or sets the password for the new user.\n            ",
+            "minLength": 1
+          }
+        }
+      },
+      "JwtToken": {
+        "type": "object",
+        "description": "Represents a JWT token and its associated refresh token and metadata.\n            ",
+        "additionalProperties": false,
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Gets or sets the JWT access token string.\n            "
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Gets or sets the refresh token string.\n            "
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "Gets or sets the expiry date and time of the JWT token.\n            ",
+            "format": "date-time"
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Gets or sets the creation date and time of the JWT token.\n            ",
+            "format": "date-time"
+          },
+          "roles": {
+            "type": "array",
+            "description": "Gets or sets the user roles associated with the JWT token.\n            ",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TemperatureDataOverview": {
+        "type": "object",
+        "description": "Represents an overview of temperature data for different locations.\n            ",
+        "additionalProperties": false,
+        "properties": {
+          "sensorData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SensorData"
+            }
+          },
+          "temperatureOutside": {
+            "type": "array",
+            "description": "Gets or sets the list of temperature data for the outside location.\n            ",
+            "items": {
+              "$ref": "#/components/schemas/TemperatureData"
+            }
+          }
+        }
+      },
+      "SensorData": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sensorName": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "temperatureDatas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemperatureData"
+            }
+          }
+        }
+      },
+      "TemperatureData": {
+        "type": "object",
+        "description": "Represents a single temperature data point with timestamp and value.\n            ",
+        "additionalProperties": false,
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "Gets or sets the timestamp of the temperature measurement.\n            ",
+            "format": "date-time"
+          },
+          "temperature": {
+            "type": "number",
+            "description": "Gets or sets the temperature value.\n            ",
+            "format": "double"
+          },
+          "plausibility": {
+            "type": "string"
+          }
+        }
+      },
+      "TopicSetting": {
+        "type": "object",
+        "description": "Represents the settings for a specific MQTT topic, including default path, group, and sensor information.\n            ",
+        "additionalProperties": false,
+        "properties": {
+          "topicSettingId": {
+            "type": "integer",
+            "description": "Gets or sets the unique identifier for the TopicSetting entity.\n            ",
+            "format": "int32"
+          },
+          "coordinateMappingId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "coordinateMapping": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CoordinateMapping"
+              }
+            ]
+          },
+          "defaultTopicPath": {
+            "type": "string",
+            "description": "Gets or sets the default MQTT topic path for this setting.\n            ",
+            "maxLength": 100
+          },
+          "groupId": {
+            "type": "integer",
+            "description": "Gets or sets the group identifier associated with this topic setting.\n            ",
+            "format": "int32"
+          },
+          "sensorTypeEnum": {
+            "description": "Gets or sets the type of sensor (e.g., temperature, humidity).\n            ",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SensorType"
+              }
+            ]
+          },
+          "sensorName": {
+            "type": "string",
+            "description": "Gets or sets the name of the sensor.\n            ",
+            "maxLength": 50,
+            "nullable": true
+          },
+          "sensorLocation": {
+            "type": "string",
+            "description": "Gets or sets the location of the sensor.\n            ",
+            "maxLength": 50,
+            "nullable": true
+          },
+          "hasRecovery": {
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether this topic setting has recovery enabled.\n            "
+          }
+        }
+      },
+      "CoordinateMapping": {
+        "type": "object",
+        "description": "Stores geographic coordinates associated with postalcodes, including the time the mapping was used.\n            ",
+        "additionalProperties": false,
+        "properties": {
+          "postalCode": {
+            "type": "integer",
+            "description": "Gets or sets the postalcode which is also the uniqe identifier.\n            ",
+            "format": "int32"
+          },
+          "location": {
+            "type": "string",
+            "description": "Gets or sets the name of the location.\n            "
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Gets or sets the latitude for the location.\n            ",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Gets or sets the longitude of the location.\n            ",
+            "format": "double"
+          },
+          "lastUsed": {
+            "type": "string",
+            "description": "Gets or sets the time the postalcode was last entered by the user.\n            ",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lockedUntil": {
+            "type": "string",
+            "description": "Gets or sets the time until which the entry is locked.\n            ",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "SensorType": {
+        "type": "integer",
+        "description": "Represents the different types of sensors available in the system.",
+        "x-enum-names": [
+          "temp",
+          "spl",
+          "hum",
+          "ikea",
+          "co2",
+          "mic"
+        ],
+        "x-enum-varnames": [
+          "temp",
+          "spl",
+          "hum",
+          "ikea",
+          "co2",
+          "mic"
+        ],
+        "x-enumNames": [
+          "temp",
+          "spl",
+          "hum",
+          "ikea",
+          "co2",
+          "mic"
+        ],
+        "x-enum-descriptions": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "x-enumDescriptions": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "ChangePassword": {
+        "type": "object",
+        "description": "Represents a request to change a user's password.\n            ",
+        "additionalProperties": false,
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Gets or sets the unique identifier of the user whose password is to be changed.\n            ",
+            "nullable": true
+          },
+          "currentPassword": {
+            "type": "string",
+            "description": "Gets or sets the current password of the user.\n            ",
+            "nullable": true
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "Gets or sets the new password to be set for the user.\n            ",
+            "nullable": true
+          }
+        }
+      },
+      "ApiUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IdentityUser"
+          },
+          {
+            "type": "object",
+            "description": "Represents an application user in the system\n            ",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "IdentityUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IdentityUserOfString"
+          },
+          {
+            "type": "object",
+            "description": "The default implementation of IdentityUser`1 which uses a string as a primary key.",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "IdentityUserOfString": {
+        "type": "object",
+        "description": "Represents a user in the identity system",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the primary key for this user.",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "description": "Gets or sets the user name for this user.",
+            "nullable": true
+          },
+          "normalizedUserName": {
+            "type": "string",
+            "description": "Gets or sets the normalized user name for this user.",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "Gets or sets the email address for this user.",
+            "nullable": true
+          },
+          "normalizedEmail": {
+            "type": "string",
+            "description": "Gets or sets the normalized email address for this user.",
+            "nullable": true
+          },
+          "emailConfirmed": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if a user has confirmed their email address."
+          },
+          "passwordHash": {
+            "type": "string",
+            "description": "Gets or sets a salted and hashed representation of the password for this user.",
+            "nullable": true
+          },
+          "securityStamp": {
+            "type": "string",
+            "description": "A random value that must change whenever a users credentials change (password changed, login removed)",
+            "nullable": true
+          },
+          "concurrencyStamp": {
+            "type": "string",
+            "description": "A random value that must change whenever a user is persisted to the store",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Gets or sets a telephone number for the user.",
+            "nullable": true
+          },
+          "phoneNumberConfirmed": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if a user has confirmed their telephone address."
+          },
+          "twoFactorEnabled": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if two factor authentication is enabled for this user."
+          },
+          "lockoutEnd": {
+            "type": "string",
+            "description": "Gets or sets the date and time, in UTC, when any user lockout ends.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lockoutEnabled": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if the user could be locked out."
+          },
+          "accessFailedCount": {
+            "type": "integer",
+            "description": "Gets or sets the number of failed login attempts for the current user.",
+            "format": "int32"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Enter your JWT token in the text input below.",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ]
+}

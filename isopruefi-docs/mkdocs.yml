@@ -1,31 +1,21 @@
 site_name: IsoPrüfi
 docs_dir: ./docs
-site_url: https://github.com/deadmade/IsoPruefi
+site_url: https://deadmade.github.io/IsoPruefi/
 repo_url: https://github.com/deadmade/IsoPruefi
 repo_name: "deadmade/IsoPruefi"
 
-
 nav:
   - Home: index.md
-  - Build: build.md
-  - Dev-Guidelines: guidelines.md
-  - Code Documentation:
-      - Rest-API: code/Rest-API/index.md
-      - MQTT-Receiver-Worker: code/MQTT-Receiver-Worker/index.md
-      - MQTT-Sender: code/MQTT-Sender/index.md
-      - Database: code/Database/index.md
-      - UnitTests: code/UnitTests/index.md
-      - Arduino: code/arduino/md/index.md
-      - Frontend:
-          - Overview: code/frontend/README.md
-          - Api: code/frontend/api
-          - Authentication: code/frontend/auth
-          - Components: code/frontend/components
-          - Pages: code/frontend/pages
-          - Utils: code/frontend/utils
-  - Docker:
-      - Docker Dev Environment: docker-dev.md
-  - IsoPrüfi Documentation:
+  - Getting Started:
+      - Build & Setup: build.md
+      - Docker Environment: docker-dev.md
+      - Contributing: contributing.md
+  - Development:
+      - Guidelines: guidelines.md
+      - API Reference: api-reference.md
+      - API V1: api-v1.md
+      - Troubleshooting: troubleshooting.md
+  - Architecture Documentation:
       - 01 Introduction and Goals: documentation/01_introduction_and_goals.md
       - 02 Quality Requirements: documentation/02_quality_requirements.md
       - 03 Architecture Constraints and Solution Strategy: documentation/03_architecture_constraints_and_solution_strategy.md
@@ -76,32 +66,11 @@ plugins:
   - git-revision-date-localized
   - git-authors
   - callouts
+  - render_swagger:
+      allow_arbitrary_locations: true
   # - to-pdf
 markdown_extensions:
   - pymdownx.extra
-  - pymdownx.highlight
-  - nl2br
-  - admonition
-  - pymdownx.details
-  - pymdownx.superfences
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
-  - admonition
-  - footnotes
-  - md_in_html
-  - meta
-  - toc:
-      permalink: true
-      toc_depth: 2
-  - pymdownx.caret
-  - pymdownx.details
-  - pymdownx.arithmatex:
-      generic: true
-  - pymdownx.betterem:
-      smart_enable: all
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -118,3 +87,17 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - admonition
+  - footnotes
+  - md_in_html
+  - meta
+  - nl2br
+  - toc:
+      permalink: true
+      toc_depth: 2

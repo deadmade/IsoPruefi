@@ -4,6 +4,7 @@ site_url: https://deadmade.github.io/IsoPruefi/
 repo_url: https://github.com/deadmade/IsoPruefi
 repo_name: "deadmade/IsoPruefi"
 
+
 nav:
   - Home: index.md
   - Getting Started:
@@ -12,7 +13,6 @@ nav:
       - Contributing: contributing.md
   - Development:
       - Guidelines: guidelines.md
-      - Environment Files: environment-files.md
       - API Reference: api-reference.md
       - API V1: api-v1.md
       - Troubleshooting: troubleshooting.md
@@ -30,7 +30,10 @@ nav:
           - Components: code/frontend/components
           - Pages: code/frontend/pages
           - Utils: code/frontend/utils
-  - Architecture Documentation:
+  - Docker:
+      - Docker Dev Environment: docker-dev.md
+      - Environment Files: environment-files.md
+  - IsoPrüfi Documentation:
       - 01 Introduction and Goals: documentation/01_introduction_and_goals.md
       - 02 Quality Requirements: documentation/02_quality_requirements.md
       - 03 Architecture Constraints and Solution Strategy: documentation/03_architecture_constraints_and_solution_strategy.md
@@ -83,9 +86,32 @@ plugins:
   - callouts
   - render_swagger:
       allow_arbitrary_locations: true
-  # - to-pdf
+  #- to-pdf
 markdown_extensions:
   - pymdownx.extra
+  - pymdownx.highlight
+  - nl2br
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - footnotes
+  - md_in_html
+  - meta
+  - toc:
+      permalink: true
+      toc_depth: 2
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span

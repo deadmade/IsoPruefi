@@ -1,14 +1,49 @@
+/**
+ * @fileoverview Authentication form component for user sign-in and sign-up operations.
+ * Handles JWT token authentication with role-based navigation and comprehensive error handling.
+ */
+
 import {useState} from "react";
 import {login, register} from "../utils/authApi.ts";
 import {decodeToken, type JwtPayload, saveToken} from "../utils/tokenHelpers";
 import {useNavigate} from "react-router-dom";
 
+/**
+ * Authentication mode for the form.
+ */
 type Mode = "signin" | "signup";
 
+/**
+ * Props for the AuthForm component.
+ */
 interface AuthFormProps {
+    /** The authentication mode to display */
     mode: Mode;
 }
 
+/**
+ * A flexible authentication form component that handles both sign-in and sign-up operations.
+ * 
+ * Features:
+ * - Unified form for sign-in and registration
+ * - JWT token handling with automatic storage
+ * - Role-based navigation after successful authentication
+ * - Comprehensive error handling with server-side error parsing
+ * - Responsive design with consistent styling
+ * - Form validation and loading states
+ * 
+ * @param props - Component configuration
+ * @returns JSX element containing the authentication form
+ * 
+ * @example
+ * ```tsx
+ * // Sign-in form
+ * <AuthForm mode="signin" />
+ * 
+ * // Registration form (admin only)
+ * <AuthForm mode="signup" />
+ * ```
+ */
 export default function AuthForm({mode}: AuthFormProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");

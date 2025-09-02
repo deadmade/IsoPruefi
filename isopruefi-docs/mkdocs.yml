@@ -76,7 +76,7 @@ plugins:
   - git-revision-date-localized
   - git-authors
   - callouts
-  # - to-pdf
+  - to-pdf
 markdown_extensions:
   - pymdownx.extra
   - pymdownx.highlight

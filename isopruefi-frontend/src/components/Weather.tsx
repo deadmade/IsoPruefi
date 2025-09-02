@@ -1,18 +1,57 @@
+/**
+ * @fileoverview Temperature data visualization component with interactive charts and real-time displays.
+ * Displays temperature data from multiple sensors and external weather sources in a responsive chart format.
+ */
+
 import {useEffect, useState} from "react";
 import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 import {ApiException, getStoredLocationName, tempClient} from "../api/clients";
 
+/**
+ * Represents a single temperature data entry with timestamp and sensor readings.
+ * Dynamic keys allow for flexible sensor data storage.
+ */
 export type WeatherEntry = {
+    /** ISO timestamp string for the data point */
     timestamp: string;
-    [key: string]: number | string; // Dynamic keys for different sensors
+    /** Dynamic keys for different sensors (e.g., "temp_Sensor1_Location") */
+    [key: string]: number | string;
+    /** External weather temperature for the location */
     tempOutside: number;
 };
 
+/**
+ * Props for the TempChart component.
+ */
 type TempChartProps = {
+    /** Location name for weather data retrieval */
     place?: string;
+    /** Whether to display temperatures in Fahrenheit (default: Celsius) */
     isFahrenheit?: boolean;
 };
 
+/**
+ * Temperature chart component that displays real-time temperature data from multiple sensors.
+ * 
+ * Features:
+ * - Interactive line chart with time filtering
+ * - Multiple sensor data visualization
+ * - Real-time temperature tiles
+ * - Celsius/Fahrenheit unit conversion
+ * - Responsive design with error handling
+ * 
+ * @param props - Component configuration
+ * @returns JSX element containing the temperature dashboard
+ * 
+ * @example
+ * ```tsx
+ * // Basic usage with default location
+ * <TempChart />
+ * 
+ * // With specific location and Fahrenheit units
+ * <TempChart place="Berlin" isFahrenheit={true} />
+ * ```
+ */
 export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = false}: TempChartProps = {}) {
     const [weatherData, setWeatherData] = useState<WeatherEntry[]>([]);
     const [filter, setFilter] = useState<"all" | "hour" | "day" | "week">("all");

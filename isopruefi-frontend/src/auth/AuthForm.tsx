@@ -1,21 +1,46 @@
-import {useState} from "react";
-import {login, register} from "../utils/authApi.ts";
-import {decodeToken, type JwtPayload, saveToken} from "../utils/tokenHelpers";
-import {useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { login, register } from "../utils/authApi.ts";
+import { decodeToken, type JwtPayload, saveToken } from "../utils/tokenHelpers";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext.tsx";
 
+/**
+ * The authentication mode for the form.
+ * - "signin": Login mode.
+ * - "signup": Registration mode.
+ */
 type Mode = "signin" | "signup";
 
+/**
+ * Props for the AuthForm component.
+ * @property {Mode} mode - Determines whether the form is for sign in or sign up.
+ */
 interface AuthFormProps {
     mode: Mode;
 }
 
-export default function AuthForm({mode}: AuthFormProps) {
+/**
+ * Authentication form component for sign in and sign up.
+ * Handles user input, authentication API calls, error display, and navigation.
+ * On successful login, sets the global authentication state and navigates to the appropriate page.
+ * On registration, shows a success message and navigates to the sign in page.
+ *
+ * @param {AuthFormProps} props - Component props.
+ * @returns {JSX.Element} The rendered authentication form.
+ */
+export default function AuthForm({ mode }: AuthFormProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
 
     const navigate = useNavigate();
+    const { setUser } = useAuth();
 
+    /**
+     * Handles form submission for login or registration.
+     * Calls the appropriate API, sets authentication state, and handles errors.
+     * @param {React.FormEvent} e - The form submit event.
+     */
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
@@ -23,28 +48,30 @@ export default function AuthForm({mode}: AuthFormProps) {
         try {
             if (mode === "signin") {
                 const tokenData = await login(username, password);
-
-                // store tokens
                 saveToken(tokenData.token, tokenData.refreshToken);
 
-                // decode and normalize roles
                 const decoded: JwtPayload = decodeToken(tokenData.token) ?? {};
                 const claim =
                     decoded.role ??
                     decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-                const roles: string[] =
-                    Array.isArray(claim) ? claim :
-                        typeof claim === "string" && claim ? [claim] : [];
+                const roles: string[] = Array.isArray(claim)
+                    ? claim
+                    : typeof claim === "string" && claim
+                        ? [claim]
+                        : [];
 
-                // route based on role
-                if (roles.includes("Admin")) {
-                    navigate("/admin");
-                } else if (roles.includes("User")) {
-                    navigate("/user");
-                } else {
-                    navigate("/");
-                }
+                const isAdmin = roles.some(r => /admin/i.test(r));
+                const isUser = roles.some(r => /user/i.test(r));
+                const role = isAdmin ? "admin" : isUser ? "user" : null;
+
+                // Set global authentication state
+                if (role) setUser({ username: (decoded.sub as string) ?? username, role });
+                else setUser(null);
+
+                // Navigate to the appropriate page
+                navigate(role === "admin" ? "/admin" : role === "user" ? "/user" : "/");
+                return;
             } else {
                 await register(username, password);
                 alert("Registration successful. You can now log in.");
@@ -88,7 +115,6 @@ export default function AuthForm({mode}: AuthFormProps) {
         }
     };
 
-
     return (
         <form
             onSubmit={handleSubmit}
@@ -100,9 +126,9 @@ export default function AuthForm({mode}: AuthFormProps) {
 
             <label>
                 <div>
-        <span className="block text-sm font-bold text-gray-700 mb-1">
-          Username
-        </span>
+                    <span className="block text-sm font-bold text-gray-700 mb-1">
+                        Username
+                    </span>
                     <input
                         type="text"
                         value={username}
@@ -116,9 +142,9 @@ export default function AuthForm({mode}: AuthFormProps) {
 
             <label>
                 <div>
-        <span className="block text-sm font-bold text-gray-700 mb-1">
-          Password
-        </span>
+                    <span className="block text-sm font-bold text-gray-700 mb-1">
+                        Password
+                    </span>
                     <input
                         type="password"
                         value={password}

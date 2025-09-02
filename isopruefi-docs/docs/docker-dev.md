@@ -36,8 +36,7 @@ The following Docker networks are used to logically separate the containers from
 
 ### Traefik
 
-Traefik serves as a reverse proxy that receives all HTTP(S) requests and forwards them to the appropriate Docker
-containers. It automatically manages the TLS certificates and provides a dashboard for administration.
+Traefik serves as a reverse proxy that receives all HTTP(S) requests and forwards them to the appropriate Docker containers. It automatically manages the TLS certificates and provides a dashboard for administration.
 
 ### Grafana
 

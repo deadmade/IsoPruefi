@@ -44,13 +44,9 @@ jobs:
       - name: Build solution
         run: dotnet build --no-restore
 
-      - name: Run unit tests
-        run: dotnet test UnitTests/UnitTests.csproj --no-build --verbosity normal --logger "trx;LogFileName=unit_tests.trx"
-        continue-on-error: false
-
       - name: Run integration tests
         working-directory: ./isopruefi-backend/IntegrationTests
-        run: dotnet test IntegrationTests/IntegrationTests.csproj --no-build --verbosity normal --logger "trx;LogFileName=integration_tests.trx"
+        run: dotnet test
         env:
           ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=isopruefi_integration_test;Username=test;Password=test"
         continue-on-error: false

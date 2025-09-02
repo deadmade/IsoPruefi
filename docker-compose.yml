@@ -209,8 +209,8 @@ services:
       - /app/node_modules
     networks:
       - isopruefi-network
-    environment:
-      VITE_DEV_PROXY_TARGET: https://aicon.dhbw-heidenheim.de:5001/backend
+    env_file:
+      - ./secrets.env
     stdin_open: true
     tty: true
 

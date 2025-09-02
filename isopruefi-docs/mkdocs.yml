@@ -1,5 +1,5 @@
 site_name: IsoPrüfi
-docs_dir: docs
+docs_dir: ./docs
 site_url: https://github.com/deadmade/IsoPruefi
 repo_url: https://github.com/deadmade/IsoPruefi
 repo_name: "deadmade/IsoPruefi"
@@ -16,19 +16,13 @@ nav:
     - Database: code/Database/index.md
     - UnitTests: code/UnitTests/index.md
     - Arduino: code/arduino/md/index.md
-    - Frontend:
-        - Overview: code/frontend/README.md
-        - App:
-            - App Overview: code/frontend/App/README.md
-            - App Component: code/frontend/App/functions/default.md
-        - Weather:
-            - Weather Overview: code/frontend/Weather/README.md
-            - Components:
-                - Chart Title: code/frontend/Weather/functions/WeatherChartTitle.md
-                - Temp Chart: code/frontend/Weather/functions/TempChart.md
-            - Data Types:
-                - WeatherEntry: code/frontend/Weather/type-aliases/WeatherEntry.md
-                - WeatherData: code/frontend/Weather/variables/WeatherData.md
+    - Frontend: 
+      - Overview: code/frontend/README.md
+      - Api: code/frontend/api
+      - Authentication: code/frontend/auth
+      - Components: code/frontend/components
+      - Pages: code/frontend/pages
+      - Utils: code/frontend/utils
   - Docker: 
     - Docker Dev Environment: docker-dev.md
   - IsoPrüfi Documentation: 

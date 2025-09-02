@@ -119,62 +119,88 @@ public class CachedInfluxRepo : IInfluxRepo
     }
 
     /// <inheritdoc />
-    public IAsyncEnumerable<object?[]> GetOutsideWeatherData(DateTime start, DateTime end, string place)
+    public async IAsyncEnumerable<object?[]> GetOutsideWeatherData(DateTime start, DateTime end, string place)
     {
         var timespan = end - start;
         string query;
+        IAsyncEnumerable<object?[]> result;
 
-        if (timespan.Hours < 24)
-            query =
-                $"SELECT MEAN(value) FROM outside_temperature where place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
-        else if (timespan.Days < 30)
-            query =
-                $"SELECT MEAN(value) FROM outside_temperature WHERE place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h) fill(none)";
-        else
-            query =
-                $"SELECT MEAN(value) FROM outside_temperature WHERE place='{place}' AND time BETWEEN TIMESTAMP '{start:yyyy-MM-dd HH:mm:ss}' AND TIMESTAMP '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d) fill(none)";
+        string group;
+        if (timespan.TotalHours < 24) group = "1m";
+        else if (timespan.TotalDays < 30) group = "1h";
+        else group = "1d";
+        
+        var bucket = TimeSpan.FromDays(2);
+        var bucketStart = start;
+        while (bucketStart < end)
+        {
+            var bucketEnd = bucketStart + bucket;
+            if (bucketEnd > end)
+            {
+                bucketEnd = end;
+            }
+            
+            query = $"SELECT MEAN(value) FROM outside_temperature where place='{place}' AND time >= '{bucketStart:yyyy-MM-dd HH:mm:ss}' AND time <= '{bucketEnd:yyyy-MM-dd HH:mm:ss}' GROUP BY time({group}) fill(none)";
+            
+            try
+            {
+                result = _client.Query(query, QueryType.InfluxQL);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
+                throw;
+            }
+            
+            await foreach (var row in result)
+            {
+                yield return row;
+            }
 
-        try
-        {
-            return _client.Query(query, QueryType.InfluxQL);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
-            throw;
+            bucketStart = bucketEnd;
         }
     }
 
     /// <inheritdoc />
-    public IAsyncEnumerable<object?[]> GetSensorWeatherData(DateTime start, DateTime end, string sensor)
+    public async IAsyncEnumerable<object?[]> GetSensorWeatherData(DateTime start, DateTime end, string sensor)
     {
         var timespan = end - start;
         string query;
+        IAsyncEnumerable<object?[]> result;
 
-        if (timespan.TotalHours < 24)
+        string group;
+        if (timespan.TotalHours < 24) group = "1m";
+        else if (timespan.TotalDays < 30) group = "1h";
+        else group = "1d";
+        
+        var bucket = TimeSpan.FromDays(2);
+        var bucketStart = start;
+        while (bucketStart < end)
         {
-            query =
-                $"SELECT MEAN(value) FROM temperature where sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1m) fill(none)";
-        }
-        else if (timespan.TotalDays < 30)
-        {
-            query =
-                $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1h) fill(none)";
-        }
-        else
-        {
-            query =
-                $"SELECT MEAN(value) FROM temperature WHERE sensor='{sensor}' AND time >= '{start:yyyy-MM-dd HH:mm:ss}' AND time <= '{end:yyyy-MM-dd HH:mm:ss}' GROUP BY time(1d) fill(none)";
-        }
+            var bucketEnd = bucketStart + bucket;
+            if (bucketEnd > end)
+            {
+                bucketEnd = end;
+            }
+            
+            query = $"SELECT MEAN(value) FROM temperature where sensor='{sensor}' AND time >= '{bucketStart:yyyy-MM-dd HH:mm:ss}' AND time <= '{bucketEnd:yyyy-MM-dd HH:mm:ss}' GROUP BY time({group}) fill(none)";
+            
+            try
+            {
+                result = _client.Query(query, QueryType.InfluxQL);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
+                throw;
+            }
+            
+            await foreach (var row in result)
+            {
+                yield return row;
+            }
 
-        try
-        {
-            return _client.Query(query, QueryType.InfluxQL);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
-            throw;
+            bucketStart = bucketEnd;
         }
     }
     

@@ -1,10 +1,10 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 
-namespace Database.Repository.InfluxRepo;
+namespace Database.Repository.InfluxRepo.Influx;
 
 /// <summary>
-/// Health check for InfluxDB connectivity.
+///     Health check for InfluxDB connectivity.
 /// </summary>
 public class InfluxHealthCheck : IHealthCheck
 {
@@ -19,7 +19,7 @@ public class InfluxHealthCheck : IHealthCheck
     private readonly ILogger<InfluxHealthCheck> _logger;
 
     /// <summary>
-    /// Constructor for the InfluxHealthCheck class.
+    ///     Constructor for the InfluxHealthCheck class.
     /// </summary>
     /// <param name="influxRepo">The InfluxDB repository.</param>
     /// <param name="logger">The logger instance.</param>
@@ -30,7 +30,7 @@ public class InfluxHealthCheck : IHealthCheck
     }
 
     /// <summary>
-    /// Checks the health of the InfluxDB connection.
+    ///     Checks the health of the InfluxDB connection.
     /// </summary>
     /// <param name="context">The health check context.</param>
     /// <param name="cancellationToken">The cancellation token.</param>

@@ -1,3 +1,4 @@
+using Database.EntityFramework.Enums;
 using Database.EntityFramework.Models;
 using Database.Repository.SettingsRepo;
 using FluentAssertions;
@@ -12,24 +13,13 @@ using MQTTnet;
 namespace UnitTests.MqttReceiver;
 
 /// <summary>
-/// Unit tests for the Receiver class, verifying MQTT topic subscription functionality.
+///     Unit tests for the Receiver class, verifying MQTT topic subscription functionality.
 /// </summary>
 [TestFixture]
 public class ReceiverTests
 {
-    private Mock<IServiceProvider> _mockServiceProvider;
-    private Mock<IServiceScope> _mockServiceScope;
-    private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
-    private Mock<ISettingsRepo> _mockSettingsRepo;
-    private Mock<IConnection> _mockConnection;
-    private Mock<IMqttClient> _mockMqttClient;
-    private Mock<ILogger<Receiver>> _mockLogger;
-    private Mock<IConfiguration> _mockConfiguration;
-    private Receiver _receiver;
-    private List<TopicSetting> _testTopicSettings;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -63,7 +53,7 @@ public class ReceiverTests
                 TopicSettingId = 1,
                 DefaultTopicPath = "sensors",
                 GroupId = 1,
-                SensorType = "temperature",
+                SensorTypeEnum = SensorType.temp,
                 SensorName = "sensor1",
                 HasRecovery = true
             },
@@ -72,7 +62,7 @@ public class ReceiverTests
                 TopicSettingId = 2,
                 DefaultTopicPath = "sensors",
                 GroupId = 2,
-                SensorType = "humidity",
+                SensorTypeEnum = SensorType.hum,
                 SensorName = "sensor2",
                 HasRecovery = false
             }
@@ -84,10 +74,19 @@ public class ReceiverTests
         _receiver = new Receiver(_mockServiceProvider.Object, _mockConnection.Object, _mockLogger.Object);
     }
 
-    #region Constructor Tests
+    private Mock<IServiceProvider> _mockServiceProvider;
+    private Mock<IServiceScope> _mockServiceScope;
+    private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
+    private Mock<ISettingsRepo> _mockSettingsRepo;
+    private Mock<IConnection> _mockConnection;
+    private Mock<IMqttClient> _mockMqttClient;
+    private Mock<ILogger<Receiver>> _mockLogger;
+    private Mock<IConfiguration> _mockConfiguration;
+    private Receiver _receiver;
+    private List<TopicSetting> _testTopicSettings;
 
     /// <summary>
-    /// Tests that the Receiver constructor properly initializes with valid dependencies.
+    ///     Tests that the Receiver constructor properly initializes with valid dependencies.
     /// </summary>
     [Test]
     public void Constructor_WithValidDependencies_InitializesSuccessfully()
@@ -102,7 +101,7 @@ public class ReceiverTests
     }
 
     /// <summary>
-    /// Tests that the Receiver constructor throws when service provider is null.
+    ///     Tests that the Receiver constructor throws when service provider is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullServiceProvider_ThrowsArgumentNullException()
@@ -116,7 +115,7 @@ public class ReceiverTests
     }
 
     /// <summary>
-    /// Tests that the Receiver constructor throws when connection is null.
+    ///     Tests that the Receiver constructor throws when connection is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullConnection_ThrowsArgumentNullException()
@@ -130,7 +129,7 @@ public class ReceiverTests
     }
 
     /// <summary>
-    /// Tests that the Receiver constructor throws when logger is null.
+    ///     Tests that the Receiver constructor throws when logger is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullLogger_ThrowsArgumentNullException()
@@ -143,12 +142,8 @@ public class ReceiverTests
         action.Should().Throw<ArgumentNullException>();
     }
 
-    #endregion
-
-    #region SubscribeToTopics Tests
-
     /// <summary>
-    /// Tests that SubscribeToTopics retrieves topic settings and establishes connection.
+    ///     Tests that SubscribeToTopics retrieves topic settings and establishes connection.
     /// </summary>
     [Test]
     public async Task SubscribeToTopics_WithValidSettings_RetrievesSettingsAndConnects()
@@ -163,7 +158,7 @@ public class ReceiverTests
     }
 
     /// <summary>
-    /// Tests that SubscribeToTopics handles empty topic settings gracefully.
+    ///     Tests that SubscribeToTopics handles empty topic settings gracefully.
     /// </summary>
     [Test]
     public async Task SubscribeToTopics_WithEmptySettings_CompletesWithoutError()
@@ -178,7 +173,7 @@ public class ReceiverTests
     }
 
     /// <summary>
-    /// Tests that SubscribeToTopics handles null topic settings gracefully.
+    ///     Tests that SubscribeToTopics handles null topic settings gracefully.
     /// </summary>
     [Test]
     public async Task SubscribeToTopics_WithNullSettings_ThrowsException()
@@ -192,7 +187,7 @@ public class ReceiverTests
     }
 
     /// <summary>
-    /// Tests that SubscribeToTopics handles repository exceptions.
+    ///     Tests that SubscribeToTopics handles repository exceptions.
     /// </summary>
     [Test]
     public async Task SubscribeToTopics_WhenRepositoryThrows_PropagatesException()
@@ -208,7 +203,7 @@ public class ReceiverTests
     }
 
     /// <summary>
-    /// Tests that SubscribeToTopics handles connection failures.
+    ///     Tests that SubscribeToTopics handles connection failures.
     /// </summary>
     [Test]
     public async Task SubscribeToTopics_WhenConnectionFails_PropagatesException()
@@ -223,12 +218,8 @@ public class ReceiverTests
             .WithMessage("Connection failed");
     }
 
-    #endregion
-
-    #region Service Provider Scope Tests
-
     /// <summary>
-    /// Tests that SubscribeToTopics properly creates and disposes of service scope.
+    ///     Tests that SubscribeToTopics properly creates and disposes of service scope.
     /// </summary>
     [Test]
     public async Task SubscribeToTopics_CreatesAndDisposesServiceScope()
@@ -240,7 +231,7 @@ public class ReceiverTests
     }
 
     /// <summary>
-    /// Tests that SubscribeToTopics disposes scope even when exception occurs.
+    ///     Tests that SubscribeToTopics disposes scope even when exception occurs.
     /// </summary>
     [Test]
     public async Task SubscribeToTopics_DisposesScope_EvenWhenExceptionOccurs()
@@ -254,12 +245,8 @@ public class ReceiverTests
         _mockServiceScope.Verify(s => s.Dispose(), Times.Once);
     }
 
-    #endregion
-
-    #region Integration Tests
-
     /// <summary>
-    /// Tests the complete subscription workflow with realistic data.
+    ///     Tests the complete subscription workflow with realistic data.
     /// </summary>
     [Test]
     public async Task SubscribeToTopics_CompleteWorkflow_WorksCorrectly()
@@ -272,6 +259,4 @@ public class ReceiverTests
         _mockConnection.Verify(c => c.GetConnectionAsync(), Times.Once);
         _mockServiceScope.Verify(s => s.Dispose(), Times.Once);
     }
-
-    #endregion
 }

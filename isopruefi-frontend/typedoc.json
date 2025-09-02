@@ -21,7 +21,9 @@
   "out": "../isopruefi-docs/docs/code/frontend",
   "excludeExternals": true,
   "theme": "markdown",
-  "plugin": ["typedoc-plugin-markdown"],
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
   "includeVersion": true,
   "readme": "none",
   "tsconfig": "./tsconfig.json"

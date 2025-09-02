@@ -65,11 +65,10 @@ public class BrightSkyHealthCheck : IHealthCheck
 
             if (response.IsSuccessStatusCode)
                 return HealthCheckResult.Healthy($"BrightSky API is reachable (Status: {response.StatusCode})");
-            else if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
+            if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
                 // 4xx errors might be expected for HEAD requests, service is still reachable
                 return HealthCheckResult.Healthy($"BrightSky API is reachable (Status: {response.StatusCode})");
-            else
-                return HealthCheckResult.Unhealthy($"BrightSky API returned status code: {response.StatusCode}");
+            return HealthCheckResult.Unhealthy($"BrightSky API returned status code: {response.StatusCode}");
         }
         catch (Exception)
         {

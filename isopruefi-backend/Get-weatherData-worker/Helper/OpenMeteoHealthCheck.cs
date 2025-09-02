@@ -3,27 +3,27 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace Get_weatherData_worker.Helper;
 
 /// <summary>
-/// Healthcheck for availability of Meteo API.
+///     Healthcheck for availability of Meteo API.
 /// </summary>
 public class OpenMeteoHealthCheck : IHealthCheck
 {
     /// <summary>
-    /// Factory used for making API requests.
+    ///     Factory used for making API requests.
     /// </summary>
     private readonly IHttpClientFactory _httpClientFactory;
     
     /// <summary>
-    /// Configuration used to retrieve settings.
+    ///     Configuration used to retrieve settings.
     /// </summary>
     private readonly IConfiguration _configuration;
     
     /// <summary>
-    /// Logger instance used to document diagnostics.
+    ///     Logger instance used to document diagnostics.
     /// </summary>
     private readonly ILogger<OpenMeteoHealthCheck> _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="OpenMeteoHealthCheck"/> class.
+    ///     Initializes a new instance of the <see cref="OpenMeteoHealthCheck"/> class.
     /// </summary>
     /// <param name="httpClientFactory">Factory for API calls.</param>
     /// <param name="configuration">Configuration for settings.</param>
@@ -38,7 +38,7 @@ public class OpenMeteoHealthCheck : IHealthCheck
     }
 
     /// <summary>
-    /// Performs the healthcheck on the Meteo API.
+    ///     Performs the healthcheck on the Meteo API.
     /// </summary>
     /// <param name="context">Context when executing.</param>
     /// <param name="cancellationToken">Cancellation Token</param>
@@ -65,11 +65,10 @@ public class OpenMeteoHealthCheck : IHealthCheck
 
             if (response.IsSuccessStatusCode)
                 return HealthCheckResult.Healthy($"OpenMeteo API is reachable (Status: {response.StatusCode})");
-            else if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
+            if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
                 // 4xx errors might be expected for HEAD requests, service is still reachable
                 return HealthCheckResult.Healthy($"OpenMeteo API is reachable (Status: {response.StatusCode})");
-            else
-                return HealthCheckResult.Unhealthy($"OpenMeteo API returned status code: {response.StatusCode}");
+            return HealthCheckResult.Unhealthy($"OpenMeteo API returned status code: {response.StatusCode}");
         }
         catch (Exception)
         {

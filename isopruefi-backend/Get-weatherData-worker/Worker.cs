@@ -187,10 +187,8 @@ public class Worker : BackgroundService
 
                     return weatherData;
                 }
-                else
-                {
-                    _logger.LogWarning("Weather data from Meteo incomplete");
-                }
+
+                _logger.LogWarning("Weather data from Meteo incomplete");
             }
         }
         else
@@ -236,10 +234,8 @@ public class Worker : BackgroundService
                     _logger.LogInformation("Weather data from Bright Sky retrieved successfully.");
                     return weatherData;
                 }
-                else
-                {
-                    _logger.LogWarning("Data from Bright Sky incomplete.");
-                }
+
+                _logger.LogWarning("Data from Bright Sky incomplete.");
             }
         }
         else

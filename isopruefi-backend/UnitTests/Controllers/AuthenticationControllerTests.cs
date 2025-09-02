@@ -11,17 +11,14 @@ using Rest_API.Services.Auth;
 namespace UnitTests.Controllers;
 
 /// <summary>
-/// Unit tests for the AuthenticationController class, verifying authentication operations including login, registration, and token refresh functionality.
+///     Unit tests for the AuthenticationController class, verifying authentication operations including login,
+///     registration, and token refresh functionality.
 /// </summary>
 [TestFixture]
 public class AuthenticationControllerTests
 {
-    private Mock<IAuthenticationService> _mockAuthService;
-    private Mock<ILogger<AuthenticationController>> _mockLogger;
-    private AuthenticationController _controller;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -32,10 +29,12 @@ public class AuthenticationControllerTests
         _controller = new AuthenticationController(_mockAuthService.Object, _mockLogger.Object);
     }
 
-    #region Login Tests
+    private Mock<IAuthenticationService> _mockAuthService;
+    private Mock<ILogger<AuthenticationController>> _mockLogger;
+    private AuthenticationController _controller;
 
     /// <summary>
-    /// Tests that login with valid credentials returns an OK result with a JWT token.
+    ///     Tests that login with valid credentials returns an OK result with a JWT token.
     /// </summary>
     [Test]
     public async Task Login_WithValidCredentials_ShouldReturnOkWithJwtToken()
@@ -64,7 +63,7 @@ public class AuthenticationControllerTests
     }
 
     /// <summary>
-    /// Tests that login with invalid model state returns a BadRequest result with validation problem details.
+    ///     Tests that login with invalid model state returns a BadRequest result with validation problem details.
     /// </summary>
     [Test]
     public async Task Login_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()
@@ -89,7 +88,7 @@ public class AuthenticationControllerTests
     }
 
     /// <summary>
-    /// Tests that login with authentication exception returns an Unauthorized result with problem details.
+    ///     Tests that login with authentication exception returns an Unauthorized result with problem details.
     /// </summary>
     [Test]
     public async Task Login_WithAuthenticationException_ShouldReturnUnauthorizedWithProblemDetails()
@@ -115,7 +114,7 @@ public class AuthenticationControllerTests
     }
 
     /// <summary>
-    /// Tests that login with InvalidOperationException returns an InternalServerError result with problem details.
+    ///     Tests that login with InvalidOperationException returns an InternalServerError result with problem details.
     /// </summary>
     [Test]
     public async Task Login_WithInvalidOperationException_ShouldReturnInternalServerErrorWithProblemDetails()
@@ -141,7 +140,7 @@ public class AuthenticationControllerTests
     }
 
     /// <summary>
-    /// Tests that login with generic exception returns an InternalServerError result with problem details.
+    ///     Tests that login with generic exception returns an InternalServerError result with problem details.
     /// </summary>
     [Test]
     public async Task Login_WithGenericException_ShouldReturnInternalServerErrorWithProblemDetails()
@@ -166,12 +165,8 @@ public class AuthenticationControllerTests
         problemDetails.Detail.Should().Be("Unexpected error");
     }
 
-    #endregion
-
-    #region Register Tests
-
     /// <summary>
-    /// Tests that registration with valid input returns an OK result.
+    ///     Tests that registration with valid input returns an OK result.
     /// </summary>
     [Test]
     public async Task Register_WithValidInput_ShouldReturnOk()
@@ -189,7 +184,7 @@ public class AuthenticationControllerTests
     }
 
     /// <summary>
-    /// Tests that registration with invalid model state returns a BadRequest result with validation problem details.
+    ///     Tests that registration with invalid model state returns a BadRequest result with validation problem details.
     /// </summary>
     [Test]
     public async Task Register_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()
@@ -214,7 +209,7 @@ public class AuthenticationControllerTests
     }
 
     /// <summary>
-    /// Tests that registration with exception returns an InternalServerError result with problem details.
+    ///     Tests that registration with exception returns an InternalServerError result with problem details.
     /// </summary>
     [Test]
     public async Task Register_WithException_ShouldReturnInternalServerErrorWithProblemDetails()
@@ -239,12 +234,8 @@ public class AuthenticationControllerTests
         problemDetails.Detail.Should().Be("Registration failed");
     }
 
-    #endregion
-
-    #region Refresh Tests
-
     /// <summary>
-    /// Tests that token refresh with valid token returns an OK result with new JWT token.
+    ///     Tests that token refresh with valid token returns an OK result with new JWT token.
     /// </summary>
     [Test]
     public async Task Refresh_WithValidToken_ShouldReturnOkWithNewJwtToken()
@@ -277,7 +268,7 @@ public class AuthenticationControllerTests
     }
 
     /// <summary>
-    /// Tests that token refresh with invalid model state returns a BadRequest result with validation problem details.
+    ///     Tests that token refresh with invalid model state returns a BadRequest result with validation problem details.
     /// </summary>
     [Test]
     public async Task Refresh_WithInvalidModelState_ShouldReturnBadRequestWithValidationProblemDetails()
@@ -302,7 +293,7 @@ public class AuthenticationControllerTests
     }
 
     /// <summary>
-    /// Tests that token refresh with exception returns an InternalServerError result with problem details.
+    ///     Tests that token refresh with exception returns an InternalServerError result with problem details.
     /// </summary>
     [Test]
     public async Task Refresh_WithException_ShouldReturnInternalServerErrorWithProblemDetails()
@@ -331,12 +322,8 @@ public class AuthenticationControllerTests
         problemDetails.Detail.Should().Be("Token refresh failed");
     }
 
-    #endregion
-
-    #region Logging Tests
-
     /// <summary>
-    /// Tests that login operation logs appropriate information messages during execution.
+    ///     Tests that login operation logs appropriate information messages during execution.
     /// </summary>
     [Test]
     public async Task Login_ShouldLogInformationMessages()
@@ -371,7 +358,7 @@ public class AuthenticationControllerTests
     }
 
     /// <summary>
-    /// Tests that registration operation logs appropriate information messages during execution.
+    ///     Tests that registration operation logs appropriate information messages during execution.
     /// </summary>
     [Test]
     public async Task Register_ShouldLogInformationMessages()
@@ -402,6 +389,4 @@ public class AuthenticationControllerTests
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
     }
-
-    #endregion
 }

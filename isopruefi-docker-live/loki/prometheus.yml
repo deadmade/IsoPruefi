@@ -24,53 +24,53 @@ scrape_configs:
     # scheme defaults to 'http'.
 
     static_configs:
-      - targets: ["localhost:9090"]
-       # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
+      - targets: [ "localhost:9090" ]
+        # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
         labels:
           app: "prometheus"
-          
+
   - job_name: 'isopruefi-frontend'
     static_configs:
-      - targets: ['isopruefi-frontend-1:80']
-      - targets: ['isopruefi-frontend-2:80']
+      - targets: [ 'isopruefi-frontend-1:80' ]
+      - targets: [ 'isopruefi-frontend-2:80' ]
     metrics_path: '/health'
     scrape_interval: 30s
-          
+
   - job_name: 'isopruefi-backend-api'
     static_configs:
-      - targets: ['isopruefi-backend-api-1:8080']
-      - targets: ['isopruefi-backend-api-2:8080']
+      - targets: [ 'isopruefi-backend-api-1:8080' ]
+      - targets: [ 'isopruefi-backend-api-2:8080' ]
     metrics_path: '/healthoka'
     scrape_interval: 30s
 
   - job_name: 'isopruefi-mqtt-receiver'
     static_configs:
-      - targets: ['isopruefi-mqtt-receiver-1:8080']
-      - targets: ['isopruefi-mqtt-receiver-2:8080']
+      - targets: [ 'isopruefi-mqtt-receiver-1:8080' ]
+      - targets: [ 'isopruefi-mqtt-receiver-2:8080' ]
     metrics_path: '/healthoka'
     scrape_interval: 30s
 
   - job_name: 'isopruefi-weather-worker'
     static_configs:
-      - targets: ['isopruefi-get-weather-worker-1:8080']
-      - targets: ['isopruefi-get-weather-worker-2:8080']
+      - targets: [ 'isopruefi-get-weather-worker-1:8080' ]
+      - targets: [ 'isopruefi-get-weather-worker-2:8080' ]
     metrics_path: '/healthoka'
     scrape_interval: 30s
 
   - job_name: 'traefik'
     static_configs:
-      - targets: ['isopruefi-loadbalancer:8082']
+      - targets: [ 'isopruefi-loadbalancer:8082' ]
     scrape_interval: 30s
 
   - job_name: 'grafana'
     static_configs:
-      - targets: ['isopruefi-grafana:3000']
+      - targets: [ 'isopruefi-grafana:3000' ]
     metrics_path: '/metrics'
     scrape_interval: 30s
 
   - job_name: 'alloy'
     static_configs:
-      - targets: ['isopruefi-alloy:12345']
+      - targets: [ 'isopruefi-alloy:12345' ]
     metrics_path: '/metrics'
     scrape_interval: 30s
 

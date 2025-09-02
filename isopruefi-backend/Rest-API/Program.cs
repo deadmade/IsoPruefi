@@ -5,6 +5,7 @@ using Database.EntityFramework;
 using Database.EntityFramework.Models;
 using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
+using Database.Repository.InfluxRepo.Influx;
 using Database.Repository.SettingsRepo;
 using Database.Repository.TokenRepo;
 using HealthChecks.UI.Client;
@@ -30,12 +31,12 @@ namespace Rest_API;
 //Migration dotnet ef migrations add Init --project ./Database/Database.csproj --startup-project ./Rest-API/Rest-API.csproj
 
 /// <summary>
-///  Main entry point for the application.
+///     Main entry point for the application.
 /// </summary>
 public class Program
 {
     /// <summary>
-    /// Entry point for the Rest API application.
+    ///     Entry point for the Rest API application.
     /// </summary>
     /// <param name="args"></param>
     public static async Task Main(string[] args)

@@ -5,20 +5,19 @@ using Microsoft.EntityFrameworkCore;
 namespace Database.Repository.TokenRepo;
 
 /// <summary>
-/// Repository implementation for managing TokenInfo entities.
+///     Repository implementation for managing TokenInfo entities.
 /// </summary>
 public class TokenRepo : ITokenRepo
 {
     /// <summary>
-    /// The ApplicationDbContext that is used for accessing the database.
+    ///     The ApplicationDbContext that is used for accessing the database.
     /// </summary>
     private readonly ApplicationDbContext _context;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TokenRepo"/> class.
+    ///     Initializes a new instance of the TokenRepo class.
     /// </summary>
     /// <param name="context">The database context.</param>
-    /// <exception cref="ArgumentNullException">Thrown when context is null.</exception>
     public TokenRepo(ApplicationDbContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));

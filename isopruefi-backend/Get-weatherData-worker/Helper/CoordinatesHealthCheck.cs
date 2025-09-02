@@ -19,7 +19,7 @@ public class CoordinatesHealthCheck : IHealthCheck
     private readonly ILogger<CoordinatesHealthCheck> _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoordinatesHealthCheck"/> class.
+    ///     Initializes a new instance of the <see cref="CoordinatesHealthCheck"/> class.
     /// </summary>
     /// <param name="serviceProvider">Service provider for accessing services.</param>
     /// <param name="logger">Logger for documenting diagnostics.</param>
@@ -31,7 +31,7 @@ public class CoordinatesHealthCheck : IHealthCheck
     }
 
     /// <summary>
-    /// Performs healthcheck for the database.
+    ///     Performs healthcheck for the database.
     /// </summary>
     /// <param name="context">Context when executing.</param>
     /// <param name="cancellationToken">Cancellation Token</param>
@@ -49,8 +49,7 @@ public class CoordinatesHealthCheck : IHealthCheck
 
             if (canConnect)
                 return HealthCheckResult.Healthy("Database is reachable for coordinates service");
-            else
-                return HealthCheckResult.Unhealthy("Cannot connect to database for coordinates service");
+            return HealthCheckResult.Unhealthy("Cannot connect to database for coordinates service");
         }
         catch (Exception ex)
         {

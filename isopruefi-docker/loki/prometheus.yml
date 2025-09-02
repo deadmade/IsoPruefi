@@ -9,7 +9,7 @@ alerting:
   alertmanagers:
     - static_configs:
         - targets:
-          - alertmanager:9093
+            - alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
@@ -24,27 +24,27 @@ scrape_configs:
     # scheme defaults to 'http'.
 
     static_configs:
-      - targets: ["localhost:9090"]
-       # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
+      - targets: [ "localhost:9090" ]
+        # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
         labels:
           app: "prometheus"
-          
+
   - job_name: 'isopruefi-backend-api'
     static_configs:
-      - targets: ['isopruefi-backend-api-1:8080']
-      - targets: ['isopruefi-backend-api-2:8080']
+      - targets: [ 'isopruefi-backend-api-1:8080' ]
+      - targets: [ 'isopruefi-backend-api-2:8080' ]
     metrics_path: '/healthoka'
     scrape_interval: 30s
 
   - job_name: 'isopruefi-mqtt-receiver'
     static_configs:
-      - targets: ['isopruefi-mqtt-receiver-1:8080']
-      - targets: ['isopruefi-mqtt-receiver-2:8080']
+      - targets: [ 'isopruefi-mqtt-receiver-1:8080' ]
+      - targets: [ 'isopruefi-mqtt-receiver-2:8080' ]
     metrics_path: '/healthoka'
     scrape_interval: 30s
 
   - job_name: 'isopruefi-weather-worker'
     static_configs:
-      - targets: ['isopruefi-get-weather-worker-1:8080']
+      - targets: [ 'isopruefi-get-weather-worker-1:8080' ]
     metrics_path: '/healthoka'
     scrape_interval: 30s

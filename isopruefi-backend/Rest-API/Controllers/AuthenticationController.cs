@@ -111,7 +111,6 @@ public class AuthenticationController(
     ///     Registers a new user in the system. Admin access required.
     /// </summary>
     /// <remarks>
-    ///     This endpoint allows administrators to create new user accounts in the system.
     ///     Only users with the "Admin" role can access this endpoint.
     ///     **Authorization Required**: Bearer token with Admin role
     ///     Example request:

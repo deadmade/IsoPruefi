@@ -8,8 +8,7 @@ Accepted (July 2025)
 
 ### Context:
 
-System needs robust backend technology for REST API and worker services. Team has existing familiarity with C#
-development.
+System needs robust backend technology for REST API and worker services. Team has existing familiarity with C# development.
 
 ### Decision:
 
@@ -51,8 +50,7 @@ Accepted (July 2025)
 
 ### Context:
 
-System has distinct responsibilities: API serving, MQTT message processing, and weather data fetching. Need modularity
-and independent scaling.
+System has distinct responsibilities: API serving, MQTT message processing, and weather data fetching. Need modularity and independent scaling.
 
 ### Decision:
 
@@ -93,8 +91,7 @@ Accepted (July 2025)
 
 ### Context:
 
-System needs both structured application data (users, authentication) and time-series sensor data with different access
-patterns.
+System needs both structured application data (users, authentication) and time-series sensor data with different access patterns.
 
 ### Decision:
 
@@ -297,8 +294,7 @@ Accepted (July 2025)
 
 ### Context:
 
-System needs a frontend to display charts from measured/collected temperature data and to generate API docs with
-TypeDoc.
+System needs a frontend to display charts from measured/collected temperature data and to generate API docs with TypeDoc.
 
 ### Decision:
 

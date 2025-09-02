@@ -1,6 +1,4 @@
-using System.Text.RegularExpressions;
 using Database.EntityFramework;
-using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
 using Database.Repository.InfluxRepo.InfluxCache;
 using Database.Repository.SettingsRepo;
@@ -19,15 +17,21 @@ using MQTT_Receiver_Worker.MQTT.Interfaces;
 namespace LoadTests.Infrastructure;
 
 /// <summary>
-///     Web application factory for load tests using TestContainers
+///     Web application factory for MQTT load tests using TestContainers
 /// </summary>
 public class LoadTestMqttFactory : WebApplicationFactory<Program>
 {
-    private readonly IContainer _mosquittoContainer;
     private readonly string _connectionString;
-    private readonly string _influxDbToken;
     private readonly string _influxDbHost;
+    private readonly string _influxDbToken;
+    private readonly IContainer _mosquittoContainer;
 
+    /// <summary>
+    ///     Initializes a new instance of the LoadTestMqttFactory
+    /// </summary>
+    /// <param name="dbConnectionString">Database connection string</param>
+    /// <param name="influxDbToken">InfluxDB authentication token</param>
+    /// <param name="influxDbHost">InfluxDB host URL</param>
     public LoadTestMqttFactory(string dbConnectionString, string influxDbToken, string influxDbHost)
     {
         _mosquittoContainer = new ContainerBuilder()
@@ -40,14 +44,21 @@ public class LoadTestMqttFactory : WebApplicationFactory<Program>
                 .UntilInternalTcpPortIsAvailable(1883))
             .WithCleanUp(true)
             .Build();
-        
+
         _connectionString = dbConnectionString;
         _influxDbToken = influxDbToken;
         _influxDbHost = influxDbHost;
     }
 
+    /// <summary>
+    ///     Gets the mapped MQTT broker port for external connections
+    /// </summary>
     public int MqttPort => _mosquittoContainer.GetMappedPublicPort(1883);
 
+    /// <summary>
+    ///     Creates a temporary Mosquitto configuration file for load testing
+    /// </summary>
+    /// <returns>Path to the created configuration file</returns>
     private string CreateMosquittoConfigFile()
     {
         var configPath = Path.Combine(Path.GetTempPath(), "mosquitto_loadtest.conf");
@@ -59,6 +70,10 @@ public class LoadTestMqttFactory : WebApplicationFactory<Program>
         return configPath;
     }
 
+    /// <summary>
+    ///     Configures the web host for MQTT load testing
+    /// </summary>
+    /// <param name="builder">Web host builder to configure</param>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureAppConfiguration((context, config) =>
@@ -74,7 +89,7 @@ public class LoadTestMqttFactory : WebApplicationFactory<Program>
                 ["DOTNET_ENVIRONMENT"] = "Docker"
             });
         });
-        
+
         builder.UseEnvironment("Docker");
 
         builder.ConfigureServices(services =>
@@ -86,10 +101,7 @@ public class LoadTestMqttFactory : WebApplicationFactory<Program>
                 services.Remove(descriptor);
 
             // Add test database context
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseNpgsql(_connectionString);
-            });
+            services.AddDbContext<ApplicationDbContext>(options => { options.UseNpgsql(_connectionString); });
 
             // Configure logging to reduce noise during load testing
             services.Configure<LoggerFilterOptions>(options => { options.MinLevel = LogLevel.Information; });
@@ -101,7 +113,7 @@ public class LoadTestMqttFactory : WebApplicationFactory<Program>
             services.AddScoped<ISettingsRepo, SettingsRepo>();
             services.AddSingleton<IReceiver, Receiver>();
             services.AddSingleton<IConnection, Connection>();
-            
+
             services.AddHostedService<Worker>();
             services.AddHostedService<InfluxRetryService>();
         });
@@ -123,7 +135,7 @@ public class LoadTestMqttFactory : WebApplicationFactory<Program>
         };
 
         await Task.WhenAll(tasks);
-        
+
         using var scope = Services.CreateScope();
         ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
     }
@@ -147,13 +159,17 @@ public class LoadTestMqttFactory : WebApplicationFactory<Program>
         }
     }
 
+    /// <summary>
+    ///     Disposes of container resources
+    /// </summary>
+    /// <param name="disposing">True if disposing managed resources</param>
     protected override void Dispose(bool disposing)
     {
         if (disposing)
             try
             {
                 CleanupAsync().GetAwaiter().GetResult();
-                
+
                 _mosquittoContainer?.DisposeAsync().GetAwaiter().GetResult();
             }
             catch (ObjectDisposedException)

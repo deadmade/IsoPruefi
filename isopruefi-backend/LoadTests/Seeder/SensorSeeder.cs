@@ -17,12 +17,13 @@ public static class SensorSeeder
     /// <param name="serviceProvider">Service provider to resolve dependencies</param>
     /// <param name="sensorCount">Number of sensors to create for testing</param>
     /// <returns>List of created sensor names for use in load tests</returns>
-    public static async Task<List<Tuple<string, string>>> SeedTestDataAsync(IServiceProvider serviceProvider, int sensorCount = 10)
+    public static async Task<List<Tuple<string, string>>> SeedTestDataAsync(IServiceProvider serviceProvider,
+        int sensorCount = 10)
     {
         using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        var sensorNames = new List<Tuple<string,string>>();
+        var sensorNames = new List<Tuple<string, string>>();
 
         // Create test coordinate mapping if it doesn't exist
         const int testPostalCode = 89518; // Heidenheim postal code for load testing
@@ -57,30 +58,35 @@ public static class SensorSeeder
         await context.SaveChangesAsync();
         return sensorNames;
     }
-    
+
+    /// <summary>
+    ///     Verifies that the expected number of test sensors exist in the database
+    /// </summary>
+    /// <param name="serviceProvider">Service provider to resolve dependencies</param>
+    /// <param name="sensorCount">Expected number of sensors to validate</param>
     public static async Task CheckSensorExistsAsync(IServiceProvider serviceProvider, int sensorCount)
     {
         using var scope = serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();   
-        
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
         var count = await context.TopicSettings.CountAsync();
         Assert.That(count == sensorCount, "Expected sensor count does not match actual count");
     }
-    
+
     /// <summary>
-    /// Cleans up test data after load tests complete
+    ///     Cleans up test data after load tests complete
     /// </summary>
     /// <param name="serviceProvider">Service provider from the test factory</param>
     public static async Task CleanupTestDataAsync(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        
+
         // Remove test topic settings
         var testTopicSettings = await context.TopicSettings
             .Where(ts => ts.SensorName != null && ts.SensorName.StartsWith("LoadTestSensor_"))
             .ToListAsync();
-            
+
         context.TopicSettings.RemoveRange(testTopicSettings);
         await context.SaveChangesAsync();
     }

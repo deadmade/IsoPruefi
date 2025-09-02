@@ -1,6 +1,5 @@
 using LoadTests.Seeder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace LoadTests.Infrastructure;
 
@@ -9,13 +8,29 @@ namespace LoadTests.Infrastructure;
 /// </summary>
 public abstract class LoadTestBase
 {
+    /// <summary>
+    ///     Configuration for the load test environment
+    /// </summary>
     protected IConfiguration Configuration { get; private set; } = null!;
+
+    /// <summary>
+    ///     Factory for creating REST API test infrastructure
+    /// </summary>
     protected LoadTestRestAPIFactory ApiFactory { get; private set; } = null!;
-    
+
+    /// <summary>
+    ///     Factory for creating MQTT test infrastructure
+    /// </summary>
     protected LoadTestMqttFactory MqttFactory { get; private set; } = null!;
-    
+
+    /// <summary>
+    ///     HTTP client for API testing
+    /// </summary>
     protected HttpClient ApiClient { get; private set; } = null!;
 
+    /// <summary>
+    ///     Sets up the test environment with all required infrastructure
+    /// </summary>
     [OneTimeSetUp]
     public async Task GlobalSetup()
     {
@@ -30,19 +45,23 @@ public abstract class LoadTestBase
         ApiFactory = new LoadTestRestAPIFactory();
         await ApiFactory.InitializeAsync();
 
-        await SensorSeeder.SeedTestDataAsync(ApiFactory.Services, sensorCount: 100);
-        await SensorSeeder.CheckSensorExistsAsync(ApiFactory.Services, 100);
+        await SensorSeeder.SeedTestDataAsync(ApiFactory.Services);
+        await SensorSeeder.CheckSensorExistsAsync(ApiFactory.Services, 10);
 
         await InfluxSeeder.CreateIsoPrüfiDatabase(ApiFactory.Services);
         await InfluxSeeder.CheckDatabaseExists(ApiFactory.Services);
 
-        MqttFactory = new LoadTestMqttFactory(ApiFactory.DatabaseConnectionString, ApiFactory.InfluxDbToken, ApiFactory.InfluxDbUrl);
+        MqttFactory = new LoadTestMqttFactory(ApiFactory.DatabaseConnectionString, ApiFactory.InfluxDbToken,
+            ApiFactory.InfluxDbUrl);
         await MqttFactory.InitializeAsync();
 
         // Create HTTP client from factory
         ApiClient = ApiFactory.CreateClient();
     }
 
+    /// <summary>
+    ///     Cleans up the test infrastructure after all tests complete
+    /// </summary>
     [OneTimeTearDown]
     public async Task GlobalTeardown()
     {
@@ -65,10 +84,7 @@ public abstract class LoadTestBase
     protected string GetApiBaseUrl()
     {
         var baseAddress = ApiClient.BaseAddress?.ToString().TrimEnd('/');
-        if (string.IsNullOrEmpty(baseAddress))
-        {
-            return "http://localhost";
-        }
+        if (string.IsNullOrEmpty(baseAddress)) return "http://localhost";
         return baseAddress;
     }
 }

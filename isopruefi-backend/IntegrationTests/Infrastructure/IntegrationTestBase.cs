@@ -10,13 +10,14 @@ using Rest_API.Models;
 namespace IntegrationTests.Infrastructure;
 
 /// <summary>
-/// Base class for integration tests providing common HTTP client functionality, authentication helpers, and test data management.
+///     Base class for integration tests providing common HTTP client functionality, authentication helpers, and test data
+///     management.
 /// </summary>
 [TestFixture]
 public abstract class IntegrationTestBase
 {
     /// <summary>
-    /// One-time setup to initialize the test web application factory and HTTP client for all tests in the fixture.
+    ///     One-time setup to initialize the test web application factory and HTTP client for all tests in the fixture.
     /// </summary>
     [OneTimeSetUp]
     public virtual async Task OneTimeSetUp()
@@ -27,7 +28,7 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    /// One-time cleanup to dispose of the HTTP client and web application factory after all tests complete.
+    ///     One-time cleanup to dispose of the HTTP client and web application factory after all tests complete.
     /// </summary>
     [OneTimeTearDown]
     public virtual void OneTimeTearDown()
@@ -37,7 +38,7 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    /// Setup method run before each test to reset the HTTP client authorization header.
+    ///     Setup method run before each test to reset the HTTP client authorization header.
     /// </summary>
     [SetUp]
     public virtual void SetUp()
@@ -49,12 +50,12 @@ public abstract class IntegrationTestBase
     private static long _counter;
 
     /// <summary>
-    /// Gets the integration test web application factory instance used for creating test clients.
+    ///     Gets the integration test web application factory instance used for creating test clients.
     /// </summary>
     protected IntegrationTestWebApplicationFactory Factory { get; private set; } = null!;
-    
+
     /// <summary>
-    /// Gets the HTTP client instance configured for making requests to the test application.
+    ///     Gets the HTTP client instance configured for making requests to the test application.
     /// </summary>
     protected HttpClient Client { get; private set; } = null!;
 
@@ -64,7 +65,7 @@ public abstract class IntegrationTestBase
     };
 
     /// <summary>
-    /// Sends an HTTP request and deserializes the response content to the specified type.
+    ///     Sends an HTTP request and deserializes the response content to the specified type.
     /// </summary>
     /// <typeparam name="T">The type to deserialize the response content to.</typeparam>
     /// <param name="request">The HTTP request message to send.</param>
@@ -81,7 +82,7 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    /// Creates JSON content for HTTP requests from the specified object using camelCase property naming.
+    ///     Creates JSON content for HTTP requests from the specified object using camelCase property naming.
     /// </summary>
     /// <typeparam name="T">The type of object to serialize.</typeparam>
     /// <param name="obj">The object to serialize to JSON.</param>
@@ -93,7 +94,7 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    /// Gets a valid JWT token by creating a test user and performing authentication.
+    ///     Gets a valid JWT token by creating a test user and performing authentication.
     /// </summary>
     /// <param name="baseUsername">The base username for the test user (default: "admin").</param>
     /// <param name="password">The password for the test user (default: "Admin123!").</param>
@@ -124,7 +125,7 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    /// Sets the Authorization header on the HTTP client with the provided JWT token.
+    ///     Sets the Authorization header on the HTTP client with the provided JWT token.
     /// </summary>
     /// <param name="token">The JWT token to use for authorization.</param>
     protected void SetAuthorizationHeader(string token)
@@ -133,7 +134,7 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    /// Creates a test user with the specified credentials and role in the test database.
+    ///     Creates a test user with the specified credentials and role in the test database.
     /// </summary>
     /// <param name="username">The unique username for the test user.</param>
     /// <param name="password">The password for the test user.</param>
@@ -173,7 +174,7 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    /// Generates a unique username by appending timestamp and counter to the base username to avoid conflicts.
+    ///     Generates a unique username by appending timestamp and counter to the base username to avoid conflicts.
     /// </summary>
     /// <param name="baseUsername">The base username to make unique.</param>
     /// <returns>A unique username string.</returns>
@@ -190,7 +191,7 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    /// Cleans up test data by removing all test users from the database.
+    ///     Cleans up test data by removing all test users from the database.
     /// </summary>
     protected async Task CleanupDatabaseAsync()
     {
@@ -205,7 +206,7 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    /// Creates a test user with the specified credentials and role for use in integration tests.
+    ///     Creates a test user with the specified credentials and role for use in integration tests.
     /// </summary>
     /// <param name="username">The username for the test user.</param>
     /// <param name="password">The password for the test user.</param>
@@ -230,7 +231,7 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    /// Authenticates with the specified credentials and returns a valid JWT token for API requests.
+    ///     Authenticates with the specified credentials and returns a valid JWT token for API requests.
     /// </summary>
     /// <param name="username">The username for authentication.</param>
     /// <param name="password">The password for authentication.</param>

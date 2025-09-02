@@ -12,15 +12,15 @@ using Microsoft.Extensions.DependencyInjection;
 namespace IntegrationTests.WeatherWorker;
 
 /// <summary>
-/// Integration tests for the Weather Data Worker to verify coordinate management, InfluxDB operations,
-/// API response parsing, and dependency resolution functionality.
+///     Integration tests for the Weather Data Worker to verify coordinate management, InfluxDB operations,
+///     API response parsing, and dependency resolution functionality.
 /// </summary>
 [TestFixture]
 [Parallelizable(ParallelScope.All)]
 public class WeatherWorkerIntegrationTests : IntegrationTestBase
 {
     /// <summary>
-    /// Tests the coordinate repository's ability to retrieve unlocked locations for weather data collection.
+    ///     Tests the coordinate repository's ability to retrieve unlocked locations for weather data collection.
     /// </summary>
     [Test]
     public async Task CoordinateRepo_GetUnlockedLocation_ReturnsAvailableLocation()
@@ -50,7 +50,7 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
     }
 
     /// <summary>
-    /// Tests the coordinate repository's ability to retrieve location data by postal code or location name.
+    ///     Tests the coordinate repository's ability to retrieve location data by postal code or location name.
     /// </summary>
     [Test]
     public async Task CoordinateRepo_GetLocation_ReturnsLocationByPostalCode()
@@ -83,7 +83,7 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
     }
 
     /// <summary>
-    /// Tests the InfluxDB repository's ability to write weather data without throwing exceptions in test environment.
+    ///     Tests the InfluxDB repository's ability to write weather data without throwing exceptions in test environment.
     /// </summary>
     [Test]
     public async Task InfluxRepo_WriteOutsideWeatherData_DoesNotThrowException()
@@ -107,7 +107,7 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
     }
 
     /// <summary>
-    /// Tests the WeatherData model's property assignment and retrieval functionality.
+    ///     Tests the WeatherData model's property assignment and retrieval functionality.
     /// </summary>
     [Test]
     public void WeatherData_Properties_CanBeSetAndRetrieved()
@@ -129,7 +129,7 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
     }
 
     /// <summary>
-    /// Tests JSON parsing functionality for Open-Meteo API response format to extract temperature and timestamp data.
+    ///     Tests JSON parsing functionality for Open-Meteo API response format to extract temperature and timestamp data.
     /// </summary>
     [Test]
     public void Worker_CanParseMeteoApiResponse()
@@ -166,7 +166,7 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
     }
 
     /// <summary>
-    /// Tests JSON parsing functionality for Bright Sky API response format to extract temperature and timestamp data.
+    ///     Tests JSON parsing functionality for Bright Sky API response format to extract temperature and timestamp data.
     /// </summary>
     [Test]
     public void Worker_CanParseBrightSkyApiResponse()
@@ -203,7 +203,7 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
     }
 
     /// <summary>
-    /// Tests the HTTP client factory's ability to create HTTP client instances for API communication.
+    ///     Tests the HTTP client factory's ability to create HTTP client instances for API communication.
     /// </summary>
     [Test]
     public void HttpClientFactory_CanCreateHttpClient()
@@ -221,7 +221,7 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
     }
 
     /// <summary>
-    /// Tests that all required weather worker dependencies can be resolved from the dependency injection container.
+    ///     Tests that all required weather worker dependencies can be resolved from the dependency injection container.
     /// </summary>
     [Test]
     public void WorkerDependencies_CanBeResolved()
@@ -241,7 +241,7 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
     }
 
     /// <summary>
-    /// Tests that the configuration system contains the required weather API settings and sections.
+    ///     Tests that the configuration system contains the required weather API settings and sections.
     /// </summary>
     [Test]
     public void Configuration_ContainsRequiredWeatherApiSettings()

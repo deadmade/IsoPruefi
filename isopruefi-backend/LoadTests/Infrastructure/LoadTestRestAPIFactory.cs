@@ -20,13 +20,16 @@ using Testcontainers.PostgreSql;
 namespace LoadTests.Infrastructure;
 
 /// <summary>
-///     Web application factory for load tests using TestContainers
+///     Web application factory for REST API load tests using TestContainers
 /// </summary>
 public class LoadTestRestAPIFactory : WebApplicationFactory<Program>
 {
     private readonly PostgreSqlContainer _dbContainer;
     private readonly IContainer _influxDbContainer;
 
+    /// <summary>
+    ///     Initializes a new instance of the LoadTestRestAPIFactory
+    /// </summary>
     public LoadTestRestAPIFactory()
     {
         _dbContainer = new PostgreSqlBuilder()
@@ -49,11 +52,25 @@ public class LoadTestRestAPIFactory : WebApplicationFactory<Program>
             .Build();
     }
 
-
+    /// <summary>
+    ///     Gets the PostgreSQL database connection string
+    /// </summary>
     public string DatabaseConnectionString => _dbContainer.GetConnectionString();
+
+    /// <summary>
+    ///     Gets the InfluxDB server URL
+    /// </summary>
     public string InfluxDbUrl => $"http://localhost:{_influxDbContainer.GetMappedPublicPort(8181)}";
+
+    /// <summary>
+    ///     Gets the InfluxDB authentication token
+    /// </summary>
     public string InfluxDbToken { get; private set; } = string.Empty;
 
+    /// <summary>
+    ///     Configures the web host for REST API load testing
+    /// </summary>
+    /// <param name="builder">Web host builder to configure</param>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureAppConfiguration((context, config) =>
@@ -61,7 +78,7 @@ public class LoadTestRestAPIFactory : WebApplicationFactory<Program>
             // Add configuration for load testing
             config.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["Admin:UserName"] = "loadtestadmin",
+                ["Admin:UserName"] = "admin",
                 ["Admin:Email"] = "loadtestadmin@loadtest.com",
                 ["Admin:Password"] = "LoadTestAdmin123!",
                 ["ConnectionStrings:DefaultConnection"] = _dbContainer.GetConnectionString(),
@@ -117,7 +134,7 @@ public class LoadTestRestAPIFactory : WebApplicationFactory<Program>
         var tasks = new[]
         {
             _dbContainer.StartAsync(),
-            _influxDbContainer.StartAsync(),
+            _influxDbContainer.StartAsync()
         };
 
         await Task.WhenAll(tasks);
@@ -139,6 +156,11 @@ public class LoadTestRestAPIFactory : WebApplicationFactory<Program>
         ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
     }
 
+    /// <summary>
+    ///     Parses the InfluxDB token from command output
+    /// </summary>
+    /// <param name="tokenOutput">Raw output from InfluxDB token creation command</param>
+    /// <returns>Extracted token string or empty string if parsing fails</returns>
     private string ParseTokenFromOutput(string tokenOutput)
     {
         // Remove ANSI escape codes and split by lines
@@ -176,6 +198,10 @@ public class LoadTestRestAPIFactory : WebApplicationFactory<Program>
         }
     }
 
+    /// <summary>
+    ///     Disposes of container resources
+    /// </summary>
+    /// <param name="disposing">True if disposing managed resources</param>
     protected override void Dispose(bool disposing)
     {
         if (disposing)

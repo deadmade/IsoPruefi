@@ -43,12 +43,16 @@ public class Connection : IConnection
             PropertyNameCaseInsensitive = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
+
+        IsSubscribed = false;
     }
 
     /// <summary>
     ///     Gets a value indicating whether the MQTT client is currently connected.
     /// </summary>
     public bool IsConnected => _isConnected && _mqttClient?.IsConnected == true;
+
+    public bool IsSubscribed { get; set; }
 
     /// <summary>
     ///     Attempts to connect to the MQTT broker.

@@ -11,13 +11,14 @@ using DomainApiUser = Database.EntityFramework.Models.ApiUser;
 namespace IntegrationTests.Controllers;
 
 /// <summary>
-/// Integration tests for the User Info Controller to verify user management, profile operations, and access control functionality.
+///     Integration tests for the User Info Controller to verify user management, profile operations, and access control
+///     functionality.
 /// </summary>
 [TestFixture]
 public class UserInfoControllerIntegrationTests : ApiClientTestBase
 {
     /// <summary>
-    /// Tests retrieving all users with admin privileges and verifies successful response or proper error handling.
+    ///     Tests retrieving all users with admin privileges and verifies successful response or proper error handling.
     /// </summary>
     [Test]
     public async Task GetAllUsers_WithAdminToken_ReturnsOk()
@@ -33,7 +34,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests retrieving all users with user token and verifies 403 Forbidden response for insufficient privileges.
+    ///     Tests retrieving all users with user token and verifies 403 Forbidden response for insufficient privileges.
     /// </summary>
     [Test]
     public async Task GetAllUsers_WithUserToken_ReturnsForbidden()
@@ -49,7 +50,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests retrieving all users without authentication token and verifies 401 Unauthorized response.
+    ///     Tests retrieving all users without authentication token and verifies 401 Unauthorized response.
     /// </summary>
     [Test]
     public async Task GetAllUsers_WithoutToken_ReturnsUnauthorized()
@@ -62,7 +63,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests retrieving user by invalid ID and verifies 404 Not Found response or proper error handling.
+    ///     Tests retrieving user by invalid ID and verifies 404 Not Found response or proper error handling.
     /// </summary>
     [Test]
     public async Task GetUserById_WithInvalidUserId_ReturnsNotFound()
@@ -79,7 +80,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests retrieving user by ID without authentication token and verifies 401 Unauthorized response.
+    ///     Tests retrieving user by ID without authentication token and verifies 401 Unauthorized response.
     /// </summary>
     [Test]
     public void GetUserById_WithoutToken_ReturnsUnauthorized()
@@ -93,7 +94,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests password change with invalid current password and verifies proper error response handling.
+    ///     Tests password change with invalid current password and verifies proper error response handling.
     /// </summary>
     [Test]
     public async Task ChangePassword_WithInvalidCurrentPassword_ReturnsBadRequest()
@@ -116,7 +117,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests password change without authentication token and verifies 401 Unauthorized response.
+    ///     Tests password change without authentication token and verifies 401 Unauthorized response.
     /// </summary>
     [Test]
     public void ChangePassword_WithoutToken_ReturnsUnauthorized()
@@ -135,7 +136,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests user deletion with user token and verifies 403 Forbidden response for insufficient privileges.
+    ///     Tests user deletion with user token and verifies 403 Forbidden response for insufficient privileges.
     /// </summary>
     [Test]
     public async Task DeleteUser_WithUserToken_ReturnsForbidden()
@@ -150,7 +151,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests user deletion with non-existent user ID and verifies 404 Not Found response or proper error handling.
+    ///     Tests user deletion with non-existent user ID and verifies 404 Not Found response or proper error handling.
     /// </summary>
     [Test]
     public async Task DeleteUser_WithNonExistentUserId_ReturnsNotFound()
@@ -167,7 +168,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Retrieves the user ID for a test user by username from the database.
+    ///     Retrieves the user ID for a test user by username from the database.
     /// </summary>
     /// <param name="username">The username of the test user.</param>
     /// <returns>The user ID or a default GUID if user not found.</returns>
@@ -180,7 +181,7 @@ public class UserInfoControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Creates a test user specifically for deletion testing purposes.
+    ///     Creates a test user specifically for deletion testing purposes.
     /// </summary>
     /// <returns>The user ID of the created test user or a default GUID if creation fails.</returns>
     private async Task<string> CreateTestUserForDeletionAsync()

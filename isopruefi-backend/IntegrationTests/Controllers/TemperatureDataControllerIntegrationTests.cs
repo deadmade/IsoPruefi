@@ -5,13 +5,14 @@ using IntegrationTests.Infrastructure;
 namespace IntegrationTests.Controllers;
 
 /// <summary>
-/// Integration tests for the Temperature Data Controller to verify temperature data retrieval and filtering functionality.
+///     Integration tests for the Temperature Data Controller to verify temperature data retrieval and filtering
+///     functionality.
 /// </summary>
 [TestFixture]
 public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
 {
     /// <summary>
-    /// Tests temperature data retrieval with valid user token and verifies successful response or expected error handling.
+    ///     Tests temperature data retrieval with valid user token and verifies successful response or expected error handling.
     /// </summary>
     [Test]
     public async Task GetTemperature_WithValidUserToken_ReturnsResponse()
@@ -38,7 +39,7 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests temperature data retrieval with admin token and verifies successful response or expected error handling.
+    ///     Tests temperature data retrieval with admin token and verifies successful response or expected error handling.
     /// </summary>
     [Test]
     public async Task GetTemperature_WithAdminToken_ReturnsResponse()
@@ -64,7 +65,7 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests temperature data retrieval without authentication token and verifies 401 Unauthorized response.
+    ///     Tests temperature data retrieval without authentication token and verifies 401 Unauthorized response.
     /// </summary>
     [Test]
     public void GetTemperature_WithoutToken_ThrowsUnauthorizedException()
@@ -82,7 +83,8 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests temperature data retrieval with Fahrenheit temperature conversion and verifies proper unit conversion functionality.
+    ///     Tests temperature data retrieval with Fahrenheit temperature conversion and verifies proper unit conversion
+    ///     functionality.
     /// </summary>
     [Test]
     public async Task GetTemperature_WithFahrenheitConversion_ReturnsResponse()
@@ -108,7 +110,7 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests temperature data retrieval with missing or null parameters and verifies proper error response handling.
+    ///     Tests temperature data retrieval with missing or null parameters and verifies proper error response handling.
     /// </summary>
     [Test]
     public async Task GetTemperature_MissingParameters_ReturnsBadRequestOrInternalError()

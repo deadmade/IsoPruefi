@@ -177,7 +177,7 @@ public class CachedInfluxRepo : IInfluxRepo
             throw;
         }
     }
-    
+
     ///<inheritdoc />
     public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
     {
@@ -241,6 +241,4 @@ public class CachedInfluxRepo : IInfluxRepo
         _memoryCache.Remove(cacheKey);
         _logger.LogDebug("Removed cached point: {CacheKey}", cacheKey);
     }
-    
-    
 }

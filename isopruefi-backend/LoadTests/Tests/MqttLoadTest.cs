@@ -1,12 +1,8 @@
-﻿using System.Diagnostics;
 using System.Text.Json;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
-using IntegrationTests.ApiClient;
 using LoadTests.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using MQTT_Receiver_Worker;
-using MQTT_Receiver_Worker.MQTT;
 using MQTT_Receiver_Worker.MQTT.Interfaces;
 using MQTT_Receiver_Worker.MQTT.Models;
 using MQTTnet;
@@ -22,6 +18,9 @@ namespace LoadTests.Tests;
 [TestFixture]
 public class MqttSensorLoadTest : LoadTestBase
 {
+    /// <summary>
+    ///     Sets up MQTT test environment and verifies connectivity
+    /// </summary>
     [OneTimeSetUp]
     public async Task TestSetup()
     {
@@ -29,27 +28,39 @@ public class MqttSensorLoadTest : LoadTestBase
         var repo = scope.ServiceProvider.GetRequiredService<ISettingsRepo>();
 
         _topicSettings = await repo.GetTopicSettingsAsync();
-        
-        await Task.Delay(TimeSpan.FromSeconds(15));     
-        
+
+        await Task.Delay(TimeSpan.FromSeconds(15));
+
         var connected = false;
-        
-        do {
+        var subscribed = false;
+
+        do
+        {
             var health = scope.ServiceProvider.GetRequiredService<IConnection>();
             connected = health.IsConnected;
         } while (!connected);
 
+        do
+        {
+            var health = scope.ServiceProvider.GetRequiredService<IConnection>();
+            subscribed = health.IsSubscribed;
+        } while (!subscribed);
     }
 
+    /// <summary>
+    ///     Cleans up MQTT test resources
+    /// </summary>
     [OneTimeTearDown]
     public async Task TestCleanup()
     {
-
     }
 
     private List<TopicSetting> _topicSettings;
     private readonly Random rnd = Random.Shared;
 
+    /// <summary>
+    ///     Load test for MQTT sensor data reception and processing
+    /// </summary>
     [Test]
     public async Task Test_MQTT_Receving()
     {
@@ -100,7 +111,12 @@ public class MqttSensorLoadTest : LoadTestBase
         var end = DateTime.UtcNow;
         await VerifyInfluxDBData(start, end);
     }
-    
+
+    /// <summary>
+    ///     Generates a properly formatted MQTT topic for the given topic setting
+    /// </summary>
+    /// <param name="topic">Topic setting configuration</param>
+    /// <returns>Formatted MQTT topic string</returns>
     private string GenerateTopic(TopicSetting topic)
     {
         var topicString = $"{topic.DefaultTopicPath}/{topic.GroupId}/{topic.SensorTypeEnum}/{topic.SensorName}";
@@ -108,6 +124,10 @@ public class MqttSensorLoadTest : LoadTestBase
         return topicString;
     }
 
+    /// <summary>
+    ///     Generates a JSON payload with random temperature data
+    /// </summary>
+    /// <returns>JSON string containing temperature sensor reading</returns>
     public string GenerateTemperature()
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -122,19 +142,24 @@ public class MqttSensorLoadTest : LoadTestBase
         return json;
     }
 
+    /// <summary>
+    ///     Verifies that MQTT data was successfully written to InfluxDB
+    /// </summary>
+    /// <param name="start">Start time for data verification</param>
+    /// <param name="end">End time for data verification</param>
     private async Task VerifyInfluxDBData(DateTime start, DateTime end)
     {
         // Get InfluxDB service from your Database project
         using var scope = MqttFactory.Services.CreateScope();
         var repo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
 
-        foreach (var sensor in _topicSettings)
+        foreach (var sensor in _topicSettings.OrderBy(x => x.SensorName))
         {
             var recordCount = 0;
             await foreach (var row in repo.GetSensorWeatherData(start, end, sensor.SensorName)) recordCount++;
-        
+
             Assert.That(recordCount, Is.GreaterThan(0),
-                $"Expected more than 0 records in InfluxDB but found {recordCount}");
+                $"Expected more than 0 records in InfluxDB but found {recordCount} - Sensor: {sensor.SensorName}");
         }
     }
 }

@@ -71,7 +71,8 @@ public class ReceiverTests
         _mockSettingsRepo.Setup(r => r.GetTopicSettingsAsync())
             .ReturnsAsync(_testTopicSettings);
 
-        _receiver = new Receiver(_mockServiceProvider.Object, _mockConnection.Object, _mockLogger.Object, _mockConfiguration.Object);
+        _receiver = new Receiver(_mockServiceProvider.Object, _mockConnection.Object, _mockLogger.Object,
+            _mockConfiguration.Object);
     }
 
     private Mock<IServiceProvider> _mockServiceProvider;

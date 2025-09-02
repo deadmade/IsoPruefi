@@ -19,8 +19,8 @@ using Testcontainers.PostgreSql;
 namespace IntegrationTests.Infrastructure;
 
 /// <summary>
-/// Custom web application factory for integration tests that configures a test environment with PostgreSQL container,
-/// test-specific configuration, and dependency injection overrides for isolated testing.
+///     Custom web application factory for integration tests that configures a test environment with PostgreSQL container,
+///     test-specific configuration, and dependency injection overrides for isolated testing.
 /// </summary>
 public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Program>
 {
@@ -32,8 +32,8 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Progra
         .Build();
 
     /// <summary>
-    /// Configures the web host for integration testing by setting up test database, configuration overrides,
-    /// and service registrations specific to the test environment.
+    ///     Configures the web host for integration testing by setting up test database, configuration overrides,
+    ///     and service registrations specific to the test environment.
     /// </summary>
     /// <param name="builder">The web host builder to configure.</param>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -84,7 +84,7 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Progra
     }
 
     /// <summary>
-    /// Creates an HTTP client configured for integration testing with auto-redirect disabled.
+    ///     Creates an HTTP client configured for integration testing with auto-redirect disabled.
     /// </summary>
     /// <returns>An HTTP client instance configured for testing.</returns>
     public new HttpClient CreateClient()
@@ -96,7 +96,7 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Progra
     }
 
     /// <summary>
-    /// Starts the PostgreSQL test container and initializes the database with required schema and seed data.
+    ///     Starts the PostgreSQL test container and initializes the database with required schema and seed data.
     /// </summary>
     public async Task StartAsync()
     {
@@ -116,7 +116,7 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Progra
     }
 
     /// <summary>
-    /// Disposes of the PostgreSQL container and other resources when the factory is disposed.
+    ///     Disposes of the PostgreSQL container and other resources when the factory is disposed.
     /// </summary>
     /// <param name="disposing">True if disposing managed resources.</param>
     protected override void Dispose(bool disposing)

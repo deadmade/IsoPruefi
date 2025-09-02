@@ -12,10 +12,10 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// </summary>
 public class Receiver : IReceiver
 {
+    private readonly IConfiguration _configuration;
     private readonly IConnection _connection;
     private readonly ILogger<Receiver> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IConfiguration _configuration;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="Receiver" /> class.
@@ -23,13 +23,13 @@ public class Receiver : IReceiver
     /// <param name="serviceProvider">Service provider for dependency injection.</param>
     /// <param name="connection">Connection manager for the MQTT client.</param>
     /// <param name="logger">Logger for diagnostic information.</param>
-    public Receiver(IServiceProvider serviceProvider, IConnection connection, ILogger<Receiver> logger, IConfiguration configuration)
+    public Receiver(IServiceProvider serviceProvider, IConnection connection, ILogger<Receiver> logger,
+        IConfiguration configuration)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _connection = connection ?? throw new ArgumentNullException(nameof(connection));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-
     }
 
     /// <summary>
@@ -73,6 +73,8 @@ public class Receiver : IReceiver
 
                 await SubscribeToTopic(sharedTopic, mqttClient, topic.HasRecovery);
             }
+
+            _connection.IsSubscribed = true;
 
             _logger.LogInformation("Successfully subscribed to all {TopicCount} topics", topics.Count());
         }

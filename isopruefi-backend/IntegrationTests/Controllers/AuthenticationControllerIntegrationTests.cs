@@ -11,13 +11,13 @@ using ApiRegister = IntegrationTests.ApiClient.Register;
 namespace IntegrationTests.Controllers;
 
 /// <summary>
-/// Integration tests for the Authentication Controller to verify login, registration, and JWT token functionality.
+///     Integration tests for the Authentication Controller to verify login, registration, and JWT token functionality.
 /// </summary>
 [TestFixture]
 public class AuthenticationControllerIntegrationTests : ApiClientTestBase
 {
     /// <summary>
-    /// Tests successful login with valid credentials and verifies JWT token generation with proper structure.
+    ///     Tests successful login with valid credentials and verifies JWT token generation with proper structure.
     /// </summary>
     [Test]
     public async Task Login_ValidCredentials_ReturnsJwtToken()
@@ -44,7 +44,7 @@ public class AuthenticationControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests login attempt with invalid credentials and verifies proper 401 Unauthorized response.
+    ///     Tests login attempt with invalid credentials and verifies proper 401 Unauthorized response.
     /// </summary>
     [Test]
     public void Login_InvalidCredentials_ThrowsApiException()
@@ -60,7 +60,7 @@ public class AuthenticationControllerIntegrationTests : ApiClientTestBase
     }
 
     /// <summary>
-    /// Tests user registration functionality with admin authorization and verifies successful user creation.
+    ///     Tests user registration functionality with admin authorization and verifies successful user creation.
     /// </summary>
     [Test]
     public async Task Register_WithAdminToken_ReturnsOk()

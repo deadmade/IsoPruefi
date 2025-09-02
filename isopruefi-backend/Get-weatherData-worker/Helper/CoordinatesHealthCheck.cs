@@ -4,17 +4,17 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace Get_weatherData_worker.Helper;
 
 /// <summary>
-/// Healthcheck for availability of the database.
+///     Healthcheck for availability of the database.
 /// </summary>
 public class CoordinatesHealthCheck : IHealthCheck
 {
     /// <summary>
-    /// Instance of the service provider for accessing services.
+    ///     Instance of the service provider for accessing services.
     /// </summary>
     private readonly IServiceProvider _serviceProvider;
     
     /// <summary>
-    /// Logger instance used to document diagnostics.
+    ///     Logger instance used to document diagnostics.
     /// </summary>
     private readonly ILogger<CoordinatesHealthCheck> _logger;
 

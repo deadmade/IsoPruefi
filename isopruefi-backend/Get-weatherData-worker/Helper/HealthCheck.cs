@@ -5,12 +5,12 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace Get_weatherData_worker.Helper;
 
 /// <summary>
-/// Provides extension methods for configuring application health checks.
+///     Provides extension methods for configuring application health checks.
 /// </summary>
 public static class HealthCheck
 {
     /// <summary>
-    /// Registers and configures health checks for the application.
+    ///     Registers and configures health checks for the application.
     /// </summary>
     /// <param name="builder"> The WebApplicationBuilder used to configure services and middleware for the application.</param>
     public static void ConfigureHealthChecks(this WebApplicationBuilder builder)

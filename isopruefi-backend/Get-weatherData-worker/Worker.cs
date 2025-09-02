@@ -6,42 +6,42 @@ using Database.Repository.InfluxRepo;
 namespace Get_weatherData_worker;
 
 /// <summary>
-/// Background worker service for handling retrieval of outside weather data.
+///     Background worker service for handling retrieval of outside weather data.
 /// </summary>
 public class Worker : BackgroundService
 {
     /// <summary>
-    /// Logger instance for documenting diagnostics.
+    ///     Logger instance for documenting diagnostics.
     /// </summary>
     private readonly ILogger<Worker> _logger;
     
     /// <summary>
-    /// HttpClient factory for making API calls.
+    ///     HttpClient factory for making API calls.
     /// </summary>
     private readonly IHttpClientFactory _httpClientFactory;
     
     /// <summary>
-    /// Service provider for accessing services.
+    ///     Service provider for accessing services.
     /// </summary>
     private readonly IServiceProvider _serviceProvider;
     
     /// <summary>
-    /// Configuration for accessing settings.
+    ///     Configuration for accessing settings.
     /// </summary>
     private readonly IConfiguration _configuration;
 
     /// <summary>
-    /// URL of the API.
+    ///     URL of the API.
     /// </summary>
     private readonly string _weatherDataApi;
     
     /// <summary>
-    /// Alternative URL if the first API is unavailable.
+    ///     Alternative URL if the first API is unavailable.
     /// </summary>
     private readonly string _alternativeWeatherDataApi;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Worker"/> class.
+    ///     Initializes a new instance of the <see cref="Worker"/> class.
     /// </summary>
     /// <param name="logger">Logger for recording service events.</param>
     /// <param name="httpClientFactory">Http Client Factory for handling connections for API calls.</param>
@@ -64,8 +64,8 @@ public class Worker : BackgroundService
     }
 
     /// <summary>
-    /// Executes the worker process, maintaining up-to-date weather data for all possible locations.
-    /// This is the entry point for the background service execution.
+    ///     Executes the worker process, maintaining up-to-date weather data for all possible locations.
+    ///     This is the entry point for the background service execution.
     /// </summary>
     /// <param name="stoppingToken">Token that can be used to request cancellation of the operation.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
@@ -133,7 +133,7 @@ public class Worker : BackgroundService
     }
 
     /// <summary>
-    /// Checks for locations that  don't have up-to-date weather data.
+    ///     Checks for locations that  don't have up-to-date weather data.
     /// </summary>
     /// <param name="coordinateRepo">Coordinate Repo</param>
     /// <returns>An instance of the CoordinateMapping class with a location that needs updated weather data.</returns>
@@ -153,7 +153,7 @@ public class Worker : BackgroundService
     }
 
     /// <summary>
-    /// Calling the Meteo API for data.
+    ///     Calling the Meteo API for data.
     /// </summary>
     /// <param name="lat">Latitude coordinate</param>
     /// <param name="lon">Longitude coordinate</param>
@@ -200,7 +200,7 @@ public class Worker : BackgroundService
     }
 
     /// <summary>
-    /// Calling the Bright Sky API for data.
+    ///     Calling the Bright Sky API for data.
     /// </summary>
     /// <param name="lat">Latidute coordinate</param>
     /// <param name="lon">Longitude coordinate</param>

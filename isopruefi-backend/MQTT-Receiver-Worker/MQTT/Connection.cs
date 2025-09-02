@@ -15,13 +15,44 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// </summary>
 public class Connection : IConnection
 {
+    /// <summary>
+    ///     Application configuration used to retrieve settings related to MQTT or other services.
+    /// </summary>
     private readonly IConfiguration _configuration;
+    
+    /// <summary>
+    ///     Semaphore used to ensure that only one connection attempt happens at a time.
+    /// </summary>
     private readonly SemaphoreSlim _connectionSemaphore = new(1, 1);
+    
+    /// <summary>
+    ///     JSON serializer options used to serialize and deserialize messages sent/received via MQTT.
+    /// </summary>
     private readonly JsonSerializerOptions _jsonSerializerOptions;
+    
+    /// <summary>
+    ///     Logger instance used to capture diagnostic and error information.
+    /// </summary>
     private readonly ILogger<Connection> _logger;
+    
+    /// <summary>
+    ///     Options used to configure the MQTT client connection.
+    /// </summary>
     private readonly MqttClientOptions _options;
+    
+    /// <summary>
+    ///     Provides access to the application's service container for resolving dependencies.
+    /// </summary>
     private readonly IServiceProvider _serviceProvider;
+    
+    /// <summary>
+    ///     Indicates whether the MQTT client is currently connected to the broker.
+    /// </summary>
     private bool _isConnected;
+    
+    /// <summary>
+    ///     The MQTT client instance used to communicate with the broker.
+    /// </summary>
     private IMqttClient? _mqttClient;
 
     /// <summary>
@@ -154,6 +185,16 @@ public class Connection : IConnection
             .Build();
     }
 
+    /// <summary>
+    ///     Handles the event when the MQTT client is disconnected from the broker.
+    /// </summary>
+    /// <param name="e">
+    ///     Event arguments containing information about the disconnection,
+    ///     including the reason and any exceptions that occurred.
+    /// </param>
+    /// <returns>
+    ///     A task that represents the asynchronous handling of the disconnection event.
+    /// </returns>
     private async Task Disconnected(MqttClientDisconnectedEventArgs e)
     {
         _isConnected = false;
@@ -162,6 +203,16 @@ public class Connection : IConnection
         // Don't immediately reconnect here - let the worker handle it with proper timing
     }
 
+    
+    /// <summary>
+    ///     Handles incoming MQTT messages from subscribed topics asynchronously.
+    /// </summary>
+    /// <param name="e">
+    ///     Event arguments containing the received MQTT application message.
+    /// </param>
+    /// <returns>
+    ///     A task that represents the asynchronous processing of the incoming message.
+    /// </returns>
     private async Task<Task> ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
     {
         try
@@ -209,6 +260,15 @@ public class Connection : IConnection
         return Task.FromResult(Task.CompletedTask);
     }
 
+    /// <summary>
+    ///     Processes a single temperature sensor reading asynchronously and writes it to the provided InfluxDB repository.
+    /// </summary>
+    /// <param name="tempSensorReading">The temperature sensor reading to process.</param>
+    /// <param name="sensorName">The name of the sensor that produced the reading.</param>
+    /// <param name="influxRepo">The InfluxDB repository used to persist the reading.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous processing operation.
+    /// </returns>
     private async Task<Task> ProcessSensorReading(TempSensorReading tempSensorReading, string sensorName,
         IInfluxRepo influxRepo)
     {
@@ -250,6 +310,15 @@ public class Connection : IConnection
         return Task.FromResult(Task.CompletedTask);
     }
 
+    /// <summary>
+    ///     Processes a batch of temperature sensor readings asynchronously writes them to the provided InfluxDB repository.
+    /// </summary>
+    /// <param name="tempSensorReading">The temperature sensor reading to process in batch.</param>
+    /// <param name="sensorName">The name of the sensor that produced the reading.</param>
+    /// <param name="influxRepo">The InfluxDB repository used to persist the batch of readings.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous batch processing operation.
+    /// </returns>
     private async Task<Task> ProcessBatchSensorReading(TempSensorReading tempSensorReading, string sensorName,
         IInfluxRepo influxRepo)
     {

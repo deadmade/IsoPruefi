@@ -3,27 +3,27 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace Get_weatherData_worker.Helper;
 
 /// <summary>
-/// Healthcheck for availability of Bright Sky API.
+///     Healthcheck for availability of Bright Sky API.
 /// </summary>
 public class BrightSkyHealthCheck : IHealthCheck
 {
     /// <summary>
-    /// Factory used for making API requests.
+    ///     Factory used for making API requests.
     /// </summary>
     private readonly IHttpClientFactory _httpClientFactory;
     
     /// <summary>
-    /// Configuration used to retrieve settings.
+    ///     Configuration used to retrieve settings.
     /// </summary>
     private readonly IConfiguration _configuration;
     
     /// <summary>
-    /// Logger instance used to document diagnostics.
+    ///     Logger instance used to document diagnostics.
     /// </summary>
     private readonly ILogger<BrightSkyHealthCheck> _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BrightSkyHealthCheck"/> class.
+    ///     Initializes a new instance of the <see cref="BrightSkyHealthCheck"/> class.
     /// </summary>
     /// <param name="httpClientFactory">Factory for API calls.</param>
     /// <param name="configuration">Configuration for settings.</param>
@@ -38,7 +38,7 @@ public class BrightSkyHealthCheck : IHealthCheck
     }
 
     /// <summary>
-    /// Performs the healthcheck on the BrightSky API.
+    ///     Performs the healthcheck on the BrightSky API.
     /// </summary>
     /// <param name="context">Context when executing.</param>
     /// <param name="cancellationToken">Cancellation Token</param>

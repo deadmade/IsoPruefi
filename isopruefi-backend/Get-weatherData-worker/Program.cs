@@ -14,12 +14,12 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace Get_weatherData_worker;
 
 /// <summary>
-/// This class is the entry point for the Get Weather Data Worker application.
+///     This class is the entry point for the Get Weather Data Worker application.
 /// </summary>
 public class Program
 {
     /// <summary>
-    /// Entry point for the Get Weather Data Worker application.
+    ///     Entry point for the Get Weather Data Worker application.
     /// </summary>
     /// <param name="args">Arguments passed to the application.</param>
     public static void Main(string[] args)

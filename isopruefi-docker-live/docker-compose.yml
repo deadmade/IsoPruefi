@@ -205,6 +205,19 @@ services:
           isDefault: true
           version: 1
           editable: false
+        - name: InfluxDB
+          type: influxdb
+          access: proxy
+          orgId: 1
+          url: http://influxdb3:5006
+          jsonData:
+            version: SQL
+            dbName: IsoPruefi
+            httpMode: POST
+            insecureGrpc: true
+            tlsSkipVerify: true
+          secureJsonData:
+            token: ${Influx__InfluxDBToken}
         EOF
         /run.sh
 

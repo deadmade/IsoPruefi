@@ -71,7 +71,7 @@ public class ReceiverTests
         _mockSettingsRepo.Setup(r => r.GetTopicSettingsAsync())
             .ReturnsAsync(_testTopicSettings);
 
-        _receiver = new Receiver(_mockServiceProvider.Object, _mockConnection.Object, _mockLogger.Object);
+        _receiver = new Receiver(_mockServiceProvider.Object, _mockConnection.Object, _mockLogger.Object, _mockConfiguration.Object);
     }
 
     private Mock<IServiceProvider> _mockServiceProvider;
@@ -95,7 +95,7 @@ public class ReceiverTests
         var connection = Mock.Of<IConnection>();
         var logger = Mock.Of<ILogger<Receiver>>();
 
-        var receiver = new Receiver(serviceProvider, connection, logger);
+        var receiver = new Receiver(serviceProvider, connection, logger, _mockConfiguration.Object);
 
         receiver.Should().NotBeNull();
     }
@@ -109,7 +109,7 @@ public class ReceiverTests
         var connection = Mock.Of<IConnection>();
         var logger = Mock.Of<ILogger<Receiver>>();
 
-        var action = () => new Receiver(null!, connection, logger);
+        var action = () => new Receiver(null!, connection, logger, _mockConfiguration.Object);
 
         action.Should().Throw<ArgumentNullException>();
     }
@@ -123,7 +123,7 @@ public class ReceiverTests
         var serviceProvider = Mock.Of<IServiceProvider>();
         var logger = Mock.Of<ILogger<Receiver>>();
 
-        var action = () => new Receiver(serviceProvider, null!, logger);
+        var action = () => new Receiver(serviceProvider, null!, logger, _mockConfiguration.Object);
 
         action.Should().Throw<ArgumentNullException>();
     }
@@ -137,7 +137,7 @@ public class ReceiverTests
         var serviceProvider = Mock.Of<IServiceProvider>();
         var connection = Mock.Of<IConnection>();
 
-        var action = () => new Receiver(serviceProvider, connection, null!);
+        var action = () => new Receiver(serviceProvider, connection, null!, _mockConfiguration.Object);
 
         action.Should().Throw<ArgumentNullException>();
     }

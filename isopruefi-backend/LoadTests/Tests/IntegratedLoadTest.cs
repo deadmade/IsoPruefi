@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using LoadTests.Infrastructure;
-using LoadTests.MQTT;
+using LoadTests.Seeder;
 using NBomber.CSharp;
 using NBomber.Http.CSharp;
 using MQTT_Receiver_Worker.MQTT.Models;
@@ -39,7 +39,7 @@ public class IntegratedLoadTest : LoadTestBase
         }
 
         // Setup test sensors
-        _testSensors = await LoadTestDataSeeder.SeedTestDataAsync(Factory.Services, 30);
+        _testSensors = await SensorSeeder.SeedTestDataAsync(ApiFactory.Services, 30);
         Console.WriteLine($"Created {_testSensors.Count} test sensors for integrated testing");
 
         // Setup MQTT client
@@ -47,7 +47,7 @@ public class IntegratedLoadTest : LoadTestBase
         _mqttClient = factory.CreateMqttClient();
         
         var options = new MqttClientOptionsBuilder()
-            .WithTcpServer("localhost", Factory.MqttPort)
+            .WithTcpServer("localhost", MqttFactory.MqttPort)
             .WithClientId($"IntegratedTestPublisher_{Guid.NewGuid()}")
             .Build();
             
@@ -66,7 +66,7 @@ public class IntegratedLoadTest : LoadTestBase
         
         if (_testSensors != null)
         {
-            await LoadTestDataSeeder.CleanupTestDataAsync(Factory.Services);
+            await SensorSeeder.CleanupTestDataAsync(ApiFactory.Services);
         }
         
         _authHelper?.Dispose();

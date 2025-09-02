@@ -4,12 +4,12 @@ using Database.EntityFramework.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LoadTests.MQTT;
+namespace LoadTests.Seeder;
 
 /// <summary>
 ///     Seeds test data for MQTT load testing including coordinates and topic settings
 /// </summary>
-public static class LoadTestDataSeeder
+public static class SensorSeeder
 {
     /// <summary>
     ///     Seeds the database with test coordinates and topic settings for load testing
@@ -56,6 +56,15 @@ public static class LoadTestDataSeeder
 
         await context.SaveChangesAsync();
         return sensorNames;
+    }
+    
+    public static async Task CheckSensorExistsAsync(IServiceProvider serviceProvider, int sensorCount)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();   
+        
+        var count = await context.TopicSettings.CountAsync();
+        Assert.That(count == sensorCount, "Expected sensor count does not match actual count");
     }
     
     /// <summary>

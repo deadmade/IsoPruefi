@@ -207,8 +207,7 @@ namespace IntegrationTests.ApiClient
         /// Registers a new user in the system. Admin access required.
         /// </summary>
         /// <remarks>
-        /// This endpoint allows administrators to create new user accounts in the system.
-        /// <br/>Only users with the "Admin" role can access this endpoint.
+        /// Only users with the "Admin" role can access this endpoint.
         /// <br/>**Authorization Required**: Bearer token with Admin role
         /// <br/>Example request:
         /// <br/>```json
@@ -233,8 +232,7 @@ namespace IntegrationTests.ApiClient
         /// Registers a new user in the system. Admin access required.
         /// </summary>
         /// <remarks>
-        /// This endpoint allows administrators to create new user accounts in the system.
-        /// <br/>Only users with the "Admin" role can access this endpoint.
+        /// Only users with the "Admin" role can access this endpoint.
         /// <br/>**Authorization Required**: Bearer token with Admin role
         /// <br/>Example request:
         /// <br/>```json
@@ -3065,9 +3063,17 @@ namespace IntegrationTests.ApiClient
         [Newtonsoft.Json.JsonProperty("topicSettingId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int TopicSettingId { get; set; } = default!;
 
+        /// <summary>
+        /// Gets or sets the foreign key for the related CoordinateMapping entity.
+        /// <br/>            
+        /// </summary>
         [Newtonsoft.Json.JsonProperty("coordinateMappingId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int CoordinateMappingId { get; set; } = default!;
 
+        /// <summary>
+        /// Navigation property for the related CoordinateMapping entity.
+        /// <br/>            
+        /// </summary>
         [Newtonsoft.Json.JsonProperty("coordinateMapping", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public CoordinateMapping? CoordinateMapping { get; set; } = default!;
 

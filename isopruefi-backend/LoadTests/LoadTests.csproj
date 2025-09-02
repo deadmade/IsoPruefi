@@ -39,6 +39,7 @@
 
     <ItemGroup>
         <Folder Include="Generated\"/>
+        <Folder Include="MQTT\" />
     </ItemGroup>
 
 </Project>

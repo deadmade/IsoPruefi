@@ -21,8 +21,6 @@ public class RestApiLoadTest : LoadTestBase
     [OneTimeSetUp]
     public async Task RestApiLoadTestSetup()
     {
-        await GlobalSetup();
-        
         _authHelper = new AuthHelper(GetApiBaseUrl());
         
         try
@@ -36,7 +34,7 @@ public class RestApiLoadTest : LoadTestBase
         }
 
         // Get existing sensor names from the database for realistic queries
-        using var scope = Factory.Services.CreateScope();
+        using var scope = ApiFactory.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         _testSensorNames = context.TopicSettings
             .Where(ts => ts.SensorName != null)

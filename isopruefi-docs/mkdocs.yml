@@ -15,6 +15,20 @@ nav:
       - API Reference: api-reference.md
       - API V1: api-v1.md
       - Troubleshooting: troubleshooting.md
+  - Code Documentation:
+      - Rest-API: code/Rest-API/index.md
+      - MQTT-Receiver-Worker: code/MQTT-Receiver-Worker/index.md
+      - MQTT-Sender: code/MQTT-Sender/index.md
+      - Database: code/Database/index.md
+      - UnitTests: code/UnitTests/index.md
+      - Arduino: code/arduino/md/index.md
+      - Frontend:
+          - Overview: code/frontend/README.md
+          - Api: code/frontend/api
+          - Authentication: code/frontend/auth
+          - Components: code/frontend/components
+          - Pages: code/frontend/pages
+          - Utils: code/frontend/utils
   - Architecture Documentation:
       - 01 Introduction and Goals: documentation/01_introduction_and_goals.md
       - 02 Quality Requirements: documentation/02_quality_requirements.md

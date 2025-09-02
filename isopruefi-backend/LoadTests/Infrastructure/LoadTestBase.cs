@@ -1,3 +1,4 @@
+using LoadTests.Seeder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +10,10 @@ namespace LoadTests.Infrastructure;
 public abstract class LoadTestBase
 {
     protected IConfiguration Configuration { get; private set; } = null!;
-    protected LoadTestWebApplicationFactory Factory { get; private set; } = null!;
+    protected LoadTestRestAPIFactory ApiFactory { get; private set; } = null!;
+    
+    protected LoadTestMqttFactory MqttFactory { get; private set; } = null!;
+    
     protected HttpClient ApiClient { get; private set; } = null!;
 
     [OneTimeSetUp]
@@ -18,22 +22,25 @@ public abstract class LoadTestBase
         // Load configuration
         Configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.loadtest.json")
+            //.AddJsonFile("appsettings.loadtest.json")
             .AddEnvironmentVariables()
             .Build();
 
         // Initialize factory and containers
-        Factory = new LoadTestWebApplicationFactory();
-        await Factory.InitializeAsync();
+        ApiFactory = new LoadTestRestAPIFactory();
+        await ApiFactory.InitializeAsync();
+
+        await SensorSeeder.SeedTestDataAsync(ApiFactory.Services, sensorCount: 100);
+        await SensorSeeder.CheckSensorExistsAsync(ApiFactory.Services, 100);
+
+        await InfluxSeeder.CreateIsoPrüfiDatabase(ApiFactory.Services);
+        await InfluxSeeder.CheckDatabaseExists(ApiFactory.Services);
+
+        MqttFactory = new LoadTestMqttFactory(ApiFactory.DatabaseConnectionString, ApiFactory.InfluxDbToken, ApiFactory.InfluxDbUrl);
+        await MqttFactory.InitializeAsync();
 
         // Create HTTP client from factory
-        ApiClient = Factory.CreateClient();
-
-        Console.WriteLine("Load test infrastructure initialized successfully");
-        Console.WriteLine(
-            $"API Base URL: {Factory.Services.GetRequiredService<IConfiguration>()["BaseUrl"] ?? "http://localhost"}");
-        Console.WriteLine($"Database: {Factory.DatabaseConnectionString}");
-        Console.WriteLine($"InfluxDB: {Factory.InfluxDbUrl} (Token: {Factory.InfluxDbToken})");
+        ApiClient = ApiFactory.CreateClient();
     }
 
     [OneTimeTearDown]
@@ -41,10 +48,11 @@ public abstract class LoadTestBase
     {
         ApiClient?.Dispose();
 
-        if (Factory != null)
+        if (ApiFactory != null)
         {
-            await Factory.CleanupAsync();
-            Factory.Dispose();
+            await ApiFactory.CleanupAsync();
+            await MqttFactory.CleanupAsync();
+            ApiFactory.Dispose();
         }
 
         Console.WriteLine("Load test infrastructure cleaned up");

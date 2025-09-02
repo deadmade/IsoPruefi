@@ -49,7 +49,7 @@
           "Authentication"
         ],
         "summary": "Registers a new user in the system. Admin access required.",
-        "description": "This endpoint allows administrators to create new user accounts in the system.\nOnly users with the \"Admin\" role can access this endpoint.\n**Authorization Required**: Bearer token with Admin role\nExample request:\n```json\n{\n\"userName\": \"newuser\",\n\"password\": \"secure-password\"\n}\n```\nThe new user will be created with the \"User\" role by default and can access\ntemperature data endpoints but cannot perform administrative functions.",
+        "description": "Only users with the \"Admin\" role can access this endpoint.\n**Authorization Required**: Bearer token with Admin role\nExample request:\n```json\n{\n\"userName\": \"newuser\",\n\"password\": \"secure-password\"\n}\n```\nThe new user will be created with the \"User\" role by default and can access\ntemperature data endpoints but cannot perform administrative functions.",
         "operationId": "Authentication_Register",
         "requestBody": {
           "x-name": "input",
@@ -101,12 +101,7 @@
           "500": {
             "description": "Internal server error occurred during registration."
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/v1/Authentication/Refresh": {
@@ -995,9 +990,11 @@
           },
           "coordinateMappingId": {
             "type": "integer",
+            "description": "Gets or sets the foreign key for the related CoordinateMapping entity.\n            ",
             "format": "int32"
           },
           "coordinateMapping": {
+            "description": "Navigation property for the related CoordinateMapping entity.\n            ",
             "nullable": true,
             "oneOf": [
               {

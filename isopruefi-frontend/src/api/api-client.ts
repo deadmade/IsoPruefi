@@ -1362,7 +1362,11 @@ export class TopicSetting implements ITopicSetting {
     /** Gets or sets the unique identifier for the TopicSetting entity.
              */
     topicSettingId?: number;
+    /** Gets or sets the foreign key for the related CoordinateMapping entity.
+             */
     coordinateMappingId?: number;
+    /** Navigation property for the related CoordinateMapping entity.
+             */
     coordinateMapping?: CoordinateMapping | undefined;
     /** Gets or sets the default MQTT topic path for this setting.
              */
@@ -1433,7 +1437,11 @@ export interface ITopicSetting {
     /** Gets or sets the unique identifier for the TopicSetting entity.
              */
     topicSettingId?: number;
+    /** Gets or sets the foreign key for the related CoordinateMapping entity.
+             */
     coordinateMappingId?: number;
+    /** Navigation property for the related CoordinateMapping entity.
+             */
     coordinateMapping?: CoordinateMapping | undefined;
     /** Gets or sets the default MQTT topic path for this setting.
              */

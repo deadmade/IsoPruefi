@@ -177,6 +177,23 @@ public class CachedInfluxRepo : IInfluxRepo
             throw;
         }
     }
+    
+    ///<inheritdoc />
+    public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
+    {
+        try
+        {
+            var query =
+                $"SELECT sensor, time FROM uptime WHERE sensor = '{sensor}'";
+
+            return _client.QueryPoints(query);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
+            throw;
+        }
+    }
 
     /// <summary>
     ///     Attempts to write a point to InfluxDB, caching it if the write fails.
@@ -224,4 +241,6 @@ public class CachedInfluxRepo : IInfluxRepo
         _memoryCache.Remove(cacheKey);
         _logger.LogDebug("Removed cached point: {CacheKey}", cacheKey);
     }
+    
+    
 }

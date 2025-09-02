@@ -22,13 +22,12 @@ namespace LoadTests.Infrastructure;
 /// <summary>
 ///     Web application factory for load tests using TestContainers
 /// </summary>
-public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
+public class LoadTestRestAPIFactory : WebApplicationFactory<Program>
 {
     private readonly PostgreSqlContainer _dbContainer;
     private readonly IContainer _influxDbContainer;
-    private readonly IContainer _mosquittoContainer;
 
-    public LoadTestWebApplicationFactory()
+    public LoadTestRestAPIFactory()
     {
         _dbContainer = new PostgreSqlBuilder()
             .WithImage("postgres:alpine3.21")
@@ -48,37 +47,12 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
             .WithCleanUp(true)
             .WithAutoRemove(true)
             .Build();
-
-
-        _mosquittoContainer = new ContainerBuilder()
-            .WithImage("eclipse-mosquitto")
-            .WithPortBinding(1883, true)
-            .WithPortBinding(9001, true)
-            .WithBindMount(CreateMosquittoConfigFile(), "/mosquitto/config/mosquitto.conf")
-            .WithVolumeMount("mosquitto", "/etc/mosquitto")
-            .WithWaitStrategy(Wait.ForUnixContainer()
-                .UntilInternalTcpPortIsAvailable(1883))
-            .WithCleanUp(true)
-            .Build();
     }
 
 
     public string DatabaseConnectionString => _dbContainer.GetConnectionString();
     public string InfluxDbUrl => $"http://localhost:{_influxDbContainer.GetMappedPublicPort(8181)}";
     public string InfluxDbToken { get; private set; } = string.Empty;
-
-    public int MqttPort => _mosquittoContainer.GetMappedPublicPort(1883);
-
-    private string CreateMosquittoConfigFile()
-    {
-        var configPath = Path.Combine(Path.GetTempPath(), "mosquitto_loadtest.conf");
-        var configContent = @"listener 1883
-    allow_anonymous true
-    ";
-
-        File.WriteAllText(configPath, configContent);
-        return configPath;
-    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -91,13 +65,11 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
                 ["Admin:Email"] = "loadtestadmin@loadtest.com",
                 ["Admin:Password"] = "LoadTestAdmin123!",
                 ["ConnectionStrings:DefaultConnection"] = _dbContainer.GetConnectionString(),
-                ["Influx:InfluxDBHost"] = $"http://localhost:{_influxDbContainer.GetMappedPublicPort(8181)}",
+                ["Influx:InfluxDBHost"] = InfluxDbUrl,
                 ["Influx:InfluxDBToken"] = InfluxDbToken,
-                ["MQTT:Server"] = _mosquittoContainer.Hostname,
-                ["MQTT:Port"] = 1883.ToString(),
-                ["MQTT:Username"] = "",
-                ["MQTT:Password"] = "",
-                ["BaseUrl"] = "http://localhost"
+                ["Jwt:ValidAudience"] = "localhost",
+                ["Jwt:ValidIssuer"] = "localhost",
+                ["Jwt:Secret"] = "your-secure-256-bit-secret-key-replace-this-in-production"
             });
 
             config.AddJsonFile("appsettings.loadtest.json", true);
@@ -136,18 +108,6 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
         builder.UseEnvironment("LoadTesting");
     }
 
-    public new HttpClient CreateClient()
-    {
-        var client = CreateClient(new WebApplicationFactoryClientOptions
-        {
-            AllowAutoRedirect = false,
-            BaseAddress = new Uri("http://localhost")
-        });
-        
-        Console.WriteLine($"Created client with BaseAddress: {client.BaseAddress}");
-        return client;
-    }
-
     /// <summary>
     ///     Initialize all containers and seed test data
     /// </summary>
@@ -158,7 +118,6 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
         {
             _dbContainer.StartAsync(),
             _influxDbContainer.StartAsync(),
-            _mosquittoContainer.StartAsync()
         };
 
         await Task.WhenAll(tasks);
@@ -176,32 +135,8 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
         InfluxDbToken = ParseTokenFromOutput(result.Stdout);
         Console.WriteLine($"InfluxDB Token created: {InfluxDbToken}");
 
-        // Create the IsoPruefi database in InfluxDB
-        var createDbCommand = new List<string>
-        {
-            "influxdb3",
-            "create",
-            "database",
-            "IsoPruefi"
-        };
-
-        var dbResult = await _influxDbContainer.ExecAsync(createDbCommand, CancellationToken.None);
-        Console.WriteLine($"InfluxDB Database creation result: {dbResult.Stdout}");
-        if (dbResult.ExitCode != 0)
-        {
-            Console.WriteLine($"InfluxDB Database creation error: {dbResult.Stderr}");
-        }
-        Console.WriteLine("InfluxDB database setup completed");
-
         using var scope = Services.CreateScope();
-
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        
-        // Use the same ApplyMigration method that other components use
-        // This will ensure proper seeding of default data
-        Console.WriteLine($"Applying database migrations for connection: {_dbContainer.GetConnectionString()}");
         ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
-        Console.WriteLine("Database migrations completed successfully");
     }
 
     private string ParseTokenFromOutput(string tokenOutput)
@@ -232,7 +167,6 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
         {
             if (_dbContainer != null) tasks.Add(_dbContainer.StopAsync());
             if (_influxDbContainer != null) tasks.Add(_influxDbContainer.StopAsync());
-            if (_mosquittoContainer != null) tasks.Add(_mosquittoContainer.StopAsync());
 
             await Task.WhenAll(tasks);
         }
@@ -251,7 +185,6 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
 
                 _dbContainer?.DisposeAsync().GetAwaiter().GetResult();
                 _influxDbContainer?.DisposeAsync().GetAwaiter().GetResult();
-                _mosquittoContainer?.DisposeAsync().GetAwaiter().GetResult();
             }
             catch (ObjectDisposedException)
             {

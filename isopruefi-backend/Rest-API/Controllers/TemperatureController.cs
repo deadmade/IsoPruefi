@@ -22,9 +22,24 @@ namespace Rest_API.Controllers;
 [Consumes("application/json")]
 public class TemperatureDataController : ControllerBase
 {
+    /// <summary>
+    ///     Repository used to access coordinate data.
+    /// </summary>
     private readonly ICoordinateRepo _coordinateRepo;
+    
+    /// <summary>
+    ///     Repository used to store and retrieve temperature data in InfluxDB.
+    /// </summary>
     private readonly IInfluxRepo _influxRepo;
+    
+    /// <summary>
+    ///     Logger instance used to capture diagnostic and error information.
+    /// </summary>
     private readonly ILogger<TemperatureDataController> _logger;
+    
+    /// <summary>
+    ///     Repository used to access application settings.
+    /// </summary>
     private readonly ISettingsRepo _settingsRepo;
 
 
@@ -34,6 +49,7 @@ public class TemperatureDataController : ControllerBase
     /// <param name="logger">The logger instance used for logging operations.</param>
     /// <param name="settingsRepo">The repository for accessing application settings.</param>
     /// <param name="influxRepo">The repository for accessing temperature data from InfluxDB.</param>
+    /// <param name="coordinateRepo">The repository for accessing the coordinate info.</param>
     /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
     public TemperatureDataController(ILogger<TemperatureDataController> logger, ISettingsRepo settingsRepo,
         IInfluxRepo influxRepo, ICoordinateRepo coordinateRepo)
@@ -168,6 +184,17 @@ public class TemperatureDataController : ControllerBase
         return temperatureData;
     }
 
+    
+    /// <summary>
+    ///     Checks the plausibility of a list of temperature sensor readings.
+    /// </summary>
+    /// <param name="sensorData">The list of temperature readings to check.</param>
+    /// <param name="sensorName">The name of the sensor providing the readings.</param>
+    /// <param name="sensorLocation">The location of the sensor.</param>
+    /// <param name="isFahrenheit">Indicates whether the temperature readings are in Fahrenheit.</param>
+    /// <returns>
+    ///     A filtered or adjusted list of <see cref="TemperatureData"/> representing plausible readings.
+    /// </returns>
     private List<TemperatureData> CheckPlausibility(List<TemperatureData> sensorData, string sensorName,
         string sensorLocation, bool isFahrenheit)
     {

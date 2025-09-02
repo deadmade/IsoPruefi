@@ -38,7 +38,7 @@ public class Program
     /// <summary>
     ///     Entry point for the Rest API application.
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Arguments passed to the application</param>
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);

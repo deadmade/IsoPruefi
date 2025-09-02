@@ -25,6 +25,13 @@ public interface ICoordinateRepo
     /// <param name="postalcode">postalcode</param>
     /// <returns>Returns a boolean value.</returns>
     Task<bool> ExistsPostalCode(int postalcode);
+    
+    /// <summary>
+    ///     Retrieves the coordinates of the postalcode that was inserted last.
+    /// </summary>
+    /// <param name="place">Name of the location</param>
+    /// <returns>Returns coordinates of the location that was last chosen by the User.</returns>
+    Task<CoordinateMapping?> GetLocation(string place);
 
     /// <summary>
     ///     Gets all postalcodes that are saved in the database.

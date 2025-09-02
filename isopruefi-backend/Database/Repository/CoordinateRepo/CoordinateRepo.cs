@@ -46,6 +46,15 @@ public class CoordinateRepo : ICoordinateRepo
 
         return result;
     }
+    
+    /// <inheritdoc />
+    public async Task<CoordinateMapping?> GetLocation(string place)
+    {
+        var result = await _applicationDbContext.CoordinateMappings
+            .FirstOrDefaultAsync(c => c.Location == place);
+
+        return result;
+    }
 
     /// <inheritdoc />
     public async Task<CoordinateMapping?> GetUnlockedLocation()

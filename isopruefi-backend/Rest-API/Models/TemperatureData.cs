@@ -5,6 +5,9 @@ namespace Rest_API.Models;
 /// </summary>
 public class TemperatureDataOverview
 {
+    /// <summary>
+    ///     Gets or sets the list of Sensor data for the inside temperature.
+    /// </summary>
     public List<SensorData> SensorData { get; set; }
 
     /// <summary>
@@ -13,10 +16,24 @@ public class TemperatureDataOverview
     public List<TemperatureData> TemperatureOutside { get; set; }
 }
 
+/// <summary>
+///     Represents an overview of sensor data.
+/// </summary>
 public class SensorData
 {
+    /// <summary>
+    ///     Gets or sets the name of the sensor.
+    /// </summary>
     public string SensorName { get; set; }
+    
+    /// <summary>
+    ///     Gets or sets the location of the sensor.
+    /// </summary>
     public string Location { get; set; }
+    
+    /// <summary>
+    ///     Gets or sets the temperature data of the sensor.
+    /// </summary>
     public List<TemperatureData> TemperatureDatas { get; set; }
 }
 
@@ -35,5 +52,8 @@ public class TemperatureData
     /// </summary>
     public double Temperature { get; set; }
 
+    /// <summary>
+    ///     Gets or sets the plausibility of the temperature data.
+    /// </summary>
     public string Plausibility { get; set; }
 }

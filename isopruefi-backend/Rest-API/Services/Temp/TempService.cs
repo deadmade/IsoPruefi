@@ -12,11 +12,29 @@ namespace Rest_API.Services.Temp;
 /// </summary>
 public class TempService : ITempService
 {
+    /// <summary>
+    ///     Application configuration used to retrieve settings such as API keys or URLs.
+    /// </summary>
     private readonly IConfiguration _configuration;
+    
+    /// <summary>
+    ///     Repository used to access coordinate data and mappings.
+    /// </summary>
     private readonly ICoordinateRepo _coordinateRepo;
-
+    
+    /// <summary>
+    ///     The base URL or API key for the geocoding service used in this service.
+    /// </summary>
     private readonly string _geocodingApi;
+    
+    /// <summary>
+    ///     Factory used to create <see cref="HttpClient"/> instances for making HTTP requests.
+    /// </summary>
     private readonly IHttpClientFactory _httpClientFactory;
+    
+    /// <summary>
+    ///     Logger instance used to capture diagnostic and error information for the <see cref="TempService"/>.
+    /// </summary>
     private readonly ILogger<TempService> _logger;
 
     /// <summary>

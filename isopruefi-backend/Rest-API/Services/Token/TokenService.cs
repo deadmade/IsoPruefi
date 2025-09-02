@@ -9,7 +9,14 @@ namespace Rest_API.Services.Token;
 /// <inheritdoc />
 public class TokenService : ITokenService
 {
+    /// <summary>
+    ///     Application configuration used to retrieve settings.
+    /// </summary>
     private readonly IConfiguration _configuration;
+    
+    /// <summary>
+    ///     Logger instance used to capture diagnostic and error information for the <see cref="TokenService"/>.
+    /// </summary>
     private readonly ILogger<TokenService> _logger;
 
     /// <summary>

@@ -230,17 +230,7 @@ public class AuthenticationService(
         }
     }
 
-    /// <summary>
-    ///     Changes the password of a user.
-    /// </summary>
-    /// <param name="user">The Object of the user.</param>
-    /// <param name="currentPassword">The current password of the user.</param>
-    /// <param name="newPassword">The new password to set.</param>
-    /// <returns>
-    ///     A task that represents the asynchronous operation. The task result contains a message
-    ///     indicating the result of the password change.
-    /// </returns>
-    /// <exception cref="Exception">Thrown when the password change fails.</exception>
+    /// <inheritdoc />
     public async Task ChangePassword(ApiUser user, string currentPassword, string newPassword)
     {
         try
@@ -264,15 +254,7 @@ public class AuthenticationService(
         }
     }
 
-    /// <summary>
-    ///     Changes the username of a user.
-    /// </summary>
-    /// <param name="user">The User Object of the user.</param>
-    /// <returns>
-    ///     A task that represents the asynchronous operation. The task result contains a message
-    ///     indicating the result of the username change.
-    /// </returns>
-    /// <exception cref="Exception">Thrown when the username change fails.</exception>
+    /// <inheritdoc />
     public async Task ChangeUser(ApiUser user)
     {
         try

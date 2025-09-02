@@ -196,14 +196,14 @@ services:
   isopruefi-frontend-1:
     build:
       context: ./isopruefi-frontend
-      dockerfile: Dockerfile-Dev
+      dockerfile: Dockerfile
     container_name: isopruefi-frontend-1
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
     volumes:
       - ./isopruefi-frontend:/app
       - /app/node_modules
@@ -211,8 +211,6 @@ services:
       - isopruefi-network
     environment:
       VITE_DEV_PROXY_TARGET: https://aicon.dhbw-heidenheim.de:5001/backend
-    ports:
-      - "5173:5173"
     stdin_open: true
     tty: true
 

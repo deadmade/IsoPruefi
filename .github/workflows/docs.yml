@@ -62,6 +62,9 @@ jobs:
 
       - name: Install Doxygen
         run: sudo apt-get update && sudo apt-get install -y doxygen
+      
+      - name: Install Weasyprint
+        run: sudo apt-get install -y weasyprint
 
       - name: Generate Arduino Documentation
         working-directory: ./isopruefi-arduino

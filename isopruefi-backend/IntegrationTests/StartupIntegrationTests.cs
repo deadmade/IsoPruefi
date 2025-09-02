@@ -4,9 +4,15 @@ using IntegrationTests.Infrastructure;
 
 namespace IntegrationTests;
 
+/// <summary>
+/// Integration tests to verify application startup and basic endpoint accessibility.
+/// </summary>
 [TestFixture]
 public class StartupIntegrationTests : IntegrationTestBase
 {
+    /// <summary>
+    /// Verifies that the application starts successfully and the HTTP client and test factory are properly initialized.
+    /// </summary>
     [Test]
     public void Application_StartsSuccessfully()
     {
@@ -14,6 +20,9 @@ public class StartupIntegrationTests : IntegrationTestBase
         Factory.Should().NotBeNull();
     }
 
+    /// <summary>
+    /// Verifies that the Swagger API documentation endpoint is accessible in the test environment.
+    /// </summary>
     [Test]
     public async Task Swagger_IsAccessible_InTestEnvironment()
     {

@@ -3,7 +3,7 @@ using Database.EntityFramework.Models;
 namespace Database.Repository.CoordinateRepo;
 
 /// <summary>
-///     Repository interface for sccessing and managing locations.
+///     Repository interface for accessing and managing coordinate locations.
 /// </summary>
 public interface ICoordinateRepo
 {
@@ -16,7 +16,7 @@ public interface ICoordinateRepo
     /// <summary>
     ///     Deletes postalcode from the database.
     /// </summary>
-    /// <param name="postalCode">postalcode</param>
+    /// <param name="postalCode">The postal code to delete from the database.</param>
     Task DeletePostalCode(int postalCode);
 
     /// <summary>
@@ -25,6 +25,11 @@ public interface ICoordinateRepo
     /// <returns>Returns coordinates of the location that was last chosen by the User.</returns>
     Task<CoordinateMapping?> GetLocation();
 
+    /// <summary>
+    ///     Retrieves the coordinates for a specific place/location.
+    /// </summary>
+    /// <param name="place">The name of the place to retrieve coordinates for.</param>
+    /// <returns>Returns the CoordinateMapping for the specified place, or null if not found.</returns>
     Task<CoordinateMapping?> GetLocation(string place);
 
     /// <summary>
@@ -50,6 +55,6 @@ public interface ICoordinateRepo
     /// <summary>
     ///     Gets the next unlocked entry in CoordinateMappings and locks it for the next minute.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Returns the next available unlocked CoordinateMapping, or null if none available.</returns>
     Task<CoordinateMapping?> GetUnlockedLocation();
 }

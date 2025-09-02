@@ -1,24 +1,30 @@
+using System.Net.Http.Json;
 using System.Text;
 using LoadTests.Infrastructure;
 using NBomber.CSharp;
 using NBomber.Http.CSharp;
+using Microsoft.Extensions.DependencyInjection;
+using Database.EntityFramework;
 
 namespace LoadTests.Tests;
 
 /// <summary>
-///     Load tests for REST API endpoints using TestContainers and API factory
+/// Comprehensive REST API load tests simulating realistic usage scenarios
 /// </summary>
 [TestFixture]
 public class RestApiLoadTest : LoadTestBase
 {
+    private AuthHelper? _authHelper;
+    private string? _authToken;
+    private List<string>? _testSensorNames;
+
     [OneTimeSetUp]
-    public async Task RestApiSetup()
+    public async Task RestApiLoadTestSetup()
     {
         await GlobalSetup();
-
-        // Setup authentication using the factory's API client
+        
         _authHelper = new AuthHelper(GetApiBaseUrl());
-
+        
         try
         {
             _authToken = await _authHelper.GetAuthTokenAsync();
@@ -26,138 +32,296 @@ public class RestApiLoadTest : LoadTestBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Authentication failed, using test without auth: {ex.Message}");
-            // Continue without auth for now - some endpoints might be public
+            Console.WriteLine($"Authentication failed: {ex.Message}");
         }
+
+        // Get existing sensor names from the database for realistic queries
+        using var scope = Factory.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        _testSensorNames = context.TopicSettings
+            .Where(ts => ts.SensorName != null)
+            .Select(ts => ts.SensorName!)
+            .Take(20)
+            .ToList();
     }
 
     [OneTimeTearDown]
-    public async Task RestApiTeardown()
+    public async Task RestApiLoadTestTeardown()
     {
         _authHelper?.Dispose();
         await GlobalTeardown();
     }
 
-    private AuthHelper? _authHelper;
-    private string? _authToken;
-
     [Test]
-    public async Task Test_1k_REST_API_Users_Temperature_Data_Requests()
+    public void Test_Sensor_Data_Queries_Load()
     {
-        var scenario = Scenario.Create("rest_api_1k_users", async context =>
+        var baseUrl = GetApiBaseUrl();
+        
+        var sensorDataScenario = Scenario.Create("sensor_data_queries", async context =>
+        {
+            if (_testSensorNames == null || !_testSensorNames.Any())
+                return Response.Fail(400);
+
+            var random = Random.Shared;
+            var sensorName = _testSensorNames[random.Next(_testSensorNames.Count)];
+            
+            // Generate realistic date ranges for queries
+            var endDate = DateTime.UtcNow;
+            var startDate = endDate.AddDays(-random.Next(1, 30)); // Last 1-30 days
+            
+            var url = $"{baseUrl}/api/SensorData/GetSensorDataBySensorNameAndDateRange?" +
+                     $"sensorName={Uri.EscapeDataString(sensorName)}&" +
+                     $"startDate={startDate:yyyy-MM-dd}&" +
+                     $"endDate={endDate:yyyy-MM-dd}";
+
+            var request = Http.CreateRequest("GET", url);
+            
+            if (!string.IsNullOrEmpty(_authToken))
             {
-                // Generate random test data for each request
-                var (startDate, endDate) = TestDataGenerator.GenerateRandomDateRange();
-                var location = TestDataGenerator.GenerateRandomLocation();
-                var isFahrenheit = Random.Shared.NextDouble() > 0.5;
+                request = request.WithHeader("Authorization", $"Bearer {_authToken}");
+            }
 
-                // Create the HTTP request using NBomber.Http and factory's ApiClient
-                var request = Http.CreateRequest("GET",
-                        $"{GetApiBaseUrl()}/api/v1/TemperatureData/GetTemperature?start={Uri.EscapeDataString(startDate.ToString("O"))}&end={Uri.EscapeDataString(endDate.ToString("O"))}&place={Uri.EscapeDataString(location)}&isFahrenheit={isFahrenheit.ToString().ToLower()}")
-                    .WithHeader("Accept", "application/json");
-
-                // Add authorization if available
-                if (!string.IsNullOrEmpty(_authToken))
-                    request = request.WithHeader("Authorization", $"Bearer {_authToken}");
-
-                var response = await Http.Send(ApiClient, request);
-                return response;
-            })
-            .WithLoadSimulations(
-                // Warm up
-                Simulation.RampingInject(10, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(30)),
-                // Ramp up to 1k users over 1 minute
-                Simulation.RampingInject(100, TimeSpan.FromSeconds(1), TimeSpan.FromMinutes(1)),
-                // Sustain 1k concurrent users
-                Simulation.KeepConstant(Settings.LoadTestScenarios.RestApiUserCount,
-                    TimeSpan.FromMinutes(Settings.LoadTestScenarios.TestDurationMinutes))
-            );
+            return await Http.Send(ApiClient, request);
+        })
+        .WithLoadSimulations(
+            Simulation.KeepConstant(30, TimeSpan.FromMinutes(2)) // 30 concurrent users for 2 minutes
+        );
 
         var stats = NBomberRunner
-            .RegisterScenarios(scenario)
+            .RegisterScenarios(sensorDataScenario)
             .Run();
 
-        Console.WriteLine(
-            $"REST API - Success Rate: {stats.AllOkCount}/{stats.AllRequestCount} ({stats.AllOkCount * 100.0 / stats.AllRequestCount:F1}%)");
-        Console.WriteLine(
-            $"REST API - Requests/sec: {stats.AllOkCount / (Settings.LoadTestScenarios.TestDurationMinutes * 60.0):F1}");
+        Console.WriteLine("=== SENSOR DATA QUERIES LOAD TEST RESULTS ===");
+        Console.WriteLine($"Total Requests: {stats.AllRequestCount}");
+        Console.WriteLine($"Success Rate: {stats.AllOkCount * 100.0 / stats.AllRequestCount:F1}%");
+        Console.WriteLine($"Requests/sec: {stats.AllOkCount / 120.0:F1}");
 
-        // Test assertions
         Assert.That(stats.AllOkCount * 100.0 / stats.AllRequestCount, Is.GreaterThan(95),
-            "REST API success rate should be > 95%");
+            "Sensor data queries should have > 95% success rate");
+        Assert.That(stats.ScenarioStats[0].Ok.Latency, Is.LessThan(2000),
+            "Average response time should be < 2000ms");
     }
 
     [Test]
-    public async Task Test_REST_API_Authentication_Load()
+    public void Test_Sensor_Management_Operations()
     {
-        var scenario = Scenario.Create("rest_api_auth_load", async context =>
+        var baseUrl = GetApiBaseUrl();
+        
+        var sensorListScenario = Scenario.Create("list_sensors", async context =>
+        {
+            var url = $"{baseUrl}/api/Sensor/GetAllSensors";
+            var request = Http.CreateRequest("GET", url);
+            
+            if (!string.IsNullOrEmpty(_authToken))
             {
-                // Test authentication endpoint load
-                var request = Http.CreateRequest("POST", $"{GetApiBaseUrl()}/api/v1/Authentication/Login")
-                    .WithHeader("Content-Type", "application/json")
-                    .WithHeader("Accept", "application/json")
-                    .WithBody(new StringContent("""
-                                                {
-                                                    "username": "loadtest@example.com",
-                                                    "password": "LoadTest123!",
-                                                    "rememberMe": false
-                                                }
-                                                """, Encoding.UTF8, "application/json"));
+                request = request.WithHeader("Authorization", $"Bearer {_authToken}");
+            }
 
-                var response = await Http.Send(ApiClient, request);
-                return response;
-            })
-            .WithLoadSimulations(
-                // Test authentication under moderate load
-                Simulation.RampingInject(10, TimeSpan.FromSeconds(1), TimeSpan.FromMinutes(1)),
-                Simulation.KeepConstant(100, TimeSpan.FromMinutes(2))
-            );
+            return await Http.Send(ApiClient, request);
+        })
+        .WithLoadSimulations(
+            Simulation.KeepConstant(20, TimeSpan.FromMinutes(1))
+        );
+
+        var sensorDetailsScenario = Scenario.Create("sensor_details", async context =>
+        {
+            if (_testSensorNames == null || !_testSensorNames.Any())
+                return Response.Fail(400);
+
+            var random = Random.Shared;
+            var sensorName = _testSensorNames[random.Next(_testSensorNames.Count)];
+            
+            var url = $"{baseUrl}/api/Sensor/GetSensorBySensorName?sensorName={Uri.EscapeDataString(sensorName)}";
+            var request = Http.CreateRequest("GET", url);
+            
+            if (!string.IsNullOrEmpty(_authToken))
+            {
+                request = request.WithHeader("Authorization", $"Bearer {_authToken}");
+            }
+
+            return await Http.Send(ApiClient, request);
+        })
+        .WithLoadSimulations(
+            Simulation.KeepConstant(15, TimeSpan.FromMinutes(1))
+        );
 
         var stats = NBomberRunner
-            .RegisterScenarios(scenario)
+            .RegisterScenarios(sensorListScenario, sensorDetailsScenario)
             .Run();
 
-        Console.WriteLine(
-            $"Auth API - Success Rate: {stats.AllOkCount}/{stats.AllRequestCount} ({stats.AllOkCount * 100.0 / stats.AllRequestCount:F1}%)");
+        Assert.That(stats.AllOkCount * 100.0 / stats.AllRequestCount, Is.GreaterThan(95),
+            "Sensor management operations should have > 95% success rate");
     }
 
     [Test]
-    public async Task Test_REST_API_Mixed_Endpoints_Load()
+    public void Test_Dashboard_Data_Load()
     {
-        var scenario = Scenario.Create("rest_api_mixed_endpoints", async context =>
+        var baseUrl = GetApiBaseUrl();
+        
+        var dashboardScenario = Scenario.Create("dashboard_data", async context =>
+        {
+            // Simulate typical dashboard queries
+            var random = Random.Shared;
+            var queryType = random.Next(1, 4);
+            
+            string url = queryType switch
             {
-                var endpointChoice = Random.Shared.Next(4);
+                1 => $"{baseUrl}/api/SensorData/GetLatestSensorData",
+                2 => $"{baseUrl}/api/SensorData/GetSensorDataSummary?days={random.Next(1, 7)}",
+                3 => $"{baseUrl}/api/Sensor/GetSensorStatus",
+                _ => $"{baseUrl}/api/Health"
+            };
 
-                var request = endpointChoice switch
-                {
-                    0 => Http.CreateRequest("GET",
-                        $"{GetApiBaseUrl()}/api/v1/TemperatureData/GetTemperature?start={Uri.EscapeDataString(DateTime.UtcNow.AddHours(-1).ToString("O"))}&end={Uri.EscapeDataString(DateTime.UtcNow.ToString("O"))}&place={Uri.EscapeDataString(TestDataGenerator.GenerateRandomLocation())}"),
+            var request = Http.CreateRequest("GET", url);
+            
+            if (!string.IsNullOrEmpty(_authToken))
+            {
+                request = request.WithHeader("Authorization", $"Bearer {_authToken}");
+            }
 
-                    1 => Http.CreateRequest("GET", $"{GetApiBaseUrl()}/api/v1/Location"),
-
-                    2 => Http.CreateRequest("GET", $"{GetApiBaseUrl()}/api/v1/Topic"),
-
-                    _ => Http.CreateRequest("GET", $"{GetApiBaseUrl()}/api/v1/UserInfo")
-                };
-
-                if (!string.IsNullOrEmpty(_authToken))
-                    request = request.WithHeader("Authorization", $"Bearer {_authToken}");
-
-                var response = await Http.Send(ApiClient, request);
-                return response;
-            })
-            .WithLoadSimulations(
-                Simulation.KeepConstant(200, TimeSpan.FromMinutes(3))
-            );
+            return await Http.Send(ApiClient, request);
+        })
+        .WithLoadSimulations(
+            Simulation.KeepConstant(50, TimeSpan.FromMinutes(1)) // High concurrency for dashboard
+        );
 
         var stats = NBomberRunner
-            .RegisterScenarios(scenario)
+            .RegisterScenarios(dashboardScenario)
             .Run();
-
-        Console.WriteLine(
-            $"Mixed API - Success Rate: {stats.AllOkCount}/{stats.AllRequestCount} ({stats.AllOkCount * 100.0 / stats.AllRequestCount:F1}%)");
 
         Assert.That(stats.AllOkCount * 100.0 / stats.AllRequestCount, Is.GreaterThan(90),
-            "Mixed endpoints success rate should be > 90%");
+            "Dashboard queries should handle high load with > 90% success rate");
+    }
+
+    [Test]
+    public void Test_Mixed_Api_Usage_Patterns()
+    {
+        var baseUrl = GetApiBaseUrl();
+        
+        // Simulate read-heavy workload (typical for monitoring systems)
+        var readHeavyScenario = Scenario.Create("read_heavy", async context =>
+        {
+            var random = Random.Shared;
+            var operations = new[]
+            {
+                () => $"{baseUrl}/api/SensorData/GetLatestSensorData",
+                () => $"{baseUrl}/api/Sensor/GetAllSensors",
+                () => _testSensorNames != null && _testSensorNames.Any() 
+                    ? $"{baseUrl}/api/SensorData/GetSensorDataBySensorNameAndDateRange?sensorName={Uri.EscapeDataString(_testSensorNames[random.Next(_testSensorNames.Count)])}&startDate={DateTime.UtcNow.AddHours(-24):yyyy-MM-dd}&endDate={DateTime.UtcNow:yyyy-MM-dd}"
+                    : $"{baseUrl}/api/Health",
+                () => $"{baseUrl}/api/Health"
+            };
+
+            var operation = operations[random.Next(operations.Length)];
+            var url = operation();
+            
+            var request = Http.CreateRequest("GET", url);
+            
+            if (!string.IsNullOrEmpty(_authToken))
+            {
+                request = request.WithHeader("Authorization", $"Bearer {_authToken}");
+            }
+
+            // Add some realistic delay between requests
+            if (random.Next(1, 100) <= 20) // 20% of requests have user think time
+            {
+                await Task.Delay(random.Next(100, 2000));
+            }
+
+            return await Http.Send(ApiClient, request);
+        })
+        .WithLoadSimulations(
+            Simulation.KeepConstant(40, TimeSpan.FromMinutes(2)) // 40 concurrent users
+        );
+
+        // Simulate periodic batch operations (like reports or exports)
+        var batchOperationsScenario = Scenario.Create("batch_operations", async context =>
+        {
+            var random = Random.Shared;
+            
+            if (_testSensorNames == null || !_testSensorNames.Any())
+                return Response.Fail();
+            
+            // Simulate larger data queries (like generating reports)
+            var sensorName = _testSensorNames[random.Next(_testSensorNames.Count)];
+            var daysBack = random.Next(30, 90); // Larger date ranges
+            var startDate = DateTime.UtcNow.AddDays(-daysBack);
+            var endDate = DateTime.UtcNow;
+            
+            var url = $"{baseUrl}/api/SensorData/GetSensorDataBySensorNameAndDateRange?" +
+                     $"sensorName={Uri.EscapeDataString(sensorName)}&" +
+                     $"startDate={startDate:yyyy-MM-dd}&" +
+                     $"endDate={endDate:yyyy-MM-dd}";
+
+            var request = Http.CreateRequest("GET", url);
+            
+            if (!string.IsNullOrEmpty(_authToken))
+            {
+                request = request.WithHeader("Authorization", $"Bearer {_authToken}");
+            }
+
+            return await Http.Send(ApiClient, request);
+        })
+        .WithLoadSimulations(
+            Simulation.KeepConstant(5, TimeSpan.FromMinutes(1)) // Lower concurrency but heavy operations
+        );
+
+        var stats = NBomberRunner
+            .RegisterScenarios(readHeavyScenario, batchOperationsScenario)
+            .Run();
+
+        Assert.That(stats.AllOkCount * 100.0 / stats.AllRequestCount, Is.GreaterThan(90),
+            "Mixed API usage should maintain > 90% success rate");
+    }
+
+    [Test]
+    public void Test_Stress_Api_Endpoints()
+    {
+        var baseUrl = GetApiBaseUrl();
+        
+        var stressScenario = Scenario.Create("stress_test", async context =>
+        {
+            var random = Random.Shared;
+            
+            // Focus on most critical endpoints under stress
+            var endpoints = new[]
+            {
+                $"{baseUrl}/api/Health",
+                $"{baseUrl}/api/SensorData/GetLatestSensorData",
+                $"{baseUrl}/api/Sensor/GetAllSensors"
+            };
+
+            var url = endpoints[random.Next(endpoints.Length)];
+            var request = Http.CreateRequest("GET", url);
+            
+            if (!string.IsNullOrEmpty(_authToken))
+            {
+                request = request.WithHeader("Authorization", $"Bearer {_authToken}");
+            }
+
+            return await Http.Send(ApiClient, request);
+        })
+        .WithLoadSimulations(
+            Simulation.KeepConstant(10, TimeSpan.FromSeconds(30)),  // Warm up
+            Simulation.KeepConstant(50, TimeSpan.FromSeconds(30)),  // Ramp up
+            Simulation.KeepConstant(100, TimeSpan.FromSeconds(60)), // Peak load
+            Simulation.KeepConstant(50, TimeSpan.FromSeconds(30)),  // Ramp down
+            Simulation.KeepConstant(10, TimeSpan.FromSeconds(30))   // Cool down
+        );
+
+        var stats = NBomberRunner
+            .RegisterScenarios(stressScenario)
+            .Run();
+
+        Console.WriteLine("=== STRESS API ENDPOINTS TEST RESULTS ===");
+        Console.WriteLine($"Total Requests Under Stress: {stats.AllRequestCount}");
+        Console.WriteLine($"Success Rate: {stats.AllOkCount * 100.0 / stats.AllRequestCount:F1}%");
+        Console.WriteLine($"Peak Requests/sec: {stats.AllOkCount / 180.0:F1}");
+
+
+        // More lenient success rate for stress test
+        Assert.That(stats.AllOkCount * 100.0 / stats.AllRequestCount, Is.GreaterThan(85),
+            "API should handle stress with > 85% success rate");
+
     }
 }

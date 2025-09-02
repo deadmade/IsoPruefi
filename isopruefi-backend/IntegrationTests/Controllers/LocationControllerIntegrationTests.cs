@@ -4,9 +4,15 @@ using IntegrationTests.Infrastructure;
 
 namespace IntegrationTests.Controllers;
 
+/// <summary>
+/// Integration tests for the Location Controller to verify postal code management and location-based functionality.
+/// </summary>
 [TestFixture]
 public class LocationControllerIntegrationTests : ApiClientTestBase
 {
+    /// <summary>
+    /// Tests retrieving all postal codes with valid user token and verifies successful response.
+    /// </summary>
     [Test]
     public async Task GetAllPostalcodes_WithValidUserToken_ReturnsOk()
     {
@@ -18,6 +24,9 @@ public class LocationControllerIntegrationTests : ApiClientTestBase
         response.StatusCode.Should().BeOneOf(200, 500);
     }
 
+    /// <summary>
+    /// Tests retrieving all postal codes with admin token and verifies successful response.
+    /// </summary>
     [Test]
     public async Task GetAllPostalcodes_WithAdminToken_ReturnsOk()
     {
@@ -29,8 +38,11 @@ public class LocationControllerIntegrationTests : ApiClientTestBase
         response.StatusCode.Should().BeOneOf(200, 500);
     }
 
+    /// <summary>
+    /// Tests retrieving postal codes without authentication token and verifies 401 Unauthorized response.
+    /// </summary>
     [Test]
-    public async Task GetAllPostalcodes_WithoutToken_ThrowsUnauthorizedException()
+    public void GetAllPostalcodes_WithoutToken_ThrowsUnauthorizedException()
     {
         var exception = Assert.ThrowsAsync<ApiException>(() =>
             LocationClient.GetAllPostalcodesAsync());
@@ -38,6 +50,9 @@ public class LocationControllerIntegrationTests : ApiClientTestBase
         exception.StatusCode.Should().Be(401);
     }
 
+    /// <summary>
+    /// Tests inserting a new location with admin privileges and verifies successful operation.
+    /// </summary>
     [Test]
     public async Task InsertLocation_WithAdminToken_ReturnsOk()
     {
@@ -56,6 +71,9 @@ public class LocationControllerIntegrationTests : ApiClientTestBase
         }
     }
 
+    /// <summary>
+    /// Tests inserting a location with user token and verifies 403 Forbidden response for insufficient privileges.
+    /// </summary>
     [Test]
     public async Task InsertLocation_WithUserToken_ThrowsForbiddenException()
     {
@@ -70,8 +88,11 @@ public class LocationControllerIntegrationTests : ApiClientTestBase
         exception.StatusCode.Should().Be(403);
     }
 
+    /// <summary>
+    /// Tests inserting a location without authentication token and verifies 401 Unauthorized response.
+    /// </summary>
     [Test]
-    public async Task InsertLocation_WithoutToken_ThrowsUnauthorizedException()
+    public void InsertLocation_WithoutToken_ThrowsUnauthorizedException()
     {
         var postalCode = 10115;
 
@@ -81,6 +102,9 @@ public class LocationControllerIntegrationTests : ApiClientTestBase
         exception.StatusCode.Should().Be(401);
     }
 
+    /// <summary>
+    /// Tests removing a postal code with valid authentication and verifies successful deletion or proper error handling.
+    /// </summary>
     [Test]
     public async Task RemovePostalcode_WithValidToken_ReturnsOkOrNotFound()
     {
@@ -101,8 +125,11 @@ public class LocationControllerIntegrationTests : ApiClientTestBase
         }
     }
 
+    /// <summary>
+    /// Tests removing a postal code without authentication token and verifies 401 Unauthorized response.
+    /// </summary>
     [Test]
-    public async Task RemovePostalcode_WithoutToken_ThrowsUnauthorizedException()
+    public void RemovePostalcode_WithoutToken_ThrowsUnauthorizedException()
     {
         var postalCode = 12345;
 

@@ -1537,6 +1537,7 @@ export interface ICoordinateMapping {
     lockedUntil?: Date | undefined;
 }
 
+/** Represents the different types of sensors available in the system. */
 export enum SensorType {
     Temp = 0,
     Spl = 1,

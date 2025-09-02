@@ -9,7 +9,6 @@ namespace LoadTests.Infrastructure;
 public abstract class LoadTestBase
 {
     protected IConfiguration Configuration { get; private set; } = null!;
-    protected LoadTestSettings Settings { get; private set; } = null!;
     protected LoadTestWebApplicationFactory Factory { get; private set; } = null!;
     protected HttpClient ApiClient { get; private set; } = null!;
 
@@ -22,9 +21,6 @@ public abstract class LoadTestBase
             .AddJsonFile("appsettings.loadtest.json")
             .AddEnvironmentVariables()
             .Build();
-
-        Settings = Configuration.GetSection("LoadTestSettings").Get<LoadTestSettings>()
-                   ?? throw new InvalidOperationException("LoadTestSettings not found in configuration");
 
         // Initialize factory and containers
         Factory = new LoadTestWebApplicationFactory();
@@ -60,6 +56,11 @@ public abstract class LoadTestBase
     /// </summary>
     protected string GetApiBaseUrl()
     {
-        return ApiClient.BaseAddress?.ToString().TrimEnd('/') ?? "http://localhost";
+        var baseAddress = ApiClient.BaseAddress?.ToString().TrimEnd('/');
+        if (string.IsNullOrEmpty(baseAddress))
+        {
+            return "http://localhost";
+        }
+        return baseAddress;
     }
 }

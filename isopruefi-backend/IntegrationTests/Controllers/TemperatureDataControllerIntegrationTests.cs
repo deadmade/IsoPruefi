@@ -4,9 +4,15 @@ using IntegrationTests.Infrastructure;
 
 namespace IntegrationTests.Controllers;
 
+/// <summary>
+/// Integration tests for the Temperature Data Controller to verify temperature data retrieval and filtering functionality.
+/// </summary>
 [TestFixture]
 public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
 {
+    /// <summary>
+    /// Tests temperature data retrieval with valid user token and verifies successful response or expected error handling.
+    /// </summary>
     [Test]
     public async Task GetTemperature_WithValidUserToken_ReturnsResponse()
     {
@@ -31,6 +37,9 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
         }
     }
 
+    /// <summary>
+    /// Tests temperature data retrieval with admin token and verifies successful response or expected error handling.
+    /// </summary>
     [Test]
     public async Task GetTemperature_WithAdminToken_ReturnsResponse()
     {
@@ -54,8 +63,11 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
         }
     }
 
+    /// <summary>
+    /// Tests temperature data retrieval without authentication token and verifies 401 Unauthorized response.
+    /// </summary>
     [Test]
-    public async Task GetTemperature_WithoutToken_ThrowsUnauthorizedException()
+    public void GetTemperature_WithoutToken_ThrowsUnauthorizedException()
     {
         // Arrange
         var start = DateTimeOffset.UtcNow.AddDays(-1);
@@ -69,6 +81,9 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
         exception.StatusCode.Should().Be(401);
     }
 
+    /// <summary>
+    /// Tests temperature data retrieval with Fahrenheit temperature conversion and verifies proper unit conversion functionality.
+    /// </summary>
     [Test]
     public async Task GetTemperature_WithFahrenheitConversion_ReturnsResponse()
     {
@@ -92,6 +107,9 @@ public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
         }
     }
 
+    /// <summary>
+    /// Tests temperature data retrieval with missing or null parameters and verifies proper error response handling.
+    /// </summary>
     [Test]
     public async Task GetTemperature_MissingParameters_ReturnsBadRequestOrInternalError()
     {

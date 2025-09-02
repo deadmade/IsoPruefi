@@ -11,9 +11,15 @@ using DomainApiUser = Database.EntityFramework.Models.ApiUser;
 
 namespace IntegrationTests;
 
+/// <summary>
+/// Simple authentication integration tests to verify basic login functionality and JWT token generation.
+/// </summary>
 [TestFixture]
 public class SimpleAuthTest : ApiClientTestBase
 {
+    /// <summary>
+    /// Tests the complete authentication flow by creating a test user and verifying successful login with JWT token generation.
+    /// </summary>
     [Test]
     public async Task SimpleLogin_Test()
     {

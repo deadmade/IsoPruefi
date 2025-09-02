@@ -96,7 +96,8 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
                 ["MQTT:Server"] = _mosquittoContainer.Hostname,
                 ["MQTT:Port"] = 1883.ToString(),
                 ["MQTT:Username"] = "",
-                ["MQTT:Password"] = ""
+                ["MQTT:Password"] = "",
+                ["BaseUrl"] = "http://localhost"
             });
 
             config.AddJsonFile("appsettings.loadtest.json", true);
@@ -137,10 +138,14 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
 
     public new HttpClient CreateClient()
     {
-        return CreateClient(new WebApplicationFactoryClientOptions
+        var client = CreateClient(new WebApplicationFactoryClientOptions
         {
-            AllowAutoRedirect = false
+            AllowAutoRedirect = false,
+            BaseAddress = new Uri("http://localhost")
         });
+        
+        Console.WriteLine($"Created client with BaseAddress: {client.BaseAddress}");
+        return client;
     }
 
     /// <summary>
@@ -169,11 +174,34 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
 
         var result = await _influxDbContainer.ExecAsync(command, CancellationToken.None);
         InfluxDbToken = ParseTokenFromOutput(result.Stdout);
+        Console.WriteLine($"InfluxDB Token created: {InfluxDbToken}");
+
+        // Create the IsoPruefi database in InfluxDB
+        var createDbCommand = new List<string>
+        {
+            "influxdb3",
+            "create",
+            "database",
+            "IsoPruefi"
+        };
+
+        var dbResult = await _influxDbContainer.ExecAsync(createDbCommand, CancellationToken.None);
+        Console.WriteLine($"InfluxDB Database creation result: {dbResult.Stdout}");
+        if (dbResult.ExitCode != 0)
+        {
+            Console.WriteLine($"InfluxDB Database creation error: {dbResult.Stderr}");
+        }
+        Console.WriteLine("InfluxDB database setup completed");
 
         using var scope = Services.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        await context.Database.EnsureCreatedAsync();
+        
+        // Use the same ApplyMigration method that other components use
+        // This will ensure proper seeding of default data
+        Console.WriteLine($"Applying database migrations for connection: {_dbContainer.GetConnectionString()}");
+        ApplicationDbContext.ApplyMigration<ApplicationDbContext>(scope);
+        Console.WriteLine("Database migrations completed successfully");
     }
 
     private string ParseTokenFromOutput(string tokenOutput)
@@ -200,15 +228,18 @@ public class LoadTestWebApplicationFactory : WebApplicationFactory<Program>
     {
         var tasks = new List<Task>();
 
-        if (_dbContainer != null) tasks.Add(_dbContainer.StopAsync());
+        try
+        {
+            if (_dbContainer != null) tasks.Add(_dbContainer.StopAsync());
+            if (_influxDbContainer != null) tasks.Add(_influxDbContainer.StopAsync());
+            if (_mosquittoContainer != null) tasks.Add(_mosquittoContainer.StopAsync());
 
-        if (_influxDbContainer != null) tasks.Add(_influxDbContainer.StopAsync());
-
-        if (_mosquittoContainer != null) tasks.Add(_mosquittoContainer.StopAsync());
-
-        if (_mosquittoContainer != null) tasks.Add(_mosquittoContainer.StopAsync());
-
-        await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks);
+        }
+        catch (ObjectDisposedException)
+        {
+            // Containers already disposed, ignore
+        }
     }
 
     protected override void Dispose(bool disposing)

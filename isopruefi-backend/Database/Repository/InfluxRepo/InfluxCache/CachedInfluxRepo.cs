@@ -190,7 +190,7 @@ public class CachedInfluxRepo : IInfluxRepo
         {
             await _client.WritePointAsync(point);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             var cacheKey = $"{CACHE_KEY_PREFIX}{dataType}:{Guid.NewGuid()}";
             var cacheExpiry = TimeSpan.FromHours(24);
@@ -210,7 +210,7 @@ public class CachedInfluxRepo : IInfluxRepo
 
         if (_memoryCache is not MemoryCache memCache) return cachedPoints;
 
-        foreach (var key in memCache.Keys) cachedPoints.Add(key, _memoryCache.Get<PointData>(key));
+        foreach (var key in memCache.Keys) cachedPoints.Add(key, _memoryCache.Get<PointData>(key)!);
 
         return cachedPoints;
     }

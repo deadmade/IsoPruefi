@@ -7,7 +7,6 @@ namespace Database.EntityFramework.Models;
 /// <summary>
 ///     Represents the settings for a specific MQTT topic, including default path, group, and sensor information.
 /// </summary>
-// Represents the settings for a specific topic, including default path, group, and sensor information.
 public class TopicSetting
 {
     /// <summary>
@@ -17,8 +16,14 @@ public class TopicSetting
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int TopicSettingId { get; set; }
 
+    /// <summary>
+    ///     Gets or sets the foreign key for the related CoordinateMapping entity.
+    /// </summary>
     public int CoordinateMappingId { get; set; }
 
+    /// <summary>
+    ///     Navigation property for the related CoordinateMapping entity.
+    /// </summary>
     [ForeignKey(nameof(CoordinateMappingId))]
     public virtual CoordinateMapping? CoordinateMapping { get; set; }
 

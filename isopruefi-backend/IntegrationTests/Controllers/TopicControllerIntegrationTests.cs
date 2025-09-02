@@ -5,9 +5,15 @@ using ApiTopicSetting = IntegrationTests.ApiClient.TopicSetting;
 
 namespace IntegrationTests.Controllers;
 
+/// <summary>
+/// Integration tests for the Topic Controller to verify MQTT topic management and sensor configuration functionality.
+/// </summary>
 [TestFixture]
 public class TopicControllerIntegrationTests : ApiClientTestBase
 {
+    /// <summary>
+    /// Tests retrieving all topics with admin privileges and verifies successful response or proper error handling.
+    /// </summary>
     [Test]
     public async Task GetAllTopics_WithAdminToken_ReturnsOk()
     {
@@ -25,6 +31,9 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
         }
     }
 
+    /// <summary>
+    /// Tests retrieving all topics with user token and verifies 403 Forbidden response for insufficient privileges.
+    /// </summary>
     [Test]
     public async Task GetAllTopics_WithUserToken_ReturnsForbidden()
     {
@@ -37,8 +46,11 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
         exception.StatusCode.Should().Be(403);
     }
 
+    /// <summary>
+    /// Tests retrieving all topics without authentication token and verifies 401 Unauthorized response.
+    /// </summary>
     [Test]
-    public async Task GetAllTopics_WithoutToken_ReturnsUnauthorized()
+    public void GetAllTopics_WithoutToken_ReturnsUnauthorized()
     {
         var exception = Assert.ThrowsAsync<ApiException>(() =>
             TopicClient.GetAllTopicsAsync());
@@ -46,6 +58,9 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
         exception.StatusCode.Should().Be(401);
     }
 
+    /// <summary>
+    /// Tests retrieving all sensor types and verifies successful response or proper error handling.
+    /// </summary>
     [Test]
     public async Task GetAllSensorTypes_ReturnsOk()
     {
@@ -60,6 +75,9 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
         }
     }
 
+    /// <summary>
+    /// Tests creating a new MQTT topic with admin privileges and valid data configuration.
+    /// </summary>
     [Test]
     public async Task CreateTopic_WithAdminToken_AndValidData_ReturnsCreated()
     {
@@ -88,6 +106,9 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
         }
     }
 
+    /// <summary>
+    /// Tests creating a topic with user token and verifies 403 Forbidden response for insufficient privileges.
+    /// </summary>
     [Test]
     public async Task CreateTopic_WithUserToken_ReturnsForbidden()
     {
@@ -111,8 +132,11 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
         exception.StatusCode.Should().Be(403);
     }
 
+    /// <summary>
+    /// Tests creating a topic without authentication token and verifies 401 Unauthorized response.
+    /// </summary>
     [Test]
-    public async Task CreateTopic_WithoutToken_ReturnsUnauthorized()
+    public void CreateTopic_WithoutToken_ReturnsUnauthorized()
     {
         var topicSetting = new ApiTopicSetting
         {
@@ -131,6 +155,9 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
         exception.StatusCode.Should().Be(401);
     }
 
+    /// <summary>
+    /// Tests creating a topic with null data and verifies proper exception handling for invalid input.
+    /// </summary>
     [Test]
     public async Task CreateTopic_WithInvalidData_ReturnsBadRequest()
     {
@@ -143,6 +170,9 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
         exception.Should().NotBeNull();
     }
 
+    /// <summary>
+    /// Tests updating an existing MQTT topic with admin privileges and verifies successful modification.
+    /// </summary>
     [Test]
     public async Task UpdateTopic_WithAdminToken_ReturnsOk()
     {
@@ -172,6 +202,9 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
         }
     }
 
+    /// <summary>
+    /// Tests updating a topic with user token and verifies 403 Forbidden response for insufficient privileges.
+    /// </summary>
     [Test]
     public async Task UpdateTopic_WithUserToken_ReturnsForbidden()
     {
@@ -194,13 +227,5 @@ public class TopicControllerIntegrationTests : ApiClientTestBase
             TopicClient.UpdateTopicAsync(topicSetting));
 
         exception.StatusCode.Should().Be(403);
-    }
-
-    [Test]
-    public async Task DeleteTopic_WithAdminToken_ReturnsOk()
-    {
-        // Note: DeleteTopic operation is not currently available in the generated API client
-        // This test is commented out until the API endpoint is properly exposed
-        Assert.Inconclusive("DeleteTopic operation not available in current API client");
     }
 }

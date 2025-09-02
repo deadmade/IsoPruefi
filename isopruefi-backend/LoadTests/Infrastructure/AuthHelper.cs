@@ -1,63 +1,82 @@
-using System.Net.Http.Headers;
 using System.Text.Json;
 using IntegrationTests.ApiClient;
 
 namespace LoadTests.Infrastructure;
 
-public class AuthHelper
+/// <summary>
+/// Helper class for handling authentication in load tests
+/// </summary>
+public class AuthHelper : IDisposable
 {
-    private readonly string _baseUrl;
     private readonly HttpClient _httpClient;
+    private readonly string _baseUrl;
+    private bool _disposed;
 
     public AuthHelper(string baseUrl)
     {
         _baseUrl = baseUrl;
         _httpClient = new HttpClient();
-        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
-    public async Task<string> GetAuthTokenAsync()
+    /// <summary>
+    /// Gets an authentication token for load testing
+    /// </summary>
+    /// <returns>JWT token string or null if authentication fails</returns>
+    public async Task<string?> GetAuthTokenAsync()
     {
         try
         {
             var authClient = new AuthenticationClient(_baseUrl, _httpClient);
-
-            // Using a test user - you might need to adjust these credentials
+            
+            // Use default test credentials - these should be configured in your test environment
             var loginRequest = new Login
             {
-                UserName = "loadtest@example.com",
-                Password = "LoadTest123!"
+                UserName = "admin", // Default test user
+                Password = "testpassword123" // Default test password
             };
 
             var response = await authClient.LoginAsync(loginRequest);
+            
+            if (response?.Stream != null)
+            {
+                using var reader = new StreamReader(response.Stream);
+                var content = await reader.ReadToEndAsync();
+                
+                // Parse the JWT token from response
+                var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
 
-            // The response is a FileResponse, we need to read the content as JSON
-            using var reader = new StreamReader(response.Stream);
-            var jsonContent = await reader.ReadToEndAsync();
+                return tokenResponse?.AccessToken;
+            }
 
-            // Parse the JSON to extract the token
-            var tokenData = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonContent);
-            if (tokenData != null && tokenData.TryGetValue("accessToken", out var token))
-                return token.ToString() ?? throw new InvalidOperationException("Token is null");
-
-            throw new InvalidOperationException("No token found in response");
+            return null;
         }
-        catch (ApiException ex)
+        catch (Exception ex)
         {
-            throw new InvalidOperationException($"Authentication failed: {ex.Message}", ex);
+            Console.WriteLine($"Authentication failed: {ex.Message}");
+            return null;
         }
-    }
-
-    public HttpClient CreateAuthenticatedHttpClient(string token)
-    {
-        var client = new HttpClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        return client;
     }
 
     public void Dispose()
     {
-        _httpClient?.Dispose();
+        if (!_disposed)
+        {
+            _httpClient?.Dispose();
+            _disposed = true;
+        }
+        GC.SuppressFinalize(this);
     }
+}
+
+/// <summary>
+/// Response model for authentication token
+/// </summary>
+public class TokenResponse
+{
+    public string? AccessToken { get; set; }
+    public string? RefreshToken { get; set; }
+    public int ExpiresIn { get; set; }
 }

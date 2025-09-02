@@ -4,7 +4,7 @@ using Database.EntityFramework.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LoadTests.Infrastructure;
+namespace LoadTests.MQTT;
 
 /// <summary>
 ///     Seeds test data for MQTT load testing including coordinates and topic settings
@@ -39,7 +39,7 @@ public static class LoadTestDataSeeder
 
             var topicSetting = new TopicSetting
             {
-                CoordinateMappingId = coordinateMapping.PostalCode,
+                CoordinateMappingId = coordinateMapping?.PostalCode ?? testPostalCode,
                 DefaultTopicPath = "dhbw/ai/si2023/",
                 GroupId = 2, // Using group 2 to match existing pattern
                 SensorTypeEnum = SensorType.temp,
@@ -56,5 +56,23 @@ public static class LoadTestDataSeeder
 
         await context.SaveChangesAsync();
         return sensorNames;
+    }
+    
+    /// <summary>
+    /// Cleans up test data after load tests complete
+    /// </summary>
+    /// <param name="serviceProvider">Service provider from the test factory</param>
+    public static async Task CleanupTestDataAsync(IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        
+        // Remove test topic settings
+        var testTopicSettings = await context.TopicSettings
+            .Where(ts => ts.SensorName != null && ts.SensorName.StartsWith("LoadTestSensor_"))
+            .ToListAsync();
+            
+        context.TopicSettings.RemoveRange(testTopicSettings);
+        await context.SaveChangesAsync();
     }
 }

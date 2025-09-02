@@ -1081,7 +1081,7 @@
       },
       "SensorType": {
         "type": "integer",
-        "description": "",
+        "description": "Represents the different types of sensors available in the system.",
         "x-enum-names": [
           "temp",
           "spl",

@@ -11,10 +11,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IntegrationTests.WeatherWorker;
 
+/// <summary>
+/// Integration tests for the Weather Data Worker to verify coordinate management, InfluxDB operations,
+/// API response parsing, and dependency resolution functionality.
+/// </summary>
 [TestFixture]
 [Parallelizable(ParallelScope.All)]
 public class WeatherWorkerIntegrationTests : IntegrationTestBase
 {
+    /// <summary>
+    /// Tests the coordinate repository's ability to retrieve unlocked locations for weather data collection.
+    /// </summary>
     [Test]
     public async Task CoordinateRepo_GetUnlockedLocation_ReturnsAvailableLocation()
     {
@@ -42,6 +49,9 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
         result.Should().NotBeNull();
     }
 
+    /// <summary>
+    /// Tests the coordinate repository's ability to retrieve location data by postal code or location name.
+    /// </summary>
     [Test]
     public async Task CoordinateRepo_GetLocation_ReturnsLocationByPostalCode()
     {
@@ -66,12 +76,15 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
 
         // Assert
         result.Should().NotBeNull();
-        result!.Location.Should().Be("Berlin");
+        result.Location.Should().Be("Berlin");
         result.PostalCode.Should().Be(10117);
         result.Latitude.Should().Be(52.5200);
         result.Longitude.Should().Be(13.4050);
     }
 
+    /// <summary>
+    /// Tests the InfluxDB repository's ability to write weather data without throwing exceptions in test environment.
+    /// </summary>
     [Test]
     public async Task InfluxRepo_WriteOutsideWeatherData_DoesNotThrowException()
     {
@@ -93,6 +106,9 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
         await act.Should().NotThrowAsync();
     }
 
+    /// <summary>
+    /// Tests the WeatherData model's property assignment and retrieval functionality.
+    /// </summary>
     [Test]
     public void WeatherData_Properties_CanBeSetAndRetrieved()
     {
@@ -112,8 +128,11 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
         weatherData.Timestamp.Should().Be(timestamp);
     }
 
+    /// <summary>
+    /// Tests JSON parsing functionality for Open-Meteo API response format to extract temperature and timestamp data.
+    /// </summary>
     [Test]
-    public async Task Worker_CanParseMeteoApiResponse()
+    public void Worker_CanParseMeteoApiResponse()
     {
         // Arrange
         var jsonResponse = """
@@ -146,8 +165,11 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
         parsedTemperature.Should().Be(23.5);
     }
 
+    /// <summary>
+    /// Tests JSON parsing functionality for Bright Sky API response format to extract temperature and timestamp data.
+    /// </summary>
     [Test]
-    public async Task Worker_CanParseBrightSkyApiResponse()
+    public void Worker_CanParseBrightSkyApiResponse()
     {
         // Arrange
         var jsonResponse = """
@@ -180,8 +202,11 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
         parsedTemperature.Should().Be(24.8);
     }
 
+    /// <summary>
+    /// Tests the HTTP client factory's ability to create HTTP client instances for API communication.
+    /// </summary>
     [Test]
-    public async Task HttpClientFactory_CanCreateHttpClient()
+    public void HttpClientFactory_CanCreateHttpClient()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -195,8 +220,11 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
         httpClient.Should().BeOfType<HttpClient>();
     }
 
+    /// <summary>
+    /// Tests that all required weather worker dependencies can be resolved from the dependency injection container.
+    /// </summary>
     [Test]
-    public async Task WorkerDependencies_CanBeResolved()
+    public void WorkerDependencies_CanBeResolved()
     {
         // Arrange & Act
         using var scope = Factory.Services.CreateScope();
@@ -212,8 +240,11 @@ public class WeatherWorkerIntegrationTests : IntegrationTestBase
         httpClientFactory.Should().NotBeNull();
     }
 
+    /// <summary>
+    /// Tests that the configuration system contains the required weather API settings and sections.
+    /// </summary>
     [Test]
-    public async Task Configuration_ContainsRequiredWeatherApiSettings()
+    public void Configuration_ContainsRequiredWeatherApiSettings()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();

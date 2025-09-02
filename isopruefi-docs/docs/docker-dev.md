@@ -51,7 +51,7 @@ The live environment is configured via `isopruefi-docker-live/docker-compose.yml
 
 When deployed on the production server (`aicon.dhbw-heidenheim.de`), the services are accessible via:
 
-- **Traefik Dashboard**: `https://traefik.aicon.dhbw-heidenheim.de:5002`
+- **Traefik Dashboard**: `https://aicon.dhbw-heidenheim.de:5002`
 - **Frontend Application**: `https://aicon.dhbw-heidenheim.de:5001/frontend`
 - **Backend API**: `https://aicon.dhbw-heidenheim.de:5001/backend`  
 - **Grafana Dashboards**: `http://aicon.dhbw-heidenheim.de:5005`

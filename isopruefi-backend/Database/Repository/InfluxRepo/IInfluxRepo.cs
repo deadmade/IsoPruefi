@@ -1,4 +1,6 @@
-﻿namespace Database.Repository.InfluxRepo;
+﻿using InfluxDB3.Client.Write;
+
+namespace Database.Repository.InfluxRepo;
 
 /// <summary>
 ///     Interface for the InfluxDB repository.
@@ -27,7 +29,7 @@ public interface IInfluxRepo
     Task WriteOutsideWeatherData(string place, string website, double temperature, DateTime timestamp, int postalcode);
     
     /// <summary>
-    /// Function saving each timestamp at which the Arduino was available.
+    ///     Function saving each timestamp at which the Arduino was available.
     /// </summary>
     /// <param name="sensor">Sensor name</param>
     /// <param name="timestamp">Timestamp</param>
@@ -53,7 +55,7 @@ public interface IInfluxRepo
     IAsyncEnumerable<object?[]> GetSensorWeatherData(DateTime start, DateTime end, string sensor);
 
     /// <summary>
-    /// Retrieves all times the Arduino was available.
+    ///     Retrieves all times the Arduino was available.
     /// </summary>
     /// <param name="sensor">Sensor name</param>
     /// <returns>An async enumerable containing all data points.</returns>

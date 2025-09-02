@@ -10,12 +10,12 @@ namespace Database.Repository.InfluxRepo.Influx;
 public class InfluxRepo : IInfluxRepo
 {
     /// <summary>
-    /// InfluxDb client for communicating with the server.
+    ///     InfluxDb client for communicating with the server.
     /// </summary>
     private readonly InfluxDBClient _client;
     
     /// <summary>
-    /// The logger instance used to record diagnostic information.
+    ///     The logger instance used to record diagnostic information.
     /// </summary>
     private readonly ILogger<InfluxRepo> _logger;
     

@@ -9,6 +9,9 @@ namespace Database.Repository.CoordinateRepo;
 /// </summary>
 public class CoordinateRepo : ICoordinateRepo
 {
+    /// <summary>
+    ///     The application's database context.
+    /// </summary>
     private readonly ApplicationDbContext _applicationDbContext;
 
     /// <summary>

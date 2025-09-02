@@ -11,7 +11,7 @@ namespace Database.Repository.SettingsRepo;
 public class SettingsRepo : ISettingsRepo
 {
     /// <summary>
-    /// The ApplicationDbContext that is used for accessing the database.
+    ///     The ApplicationDbContext that is used for accessing the database.
     /// </summary>
     private readonly ApplicationDbContext _applicationDbContext;
 

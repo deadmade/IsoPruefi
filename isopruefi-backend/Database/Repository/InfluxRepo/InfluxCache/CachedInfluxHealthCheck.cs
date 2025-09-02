@@ -10,12 +10,12 @@ namespace Database.Repository.InfluxRepo.InfluxCache;
 public class CachedInfluxHealthCheck : IHealthCheck
 {
     /// <summary>
-    /// Provides access to the cached InfluxDb data.
+    ///     Provides access to the cached InfluxDb data.
     /// </summary>
     private readonly CachedInfluxRepo _cachedInfluxRepo;
     
     /// <summary>
-    /// The logger instance used to record diagnostic information.
+    ///     The logger instance used to record diagnostic information.
     /// </summary>
     private readonly ILogger<CachedInfluxHealthCheck> _logger;
 

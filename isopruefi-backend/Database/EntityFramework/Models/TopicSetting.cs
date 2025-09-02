@@ -9,8 +9,6 @@ namespace Database.EntityFramework.Models;
 /// </summary>
 public class TopicSetting
 {
-
-    
     /// <summary>
     ///     Gets or sets the unique identifier for the TopicSetting entity.
     /// </summary>
@@ -18,8 +16,14 @@ public class TopicSetting
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int TopicSettingId { get; set; }
 
+    /// <summary>
+    ///     Gets or sets the id for the CoordinateMapping entity.
+    /// </summary>
     public int CoordinateMappingId { get; set; }  
     
+    /// <summary>
+    ///     Gets or sets the CoordinateMapping associated with this entity.
+    /// </summary>
     [ForeignKey(nameof(CoordinateMappingId))]
     public virtual CoordinateMapping? CoordinateMapping { get; set; }
 

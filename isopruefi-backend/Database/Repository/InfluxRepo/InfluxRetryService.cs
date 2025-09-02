@@ -15,20 +15,19 @@ namespace Database.Repository.InfluxRepo;
 public class InfluxRetryService : BackgroundService
 {
     /// <summary>
-    /// Factory for creating service scopes.
+    ///     Factory for creating service scopes.
     /// </summary>
     private readonly IServiceScopeFactory _serviceScopeFactory;
     
     /// <summary>
-    /// Logger instance to record diagnostics.
+    ///     Logger instance to record diagnostics.
     /// </summary>
     private readonly ILogger<InfluxRetryService> _logger;
     
     /// <summary>
-    /// Time between retry attemps.
+    ///     Time between retry attempts.
     /// </summary>
     private readonly TimeSpan _retryInterval = TimeSpan.FromMinutes(5);
-    private readonly IServiceScopeFactory _serviceScopeFactory;
 
     /// <summary>
     ///     Constructor for the InfluxRetryService.

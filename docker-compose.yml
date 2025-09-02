@@ -153,12 +153,13 @@ services:
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls=true"
       - traefik.http.services.grafana.loadbalancer.server.port=3000
+    volumes:
+      - ./isopruefi-docker/grafana/datasources:/etc/grafana/provisioning/datasources:ro
     environment:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_BASIC_ENABLED=false
       - GF_LOG_LEVEL=warn
-      - INFLUX_TOKEN=${Influx__InfluxDBToken}
     env_file:
       - ./secrets.env
     #ports:
@@ -169,49 +170,6 @@ services:
       - loki
       - alloy
       - influxdb3
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<'EOF' > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-        - name: Loki
-          type: loki
-          access: proxy
-          orgId: 1
-          url: http://loki:3100
-          basicAuth: false
-          isDefault: false
-          version: 1
-          editable: false
-        - name: Prometheus
-          type: prometheus
-          orgId: 1
-          url: http://prometheus:9090
-          basicAuth: false
-          isDefault: true
-          version: 1
-          editable: false
-        - name: InfluxDB
-          type: influxdb
-          access: proxy
-          orgId: 1
-          url: http://influxdb3:8181
-          database: IsoPruefi
-          user: ""
-          secureJsonData:
-            token: ${INFLUX_TOKEN}
-          jsonData:
-            version: SQL
-            Database: IsoPruefi
-            tlsSkipVerify: true
-          isDefault: false
-          version: 1
-          editable: true
-        EOF
-        /run.sh
 
   isopruefi-frontend-1:
     build:

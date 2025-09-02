@@ -3178,6 +3178,7 @@ namespace IntegrationTests.ApiClient
 
     /// <summary>
     /// Represents the different types of sensors available in the system.
+    /// <br/>            
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum SensorType

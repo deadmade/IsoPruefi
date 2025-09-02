@@ -12,6 +12,7 @@ nav:
       - Contributing: contributing.md
   - Development:
       - Guidelines: guidelines.md
+      - Environment Files: environment-files.md
       - API Reference: api-reference.md
       - API V1: api-v1.md
       - Troubleshooting: troubleshooting.md

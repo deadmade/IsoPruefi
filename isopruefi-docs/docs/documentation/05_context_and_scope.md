@@ -2,8 +2,7 @@
 
 ## Technical Context {#_technical_context}
 
-The IsoPrüfi system operates in a distributed container-based architecture hosted on the DHBW Server infrastructure. It
-integrates multiple services for data ingestion, processing, storage, and visualization.
+The IsoPrüfi system operates in a distributed container-based architecture hosted on the DHBW Server infrastructure. It integrates multiple services for data ingestion, processing, storage, and visualization.
 
 ---
 
@@ -25,8 +24,7 @@ integrates multiple services for data ingestion, processing, storage, and visual
 | **Weather API**        | HTTPS                 | Provides external weather data                             |
 | **Client (Browser)**   | HTTPS                 | Interacts with the frontend                                |
 
-For a detailed list of all Docker containers, their images, addresses and networks, see the separate documentation
-page: [Docker Development Environment](../docker-dev.md)
+For a detailed list of all Docker containers, their images, addresses and networks, see the separate documentation page: [Docker Development Environment](../docker-dev.md)
 
 ---
 

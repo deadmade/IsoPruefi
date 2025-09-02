@@ -7,6 +7,14 @@ import {clearToken} from "../utils/tokenHelpers.ts";
 import ManageLocations from "../components/ManageLocations.tsx";
 import ManageTopics from "../components/ManageTopics.tsx";
 
+/**
+ * AdminPage component for managing locations, topics, and viewing weather data.
+ * Provides controls for selecting location and temperature units, displays a weather chart,
+ * and includes management sections for locations and topics.
+ * Also provides a logout button to clear authentication and redirect to sign-in.
+ *
+ * @returns {JSX.Element} The rendered admin page.
+ */
 export default function AdminPage() {
     const navigate = useNavigate();
 
@@ -14,9 +22,12 @@ export default function AdminPage() {
     const [isF, setIsF] = useState(false);
     const [locVersion, setLocVersion] = useState(0);
 
+    /**
+     * Handles logout by clearing authentication tokens and navigating to the welcome page.
+     */
     const handleLogout = () => {
         clearToken();
-        navigate("/signin");
+        navigate("/");
     };
 
     return (

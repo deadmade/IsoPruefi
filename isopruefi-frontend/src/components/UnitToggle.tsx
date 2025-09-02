@@ -1,23 +1,33 @@
-import React from "react";
-
 export type UnitToggleProps = {
     /** true → Fahrenheit, false → Celsius */
     value: boolean;
     onChange: (isF: boolean) => void;
 };
 
-export const UnitToggle: React.FC<UnitToggleProps> = ({value, onChange}) => {
-    return (
-        <label className="inline-flex items-center gap-2 cursor-pointer">
-            <input
-                type="checkbox"
-                checked={value}
-                onChange={(e) => onChange(e.target.checked)}
-                className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
-            />
-            <span className="text-sm font-medium text-gray-700">
-                {value ? "Fahrenheit" : "Celsius"}
-            </span>
-        </label>
-    );
-};
+export function UnitToggle({ value, onChange }: UnitToggleProps) {
+  return (
+    <div className="flex items-center gap-6">
+      <label className="flex items-center gap-2">
+        <input
+          type="radio"
+          name="tempUnit"
+          checked={!value}
+          onChange={() => onChange(false)}
+          className="text-pink-600 focus:ring-pink-600"
+        />
+        <span>°C</span>
+      </label>
+
+      <label className="flex items-center gap-2">
+        <input
+          type="radio"
+          name="tempUnit"
+          checked={value}
+          onChange={() => onChange(true)}
+          className="text-pink-600 focus:ring-pink-600"
+        />
+        <span>°F</span>
+      </label>
+    </div>
+  );
+}

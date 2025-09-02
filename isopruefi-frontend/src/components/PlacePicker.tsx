@@ -52,13 +52,13 @@ export const PlacePicker: React.FC<Props> = ({
     };
 
     const current = (value ?? "").trim();
-    
+
     console.log('PlacePicker render - current value:', current, 'available options:', opts.map(o => o.locationName));
 
     // Ensure the selected value exists in options or add it if it's the default
     const hasCurrentOption = current === "" || opts.some(o => o.locationName === current) || current === DEFAULT_PLACE;
     const selectValue = hasCurrentOption ? current : "";
-    
+
     console.log('PlacePicker - selectValue:', selectValue, 'hasCurrentOption:', hasCurrentOption);
 
     return (

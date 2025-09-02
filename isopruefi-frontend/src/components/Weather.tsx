@@ -32,22 +32,22 @@ type TempChartProps = {
 
 /**
  * Temperature chart component that displays real-time temperature data from multiple sensors.
- * 
+ *
  * Features:
  * - Interactive line chart with time filtering
  * - Multiple sensor data visualization
  * - Real-time temperature tiles
  * - Celsius/Fahrenheit unit conversion
  * - Responsive design with error handling
- * 
+ *
  * @param props - Component configuration
  * @returns JSX element containing the temperature dashboard
- * 
+ *
  * @example
  * ```tsx
  * // Basic usage with default location
  * <TempChart />
- * 
+ *
  * // With specific location and Fahrenheit units
  * <TempChart place="Berlin" isFahrenheit={true} />
  * ```
@@ -100,16 +100,16 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
                     const tempData = sensor.temperatureDatas || [];
                     const sensorKey = `temp_${sensorName}_${location}`.replace(/\s+/g, '_');
                     discoveredSensorKeys.add(sensorKey);
-                    
+
                     tempData.forEach((temp: any) => {
                         const timestamp = temp.timestamp;
-                        const isoTimestamp = timestamp ? 
+                        const isoTimestamp = timestamp ?
                             (timestamp instanceof Date ? timestamp.toISOString() : new Date(timestamp).toISOString()) : '';
-                        
+
                         if (!timestampMap.has(isoTimestamp)) {
-                            timestampMap.set(isoTimestamp, { timestamp: isoTimestamp, tempOutside: 0 });
+                            timestampMap.set(isoTimestamp, {timestamp: isoTimestamp, tempOutside: 0});
                         }
-                        
+
                         const entry = timestampMap.get(isoTimestamp);
                         entry[sensorKey] = temp.temperature || 0;
                     });
@@ -118,13 +118,13 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
                 // Process outside data
                 outside.forEach((temp: any) => {
                     const timestamp = temp.timestamp;
-                    const isoTimestamp = timestamp ? 
+                    const isoTimestamp = timestamp ?
                         (timestamp instanceof Date ? timestamp.toISOString() : new Date(timestamp).toISOString()) : '';
-                    
+
                     if (!timestampMap.has(isoTimestamp)) {
-                        timestampMap.set(isoTimestamp, { timestamp: isoTimestamp, tempOutside: 0 });
+                        timestampMap.set(isoTimestamp, {timestamp: isoTimestamp, tempOutside: 0});
                     }
-                    
+
                     const entry = timestampMap.get(isoTimestamp);
                     entry.tempOutside = temp.temperature || 0;
                 });
@@ -200,7 +200,7 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
 
     const convertTemp = (temp: number) => {
         if (isFahrenheit) {
-            return (temp * 9/5) + 32;
+            return (temp * 9 / 5) + 32;
         }
         return temp;
     };
@@ -243,19 +243,19 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
                         <YAxis/>
                         <Tooltip/>
                         <Legend verticalAlign="bottom" align="center" wrapperStyle={{paddingTop: 8}}/>
-                        
+
                         {/* Dynamic sensor lines */}
                         {sensorKeys.map((sensorKey, index) => (
-                            <Line 
+                            <Line
                                 key={sensorKey}
-                                type="monotone" 
-                                dataKey={sensorKey} 
-                                name={sensorKey.replace(/temp_|_/g, ' ').replace(/^\s+/, '')} 
-                                stroke={colors[index % colors.length]} 
+                                type="monotone"
+                                dataKey={sensorKey}
+                                name={sensorKey.replace(/temp_|_/g, ' ').replace(/^\s+/, '')}
+                                stroke={colors[index % colors.length]}
                                 activeDot={{r: 1}}
                             />
                         ))}
-                        
+
                         {/* Outside temperature line */}
                         <Line type="monotone" dataKey="tempOutside" name="Outside" stroke="#3fbf86" activeDot={{r: 1}}/>
                     </LineChart>
@@ -271,11 +271,12 @@ export function TempChart({place = "Heidenheim an der Brenz", isFahrenheit = fal
                     return (
                         <div key={sensorKey} className="rounded-xl bg-white shadow px-5 py-4 border border-gray-300">
                             <div className="text-sm text-gray-500">{displayName}</div>
-                            <div className="mt-1 text-3xl font-bold" style={{color: colors[index % colors.length]}}>{fmt(value)}</div>
+                            <div className="mt-1 text-3xl font-bold"
+                                 style={{color: colors[index % colors.length]}}>{fmt(value)}</div>
                         </div>
                     );
                 })}
-                
+
                 {/* Outside tile */}
                 <div className="rounded-xl bg-white shadow px-5 py-4 border border-gray-300">
                     <div className="text-sm text-gray-500">Outside</div>

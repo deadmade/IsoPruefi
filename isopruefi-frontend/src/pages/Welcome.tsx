@@ -8,16 +8,16 @@ import logo from "../assets/isopruefi.png";
 
 /**
  * Welcome page component that serves as the application's landing screen.
- * 
+ *
  * Features:
  * - Split-screen layout with logo and navigation
  * - Branded design with IsoPrüfi styling
  * - Navigation links to authentication pages
  * - Responsive design with centered content
  * - Consistent color scheme and typography
- * 
+ *
  * @returns JSX element containing the welcome page layout
- * 
+ *
  * @example
  * ```tsx
  * // Used in routing configuration

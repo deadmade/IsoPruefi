@@ -9,21 +9,21 @@ import type {FileResponse} from "../api/api-client";
 /**
  * Represents the result of a successful login operation.
  */
-export type LoginResult = { 
+export type LoginResult = {
     /** JWT access token for authenticated requests */
-    token: string; 
+    token: string;
     /** Refresh token for obtaining new access tokens */
-    refreshToken: string 
+    refreshToken: string
 };
 
 /**
  * Normalizes various response formats from the authentication API into typed objects.
  * Handles FileResponse (blob), direct Response objects, and already-parsed objects.
- * 
+ *
  * @template T - The expected return type
  * @param res - The response from the authentication API
  * @returns Promise resolving to the parsed object of type T
- * 
+ *
  * @internal
  */
 async function toJson<T>(res: unknown): Promise<T> {
@@ -50,12 +50,12 @@ async function toJson<T>(res: unknown): Promise<T> {
 
 /**
  * Authenticates a user with username and password credentials.
- * 
+ *
  * @param userName - The user's login username
  * @param password - The user's password
  * @returns Promise resolving to login tokens
  * @throws {ApiException} When credentials are invalid or server error occurs
- * 
+ *
  * @example
  * ```typescript
  * try {
@@ -73,12 +73,12 @@ export async function login(userName: string, password: string): Promise<LoginRe
 
 /**
  * Registers a new user in the system. Requires admin privileges.
- * 
+ *
  * @param userName - The desired username for the new user
  * @param password - The password for the new user
  * @returns Promise that resolves on successful registration
  * @throws {ApiException} When registration fails, username exists, or insufficient permissions
- * 
+ *
  * @example
  * ```typescript
  * try {
@@ -93,17 +93,18 @@ export async function register(userName: string, password: string): Promise<void
     const res = await authClient.register({userName, password} as any);
     try {
         await toJson<any>(res);
-    } catch { /* ignore empty/204 responses */ }
+    } catch { /* ignore empty/204 responses */
+    }
 }
 
 /**
  * Refreshes an expired access token using a valid refresh token.
- * 
+ *
  * @param token - The expired JWT access token
  * @param refreshToken - The valid refresh token
  * @returns Promise resolving to new authentication tokens
  * @throws {ApiException} When refresh token is invalid, expired, or revoked
- * 
+ *
  * @example
  * ```typescript
  * try {

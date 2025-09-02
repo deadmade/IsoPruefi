@@ -6,12 +6,13 @@
 
 /* tslint:disable */
 /* eslint-disable */
+
 // ReSharper disable InconsistentNaming
 
 export class AuthenticationClient {
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
@@ -43,28 +44,6 @@ export class AuthenticationClient {
         });
     }
 
-    protected processLogin(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
-    }
-
     /**
      * Registers a new user in the system. Admin access required.
      * @param input The registration data containing username and password for the new user.
@@ -87,46 +66,6 @@ export class AuthenticationClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processRegister(_response);
         });
-    }
-
-    protected processRegister(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid registration data, missing fields, or username already exists.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied. Admin role required for user registration.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 500) {
-            return response.text().then((_responseText) => {
-            return throwException("Internal server error occurred during registration.", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(null as any);
     }
 
     /**
@@ -153,34 +92,110 @@ export class AuthenticationClient {
         });
     }
 
-    protected processRefresh(response: Response): Promise<void> {
+    protected processLogin(response: Response): Promise<FileResponse> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid token format or missing required fields.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Refresh token is invalid, expired, or has been revoked.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 500) {
-            return response.text().then((_responseText) => {
-            return throwException("Internal server error occurred during token refresh.", status, _responseText, _headers);
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => {
+                return {fileName: fileName, data: blob, status: status, headers: _headers};
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    protected processRegister(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ProblemDetails.fromJS(resultData400);
+                return throwException("Invalid registration data, missing fields, or username already exists.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+                let result403: any = null;
+                let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result403 = ProblemDetails.fromJS(resultData403);
+                return throwException("Access denied. Admin role required for user registration.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+                return throwException("Internal server error occurred during registration.", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    protected processRefresh(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ProblemDetails.fromJS(resultData400);
+                return throwException("Invalid token format or missing required fields.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("Refresh token is invalid, expired, or has been revoked.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+                return throwException("Internal server error occurred during token refresh.", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve<void>(null as any);
@@ -188,9 +203,9 @@ export class AuthenticationClient {
 }
 
 export class LocationClient {
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
@@ -215,28 +230,6 @@ export class LocationClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetAllPostalcodes(_response);
         });
-    }
-
-    protected processGetAllPostalcodes(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
     }
 
     /**
@@ -264,28 +257,6 @@ export class LocationClient {
         });
     }
 
-    protected processInsertLocation(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
-    }
-
     removePostalcode(postalCode?: number | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/v1/Location/RemovePostalcode?";
         if (postalCode === null)
@@ -296,8 +267,7 @@ export class LocationClient {
 
         let options_: RequestInit = {
             method: "DELETE",
-            headers: {
-            }
+            headers: {}
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
@@ -305,16 +275,76 @@ export class LocationClient {
         });
     }
 
-    protected processRemovePostalcode(response: Response): Promise<void> {
+    protected processGetAllPostalcodes(response: Response): Promise<FileResponse> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => {
+                return {fileName: fileName, data: blob, status: status, headers: _headers};
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    protected processInsertLocation(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => {
+                return {fileName: fileName, data: blob, status: status, headers: _headers};
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    protected processRemovePostalcode(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve<void>(null as any);
@@ -322,9 +352,9 @@ export class LocationClient {
 }
 
 export class TemperatureDataClient {
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
@@ -373,42 +403,46 @@ export class TemperatureDataClient {
 
     protected processGetTemperature(response: Response): Promise<TemperatureDataOverview> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
         if (status === 200) {
             return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TemperatureDataOverview.fromJS(resultData200);
-            return result200;
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = TemperatureDataOverview.fromJS(resultData200);
+                return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid parameters. Check date format, ensure start is before end date, or verify location name.", status, _responseText, _headers, result400);
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ProblemDetails.fromJS(resultData400);
+                return throwException("Invalid parameters. Check date format, ensure start is before end date, or verify location name.", status, _responseText, _headers, result400);
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
             });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied. User or Admin role required.", status, _responseText, _headers, result403);
+                let result403: any = null;
+                let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result403 = ProblemDetails.fromJS(resultData403);
+                return throwException("Access denied. User or Admin role required.", status, _responseText, _headers, result403);
             });
         } else if (status === 500) {
             return response.text().then((_responseText) => {
-            return throwException("Internal server error. Possible issues with database connection or external weather service.", status, _responseText, _headers);
+                return throwException("Internal server error. Possible issues with database connection or external weather service.", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve<TemperatureDataOverview>(null as any);
@@ -416,9 +450,9 @@ export class TemperatureDataClient {
 }
 
 export class TopicClient {
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
@@ -445,49 +479,6 @@ export class TopicClient {
         });
     }
 
-    protected processGetAllTopics(response: Response): Promise<TopicSetting[]> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(TopicSetting.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return result200;
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied. Admin role required to view topic configurations.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 500) {
-            return response.text().then((_responseText) => {
-            return throwException("Internal server error. Database connection issues or configuration service unavailable.", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<TopicSetting[]>(null as any);
-    }
-
     getAllSensorTypes(): Promise<string[]> {
         let url_ = this.baseUrl + "/api/v1/Topic/GetAllSensorTypes";
         url_ = url_.replace(/[?&]$/, "");
@@ -502,49 +493,6 @@ export class TopicClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetAllSensorTypes(_response);
         });
-    }
-
-    protected processGetAllSensorTypes(response: Response): Promise<string[]> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(item);
-            }
-            else {
-                result200 = <any>null;
-            }
-            return result200;
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 500) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<string[]>(null as any);
     }
 
     /**
@@ -572,50 +520,6 @@ export class TopicClient {
         });
     }
 
-    protected processCreateTopic(response: Response): Promise<any> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 201) {
-            return response.text().then((_responseText) => {
-            let result201: any = null;
-            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result201 = resultData201 !== undefined ? resultData201 : <any>null;
-    
-            return result201;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid topic setting data, missing required fields, or duplicate sensor name.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied. Admin role required to create topic configurations.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 500) {
-            return response.text().then((_responseText) => {
-            return throwException("Internal server error. Database connection issues or configuration service unavailable.", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<any>(null as any);
-    }
-
     updateTopic(topicSetting: TopicSetting): Promise<any> {
         let url_ = this.baseUrl + "/api/v1/Topic/UpdateTopic";
         url_ = url_.replace(/[?&]$/, "");
@@ -634,50 +538,6 @@ export class TopicClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processUpdateTopic(_response);
         });
-    }
-
-    protected processUpdateTopic(response: Response): Promise<any> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return result200;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 500) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<any>(null as any);
     }
 
     deleteTopic(topicSetting: TopicSetting): Promise<any> {
@@ -700,45 +560,237 @@ export class TopicClient {
         });
     }
 
-    protected processDeleteTopic(response: Response): Promise<any> {
+    protected processGetAllTopics(response: Response): Promise<TopicSetting[]> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
         if (status === 200) {
             return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return result200;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                if (Array.isArray(resultData200)) {
+                    result200 = [] as any;
+                    for (let item of resultData200)
+                        result200!.push(TopicSetting.fromJS(item));
+                } else {
+                    result200 = <any>null;
+                }
+                return result200;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
             });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+                let result403: any = null;
+                let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result403 = ProblemDetails.fromJS(resultData403);
+                return throwException("Access denied. Admin role required to view topic configurations.", status, _responseText, _headers, result403);
             });
         } else if (status === 500) {
             return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
+                return throwException("Internal server error. Database connection issues or configuration service unavailable.", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TopicSetting[]>(null as any);
+    }
+
+    protected processGetAllSensorTypes(response: Response): Promise<string[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                if (Array.isArray(resultData200)) {
+                    result200 = [] as any;
+                    for (let item of resultData200)
+                        result200!.push(item);
+                } else {
+                    result200 = <any>null;
+                }
+                return result200;
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+                let result403: any = null;
+                let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result403 = ProblemDetails.fromJS(resultData403);
+                return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+                return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string[]>(null as any);
+    }
+
+    protected processCreateTopic(response: Response): Promise<any> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 201) {
+            return response.text().then((_responseText) => {
+                let result201: any = null;
+                let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : <any>null;
+
+                return result201;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ProblemDetails.fromJS(resultData400);
+                return throwException("Invalid topic setting data, missing required fields, or duplicate sensor name.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+                let result403: any = null;
+                let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result403 = ProblemDetails.fromJS(resultData403);
+                return throwException("Access denied. Admin role required to create topic configurations.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+                return throwException("Internal server error. Database connection issues or configuration service unavailable.", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<any>(null as any);
+    }
+
+    protected processUpdateTopic(response: Response): Promise<any> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+
+                return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ProblemDetails.fromJS(resultData400);
+                return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+                let result403: any = null;
+                let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result403 = ProblemDetails.fromJS(resultData403);
+                return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+                return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<any>(null as any);
+    }
+
+    protected processDeleteTopic(response: Response): Promise<any> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+
+                return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ProblemDetails.fromJS(resultData400);
+                return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+                let result403: any = null;
+                let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result403 = ProblemDetails.fromJS(resultData403);
+                return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+                return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve<any>(null as any);
@@ -746,9 +798,9 @@ export class TopicClient {
 }
 
 export class UserInfoClient {
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
@@ -780,28 +832,6 @@ export class UserInfoClient {
         });
     }
 
-    protected processGetUserById(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
-    }
-
     /**
      * Changes the password for a user.
      * @param input The change password request containing user ID, current password, and new password.
@@ -825,28 +855,6 @@ export class UserInfoClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processChangePassword(_response);
         });
-    }
-
-    protected processChangePassword(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
     }
 
     /**
@@ -874,28 +882,6 @@ export class UserInfoClient {
         });
     }
 
-    protected processChangeUser(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
-    }
-
     /**
      * Deletes a user by their unique identifier.
      * @param userId (optional) The unique identifier of the user to delete.
@@ -921,9 +907,13 @@ export class UserInfoClient {
         });
     }
 
-    protected processDeleteUser(response: Response): Promise<FileResponse> {
+    protected processGetUserById(response: Response): Promise<FileResponse> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
         if (status === 200 || status === 206) {
             const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
             let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
@@ -934,10 +924,96 @@ export class UserInfoClient {
                 fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
                 fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
             }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+            return response.blob().then(blob => {
+                return {fileName: fileName, data: blob, status: status, headers: _headers};
+            });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    protected processChangePassword(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => {
+                return {fileName: fileName, data: blob, status: status, headers: _headers};
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    protected processChangeUser(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => {
+                return {fileName: fileName, data: blob, status: status, headers: _headers};
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    protected processDeleteUser(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        ;
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => {
+                return {fileName: fileName, data: blob, status: status, headers: _headers};
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve<FileResponse>(null as any);
@@ -947,10 +1023,10 @@ export class UserInfoClient {
 /** Represents the login credentials for a user. */
 export class Login implements ILogin {
     /** Gets or sets the username of the user.
-             */
+     */
     userName!: string;
     /** Gets or sets the password of the user.
-             */
+     */
     password!: string;
 
     constructor(data?: ILogin) {
@@ -962,18 +1038,18 @@ export class Login implements ILogin {
         }
     }
 
-    init(_data?: any) {
-        if (_data) {
-            this.userName = _data["userName"];
-            this.password = _data["password"];
-        }
-    }
-
     static fromJS(data: any): Login {
         data = typeof data === 'object' ? data : {};
         let result = new Login();
         result.init(data);
         return result;
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userName = _data["userName"];
+            this.password = _data["password"];
+        }
     }
 
     toJSON(data?: any) {
@@ -987,10 +1063,10 @@ export class Login implements ILogin {
 /** Represents the login credentials for a user. */
 export interface ILogin {
     /** Gets or sets the username of the user.
-             */
+     */
     userName: string;
     /** Gets or sets the password of the user.
-             */
+     */
     password: string;
 }
 
@@ -1012,6 +1088,13 @@ export class ProblemDetails implements IProblemDetails {
         }
     }
 
+    static fromJS(data: any): ProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemDetails();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1024,13 +1107,6 @@ export class ProblemDetails implements IProblemDetails {
             this.detail = _data["detail"];
             this.instance = _data["instance"];
         }
-    }
-
-    static fromJS(data: any): ProblemDetails {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1061,10 +1137,10 @@ export interface IProblemDetails {
 /** Represents the registration credentials for a new user. */
 export class Register implements IRegister {
     /** Gets or sets the username for the new user.
-             */
+     */
     userName!: string;
     /** Gets or sets the password for the new user.
-             */
+     */
     password!: string;
 
     constructor(data?: IRegister) {
@@ -1076,18 +1152,18 @@ export class Register implements IRegister {
         }
     }
 
-    init(_data?: any) {
-        if (_data) {
-            this.userName = _data["userName"];
-            this.password = _data["password"];
-        }
-    }
-
     static fromJS(data: any): Register {
         data = typeof data === 'object' ? data : {};
         let result = new Register();
         result.init(data);
         return result;
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userName = _data["userName"];
+            this.password = _data["password"];
+        }
     }
 
     toJSON(data?: any) {
@@ -1101,29 +1177,29 @@ export class Register implements IRegister {
 /** Represents the registration credentials for a new user. */
 export interface IRegister {
     /** Gets or sets the username for the new user.
-             */
+     */
     userName: string;
     /** Gets or sets the password for the new user.
-             */
+     */
     password: string;
 }
 
 /** Represents a JWT token and its associated refresh token and metadata. */
 export class JwtToken implements IJwtToken {
     /** Gets or sets the JWT access token string.
-             */
+     */
     token?: string;
     /** Gets or sets the refresh token string.
-             */
+     */
     refreshToken?: string;
     /** Gets or sets the expiry date and time of the JWT token.
-             */
+     */
     expiryDate?: Date;
     /** Gets or sets the creation date and time of the JWT token.
-             */
+     */
     createdDate?: Date;
     /** Gets or sets the user roles associated with the JWT token.
-             */
+     */
     roles?: string[] | undefined;
 
     constructor(data?: IJwtToken) {
@@ -1133,6 +1209,13 @@ export class JwtToken implements IJwtToken {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
+    }
+
+    static fromJS(data: any): JwtToken {
+        data = typeof data === 'object' ? data : {};
+        let result = new JwtToken();
+        result.init(data);
+        return result;
     }
 
     init(_data?: any) {
@@ -1147,13 +1230,6 @@ export class JwtToken implements IJwtToken {
                     this.roles!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): JwtToken {
-        data = typeof data === 'object' ? data : {};
-        let result = new JwtToken();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1174,19 +1250,19 @@ export class JwtToken implements IJwtToken {
 /** Represents a JWT token and its associated refresh token and metadata. */
 export interface IJwtToken {
     /** Gets or sets the JWT access token string.
-             */
+     */
     token?: string;
     /** Gets or sets the refresh token string.
-             */
+     */
     refreshToken?: string;
     /** Gets or sets the expiry date and time of the JWT token.
-             */
+     */
     expiryDate?: Date;
     /** Gets or sets the creation date and time of the JWT token.
-             */
+     */
     createdDate?: Date;
     /** Gets or sets the user roles associated with the JWT token.
-             */
+     */
     roles?: string[] | undefined;
 }
 
@@ -1194,7 +1270,7 @@ export interface IJwtToken {
 export class TemperatureDataOverview implements ITemperatureDataOverview {
     sensorData?: SensorData[];
     /** Gets or sets the list of temperature data for the outside location.
-             */
+     */
     temperatureOutside?: TemperatureData[];
 
     constructor(data?: ITemperatureDataOverview) {
@@ -1204,6 +1280,13 @@ export class TemperatureDataOverview implements ITemperatureDataOverview {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
+    }
+
+    static fromJS(data: any): TemperatureDataOverview {
+        data = typeof data === 'object' ? data : {};
+        let result = new TemperatureDataOverview();
+        result.init(data);
+        return result;
     }
 
     init(_data?: any) {
@@ -1219,13 +1302,6 @@ export class TemperatureDataOverview implements ITemperatureDataOverview {
                     this.temperatureOutside!.push(TemperatureData.fromJS(item));
             }
         }
-    }
-
-    static fromJS(data: any): TemperatureDataOverview {
-        data = typeof data === 'object' ? data : {};
-        let result = new TemperatureDataOverview();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1248,7 +1324,7 @@ export class TemperatureDataOverview implements ITemperatureDataOverview {
 export interface ITemperatureDataOverview {
     sensorData?: SensorData[];
     /** Gets or sets the list of temperature data for the outside location.
-             */
+     */
     temperatureOutside?: TemperatureData[];
 }
 
@@ -1266,6 +1342,13 @@ export class SensorData implements ISensorData {
         }
     }
 
+    static fromJS(data: any): SensorData {
+        data = typeof data === 'object' ? data : {};
+        let result = new SensorData();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.sensorName = _data["sensorName"];
@@ -1276,13 +1359,6 @@ export class SensorData implements ISensorData {
                     this.temperatureDatas!.push(TemperatureData.fromJS(item));
             }
         }
-    }
-
-    static fromJS(data: any): SensorData {
-        data = typeof data === 'object' ? data : {};
-        let result = new SensorData();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1307,10 +1383,10 @@ export interface ISensorData {
 /** Represents a single temperature data point with timestamp and value. */
 export class TemperatureData implements ITemperatureData {
     /** Gets or sets the timestamp of the temperature measurement.
-             */
+     */
     timestamp?: Date;
     /** Gets or sets the temperature value.
-             */
+     */
     temperature?: number;
     plausibility?: string;
 
@@ -1323,19 +1399,19 @@ export class TemperatureData implements ITemperatureData {
         }
     }
 
+    static fromJS(data: any): TemperatureData {
+        data = typeof data === 'object' ? data : {};
+        let result = new TemperatureData();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.timestamp = _data["timestamp"] ? new Date(_data["timestamp"].toString()) : <any>undefined;
             this.temperature = _data["temperature"];
             this.plausibility = _data["plausibility"];
         }
-    }
-
-    static fromJS(data: any): TemperatureData {
-        data = typeof data === 'object' ? data : {};
-        let result = new TemperatureData();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1350,10 +1426,10 @@ export class TemperatureData implements ITemperatureData {
 /** Represents a single temperature data point with timestamp and value. */
 export interface ITemperatureData {
     /** Gets or sets the timestamp of the temperature measurement.
-             */
+     */
     timestamp?: Date;
     /** Gets or sets the temperature value.
-             */
+     */
     temperature?: number;
     plausibility?: string;
 }
@@ -1361,27 +1437,27 @@ export interface ITemperatureData {
 /** Represents the settings for a specific MQTT topic, including default path, group, and sensor information. */
 export class TopicSetting implements ITopicSetting {
     /** Gets or sets the unique identifier for the TopicSetting entity.
-             */
+     */
     topicSettingId?: number;
     coordinateMappingId?: number;
     coordinateMapping?: CoordinateMapping | undefined;
     /** Gets or sets the default MQTT topic path for this setting.
-             */
+     */
     defaultTopicPath?: string;
     /** Gets or sets the group identifier associated with this topic setting.
-             */
+     */
     groupId?: number;
     /** Gets or sets the type of sensor (e.g., temperature, humidity).
-             */
+     */
     sensorTypeEnum?: SensorType;
     /** Gets or sets the name of the sensor.
-             */
+     */
     sensorName?: string | undefined;
     /** Gets or sets the location of the sensor.
-             */
+     */
     sensorLocation?: string | undefined;
     /** Gets or sets a value indicating whether this topic setting has recovery enabled.
-             */
+     */
     hasRecovery?: boolean;
 
     constructor(data?: ITopicSetting) {
@@ -1391,6 +1467,13 @@ export class TopicSetting implements ITopicSetting {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
+    }
+
+    static fromJS(data: any): TopicSetting {
+        data = typeof data === 'object' ? data : {};
+        let result = new TopicSetting();
+        result.init(data);
+        return result;
     }
 
     init(_data?: any) {
@@ -1405,13 +1488,6 @@ export class TopicSetting implements ITopicSetting {
             this.sensorLocation = _data["sensorLocation"];
             this.hasRecovery = _data["hasRecovery"];
         }
-    }
-
-    static fromJS(data: any): TopicSetting {
-        data = typeof data === 'object' ? data : {};
-        let result = new TopicSetting();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1432,49 +1508,49 @@ export class TopicSetting implements ITopicSetting {
 /** Represents the settings for a specific MQTT topic, including default path, group, and sensor information. */
 export interface ITopicSetting {
     /** Gets or sets the unique identifier for the TopicSetting entity.
-             */
+     */
     topicSettingId?: number;
     coordinateMappingId?: number;
     coordinateMapping?: CoordinateMapping | undefined;
     /** Gets or sets the default MQTT topic path for this setting.
-             */
+     */
     defaultTopicPath?: string;
     /** Gets or sets the group identifier associated with this topic setting.
-             */
+     */
     groupId?: number;
     /** Gets or sets the type of sensor (e.g., temperature, humidity).
-             */
+     */
     sensorTypeEnum?: SensorType;
     /** Gets or sets the name of the sensor.
-             */
+     */
     sensorName?: string | undefined;
     /** Gets or sets the location of the sensor.
-             */
+     */
     sensorLocation?: string | undefined;
     /** Gets or sets a value indicating whether this topic setting has recovery enabled.
-             */
+     */
     hasRecovery?: boolean;
 }
 
 /** Stores geographic coordinates associated with postalcodes, including the time the mapping was used. */
 export class CoordinateMapping implements ICoordinateMapping {
     /** Gets or sets the postalcode which is also the uniqe identifier.
-             */
+     */
     postalCode?: number;
     /** Gets or sets the name of the location.
-             */
+     */
     location?: string;
     /** Gets or sets the latitude for the location.
-             */
+     */
     latitude?: number;
     /** Gets or sets the longitude of the location.
-             */
+     */
     longitude?: number;
     /** Gets or sets the time the postalcode was last entered by the user.
-             */
+     */
     lastUsed?: Date | undefined;
     /** Gets or sets the time until which the entry is locked.
-             */
+     */
     lockedUntil?: Date | undefined;
 
     constructor(data?: ICoordinateMapping) {
@@ -1486,6 +1562,13 @@ export class CoordinateMapping implements ICoordinateMapping {
         }
     }
 
+    static fromJS(data: any): CoordinateMapping {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoordinateMapping();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.postalCode = _data["postalCode"];
@@ -1495,13 +1578,6 @@ export class CoordinateMapping implements ICoordinateMapping {
             this.lastUsed = _data["lastUsed"] ? new Date(_data["lastUsed"].toString()) : <any>undefined;
             this.lockedUntil = _data["lockedUntil"] ? new Date(_data["lockedUntil"].toString()) : <any>undefined;
         }
-    }
-
-    static fromJS(data: any): CoordinateMapping {
-        data = typeof data === 'object' ? data : {};
-        let result = new CoordinateMapping();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1519,22 +1595,22 @@ export class CoordinateMapping implements ICoordinateMapping {
 /** Stores geographic coordinates associated with postalcodes, including the time the mapping was used. */
 export interface ICoordinateMapping {
     /** Gets or sets the postalcode which is also the uniqe identifier.
-             */
+     */
     postalCode?: number;
     /** Gets or sets the name of the location.
-             */
+     */
     location?: string;
     /** Gets or sets the latitude for the location.
-             */
+     */
     latitude?: number;
     /** Gets or sets the longitude of the location.
-             */
+     */
     longitude?: number;
     /** Gets or sets the time the postalcode was last entered by the user.
-             */
+     */
     lastUsed?: Date | undefined;
     /** Gets or sets the time until which the entry is locked.
-             */
+     */
     lockedUntil?: Date | undefined;
 }
 
@@ -1550,13 +1626,13 @@ export enum SensorType {
 /** Represents a request to change a user's password. */
 export class ChangePassword implements IChangePassword {
     /** Gets or sets the unique identifier of the user whose password is to be changed.
-             */
+     */
     userId?: string | undefined;
     /** Gets or sets the current password of the user.
-             */
+     */
     currentPassword?: string | undefined;
     /** Gets or sets the new password to be set for the user.
-             */
+     */
     newPassword?: string | undefined;
 
     constructor(data?: IChangePassword) {
@@ -1568,19 +1644,19 @@ export class ChangePassword implements IChangePassword {
         }
     }
 
+    static fromJS(data: any): ChangePassword {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChangePassword();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.userId = _data["userId"];
             this.currentPassword = _data["currentPassword"];
             this.newPassword = _data["newPassword"];
         }
-    }
-
-    static fromJS(data: any): ChangePassword {
-        data = typeof data === 'object' ? data : {};
-        let result = new ChangePassword();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1595,13 +1671,13 @@ export class ChangePassword implements IChangePassword {
 /** Represents a request to change a user's password. */
 export interface IChangePassword {
     /** Gets or sets the unique identifier of the user whose password is to be changed.
-             */
+     */
     userId?: string | undefined;
     /** Gets or sets the current password of the user.
-             */
+     */
     currentPassword?: string | undefined;
     /** Gets or sets the new password to be set for the user.
-             */
+     */
     newPassword?: string | undefined;
 }
 
@@ -1647,6 +1723,13 @@ export class IdentityUserOfString implements IIdentityUserOfString {
         }
     }
 
+    static fromJS(data: any): IdentityUserOfString {
+        data = typeof data === 'object' ? data : {};
+        let result = new IdentityUserOfString();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
@@ -1665,13 +1748,6 @@ export class IdentityUserOfString implements IIdentityUserOfString {
             this.lockoutEnabled = _data["lockoutEnabled"];
             this.accessFailedCount = _data["accessFailedCount"];
         }
-    }
-
-    static fromJS(data: any): IdentityUserOfString {
-        data = typeof data === 'object' ? data : {};
-        let result = new IdentityUserOfString();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1736,15 +1812,15 @@ export class IdentityUser extends IdentityUserOfString implements IIdentityUser 
         super(data);
     }
 
-    override init(_data?: any) {
-        super.init(_data);
-    }
-
     static override fromJS(data: any): IdentityUser {
         data = typeof data === 'object' ? data : {};
         let result = new IdentityUser();
         result.init(data);
         return result;
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
     }
 
     override toJSON(data?: any) {
@@ -1765,15 +1841,15 @@ export class ApiUser extends IdentityUser implements IApiUser {
         super(data);
     }
 
-    override init(_data?: any) {
-        super.init(_data);
-    }
-
     static override fromJS(data: any): ApiUser {
         data = typeof data === 'object' ? data : {};
         let result = new ApiUser();
         result.init(data);
         return result;
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
     }
 
     override toJSON(data?: any) {
@@ -1800,6 +1876,7 @@ export class ApiException extends Error {
     response: string;
     headers: { [key: string]: any; };
     result: any;
+    protected isApiException = true;
 
     constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
         super();
@@ -1811,14 +1888,14 @@ export class ApiException extends Error {
         this.result = result;
     }
 
-    protected isApiException = true;
-
     static isApiException(obj: any): obj is ApiException {
         return obj.isApiException === true;
     }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
+function throwException(message: string, status: number, response: string, headers: {
+    [key: string]: any;
+}, result?: any): any {
     if (result !== null && result !== undefined)
         throw result;
     else

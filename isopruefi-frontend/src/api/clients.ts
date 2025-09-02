@@ -21,7 +21,7 @@ const BASE = apiBase();
 
 /**
  * Fetch wrapper that automatically injects JWT bearer token for authenticated requests.
- * 
+ *
  * @param input - The request URL or Request object
  * @param init - Optional request configuration
  * @returns Promise resolving to the fetch response
@@ -64,11 +64,11 @@ let locationMapping: { [displayName: string]: string } = {};
 /**
  * Fetches all postal code locations from the API and normalizes the response format.
  * Handles multiple possible response formats from the backend API.
- * 
+ *
  * @returns Promise resolving to an array of PostalLocation objects
  * @throws {ApiException} When API request fails
  */
-export const fetchPostalLocations = async (): Promise<PostalLocation[]> => {
+export const fetchPostalLocations = async () => {
     try {
         const response = await locationClient.getAllPostalcodes();
         // Parse the blob response - the API returns JSON as a blob
@@ -137,7 +137,7 @@ export const fetchPostalLocations = async (): Promise<PostalLocation[]> => {
 /**
  * Retrieves the backend-stored location name for a display location name.
  * Used internally to map user-friendly display names to backend identifiers.
- * 
+ *
  * @param displayLocationName - The display name shown to users
  * @returns The corresponding stored location name for API calls
  */
@@ -147,7 +147,7 @@ export const getStoredLocationName = (displayLocationName: string): string => {
 
 /**
  * Adds a new postal code location to the system.
- * 
+ *
  * @param postalCode - The postal code to add
  * @returns Promise resolving to the API response
  * @throws {ApiException} When the request fails or postal code already exists
@@ -158,7 +158,7 @@ export const addPostalLocation = async (postalCode: number) => {
 
 /**
  * Removes a postal code location from the system.
- * 
+ *
  * @param postalCode - The postal code to remove
  * @returns Promise resolving to void on successful removal
  * @throws {ApiException} When the request fails or postal code doesn't exist
@@ -169,44 +169,44 @@ export const removePostalLocation = async (postalCode: number) => {
 
 /**
  * Retrieves all MQTT topic settings from the system.
- * 
+ *
  * @returns Promise resolving to an array of TopicSetting objects
  * @throws {ApiException} When the request fails or access is denied
  */
-export const getAllTopics = async (): Promise<TopicSetting[]> => {
+export const getAllTopics = async () => {
     return await topicClient.getAllTopics();
 };
 
 /**
  * Creates a new MQTT topic configuration in the system.
- * 
+ *
  * @param topicSetting - The complete topic setting configuration to create
  * @returns Promise resolving to the newly created topic with assigned ID
  * @throws {ApiException} When validation fails, topic already exists, or access is denied
  */
-export const createTopic = async (topicSetting: TopicSetting): Promise<any> => {
+export const createTopic = async (topicSetting: TopicSetting) => {
     return await topicClient.createTopic(topicSetting);
 };
 
 /**
  * Updates an existing MQTT topic configuration.
- * 
+ *
  * @param topicSetting - The topic setting with updated values (must include topicSettingId)
  * @returns Promise resolving to the updated topic setting
  * @throws {ApiException} When validation fails, topic doesn't exist, or access is denied
  */
-export const updateTopic = async (topicSetting: TopicSetting): Promise<any> => {
+export const updateTopic = async (topicSetting: TopicSetting) => {
     return await topicClient.updateTopic(topicSetting);
 };
 
 /**
  * Removes an MQTT topic configuration from the system.
- * 
+ *
  * @param topicSetting - The topic setting to delete (requires topicSettingId)
  * @returns Promise resolving to void on successful deletion
  * @throws {ApiException} When topic doesn't exist or access is denied
  */
-export const deleteTopic = async (topicSetting: TopicSetting): Promise<any> => {
+export const deleteTopic = async (topicSetting: TopicSetting) => {
     return await topicClient.deleteTopic(topicSetting);
 };
 

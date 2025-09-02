@@ -23,7 +23,7 @@ interface AuthFormProps {
 
 /**
  * A flexible authentication form component that handles both sign-in and sign-up operations.
- * 
+ *
  * Features:
  * - Unified form for sign-in and registration
  * - JWT token handling with automatic storage
@@ -31,15 +31,15 @@ interface AuthFormProps {
  * - Comprehensive error handling with server-side error parsing
  * - Responsive design with consistent styling
  * - Form validation and loading states
- * 
+ *
  * @param props - Component configuration
  * @returns JSX element containing the authentication form
- * 
+ *
  * @example
  * ```tsx
  * // Sign-in form
  * <AuthForm mode="signin" />
- * 
+ *
  * // Registration form (admin only)
  * <AuthForm mode="signup" />
  * ```

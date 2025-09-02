@@ -12,16 +12,16 @@ import AdminPage from "./pages/AdminPage.tsx";
 
 /**
  * Main application component that sets up routing and navigation structure.
- * 
+ *
  * Provides routing for:
  * - Welcome/landing page (/)
  * - User authentication (sign-in/sign-up)
  * - Role-based user and admin dashboards
- * 
+ *
  * Uses React Router for client-side routing with browser history.
- * 
+ *
  * @returns JSX element containing the entire application with routing
- * 
+ *
  * @example
  * ```tsx
  * // Used as root component in main.tsx

@@ -14,16 +14,17 @@ export interface JwtPayload {
     exp?: number;
     /** Issued at time (Unix timestamp) */
     iat?: number;
+
     /** Allow additional custom claims */
     [key: string]: unknown;
 }
 
 /**
  * Saves JWT tokens to browser localStorage for persistent authentication.
- * 
+ *
  * @param token - The JWT access token
  * @param refreshToken - The refresh token for obtaining new access tokens
- * 
+ *
  * @example
  * ```typescript
  * // After successful login
@@ -37,9 +38,9 @@ export function saveToken(token: string, refreshToken: string): void {
 
 /**
  * Retrieves the stored JWT access token from localStorage.
- * 
+ *
  * @returns The access token string, or null if not found
- * 
+ *
  * @example
  * ```typescript
  * const token = getToken();
@@ -54,9 +55,9 @@ export function getToken(): string | null {
 
 /**
  * Retrieves the stored refresh token from localStorage.
- * 
+ *
  * @returns The refresh token string, or null if not found
- * 
+ *
  * @example
  * ```typescript
  * const refreshToken = getRefreshToken();
@@ -72,7 +73,7 @@ export function getRefreshToken(): string | null {
 /**
  * Removes both access and refresh tokens from localStorage.
  * Call this function when logging out or when tokens become invalid.
- * 
+ *
  * @example
  * ```typescript
  * // On logout
@@ -88,10 +89,10 @@ export function clearToken(): void {
 /**
  * Decodes a JWT token and extracts the payload containing user information.
  * Does not verify the token signature - use only for reading claims.
- * 
+ *
  * @param token - The JWT token to decode
  * @returns The decoded payload object, or null if decoding fails
- * 
+ *
  * @example
  * ```typescript
  * const payload = decodeToken(accessToken);
@@ -112,10 +113,10 @@ export function decodeToken(token: string): JwtPayload | null {
 /**
  * Extracts the user identifier from a JWT token.
  * The subject field typically contains the username or user ID.
- * 
+ *
  * @param token - The JWT token to extract user information from
  * @returns The user identifier string, or null if extraction fails
- * 
+ *
  * @example
  * ```typescript
  * const currentUser = getUserFromToken(getToken());

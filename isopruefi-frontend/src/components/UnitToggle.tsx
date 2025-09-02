@@ -17,21 +17,21 @@ export type UnitToggleProps = {
 
 /**
  * A toggle component for switching between Celsius and Fahrenheit temperature units.
- * 
+ *
  * Features:
  * - Checkbox-style toggle interface
  * - Clear visual indication of current selection
  * - Accessible design with proper labels
  * - Consistent styling with application theme
- * 
+ *
  * @param props - Component configuration
  * @returns JSX element containing the unit toggle
- * 
+ *
  * @example
  * ```tsx
  * // Basic usage
  * const [isFahrenheit, setIsFahrenheit] = useState(false);
- * 
+ *
  * <UnitToggle 
  *   value={isFahrenheit} 
  *   onChange={setIsFahrenheit} 

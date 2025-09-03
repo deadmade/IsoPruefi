@@ -8,6 +8,7 @@ namespace IntegrationTests;
 ///     Integration tests for the health check endpoints to verify API availability and status.
 /// </summary>
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class HealthCheckIntegrationTests : IntegrationTestBase
 {
     /// <summary>

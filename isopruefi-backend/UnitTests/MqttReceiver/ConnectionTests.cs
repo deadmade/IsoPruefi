@@ -36,7 +36,7 @@ public class ConnectionTests
             ["Mqtt:BrokerPort"] = "1883"
         };
         var configBuilder = new ConfigurationBuilder()
-            .AddInMemoryCollection(configDict);
+            .AddInMemoryCollection(configDict!);
         _configuration = configBuilder.Build();
 
         // Setup service provider and scope
@@ -75,7 +75,7 @@ public class ConnectionTests
             ["Mqtt:BrokerPort"] = "1883"
         };
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(configDict)
+            .AddInMemoryCollection(configDict!)
             .Build();
 
         var connection = new Connection(logger, serviceProvider, configuration);
@@ -138,7 +138,7 @@ public class ConnectionTests
             ["Mqtt:BrokerPort"] = "8883"
         };
         var config = new ConfigurationBuilder()
-            .AddInMemoryCollection(configDict)
+            .AddInMemoryCollection(configDict!)
             .Build();
 
         var connection = new Connection(_mockLogger.Object, _mockServiceProvider.Object, config);

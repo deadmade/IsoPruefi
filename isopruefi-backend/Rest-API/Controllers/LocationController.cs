@@ -25,6 +25,7 @@ public class LocationController : ControllerBase
     ///     Initializes a new instance of the <see cref="LocationController" /> class.
     /// </summary>
     /// <param name="tempService">The temp service to handle temperature operations.</param>
+    /// <param name="coordinateRepo">The coordinate Repo service to hande coordinates</param>
     /// <param name="logger">The logger instance for logging actions and errors.</param>
     public LocationController(ITempService tempService, ICoordinateRepo coordinateRepo,
         ILogger<LocationController> logger)
@@ -102,6 +103,11 @@ public class LocationController : ControllerBase
         }
     }
 
+    /// <summary>
+    ///     Deletes location from the database.
+    /// </summary>
+    /// <param name="postalCode">Postalcode</param>
+    /// <returns>Ok if successful; otherwise, an error response.</returns>
     [HttpDelete]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]

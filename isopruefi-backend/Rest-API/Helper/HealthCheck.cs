@@ -3,8 +3,14 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Rest_API.Helper;
 
+/// <summary>
+///     Provides extension methods for configuring application healthchecks.
+/// </summary>
 public static class HealthCheck
 {
+    /// <summary>
+    /// Registers and configures health checks for the application.
+    /// </summary>
     public static void ConfigureHealthChecks(this WebApplicationBuilder builder)
     {
         builder.Services.AddHealthChecks()

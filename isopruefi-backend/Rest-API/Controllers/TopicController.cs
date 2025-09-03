@@ -92,6 +92,14 @@ public class TopicController : ControllerBase
         }
     }
 
+    /// <summary>
+    ///     Retrieves all available sensor types from the system.
+    /// </summary>
+    /// <returns>A list of sensor type names as strings.</returns>
+    /// <response code="200">Successfully retrieved the list of sensor types.</response>
+    /// <response code="401">Authentication required. No valid JWT token provided.</response>
+    /// <response code="403">Access denied. Insufficient privileges to access sensor type information.</response>
+    /// <response code="500">Internal server error. Enum parsing or configuration service unavailable.</response>
     [HttpGet]
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -200,7 +208,17 @@ public class TopicController : ControllerBase
         }
     }
 
-
+    /// <summary>
+    ///     Updates an existing MQTT topic setting in the system.
+    /// </summary>
+    /// <param name="topicSetting">The topic setting object containing updated configuration.</param>
+    /// <returns>Action result indicating success or failure of the update operation.</returns>
+    /// <response code="200">Successfully updated the topic setting.</response>
+    /// <response code="400">Bad request. The provided topic setting is invalid.</response>
+    /// <response code="401">Authentication required. No valid JWT token provided.</response>
+    /// <response code="403">Access denied. Admin role required to update topic settings.</response>
+    /// <response code="404">Topic setting with the specified ID was not found.</response>
+    /// <response code="500">Internal server error. Database update failed or service unavailable.</response>
     [HttpPut]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -243,6 +261,17 @@ public class TopicController : ControllerBase
         }
     }
 
+    /// <summary>
+    ///     Deletes an existing MQTT topic setting from the system.
+    /// </summary>
+    /// <param name="topicSetting">The topic setting object identifying the configuration to delete.</param>
+    /// <returns>Action result indicating success or failure of the deletion.</returns>
+    /// <response code="200">Successfully deleted the topic setting.</response>
+    /// <response code="400">Bad request. The provided topic setting is invalid.</response>
+    /// <response code="401">Authentication required. No valid JWT token provided.</response>
+    /// <response code="403">Access denied. Admin role required to delete topic settings.</response>
+    /// <response code="404">Topic setting with the specified ID was not found.</response>
+    /// <response code="500">Internal server error. Database deletion failed or service unavailable.</response>
     [HttpDelete]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

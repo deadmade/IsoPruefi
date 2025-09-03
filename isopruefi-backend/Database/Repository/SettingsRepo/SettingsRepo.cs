@@ -10,6 +10,9 @@ namespace Database.Repository.SettingsRepo;
 /// </summary>
 public class SettingsRepo : ISettingsRepo
 {
+    /// <summary>
+    ///     The ApplicationDbContext that is used for accessing the database.
+    /// </summary>
     private readonly ApplicationDbContext _applicationDbContext;
 
     /// <summary>
@@ -43,7 +46,7 @@ public class SettingsRepo : ISettingsRepo
         _applicationDbContext.TopicSettings.Add(topicSetting);
         return await _applicationDbContext.SaveChangesAsync();
     }
-
+    
     /// <inheritdoc />
     public async Task<int> RemoveTopicSettingAsync(TopicSetting topicSetting)
     {

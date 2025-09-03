@@ -8,7 +8,14 @@ namespace Database.Repository.InfluxRepo.Influx;
 /// </summary>
 public class InfluxHealthCheck : IHealthCheck
 {
+    /// <summary>
+    ///     An instance of the InfluxRepo for accessing the Influx Database.
+    /// </summary>
     private readonly IInfluxRepo _influxRepo;
+    
+    /// <summary>
+    ///     The logger instance used to record diagnostic information.
+    /// </summary>
     private readonly ILogger<InfluxHealthCheck> _logger;
 
     /// <summary>

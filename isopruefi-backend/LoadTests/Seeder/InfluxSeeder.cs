@@ -32,6 +32,6 @@ public static class InfluxSeeder
         using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CachedInfluxRepo>();
 
-        await foreach (var row in context.GetUptime("Seeder")) Assert.That(row != null, "Database does not exist");
+        await foreach (var row in context.GetUptime("Seeder")) Assert.That(row != null!, "Database does not exist");
     }
 }

@@ -285,6 +285,11 @@ export class LocationClient {
         return Promise.resolve<FileResponse>(null as any);
     }
 
+    /**
+     * Deletes location from the database.
+     * @param postalCode (optional) Postalcode
+     * @return Ok if successful; otherwise, an error response.
+     */
     removePostalcode(postalCode?: number | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/v1/Location/RemovePostalcode?";
         if (postalCode === null)
@@ -487,6 +492,10 @@ export class TopicClient {
         return Promise.resolve<TopicSetting[]>(null as any);
     }
 
+    /**
+     * Retrieves all available sensor types from the system.
+     * @return Successfully retrieved the list of sensor types.
+     */
     getAllSensorTypes(): Promise<string[]> {
         let url_ = this.baseUrl + "/api/v1/Topic/GetAllSensorTypes";
         url_ = url_.replace(/[?&]$/, "");
@@ -525,18 +534,18 @@ export class TopicClient {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
             });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            return throwException("Access denied. Insufficient privileges to access sensor type information.", status, _responseText, _headers, result403);
             });
         } else if (status === 500) {
             return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
+            return throwException("Internal server error. Enum parsing or configuration service unavailable.", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -615,6 +624,11 @@ export class TopicClient {
         return Promise.resolve<any>(null as any);
     }
 
+    /**
+     * Updates an existing MQTT topic setting in the system.
+     * @param topicSetting The topic setting object containing updated configuration.
+     * @return Successfully updated the topic setting.
+     */
     updateTopic(topicSetting: TopicSetting): Promise<any> {
         let url_ = this.baseUrl + "/api/v1/Topic/UpdateTopic";
         url_ = url_.replace(/[?&]$/, "");
@@ -651,25 +665,25 @@ export class TopicClient {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            return throwException("Bad request. The provided topic setting is invalid.", status, _responseText, _headers, result400);
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
             });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            return throwException("Access denied. Admin role required to update topic settings.", status, _responseText, _headers, result403);
             });
         } else if (status === 500) {
             return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
+            return throwException("Internal server error. Database update failed or service unavailable.", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -679,6 +693,11 @@ export class TopicClient {
         return Promise.resolve<any>(null as any);
     }
 
+    /**
+     * Deletes an existing MQTT topic setting from the system.
+     * @param topicSetting The topic setting object identifying the configuration to delete.
+     * @return Successfully deleted the topic setting.
+     */
     deleteTopic(topicSetting: TopicSetting): Promise<any> {
         let url_ = this.baseUrl + "/api/v1/Topic/DeleteTopic";
         url_ = url_.replace(/[?&]$/, "");
@@ -715,25 +734,25 @@ export class TopicClient {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            return throwException("Bad request. The provided topic setting is invalid.", status, _responseText, _headers, result400);
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            return throwException("Authentication required. No valid JWT token provided.", status, _responseText, _headers, result401);
             });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            return throwException("Access denied. Admin role required to delete topic settings.", status, _responseText, _headers, result403);
             });
         } else if (status === 500) {
             return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
+            return throwException("Internal server error. Database deletion failed or service unavailable.", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -1191,10 +1210,12 @@ export interface IJwtToken {
 
 /** Represents an overview of temperature data for different locations. */
 export class TemperatureDataOverview implements ITemperatureDataOverview {
-    sensorData?: SensorData[];
+    /** Gets or sets the list of Sensor data for the inside temperature.
+             */
+    sensorData?: SensorData[] | undefined;
     /** Gets or sets the list of temperature data for the outside location.
              */
-    temperatureOutside?: TemperatureData[];
+    temperatureOutside?: TemperatureData[] | undefined;
 
     constructor(data?: ITemperatureDataOverview) {
         if (data) {
@@ -1245,16 +1266,25 @@ export class TemperatureDataOverview implements ITemperatureDataOverview {
 
 /** Represents an overview of temperature data for different locations. */
 export interface ITemperatureDataOverview {
-    sensorData?: SensorData[];
+    /** Gets or sets the list of Sensor data for the inside temperature.
+             */
+    sensorData?: SensorData[] | undefined;
     /** Gets or sets the list of temperature data for the outside location.
              */
-    temperatureOutside?: TemperatureData[];
+    temperatureOutside?: TemperatureData[] | undefined;
 }
 
+/** Represents an overview of sensor data. */
 export class SensorData implements ISensorData {
-    sensorName?: string;
-    location?: string;
-    temperatureDatas?: TemperatureData[];
+    /** Gets or sets the name of the sensor.
+             */
+    sensorName?: string | undefined;
+    /** Gets or sets the location of the sensor.
+             */
+    location?: string | undefined;
+    /** Gets or sets the temperature data of the sensor.
+             */
+    temperatureDatas?: TemperatureData[] | undefined;
 
     constructor(data?: ISensorData) {
         if (data) {
@@ -1297,10 +1327,17 @@ export class SensorData implements ISensorData {
     }
 }
 
+/** Represents an overview of sensor data. */
 export interface ISensorData {
-    sensorName?: string;
-    location?: string;
-    temperatureDatas?: TemperatureData[];
+    /** Gets or sets the name of the sensor.
+             */
+    sensorName?: string | undefined;
+    /** Gets or sets the location of the sensor.
+             */
+    location?: string | undefined;
+    /** Gets or sets the temperature data of the sensor.
+             */
+    temperatureDatas?: TemperatureData[] | undefined;
 }
 
 /** Represents a single temperature data point with timestamp and value. */
@@ -1311,6 +1348,8 @@ export class TemperatureData implements ITemperatureData {
     /** Gets or sets the temperature value.
              */
     temperature?: number;
+    /** Gets or sets the plausibility of the temperature data.
+             */
     plausibility?: string;
 
     constructor(data?: ITemperatureData) {
@@ -1354,6 +1393,8 @@ export interface ITemperatureData {
     /** Gets or sets the temperature value.
              */
     temperature?: number;
+    /** Gets or sets the plausibility of the temperature data.
+             */
     plausibility?: string;
 }
 

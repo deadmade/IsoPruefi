@@ -2,12 +2,33 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Get_weatherData_worker.Helper;
 
+/// <summary>
+///     Healthcheck for availability of Bright Sky API.
+/// </summary>
 public class BrightSkyHealthCheck : IHealthCheck
 {
-    private readonly IConfiguration _configuration;
+    /// <summary>
+    ///     Factory used for making API requests.
+    /// </summary>
     private readonly IHttpClientFactory _httpClientFactory;
+    
+    /// <summary>
+    ///     Configuration used to retrieve settings.
+    /// </summary>
+    private readonly IConfiguration _configuration;
+    
+    /// <summary>
+    ///     Logger instance used to document diagnostics.
+    /// </summary>
     private readonly ILogger<BrightSkyHealthCheck> _logger;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="BrightSkyHealthCheck"/> class.
+    /// </summary>
+    /// <param name="httpClientFactory">Factory for API calls.</param>
+    /// <param name="configuration">Configuration for settings.</param>
+    /// <param name="logger">Logger for documenting diagnostics.</param>
+    /// <exception cref="ArgumentNullException">Thrown if configuration is missing.</exception>
     public BrightSkyHealthCheck(IHttpClientFactory httpClientFactory, IConfiguration configuration,
         ILogger<BrightSkyHealthCheck> logger)
     {
@@ -16,6 +37,12 @@ public class BrightSkyHealthCheck : IHealthCheck
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
+    /// <summary>
+    ///     Performs the healthcheck on the BrightSky API.
+    /// </summary>
+    /// <param name="context">Context when executing.</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
+    /// <returns>An asynchronous task representing the health check operation.</returns>
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
         CancellationToken cancellationToken = default)
     {

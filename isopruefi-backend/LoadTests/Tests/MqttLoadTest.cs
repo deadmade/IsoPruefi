@@ -47,16 +47,8 @@ public class MqttSensorLoadTest : LoadTestBase
         } while (!subscribed);
     }
 
-    /// <summary>
-    ///     Cleans up MQTT test resources
-    /// </summary>
-    [OneTimeTearDown]
-    public async Task TestCleanup()
-    {
-    }
-
-    private List<TopicSetting> _topicSettings;
-    private readonly Random rnd = Random.Shared;
+    private List<TopicSetting>? _topicSettings;
+    private readonly Random _rnd = Random.Shared;
 
     /// <summary>
     ///     Load test for MQTT sensor data reception and processing
@@ -79,7 +71,7 @@ public class MqttSensorLoadTest : LoadTestBase
                     return await mqttClient.Connect(options, CancellationToken.None);
                 });
 
-                foreach (var sensor in _topicSettings)
+                foreach (var sensor in _topicSettings!)
                 {
                     var publish = await Step.Run(Guid.NewGuid().ToString(), ctx, async () =>
                     {
@@ -131,11 +123,11 @@ public class MqttSensorLoadTest : LoadTestBase
     public string GenerateTemperature()
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        double?[]? value = [Math.Round(rnd.NextDouble() * 100, 1)];
+        double?[]? value = [Math.Round(_rnd.NextDouble() * 100, 1)];
 
         var tempGen = new TempSensorReading
         {
-            Timestamp = timestamp, Value = value, Sequence = rnd.Next()
+            Timestamp = timestamp, Value = value, Sequence = _rnd.Next()
         };
         var json = JsonSerializer.Serialize(tempGen);
 
@@ -153,10 +145,10 @@ public class MqttSensorLoadTest : LoadTestBase
         using var scope = MqttFactory.Services.CreateScope();
         var repo = scope.ServiceProvider.GetRequiredService<IInfluxRepo>();
 
-        foreach (var sensor in _topicSettings.OrderBy(x => x.SensorName))
+        foreach (var sensor in _topicSettings!.OrderBy(x => x.SensorName))
         {
             var recordCount = 0;
-            await foreach (var row in repo.GetSensorWeatherData(start, end, sensor.SensorName)) recordCount++;
+            await foreach (var row in repo.GetSensorWeatherData(start, end, sensor.SensorName!)) recordCount++;
 
             Assert.That(recordCount, Is.GreaterThan(0),
                 $"Expected more than 0 records in InfluxDB but found {recordCount} - Sensor: {sensor.SensorName}");

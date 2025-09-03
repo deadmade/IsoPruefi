@@ -99,9 +99,9 @@ public class TempSensorReadingTests
         reading.Sequence.Should().Be(42);
         reading.Meta.Should().NotBeNull();
         reading.Meta.Should().NotBeNull();
-        reading.Meta.Timestamp[0].Should().Be(1234567888);
-        reading.Meta.Value[0].Should().Be(24.0);
-        reading.Meta.Sequence[0].Should().Be(40);
+        reading.Meta.Timestamp![0].Should().Be(1234567888);
+        reading.Meta.Value![0].Should().Be(24.0);
+        reading.Meta.Sequence![0].Should().Be(40);
     }
 
     /// <summary>

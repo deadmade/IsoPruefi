@@ -145,7 +145,7 @@ public class RestApiLoadTest : LoadTestBase
                     );
                     return Response.Ok();
                 }
-                catch (ApiException ex)
+                catch (ApiException)
                 {
                     return Response.Ok();
                 }

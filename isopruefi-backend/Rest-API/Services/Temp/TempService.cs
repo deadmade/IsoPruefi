@@ -12,11 +12,29 @@ namespace Rest_API.Services.Temp;
 /// </summary>
 public class TempService : ITempService
 {
+    /// <summary>
+    ///     Application configuration used to retrieve settings such as API keys or URLs.
+    /// </summary>
     private readonly IConfiguration _configuration;
+    
+    /// <summary>
+    ///     Repository used to access coordinate data and mappings.
+    /// </summary>
     private readonly ICoordinateRepo _coordinateRepo;
-
+    
+    /// <summary>
+    ///     The base URL or API key for the geocoding service used in this service.
+    /// </summary>
     private readonly string _geocodingApi;
+    
+    /// <summary>
+    ///     Factory used to create <see cref="HttpClient"/> instances for making HTTP requests.
+    /// </summary>
     private readonly IHttpClientFactory _httpClientFactory;
+    
+    /// <summary>
+    ///     Logger instance used to capture diagnostic and error information for the <see cref="TempService"/>.
+    /// </summary>
     private readonly ILogger<TempService> _logger;
 
     /// <summary>
@@ -71,10 +89,10 @@ public class TempService : ITempService
                             rootElement.TryGetProperty("lon", out var lon) &&
                             rootElement.TryGetProperty("display_name", out var location))
                         {
-                            var latDouble = double.Parse(lat.GetString(), CultureInfo.InvariantCulture);
-                            var lonDouble = double.Parse(lon.GetString(), CultureInfo.InvariantCulture);
+                            var latDouble = double.Parse(lat.GetString()!, CultureInfo.InvariantCulture);
+                            var lonDouble = double.Parse(lon.GetString()!, CultureInfo.InvariantCulture);
                             var locationString = location.GetString();
-                            var splitLocation = locationString.Split(",");
+                            var splitLocation = locationString!.Split(",");
                             var locationName = splitLocation[1];
 
                             var postalCodeLocation = new CoordinateMapping
@@ -138,6 +156,11 @@ public class TempService : ITempService
         return null;
     }
 
+    /// <summary>
+    /// Calls an API to retrieve coordinates for a location.
+    /// </summary>
+    /// <param name="postalCode">Postalcode.</param>
+    /// <returns>The API response message.</returns>
     private async Task<HttpResponseMessage?> GetCoordinatesApi(int postalCode)
     {
         // If there is no entry an API will be used to get the coordinates.

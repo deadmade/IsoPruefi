@@ -9,6 +9,7 @@ namespace IntegrationTests.Controllers;
 ///     functionality.
 /// </summary>
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class TemperatureDataControllerIntegrationTests : ApiClientTestBase
 {
     /// <summary>

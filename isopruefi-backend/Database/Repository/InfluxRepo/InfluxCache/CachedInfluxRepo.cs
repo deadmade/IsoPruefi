@@ -80,6 +80,28 @@ public class CachedInfluxRepo : IInfluxRepo
             throw;
         }
     }
+    
+    /// <inheritdoc />
+    public async Task WriteUptime(string sensor, long timestamp)
+    {
+        try
+        {
+            var dateTimeUtc = DateTimeOffset
+                .FromUnixTimeSeconds(timestamp)
+                .UtcDateTime;
+
+            var point = PointData.Measurement("uptime")
+                .SetField("sensor", sensor)
+                .SetTimestamp(dateTimeUtc);
+
+            await _client.WritePointAsync(point);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error writing uptime into InfluxDB");
+            throw;
+        }
+    }
 
     /// <inheritdoc />
     public async IAsyncEnumerable<object?[]> GetOutsideWeatherData(DateTime start, DateTime end, string place)
@@ -157,27 +179,6 @@ public class CachedInfluxRepo : IInfluxRepo
         }
     }
 
-    public async Task WriteUptime(string sensor, long timestamp)
-    {
-        try
-        {
-            var dateTimeUtc = DateTimeOffset
-                .FromUnixTimeSeconds(timestamp)
-                .UtcDateTime;
-
-            var point = PointData.Measurement("uptime")
-                .SetField("sensor", sensor)
-                .SetTimestamp(dateTimeUtc);
-
-            await _client.WritePointAsync(point);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error writing uptime into InfluxDB");
-            throw;
-        }
-    }
-
     ///<inheritdoc />
     public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
     {
@@ -200,7 +201,6 @@ public class CachedInfluxRepo : IInfluxRepo
     /// </summary>
     /// <param name="point">The PointData to write</param>
     /// <param name="dataType">Type of data for logging purposes (sensor/weather)</param>
-    /// <param name="writeToCache"></param>
     private async Task WritePointWithCache(PointData point, string dataType)
     {
         try

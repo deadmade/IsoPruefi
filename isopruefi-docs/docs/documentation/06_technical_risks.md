@@ -5,22 +5,27 @@
 **Overview of the Entire Product:**
 
 - **Temperature Measurement and Transmission:**
-    - Involves temperature sensors, RTC modules, Arduino, SD module/card, and access to online weather data
+    - Measuring temperature via temp sensors (and RTC modules) and APIs as a source for outside weather data
+    - Transmission of data via WiFi/MQTT from the Arduino to the MQTT Broker
+    - Saving the data on the Arduino in case of loss of connection
 - **Data Storage:**
-    - Utilizes a database for storing temperature data
+    - Databases: Postgres and Influx
+    - Caching of data on local storage in case of problems
 - **Analysis/Evaluation:**
-    - Data is analyzed and evaluated, with results visualized via website or analytics tools
+    - Results are displayed on a frontend web page
 
 **Components Involved:**
 
-- **Temperature Measurement:**
-    - Temperature sensors, RTC modules, Arduino, SD module/card, online weather data availability
-- **Temperature Transmission:**
-    - Network availability, server infrastructure
-- **Data Storage:**
-    - Database systems
+- **Temperature Measurement:**  
+    - Temperature sensors, RTC modules, Arduino and SD module/card for inside temperatures
+    - Online weather via API for outside temperature
+- **Temperature Transmission:**  
+    - Network/WiFi
+- **Data Storage:**  
+    - Database systems: Postgres and Influx
+    - Caching
 - **Visualization/Analysis:**
-    - Data availability, website, analytics platforms
+    - - Data availability, website, analytics platforms
 
 **Process Aspects:**
 
@@ -44,6 +49,7 @@
     - Sensor errors (e.g., incorrect calibration, hardware malfunction, sensor failure, power supply issues, incorrect interval configuration)
     - Misassignment of data (e.g., north/south confusion)
     - Weather service outages
+    - Outage of containers processing data
 - **Data Transmission:**
     - Network outages or connectivity issues
     - Duplicate data transmission
@@ -51,7 +57,7 @@
     - Incorrect or duplicate entries
     - Database corruption or failure
 - **Visualization/Analysis:**
-    - Website or Grafana unavailability
+    - Website unavailability
     - Incorrect data presented for visualization
 
 ### Impacts
@@ -65,32 +71,60 @@
 
 ## 3. Evaluation of Errors and Consequences
 
-| Error                       | Probability of Occurrence |     Severity      |          Probability of Detection          | Risk Priority Number |
-|-----------------------------|:-------------------------:|:-----------------:|:------------------------------------------:|:--------------------:|
-| Sensor error                |      2-3 (unlikely)       |   8-9 (severe)    |         2-3 (inevitable detection)         |        32-81         |
-| Misassignment of data       |          3 (low)          | 6-7 (disturbance) | 5-6 (only detected during targeted checks) |        90-126        |
-| Weather service outage      |   1 (almost impossible)   |   8-9 (severe)    |         2-3 (inevitable detection)         |        16-27         |
-| Network outage              |       2 (unlikely)        |   8-9 (severe)    |         2-3 (inevitable detection)         |        31-45         |
-| Duplicate transmission      |       2 (unlikely)        |  2 (irrelevant)   | 5-6 (only detected during targeted checks) |        20-24         |
-| Incorrect/missing entries   |      2-3 (unlikely)       |   8-9 (severe)    |    3-4 (high probability of detection)     |        48-108        |
-| Database corruption         |      2-3 (unlikely)       |   8-9 (severe)    |    3-4 (high probability of detection)     |        48-108        |
-| Website/Grafana malfunction |   1 (almost impossible)   |   8-9 (severe)    |         2-3 (inevitable detection)         |        16-27         |
-| Power outage                |          3 (low)          |   8-9 (severe)    |         2-3 (inevitable detection)         |        48-81         |
+>[!info]- Old Evaluation
+>| Error                        | Probability of Occurrence| Severity        | Probability of Detection           | Risk Priority Number |
+>|------------------------------|:------------------------:|:---------------:|:----------------------------------:|:-------------------:|
+>| Sensor error                 | 2-3 (unlikely)           | 8-9 (severe)    | 2-3 (inevitable detection)         | 32-81               |
+>| Misassignment of data        | 3 (low)                  | 6-7 (disturbance)| 5-6 (only detected during targeted checks) | 90-126      |
+>| Weather service outage       | 1 (almost impossible)    | 8-9 (severe)    | 2-3 (inevitable detection)         | 16-27               |
+>| Network outage               | 2 (unlikely)             | 8-9 (severe)    | 2-3 (inevitable detection)         | 31-45               |
+>| Duplicate transmission       | 2 (unlikely)             | 2 (irrelevant)  | 5-6 (only detected during targeted checks) | 20-24        |
+>| Incorrect/missing entries    | 2-3 (unlikely)           | 8-9 (severe)    | 3-4 (high probability of detection)| 48-108              |
+>| Database corruption          | 2-3 (unlikely)           | 8-9 (severe)    | 3-4 (high probability of detection)| 48-108              |
+>| Website/Grafana malfunction  | 1 (almost impossible)    | 8-9 (severe)    | 2-3 (inevitable detection)         | 16-27               |
+>| Power outage                 | 3 (low)                  | 8-9 (severe)    | 2-3 (inevitable detection)         | 48-81               |
+
+| Error                        | Probability of Occurrence| Severity        | Probability of Detection           | Risk Priority Number |
+|------------------------------|:------------------------:|:---------------:|:----------------------------------:|:-------------------:|
+| Sensor error (wrong temp data)| 2-3 (unlikely)          | 8-9 (severe)    | 4-5 (high probability of detection)| 64-135               |
+| Sensor unavailability        | 2-3 (unlikely)           | 8-9 (severe)    | 2-3 (inevitable detection)         | 32-81                |
+| Misassignment of data        | 3 (low)                  | 6-7 (disturbance)| 5-6 (only detected during targeted checks) | 90-126      |
+| Weather service outage       | 1 (almost impossible)    | 7-8 (severe)    | 2-3 (inevitable detection)         | 16-27               |
+| Network outage               | 8 (likely)               | 3-4 (irrelevant)| 3-4 (high probability of detection)| 72-128              |
+| Duplicate transmission       | 2 (unlikely)             | 2 (irrelevant)  | 5-6 (only detected during targeted checks) | 20-24        |
+| Incorrect/missing entries    | 2-3 (unlikely)           | 6-7 (disturbance)| 3-4 (high probability of detection)| 36-84              |
+| Database corruption          | 2-3 (unlikely)           | 8-9 (severe)    | 3-4 (high probability of detection)| 48-108              |
+| Database unavailability      | 2-3 (unlikely)           | 3-4 (irrelevant)| 3-4 (high probability of detection)| 18-48               |
+| Website malfunction          | 2-3 (unlikely)           | 8-9 (severe)    | 2-3 (inevitable detection)         | 32-81               |
+| Power outage                 | 3 (low)                  | 8-9 (severe)    | 2-3 (inevitable detection)         | 48-81               |
 
 ---
 
 ## 4. Corrective actions
 
-| Error                       | Risk Priority Number | Mitigation Measure                            |
-|-----------------------------|:--------------------:|-----------------------------------------------|
-| Sensor error                |        32-81         | -                                             |
-| Misassignment of data       |        90-126        | Implement data validation and labeling checks |
-| Weather service outage      |        16-27         | Use fallback data sources                     |
-| Network outage              |        31-45         | Local storage of data on the Arduino          |
-| Duplicate transmission      |        20-24         | -                                             |
-| Incorrect/missing entries   |        48-108        | Input validation                              |
-| Database corruption         |        48-108        | -                                             |
-| Website/Grafana malfunction |        16-27         | Monitor uptime                                |
+>[!info]- Old Evaluation
+>| Error                        | Risk Priority Number | Mitigation Measure                                   |
+>|------------------------------|:-------------------:|------------------------------------------------------|
+>| Sensor error                 | 32-135              | -             |
+>| Misassignment of data        | 90-126              | Implement data validation and labeling checks         |
+>| Weather service outage       | 16-27               | Use fallback data sources               |
+>| Network outage               | 31-45               | Local storage of data on the Arduino                  |
+>| Duplicate transmission       | 20-24               | -         |
+>| Incorrect/missing entries    | 48-108              | Input validation |
+>| Database corruption          | 48-108              | -                  |
+>| Website malfunction  | 16-27               | Monitor uptime |
+
+| Error                        | Risk Priority Number | Mitigation Measure                                   |
+|------------------------------|:-------------------:|------------------------------------------------------|
+| Sensor error                 | 32-81               | In case of missing measurements -> alerting            |
+| Misassignment of data        | 90-126              | Implement data validation         |
+| Weather service outage       | 16-27               | Use fallback data source               |
+| Network outage               | 31-45               | Local storage of data on the Arduino                  |
+| Duplicate transmission       | 20-24               | -         |
+| Incorrect/missing entries    | 48-108              | Input validation |
+| Database corruption          | 48-108              | -                  |
+| Website malfunction          | 16-27               | Monitor uptime |
+| Container unavailability     | 18-81               | Clustering of containers, monitoring uptime and caching of data |
 
 ---
 

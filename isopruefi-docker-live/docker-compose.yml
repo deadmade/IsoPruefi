@@ -186,6 +186,8 @@ services:
   isopruefi-frontend-1:
     image: ghcr.io/deadmade/isopruefi-frontend:latest
     container_name: isopruefi-frontend-1
+    env_file:
+      - ./secrets.env
     ports:
       - 5007:80
     labels:
@@ -205,6 +207,8 @@ services:
   isopruefi-frontend-2:
     image: ghcr.io/deadmade/isopruefi-frontend:latest
     container_name: isopruefi-frontend-2
+    env_file:
+      - ./secrets.env
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=PathPrefix(`/frontend`)"

@@ -62,9 +62,11 @@ To get the development environment up and running, follow these steps:
    }
    ```
 
-6. Run dotnet user-secrets set "Influx:InfluxDBToken" "<Token>" --project isopruefi-backend\MQTT-Receiver-Worker\MQTT-Receiver-Worker.csproj
+6. Run dotnet user-secrets set "Influx:InfluxDBToken" "<Token>" --project <Path to .csproj>
+   
+7. Pase InfluxDBToken in secrets.env
 
-7. Restart the Containers
+8. Restart the Containers
 
 ---
 

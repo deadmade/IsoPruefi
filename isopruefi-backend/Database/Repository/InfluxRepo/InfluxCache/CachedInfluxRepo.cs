@@ -178,6 +178,23 @@ public class CachedInfluxRepo : IInfluxRepo
         }
     }
 
+    ///<inheritdoc />
+    public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
+    {
+        try
+        {
+            var query =
+                $"SELECT sensor, time FROM uptime WHERE sensor = '{sensor}'";
+
+            return _client.QueryPoints(query);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
+            throw;
+        }
+    }
+
     /// <summary>
     ///     Attempts to write a point to InfluxDB, caching it if the write fails.
     /// </summary>
@@ -190,7 +207,7 @@ public class CachedInfluxRepo : IInfluxRepo
         {
             await _client.WritePointAsync(point);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             var cacheKey = $"{CACHE_KEY_PREFIX}{dataType}:{Guid.NewGuid()}";
             var cacheExpiry = TimeSpan.FromHours(24);
@@ -210,7 +227,7 @@ public class CachedInfluxRepo : IInfluxRepo
 
         if (_memoryCache is not MemoryCache memCache) return cachedPoints;
 
-        foreach (var key in memCache.Keys) cachedPoints.Add(key, _memoryCache.Get<PointData>(key));
+        foreach (var key in memCache.Keys) cachedPoints.Add(key, _memoryCache.Get<PointData>(key)!);
 
         return cachedPoints;
     }

@@ -104,6 +104,18 @@ public class TemperatureDataController : ControllerBase
             var temperatureData = await CombineTempData(start, end, place, isFahrenheit);
             return Ok(temperatureData);
         }
+        catch (ArgumentException e)
+        {
+            _logger.LogWarning(e, "Bad request during GetTemperature: {Message}", e.Message);
+            var exceptionDetails = new ProblemDetails
+            {
+                Detail = e.Message,
+                Status = StatusCodes.Status400BadRequest,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Title = "Bad Request"
+            };
+            return BadRequest(exceptionDetails);
+        }
         catch (Exception e)
         {
             _logger.LogError(e, "Exception during GetTemperature");
@@ -111,7 +123,8 @@ public class TemperatureDataController : ControllerBase
             {
                 Detail = e.Message,
                 Status = StatusCodes.Status500InternalServerError,
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
             };
             return StatusCode(StatusCodes.Status500InternalServerError, exceptionDetails);
         }
@@ -186,9 +199,8 @@ public class TemperatureDataController : ControllerBase
                 _logger.LogWarning(warning);
 
                 sensorData[i].Plausibility += "\n" + warning;
-               
             }
-            
+
             sensorData[i].Temperature = tempConverter(sensorData[i].Temperature);
         }
 

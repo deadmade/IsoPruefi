@@ -103,8 +103,8 @@ public class Worker : BackgroundService
         var lastSubscription = DateTime.UtcNow;
         while (!stoppingToken.IsCancellationRequested && _connection.IsConnected)
         {
-            await Task.Delay(_healthCheckInterval, stoppingToken); 
-            
+            await Task.Delay(_healthCheckInterval, stoppingToken);
+
             if (!_connection.IsConnected)
             {
                 _logger.LogWarning("MQTT connection lost. Will attempt to reconnect...");
@@ -112,7 +112,7 @@ public class Worker : BackgroundService
             }
 
             if (lastSubscription.AddHours(1) >= DateTime.UtcNow) continue;
-            
+
             await _receiver.SubscribeToTopics();
             _logger.LogInformation("Successfully subscribed to MQTT topics");
         }

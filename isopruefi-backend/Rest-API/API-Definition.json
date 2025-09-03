@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "IsoPruefi API",
@@ -49,7 +49,7 @@
           "Authentication"
         ],
         "summary": "Registers a new user in the system. Admin access required.",
-        "description": "This endpoint allows administrators to create new user accounts in the system.\nOnly users with the \"Admin\" role can access this endpoint.\n**Authorization Required**: Bearer token with Admin role\nExample request:\n```json\n{\n\"userName\": \"newuser\",\n\"password\": \"secure-password\"\n}\n```\nThe new user will be created with the \"User\" role by default and can access\ntemperature data endpoints but cannot perform administrative functions.",
+        "description": "Only users with the \"Admin\" role can access this endpoint.\n**Authorization Required**: Bearer token with Admin role\nExample request:\n```json\n{\n\"userName\": \"newuser\",\n\"password\": \"secure-password\"\n}\n```\nThe new user will be created with the \"User\" role by default and can access\ntemperature data endpoints but cannot perform administrative functions.",
         "operationId": "Authentication_Register",
         "requestBody": {
           "x-name": "input",
@@ -990,9 +990,11 @@
           },
           "coordinateMappingId": {
             "type": "integer",
+            "description": "Gets or sets the foreign key for the related CoordinateMapping entity.\n            ",
             "format": "int32"
           },
           "coordinateMapping": {
+            "description": "Navigation property for the related CoordinateMapping entity.\n            ",
             "nullable": true,
             "oneOf": [
               {
@@ -1076,7 +1078,23 @@
       },
       "SensorType": {
         "type": "integer",
-        "description": "",
+        "description": "Represents the different types of sensors available in the system.\n            ",
+        "x-enum-names": [
+          "temp",
+          "spl",
+          "hum",
+          "ikea",
+          "co2",
+          "mic"
+        ],
+        "x-enum-varnames": [
+          "temp",
+          "spl",
+          "hum",
+          "ikea",
+          "co2",
+          "mic"
+        ],
         "x-enumNames": [
           "temp",
           "spl",
@@ -1084,6 +1102,22 @@
           "ikea",
           "co2",
           "mic"
+        ],
+        "x-enum-descriptions": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "x-enumDescriptions": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
         ],
         "enum": [
           0,

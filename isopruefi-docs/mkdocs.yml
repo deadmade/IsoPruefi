@@ -1,14 +1,21 @@
 site_name: IsoPrüfi
 docs_dir: ./docs
-site_url: https://github.com/deadmade/IsoPruefi
+site_url: https://deadmade.github.io/IsoPruefi/
 repo_url: https://github.com/deadmade/IsoPruefi
 repo_name: "deadmade/IsoPruefi"
 
 
 nav:
   - Home: index.md
-  - Build: build.md
-  - Dev-Guidelines: guidelines.md
+  - Getting Started:
+      - Build & Setup: build.md
+      - Docker Environment: docker-dev.md
+      - Contributing: contributing.md
+  - Development:
+      - Guidelines: guidelines.md
+      - API Reference: api-reference.md
+      - API V1: api-v1.md
+      - Troubleshooting: troubleshooting.md
   - Code Documentation:
       - Rest-API: code/Rest-API/index.md
       - MQTT-Receiver-Worker: code/MQTT-Receiver-Worker/index.md
@@ -25,6 +32,7 @@ nav:
           - Utils: code/frontend/utils
   - Docker:
       - Docker Dev Environment: docker-dev.md
+      - Environment Files: environment-files.md
   - IsoPrüfi Documentation:
       - 01 Introduction and Goals: documentation/01_introduction_and_goals.md
       - 02 Quality Requirements: documentation/02_quality_requirements.md
@@ -76,7 +84,9 @@ plugins:
   - git-revision-date-localized
   - git-authors
   - callouts
-  - to-pdf
+  - render_swagger:
+      allow_arbitrary_locations: true
+  #- to-pdf
 markdown_extensions:
   - pymdownx.extra
   - pymdownx.highlight
@@ -118,3 +128,17 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - admonition
+  - footnotes
+  - md_in_html
+  - meta
+  - nl2br
+  - toc:
+      permalink: true
+      toc_depth: 2

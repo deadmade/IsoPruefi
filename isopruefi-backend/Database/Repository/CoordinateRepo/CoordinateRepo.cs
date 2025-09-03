@@ -36,6 +36,15 @@ public class CoordinateRepo : ICoordinateRepo
         var entry = await _applicationDbContext.CoordinateMappings.AnyAsync(c => c.PostalCode == postalcode);
         return entry;
     }
+    
+    /// <inheritdoc />
+    public async Task UpdateTime(int postalCode, DateTime newTime)
+    {
+        var entry = await _applicationDbContext.CoordinateMappings.FirstAsync(c => c.PostalCode == postalCode);
+        entry.LastUsed = newTime;
+
+        await _applicationDbContext.SaveChangesAsync();
+    }
 
     /// <inheritdoc />
     public async Task<List<Tuple<int, string>>> GetAllLocations()
@@ -43,6 +52,16 @@ public class CoordinateRepo : ICoordinateRepo
         var result = await _applicationDbContext.CoordinateMappings
             .Select(c => new Tuple<int, string>(c.PostalCode, c.Location))
             .ToListAsync();
+
+        return result;
+    }
+    
+    /// <inheritdoc />
+    public async Task<CoordinateMapping?> GetLocation()
+    {
+        var result = await _applicationDbContext.CoordinateMappings
+            .OrderByDescending(c => c.LastUsed)
+            .FirstOrDefaultAsync();
 
         return result;
     }

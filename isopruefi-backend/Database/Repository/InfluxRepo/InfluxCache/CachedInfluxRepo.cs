@@ -178,23 +178,6 @@ public class CachedInfluxRepo : IInfluxRepo
             bucketStart = bucketEnd;
         }
     }
-    
-    /// <inheritdoc />
-    public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)
-    {
-        try
-        {
-            var query =
-                $"SELECT sensor, time FROM uptime WHERE sensor = '{sensor}'";
-
-            return _client.QueryPoints(query);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error retrieving outside weather data from InfluxDB");
-            throw;
-        }
-    }
 
     ///<inheritdoc />
     public IAsyncEnumerable<PointDataValues> GetUptime(string sensor)

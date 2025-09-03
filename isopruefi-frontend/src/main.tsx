@@ -12,15 +12,20 @@ import { BrowserRouter } from "react-router-dom";
  */
 async function start() {
     try {
-        const res = await fetch("/config.json", {cache: "no-store"});
+        // Determine config path based on environment
+        const configPath = import.meta.env.PROD ? '/frontend/config.json' : '/config.json';
+        const res = await fetch(configPath, {cache: "no-store"});
         (window as any).__APP_CONFIG__ = res.ok ? await res.json() : {};
     } catch {
         (window as any).__APP_CONFIG__ = {};
     }
 
+    // Determine base path based on environment
+    const basename = import.meta.env.PROD ? '/frontend' : '';
+
     ReactDOM.createRoot(document.getElementById("root")!).render(
         <React.StrictMode>
-            <BrowserRouter>
+            <BrowserRouter basename={basename}>
                 <AuthProvider>
                     <App />
                 </AuthProvider>

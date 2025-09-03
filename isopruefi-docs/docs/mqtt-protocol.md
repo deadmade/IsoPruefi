@@ -11,7 +11,7 @@ IsoPrüfi uses MQTT for sensor data communication between Arduino devices and th
 {topicPrefix}/{sensorType}/{sensorId}
 ```
 
-**Example**: `dhbw/ai/si2023/temp/sensor001`
+**Example**: `dhbw/ai/si2023/temp/Sensor_One`
 
 ### Topic Components
 - **topicPrefix**: Configurable prefix (default: `dhbw/ai/si2023/`)
@@ -48,27 +48,12 @@ IsoPrüfi uses MQTT for sensor data communication between Arduino devices and th
 | Field | Type | Description |
 |-------|------|-------------|
 | timestamp | long | Unix timestamp (seconds since epoch) |
-| value | double[] | Sensor readings (array for multi-point sensors) |
+| value | float[] | Sensor readings (array for multi-point sensors) |
 | sequence | int | Sequential counter for message ordering |
 | meta.t | long[] | Recovery timestamps |
-| meta.v | double[] | Recovery values |
+| meta.v | float[] | Recovery values |
 | meta.s | int[] | Recovery sequence numbers |
 
-## Quality of Service
-
-- **QoS Level**: 0 (At most once delivery)
-- **Acknowledgment**: Echo-based confirmation system
-- **Recovery**: Offline data stored locally and sent when connection restored
-- **Timeout**: 5 seconds for ACK, 10 seconds for recovery ACK
-
-## Connection Parameters
-
-- **Keep Alive**: Configurable
-- **Clean Session**: True
-- **Retained Messages**: Ignored for acknowledgment
-- **Buffer Sizes**: 
-  - Small payloads: 128 bytes
-  - Large payloads (recovery): 2048 bytes
 
 ## Error Handling
 

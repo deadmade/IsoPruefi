@@ -14,7 +14,7 @@ export class AuthenticationClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "";
+        this.baseUrl = baseUrl ?? (import.meta.env?.VITE_API_BASE_URL ?? "");
     }
 
     /**
@@ -193,7 +193,7 @@ export class LocationClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "";
+        this.baseUrl = baseUrl ?? (import.meta.env?.VITE_API_BASE_URL ?? "");
     }
 
     /**
@@ -332,7 +332,7 @@ export class TemperatureDataClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "";
+        this.baseUrl = baseUrl ?? (import.meta.env?.VITE_API_BASE_URL ?? "");
     }
 
     /**
@@ -426,7 +426,7 @@ export class TopicClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "";
+        this.baseUrl = baseUrl ?? (import.meta.env?.VITE_API_BASE_URL ?? "");
     }
 
     /**
@@ -770,7 +770,7 @@ export class UserInfoClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "";
+        this.baseUrl = baseUrl ?? (import.meta.env?.VITE_API_BASE_URL ?? "");
     }
 
     /**

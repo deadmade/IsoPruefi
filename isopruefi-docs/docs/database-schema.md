@@ -69,9 +69,9 @@ Sensor temperature readings from Arduino devices.
 
 | Field/Tag | Type | Description |
 |-----------|------|-------------|
-| value (field) | double | Temperature measurement |
+| value (field) | float | Temperature measurement |
 | sensor (tag) | string | Sensor identifier |
-| sequence (tag) | string | Message sequence number |
+| sequence (tag) | int | Message sequence number |
 | timestamp | DateTime | Measurement timestamp |
 
 #### outside_temperature  
@@ -79,8 +79,8 @@ External weather data from APIs.
 
 | Field/Tag | Type | Description |
 |-----------|------|-------------|
-| value (field) | double | Temperature in Celsius |
-| value_fahrenheit (field) | double | Temperature in Fahrenheit |
+| value (field) | float | Temperature in Celsius |
+| value_fahrenheit (field) | float | Temperature in Fahrenheit |
 | postalcode (field) | int | Associated postal code |
 | place (tag) | string | Location name |
 | website (tag) | string | Data source API |

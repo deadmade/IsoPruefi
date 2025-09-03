@@ -47,10 +47,10 @@ IsoPrüfi uses MQTT for sensor data communication between Arduino devices and th
 
 | Field | Type | Description |
 |-------|------|-------------|
-| timestamp | long | Unix timestamp (seconds since epoch) |
+| timestamp | DateTime | Unix timestamp (seconds since epoch) |
 | value | float[] | Sensor readings (array for multi-point sensors) |
 | sequence | int | Sequential counter for message ordering |
-| meta.t | long[] | Recovery timestamps |
+| meta.t | DateTime[] | Recovery timestamps |
 | meta.v | float[] | Recovery values |
 | meta.s | int[] | Recovery sequence numbers |
 

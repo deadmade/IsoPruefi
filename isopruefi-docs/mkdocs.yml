@@ -1,7 +1,5 @@
 site_name: IsoPrüfi
-subtitle: Documentation
-author: "Manuel Schülein, Mara Küfer, Danylo Tulainov, Diana Huynh"
-date: "September 2025"
+site_author: Manuel Schülein, Mara Küfer, Danylo Tulainov, Diana Huynh
 copyright: " "
 docs_dir: ./docs
 site_url: https://deadmade.github.io/IsoPruefi/
@@ -98,7 +96,12 @@ plugins:
   - callouts
   - render_swagger:
       allow_arbitrary_locations: true
-  - to-pdf
+  - to-pdf:
+      cover_title: "IsoPrüfi"
+      cover_subtitle: "Documentation"
+      cover_author: "Manuel Schülein, Mara Küfer, Danylo Tulainov, Diana Huynh"
+      cover_date: "September 2025"
+
 markdown_extensions:
   - pymdownx.extra
   - pymdownx.highlight

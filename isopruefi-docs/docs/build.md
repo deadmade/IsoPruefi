@@ -64,7 +64,7 @@ To get the development environment up and running, follow these steps:
 
 6. Run dotnet user-secrets set "Influx:InfluxDBToken" "<Token>" --project <Path to .csproj>
    
-7. Pase InfluxDBToken in secrets.env
+7. Paste InfluxDBToken in secrets.env
 
 8. Restart the Containers
 

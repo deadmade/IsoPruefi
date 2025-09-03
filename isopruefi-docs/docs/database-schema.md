@@ -2,7 +2,9 @@
 
 ## Overview
 
-IsoPrüfi uses Entity Framework Core with PostgreSQL for data persistence. The schema includes user management, geographic mapping, and MQTT topic configuration.
+IsoPrüfi uses a dual database approach:
+- **PostgreSQL** with Entity Framework Core for relational data (users, settings, coordinates)
+- **InfluxDB** for time-series sensor data and metrics
 
 ## Core Entities
 
@@ -57,3 +59,43 @@ Available sensor types:
 cd isopruefi-backend
 dotnet ef migrations add <MigrationName> --project ./Database/Database.csproj --startup-project ./Rest-API/Rest-API.csproj
 ```
+
+## InfluxDB Schema
+
+### Measurements
+
+#### temperature
+Sensor temperature readings from Arduino devices.
+
+| Field/Tag | Type | Description |
+|-----------|------|-------------|
+| value (field) | double | Temperature measurement |
+| sensor (tag) | string | Sensor identifier |
+| sequence (tag) | string | Message sequence number |
+| timestamp | DateTime | Measurement timestamp |
+
+#### outside_temperature  
+External weather data from APIs.
+
+| Field/Tag | Type | Description |
+|-----------|------|-------------|
+| value (field) | double | Temperature in Celsius |
+| value_fahrenheit (field) | double | Temperature in Fahrenheit |
+| postalcode (field) | int | Associated postal code |
+| place (tag) | string | Location name |
+| website (tag) | string | Data source API |
+| timestamp | DateTime | Measurement timestamp |
+
+#### uptime
+Arduino device availability tracking.
+
+| Field/Tag | Type | Description |
+|-----------|------|-------------|
+| sensor (field) | string | Sensor identifier |
+| timestamp | DateTime | Uptime check timestamp |
+
+### Configuration
+
+- **Database**: `IsoPruefi` (configurable)
+- **Connection**: Token-based authentication
+- **Client**: InfluxDB3 .NET client

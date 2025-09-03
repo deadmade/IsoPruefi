@@ -12,10 +12,25 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// </summary>
 public class Receiver : IReceiver
 {
+    /// <summary>
+    ///     Configuration for retrieving settings.
+    /// </summary>
     private readonly IConfiguration _configuration;
-    private readonly IConnection _connection;
-    private readonly ILogger<Receiver> _logger;
+    
+    /// <summary>
+    ///     Service provider for accessing the application's services.
+    /// </summary>
     private readonly IServiceProvider _serviceProvider;
+    
+    /// <summary>
+    ///     Connection instance for receiving messages.
+    /// </summary>
+    private readonly IConnection _connection;
+    
+    /// <summary>
+    ///     Logger instance for documenting diagnostics.
+    /// </summary>
+    private readonly ILogger<Receiver> _logger;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="Receiver" /> class.
@@ -23,6 +38,7 @@ public class Receiver : IReceiver
     /// <param name="serviceProvider">Service provider for dependency injection.</param>
     /// <param name="connection">Connection manager for the MQTT client.</param>
     /// <param name="logger">Logger for diagnostic information.</param>
+    /// <param name="configuration"></param>
     public Receiver(IServiceProvider serviceProvider, IConnection connection, ILogger<Receiver> logger,
         IConfiguration configuration)
     {
@@ -85,6 +101,12 @@ public class Receiver : IReceiver
         }
     }
 
+    /// <summary>
+    ///     Subscribes the client to the specified topic.
+    /// </summary>
+    /// <param name="topic">Specified topic</param>
+    /// <param name="mqttClient">Client used for subscription</param>
+    /// <param name="hasRecovery">Includes recovery topic</param>
     private async Task SubscribeToTopic(string topic, IMqttClient mqttClient, bool hasRecovery)
     {
         try

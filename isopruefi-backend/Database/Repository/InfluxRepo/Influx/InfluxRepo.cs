@@ -9,16 +9,22 @@ namespace Database.Repository.InfluxRepo.Influx;
 /// <inheritdoc />
 public class InfluxRepo : IInfluxRepo
 {
+    /// <summary>
+    ///     InfluxDb client for communicating with the server.
+    /// </summary>
     private readonly InfluxDBClient _client;
+    
+    /// <summary>
+    ///     The logger instance used to record diagnostic information.
+    /// </summary>
     private readonly ILogger<InfluxRepo> _logger;
-
-
+    
     /// <summary>
     ///     Constructor for the InfluxRepo class.
     /// </summary>
-    /// <param name="configuration"></param>
-    /// <param name="logger"></param>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="configuration">Configuration used to retrieve the settings.</param>
+    /// <param name="logger">Logger instance for capturing diagnostics.</param>
+    /// <exception cref="ArgumentException">Thrown when the configurations are missing.</exception>
     public InfluxRepo(IConfiguration configuration, ILogger<InfluxRepo> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -132,8 +138,7 @@ public class InfluxRepo : IInfluxRepo
             bucketStart = bucketEnd;
         }
     }
-
-
+    
     /// <inheritdoc />
     public async IAsyncEnumerable<object?[]> GetSensorWeatherData(DateTime start, DateTime end, string sensor)
     {

@@ -8,6 +8,7 @@ namespace IntegrationTests.Controllers;
 ///     Integration tests for the Location Controller to verify postal code management and location-based functionality.
 /// </summary>
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class LocationControllerIntegrationTests : ApiClientTestBase
 {
     /// <summary>

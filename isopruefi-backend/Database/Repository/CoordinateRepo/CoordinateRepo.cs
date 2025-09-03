@@ -9,12 +9,15 @@ namespace Database.Repository.CoordinateRepo;
 /// </summary>
 public class CoordinateRepo : ICoordinateRepo
 {
+    /// <summary>
+    ///     The application's database context.
+    /// </summary>
     private readonly ApplicationDbContext _applicationDbContext;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="CoordinateRepo" /> class.
     /// </summary>
-    /// <param name="applicationDbContext"></param>
+    /// <param name="applicationDbContext">The database context for settings.</param>
     public CoordinateRepo(ApplicationDbContext applicationDbContext)
     {
         _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
@@ -33,7 +36,7 @@ public class CoordinateRepo : ICoordinateRepo
         var entry = await _applicationDbContext.CoordinateMappings.AnyAsync(c => c.PostalCode == postalcode);
         return entry;
     }
-
+    
     /// <inheritdoc />
     public async Task UpdateTime(int postalCode, DateTime newTime)
     {
@@ -44,6 +47,16 @@ public class CoordinateRepo : ICoordinateRepo
     }
 
     /// <inheritdoc />
+    public async Task<List<Tuple<int, string>>> GetAllLocations()
+    {
+        var result = await _applicationDbContext.CoordinateMappings
+            .Select(c => new Tuple<int, string>(c.PostalCode, c.Location))
+            .ToListAsync();
+
+        return result;
+    }
+    
+    /// <inheritdoc />
     public async Task<CoordinateMapping?> GetLocation()
     {
         var result = await _applicationDbContext.CoordinateMappings
@@ -52,22 +65,12 @@ public class CoordinateRepo : ICoordinateRepo
 
         return result;
     }
-
+    
     /// <inheritdoc />
     public async Task<CoordinateMapping?> GetLocation(string place)
     {
         var result = await _applicationDbContext.CoordinateMappings
             .FirstOrDefaultAsync(c => c.Location == place);
-
-        return result;
-    }
-
-    /// <inheritdoc />
-    public async Task<List<Tuple<int, string>>> GetAllLocations()
-    {
-        var result = await _applicationDbContext.CoordinateMappings
-            .Select(c => new Tuple<int, string>(c.PostalCode, c.Location))
-            .ToListAsync();
 
         return result;
     }
@@ -93,7 +96,7 @@ public class CoordinateRepo : ICoordinateRepo
         await transaction.CommitAsync();
         return null;
     }
-
+    
     /// <inheritdoc />
     public async Task DeletePostalCode(int postalcode)
     {

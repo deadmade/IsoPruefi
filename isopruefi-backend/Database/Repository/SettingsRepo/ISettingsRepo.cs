@@ -17,6 +17,15 @@ public interface ISettingsRepo
     /// </returns>
     Task<List<TopicSetting>> GetTopicSettingsAsync();
 
+    /// <summary>
+    ///     Asynchronously retrieves a list of all topic settings for that place and sensor type.
+    /// </summary>
+    /// <param name="placeId">Place id</param>
+    /// <param name="sensorType">Sensor type</param>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains a list of
+    ///     <see cref="TopicSetting" /> objects.
+    /// </returns>
     Task<List<TopicSetting>> GetTopicSettingsAsync(int placeId, SensorType sensorType);
 
     /// <summary>
@@ -30,8 +39,7 @@ public interface ISettingsRepo
     /// <exception cref="ArgumentNullException">Thrown when topicSetting is null.</exception>
     /// <exception cref="InvalidOperationException">Thrown when the add operation fails.</exception>
     Task<int> AddTopicSettingAsync(TopicSetting topicSetting);
-
-
+    
     /// <summary>
     ///     Asynchronously updates a  topic setting
     /// </summary>

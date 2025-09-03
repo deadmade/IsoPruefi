@@ -226,11 +226,13 @@
         "tags": [
           "Location"
         ],
+        "summary": "Deletes location from the database.",
         "operationId": "Location_RemovePostalcode",
         "parameters": [
           {
             "name": "postalCode",
             "in": "query",
+            "description": "Postalcode",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -240,7 +242,7 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Ok if successful; otherwise, an error response."
           }
         },
         "security": [
@@ -409,10 +411,11 @@
         "tags": [
           "Topic"
         ],
+        "summary": "Retrieves all available sensor types from the system.",
         "operationId": "Topic_GetAllSensorTypes",
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successfully retrieved the list of sensor types.",
             "content": {
               "application/json": {
                 "schema": {
@@ -425,7 +428,7 @@
             }
           },
           "401": {
-            "description": "",
+            "description": "Authentication required. No valid JWT token provided.",
             "content": {
               "application/json": {
                 "schema": {
@@ -435,7 +438,7 @@
             }
           },
           "403": {
-            "description": "",
+            "description": "Access denied. Insufficient privileges to access sensor type information.",
             "content": {
               "application/json": {
                 "schema": {
@@ -445,7 +448,7 @@
             }
           },
           "500": {
-            "description": ""
+            "description": "Internal server error. Enum parsing or configuration service unavailable."
           }
         }
       }
@@ -526,9 +529,11 @@
         "tags": [
           "Topic"
         ],
+        "summary": "Updates an existing MQTT topic setting in the system.",
         "operationId": "Topic_UpdateTopic",
         "requestBody": {
           "x-name": "topicSetting",
+          "description": "The topic setting object containing updated configuration.",
           "content": {
             "application/json": {
               "schema": {
@@ -541,7 +546,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successfully updated the topic setting.",
             "content": {
               "application/json": {
                 "schema": {}
@@ -549,7 +554,7 @@
             }
           },
           "400": {
-            "description": "",
+            "description": "Bad request. The provided topic setting is invalid.",
             "content": {
               "application/json": {
                 "schema": {
@@ -559,7 +564,7 @@
             }
           },
           "401": {
-            "description": "",
+            "description": "Authentication required. No valid JWT token provided.",
             "content": {
               "application/json": {
                 "schema": {
@@ -569,7 +574,7 @@
             }
           },
           "403": {
-            "description": "",
+            "description": "Access denied. Admin role required to update topic settings.",
             "content": {
               "application/json": {
                 "schema": {
@@ -579,7 +584,7 @@
             }
           },
           "500": {
-            "description": ""
+            "description": "Internal server error. Database update failed or service unavailable."
           }
         },
         "security": [
@@ -594,9 +599,11 @@
         "tags": [
           "Topic"
         ],
+        "summary": "Deletes an existing MQTT topic setting from the system.",
         "operationId": "Topic_DeleteTopic",
         "requestBody": {
           "x-name": "topicSetting",
+          "description": "The topic setting object identifying the configuration to delete.",
           "content": {
             "application/json": {
               "schema": {
@@ -609,7 +616,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successfully deleted the topic setting.",
             "content": {
               "application/json": {
                 "schema": {}
@@ -617,7 +624,7 @@
             }
           },
           "400": {
-            "description": "",
+            "description": "Bad request. The provided topic setting is invalid.",
             "content": {
               "application/json": {
                 "schema": {
@@ -627,7 +634,7 @@
             }
           },
           "401": {
-            "description": "",
+            "description": "Authentication required. No valid JWT token provided.",
             "content": {
               "application/json": {
                 "schema": {
@@ -637,7 +644,7 @@
             }
           },
           "403": {
-            "description": "",
+            "description": "Access denied. Admin role required to delete topic settings.",
             "content": {
               "application/json": {
                 "schema": {
@@ -647,7 +654,7 @@
             }
           },
           "500": {
-            "description": ""
+            "description": "Internal server error. Database deletion failed or service unavailable."
           }
         },
         "security": [
@@ -927,6 +934,8 @@
         "properties": {
           "sensorData": {
             "type": "array",
+            "description": "Gets or sets the list of Sensor data for the inside temperature.\n            ",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/SensorData"
             }
@@ -934,6 +943,7 @@
           "temperatureOutside": {
             "type": "array",
             "description": "Gets or sets the list of temperature data for the outside location.\n            ",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/TemperatureData"
             }
@@ -942,16 +952,23 @@
       },
       "SensorData": {
         "type": "object",
+        "description": "Represents an overview of sensor data.\n            ",
         "additionalProperties": false,
         "properties": {
           "sensorName": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the name of the sensor.\n            ",
+            "nullable": true
           },
           "location": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the location of the sensor.\n            ",
+            "nullable": true
           },
           "temperatureDatas": {
             "type": "array",
+            "description": "Gets or sets the temperature data of the sensor.\n            ",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/TemperatureData"
             }
@@ -974,7 +991,8 @@
             "format": "double"
           },
           "plausibility": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the plausibility of the temperature data.\n            "
           }
         }
       },

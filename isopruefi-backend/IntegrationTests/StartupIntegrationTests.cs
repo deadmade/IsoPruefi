@@ -8,6 +8,7 @@ namespace IntegrationTests;
 ///     Integration tests to verify application startup and basic endpoint accessibility.
 /// </summary>
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class StartupIntegrationTests : IntegrationTestBase
 {
     /// <summary>

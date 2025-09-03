@@ -34,7 +34,6 @@ public class AuthenticationServiceTests
         _authService = new AuthenticationService(
             _mockLogger.Object,
             _mockUserManager.Object,
-            _mockRoleManager.Object,
             _mockTokenService.Object,
             _mockTokenRepo.Object);
     }
@@ -368,7 +367,7 @@ public class AuthenticationServiceTests
 
         // Act & Assert - Just verify the method exists and doesn't throw on setup
         var service = new AuthenticationService(_mockLogger.Object, _mockUserManager.Object,
-            _mockRoleManager.Object, _mockTokenService.Object, _mockTokenRepo.Object);
+             _mockTokenService.Object, _mockTokenRepo.Object);
         service.Should().NotBeNull();
 
         // Note: This test is limited due to UserManager.Users async operations

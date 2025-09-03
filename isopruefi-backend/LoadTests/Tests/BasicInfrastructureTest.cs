@@ -12,7 +12,7 @@ public class BasicInfrastructureTest : LoadTestBase
     ///     Tests that all infrastructure components are properly initialized
     /// </summary>
     [Test]
-    public async Task Test_Infrastructure_Setup()
+    public void Test_Infrastructure_Setup()
     {
         // Test that all components are initialized
         Assert.That(ApiFactory, Is.Not.Null, "Factory should be initialized");

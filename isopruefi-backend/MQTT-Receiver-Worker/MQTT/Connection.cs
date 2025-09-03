@@ -15,19 +15,50 @@ namespace MQTT_Receiver_Worker.MQTT;
 /// </summary>
 public class Connection : IConnection
 {
+    /// <summary>
+    ///     Application configuration used to retrieve settings related to MQTT or other services.
+    /// </summary>
     private readonly IConfiguration _configuration;
+    
+    /// <summary>
+    ///     Semaphore used to ensure that only one connection attempt happens at a time.
+    /// </summary>
     private readonly SemaphoreSlim _connectionSemaphore = new(1, 1);
+    
+    /// <summary>
+    ///     JSON serializer options used to serialize and deserialize messages sent/received via MQTT.
+    /// </summary>
     private readonly JsonSerializerOptions _jsonSerializerOptions;
+    
+    /// <summary>
+    ///     Logger instance used to capture diagnostic and error information.
+    /// </summary>
     private readonly ILogger<Connection> _logger;
+    
+    /// <summary>
+    ///     Options used to configure the MQTT client connection.
+    /// </summary>
     private readonly MqttClientOptions _options;
+    
+    /// <summary>
+    ///     Provides access to the application's service container for resolving dependencies.
+    /// </summary>
     private readonly IServiceProvider _serviceProvider;
+    
+    /// <summary>
+    ///     Indicates whether the MQTT client is currently connected to the broker.
+    /// </summary>
     private bool _isConnected;
+    
+    /// <summary>
+    ///     The MQTT client instance used to communicate with the broker.
+    /// </summary>
     private IMqttClient? _mqttClient;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="Connection" /> class.
     /// </summary>
-    /// <param name="serviceProvider"></param>
+    /// <param name="serviceProvider">Service Provider for services.</param>
     /// <param name="logger">Logger for recording connection events</param>
     /// <param name="configuration">Configuration for MQTT settings</param>
     public Connection(ILogger<Connection> logger, IServiceProvider serviceProvider, IConfiguration configuration)
@@ -52,6 +83,9 @@ public class Connection : IConnection
     /// </summary>
     public bool IsConnected => _isConnected && _mqttClient?.IsConnected == true;
 
+    /// <summary>
+    /// Gets a value indicating whether the client is subscribed to the necessary topics.
+    /// </summary>
     public bool IsSubscribed { get; set; }
 
     /// <summary>
@@ -158,14 +192,35 @@ public class Connection : IConnection
             .Build();
     }
 
-    private async Task Disconnected(MqttClientDisconnectedEventArgs e)
+    /// <summary>
+    ///     Handles the event when the MQTT client is disconnected from the broker.
+    /// </summary>
+    /// <param name="e">
+    ///     Event arguments containing information about the disconnection,
+    ///     including the reason and any exceptions that occurred.
+    /// </param>
+    /// <returns>
+    ///     A task that represents the asynchronous handling of the disconnection event.
+    /// </returns>
+    private Task Disconnected(MqttClientDisconnectedEventArgs e)
     {
         _isConnected = false;
         _logger.LogWarning("Disconnected from MQTT broker: {Reason}", e.Reason);
+        return Task.CompletedTask;
 
         // Don't immediately reconnect here - let the worker handle it with proper timing
     }
 
+    
+    /// <summary>
+    ///     Handles incoming MQTT messages from subscribed topics asynchronously.
+    /// </summary>
+    /// <param name="e">
+    ///     Event arguments containing the received MQTT application message.
+    /// </param>
+    /// <returns>
+    ///     A task that represents the asynchronous processing of the incoming message.
+    /// </returns>
     private async Task<Task> ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
     {
         try
@@ -213,6 +268,15 @@ public class Connection : IConnection
         return Task.FromResult(Task.CompletedTask);
     }
 
+    /// <summary>
+    ///     Processes a single temperature sensor reading asynchronously and writes it to the provided InfluxDB repository.
+    /// </summary>
+    /// <param name="tempSensorReading">The temperature sensor reading to process.</param>
+    /// <param name="sensorName">The name of the sensor that produced the reading.</param>
+    /// <param name="influxRepo">The InfluxDB repository used to persist the reading.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous processing operation.
+    /// </returns>
     private async Task<Task> ProcessSensorReading(TempSensorReading tempSensorReading, string sensorName,
         IInfluxRepo influxRepo)
     {
@@ -254,6 +318,15 @@ public class Connection : IConnection
         return Task.FromResult(Task.CompletedTask);
     }
 
+    /// <summary>
+    ///     Processes a batch of temperature sensor readings asynchronously writes them to the provided InfluxDB repository.
+    /// </summary>
+    /// <param name="tempSensorReading">The temperature sensor reading to process in batch.</param>
+    /// <param name="sensorName">The name of the sensor that produced the reading.</param>
+    /// <param name="influxRepo">The InfluxDB repository used to persist the batch of readings.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous batch processing operation.
+    /// </returns>
     private async Task<Task> ProcessBatchSensorReading(TempSensorReading tempSensorReading, string sensorName,
         IInfluxRepo influxRepo)
     {
@@ -272,9 +345,9 @@ public class Connection : IConnection
             return Task.FromResult(Task.CompletedTask);
         }
 
-        if (tempSensorReading.Meta.Sequence.Length != 0
-            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Timestamp.Length
-            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Value.Length)
+        if (tempSensorReading!.Meta!.Sequence!.Length != 0
+            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Timestamp!.Length
+            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Value!.Length)
         {
             var tempDataMeta = tempSensorReading.Meta;
             await Parallel.ForEachAsync(Enumerable.Range(0, tempDataMeta.Sequence.Length - 1),

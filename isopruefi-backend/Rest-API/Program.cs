@@ -28,8 +28,6 @@ using Rest_API.Services.User;
 
 namespace Rest_API;
 
-//Migration dotnet ef migrations add Init --project ./Database/Database.csproj --startup-project ./Rest-API/Rest-API.csproj
-
 /// <summary>
 ///     Main entry point for the application.
 /// </summary>

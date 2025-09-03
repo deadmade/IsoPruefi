@@ -52,6 +52,14 @@ jobs:
         working-directory: ./isopruefi-backend/UnitTests
         run: dotnet xmldoc2md ./bin/Debug/net9.0/UnitTests.dll ../../isopruefi-docs/docs/code/UnitTests
 
+      - name: Generate IntegrationTests Documentation
+        working-directory: ./isopruefi-backend/IntegrationTests
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/IntegrationTests.dll ../../isopruefi-docs/docs/code/IntegrationTests
+
+      - name: Generate LoadTests Documentation
+        working-directory: ./isopruefi-backend/LoadTests
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/LoadTests.dll ../../isopruefi-docs/docs/code/LoadTests
+
       - name: Install frontend dependencies
         working-directory: ./isopruefi-frontend
         run: npm ci

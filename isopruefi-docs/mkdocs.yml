@@ -14,16 +14,19 @@ nav:
       - Docker Environment: docker-dev.md
       - Contributing: contributing.md
   - Development:
-      - Guidelines: guidelines.md
-      - API Reference: api-reference.md
-      - API V1: api-v1.md
-      - Troubleshooting: troubleshooting.md
+       - Guidelines: guidelines.md
+       - Testing Strategy: testing-strategy.md
+       - API Reference: api-reference.md
+       - API V1: api-v1.md
+       - Troubleshooting: troubleshooting.md
   - Code Documentation:
       - Rest-API: code/Rest-API/index.md
       - MQTT-Receiver-Worker: code/MQTT-Receiver-Worker/index.md
       - MQTT-Sender: code/MQTT-Sender/index.md
       - Database: code/Database/index.md
       - UnitTests: code/UnitTests/index.md
+      - IntegrationTests: code/IntegrationTests/index.md
+      - LoadTests: code/LoadTests/index.md
       - Arduino: code/arduino/md/index.md
       - Frontend:
           - Overview: code/frontend/README.md
@@ -33,8 +36,13 @@ nav:
           - Pages: code/frontend/pages
           - Utils: code/frontend/utils
   - Docker:
-      - Docker Dev Environment: docker-dev.md
-      - Environment Files: environment-files.md
+       - Docker Dev Environment: docker-dev.md
+       - Environment Files: environment-files.md
+  - System Documentation:
+       - Database Schema: database-schema.md
+       - MQTT Protocol: mqtt-protocol.md
+       - Monitoring & Observability: monitoring.md
+       - Performance & Scaling: performance-scaling.md
   - IsoPrüfi Documentation:
       - 01 Introduction and Goals: documentation/01_introduction_and_goals.md
       - 02 Quality Requirements: documentation/02_quality_requirements.md

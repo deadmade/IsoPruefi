@@ -35,6 +35,12 @@ services:
     networks:
       - isopruefi-network
       - isopruefi-monitoring
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   influxdb3:
     image: influxdb:3.2.1-core
@@ -62,6 +68,12 @@ services:
       # - ./influx/bootstrap.sh:/docker-entrypoint-initdb.d/bootstrap.sh:ro
     networks:
       - isopruefi-network
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8181/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   influxdb-explorer:
     image: influxdata/influxdb3-ui:1.0.3
@@ -101,6 +113,12 @@ services:
       - POSTGRES_PASSWORD=secret
       - POSTGRES_USER=Isopruefi
       - POSTGRES_DB=Isopruefi
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   loki:
     image: grafana/loki:3.5.2
@@ -112,6 +130,12 @@ services:
       - ./isopruefi-docker/loki/loki-config.yaml:/etc/loki/local-config.yaml
     networks:
       - isopruefi-monitoring
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   prometheus:
     image: prom/prometheus:v3.4.2
@@ -126,6 +150,12 @@ services:
     networks:
       - isopruefi-monitoring
       - isopruefi-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   alloy:
     image: grafana/alloy:v1.9.2
@@ -143,6 +173,12 @@ services:
     depends_on:
       - loki
       - prometheus
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:12345/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   grafana:
     image: grafana/grafana:12.0.2

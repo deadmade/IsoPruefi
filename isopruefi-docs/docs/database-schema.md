@@ -93,9 +93,3 @@ Arduino device availability tracking.
 |-----------|------|-------------|
 | sensor (field) | string | Sensor identifier |
 | timestamp | DateTime | Uptime check timestamp |
-
-### Configuration
-
-- **Database**: `IsoPruefi` (configurable)
-- **Connection**: Token-based authentication
-- **Client**: InfluxDB3 .NET client

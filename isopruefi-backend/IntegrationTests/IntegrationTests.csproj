@@ -42,9 +42,4 @@
         <ProjectReference Include="..\MQTT-Receiver-Worker\MQTT-Receiver-Worker.csproj"/>
         <ProjectReference Include="..\Get-weatherData-worker\Get-weatherData-worker.csproj"/>
     </ItemGroup>
-
-    <Target Name="NSwag" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
-        <Exec Command="$(NSwagExe_Net90) run nswag.json" ContinueOnError="true"/>
-    </Target>
-
 </Project>

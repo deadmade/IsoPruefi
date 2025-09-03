@@ -123,7 +123,7 @@ public class Program
                         ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
                         ClockSkew = TimeSpan.Zero,
                         IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!))
                     };
                 }
             );

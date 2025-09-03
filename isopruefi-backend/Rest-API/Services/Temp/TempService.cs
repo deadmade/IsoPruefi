@@ -89,10 +89,10 @@ public class TempService : ITempService
                             rootElement.TryGetProperty("lon", out var lon) &&
                             rootElement.TryGetProperty("display_name", out var location))
                         {
-                            var latDouble = double.Parse(lat.GetString(), CultureInfo.InvariantCulture);
-                            var lonDouble = double.Parse(lon.GetString(), CultureInfo.InvariantCulture);
+                            var latDouble = double.Parse(lat.GetString()!, CultureInfo.InvariantCulture);
+                            var lonDouble = double.Parse(lon.GetString()!, CultureInfo.InvariantCulture);
                             var locationString = location.GetString();
-                            var splitLocation = locationString.Split(",");
+                            var splitLocation = locationString!.Split(",");
                             var locationName = splitLocation[1];
 
                             var postalCodeLocation = new CoordinateMapping

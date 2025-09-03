@@ -15,7 +15,6 @@ namespace Rest_API.Services.Auth;
 public class AuthenticationService(
     ILogger<AuthenticationService> logger,
     UserManager<ApiUser> userManager,
-    RoleManager<IdentityRole> roleManager,
     ITokenService tokenService,
     ITokenRepo tokenRepo)
     : IAuthenticationService

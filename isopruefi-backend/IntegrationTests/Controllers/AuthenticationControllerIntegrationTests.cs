@@ -14,6 +14,7 @@ namespace IntegrationTests.Controllers;
 ///     Integration tests for the Authentication Controller to verify login, registration, and JWT token functionality.
 /// </summary>
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class AuthenticationControllerIntegrationTests : ApiClientTestBase
 {
     /// <summary>

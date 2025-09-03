@@ -1,4 +1,4 @@
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Database.EntityFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -157,10 +157,10 @@ public class UserInfoController : ControllerBase
 
         try
         {
-            var user = await _userService.GetUserById(input.UserId);
+            var user = await _userService.GetUserById(input.UserId!);
             if (user == null)
                 return NotFound();
-            await _userService.ChangePassword(user, input.CurrentPassword, input.NewPassword);
+            await _userService.ChangePassword(user, input.CurrentPassword!, input.NewPassword!);
             return Ok();
         }
         catch (Exception e)

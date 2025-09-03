@@ -8,12 +8,12 @@ public class TemperatureDataOverview
     /// <summary>
     ///     Gets or sets the list of Sensor data for the inside temperature.
     /// </summary>
-    public List<SensorData> SensorData { get; set; }
+    public List<SensorData>? SensorData { get; set; }
 
     /// <summary>
     ///     Gets or sets the list of temperature data for the outside location.
     /// </summary>
-    public List<TemperatureData> TemperatureOutside { get; set; }
+    public List<TemperatureData>? TemperatureOutside { get; set; }
 }
 
 /// <summary>
@@ -24,17 +24,17 @@ public class SensorData
     /// <summary>
     ///     Gets or sets the name of the sensor.
     /// </summary>
-    public string SensorName { get; set; }
+    public string? SensorName { get; set; }
     
     /// <summary>
     ///     Gets or sets the location of the sensor.
     /// </summary>
-    public string Location { get; set; }
+    public string? Location { get; set; }
     
     /// <summary>
     ///     Gets or sets the temperature data of the sensor.
     /// </summary>
-    public List<TemperatureData> TemperatureDatas { get; set; }
+    public List<TemperatureData>? TemperatureDatas { get; set; }
 }
 
 /// <summary>
@@ -55,5 +55,5 @@ public class TemperatureData
     /// <summary>
     ///     Gets or sets the plausibility of the temperature data.
     /// </summary>
-    public string Plausibility { get; set; }
+    public string Plausibility { get; set; } = string.Empty;
 }

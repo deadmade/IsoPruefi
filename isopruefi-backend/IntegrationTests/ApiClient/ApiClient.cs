@@ -860,6 +860,11 @@ namespace IntegrationTests.ApiClient
             }
         }
 
+        /// <summary>
+        /// Deletes location from the database.
+        /// </summary>
+        /// <param name="postalCode">Postalcode</param>
+        /// <returns>Ok if successful; otherwise, an error response.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task RemovePostalcodeAsync(int? postalCode)
         {
@@ -867,6 +872,11 @@ namespace IntegrationTests.ApiClient
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// Deletes location from the database.
+        /// </summary>
+        /// <param name="postalCode">Postalcode</param>
+        /// <returns>Ok if successful; otherwise, an error response.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task RemovePostalcodeAsync(int? postalCode, System.Threading.CancellationToken cancellationToken)
         {
@@ -1656,6 +1666,10 @@ namespace IntegrationTests.ApiClient
             }
         }
 
+        /// <summary>
+        /// Retrieves all available sensor types from the system.
+        /// </summary>
+        /// <returns>Successfully retrieved the list of sensor types.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> GetAllSensorTypesAsync()
         {
@@ -1663,6 +1677,10 @@ namespace IntegrationTests.ApiClient
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// Retrieves all available sensor types from the system.
+        /// </summary>
+        /// <returns>Successfully retrieved the list of sensor types.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> GetAllSensorTypesAsync(System.Threading.CancellationToken cancellationToken)
         {
@@ -1720,7 +1738,7 @@ namespace IntegrationTests.ApiClient
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<ProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<ProblemDetails>("Authentication required. No valid JWT token provided.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 403)
@@ -1730,13 +1748,13 @@ namespace IntegrationTests.ApiClient
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<ProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<ProblemDetails>("Access denied. Insufficient privileges to access sensor type information.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new ApiException("A server side error occurred.", status_, responseText_, headers_, null);
+                            throw new ApiException("Internal server error. Enum parsing or configuration service unavailable.", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -1947,6 +1965,11 @@ namespace IntegrationTests.ApiClient
             }
         }
 
+        /// <summary>
+        /// Updates an existing MQTT topic setting in the system.
+        /// </summary>
+        /// <param name="topicSetting">The topic setting object containing updated configuration.</param>
+        /// <returns>Successfully updated the topic setting.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<object> UpdateTopicAsync(TopicSetting topicSetting)
         {
@@ -1954,6 +1977,11 @@ namespace IntegrationTests.ApiClient
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// Updates an existing MQTT topic setting in the system.
+        /// </summary>
+        /// <param name="topicSetting">The topic setting object containing updated configuration.</param>
+        /// <returns>Successfully updated the topic setting.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<object> UpdateTopicAsync(TopicSetting topicSetting, System.Threading.CancellationToken cancellationToken)
         {
@@ -2018,7 +2046,7 @@ namespace IntegrationTests.ApiClient
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<ProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<ProblemDetails>("Bad request. The provided topic setting is invalid.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 401)
@@ -2028,7 +2056,7 @@ namespace IntegrationTests.ApiClient
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<ProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<ProblemDetails>("Authentication required. No valid JWT token provided.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 403)
@@ -2038,13 +2066,13 @@ namespace IntegrationTests.ApiClient
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<ProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<ProblemDetails>("Access denied. Admin role required to update topic settings.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new ApiException("A server side error occurred.", status_, responseText_, headers_, null);
+                            throw new ApiException("Internal server error. Database update failed or service unavailable.", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -2066,6 +2094,11 @@ namespace IntegrationTests.ApiClient
             }
         }
 
+        /// <summary>
+        /// Deletes an existing MQTT topic setting from the system.
+        /// </summary>
+        /// <param name="topicSetting">The topic setting object identifying the configuration to delete.</param>
+        /// <returns>Successfully deleted the topic setting.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<object> DeleteTopicAsync(TopicSetting topicSetting)
         {
@@ -2073,6 +2106,11 @@ namespace IntegrationTests.ApiClient
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// Deletes an existing MQTT topic setting from the system.
+        /// </summary>
+        /// <param name="topicSetting">The topic setting object identifying the configuration to delete.</param>
+        /// <returns>Successfully deleted the topic setting.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<object> DeleteTopicAsync(TopicSetting topicSetting, System.Threading.CancellationToken cancellationToken)
         {
@@ -2137,7 +2175,7 @@ namespace IntegrationTests.ApiClient
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<ProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<ProblemDetails>("Bad request. The provided topic setting is invalid.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 401)
@@ -2147,7 +2185,7 @@ namespace IntegrationTests.ApiClient
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<ProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<ProblemDetails>("Authentication required. No valid JWT token provided.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 403)
@@ -2157,13 +2195,13 @@ namespace IntegrationTests.ApiClient
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<ProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<ProblemDetails>("Access denied. Admin role required to delete topic settings.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new ApiException("A server side error occurred.", status_, responseText_, headers_, null);
+                            throw new ApiException("Internal server error. Database deletion failed or service unavailable.", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -2994,30 +3032,50 @@ namespace IntegrationTests.ApiClient
     public partial class TemperatureDataOverview
     {
 
-        [Newtonsoft.Json.JsonProperty("sensorData", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<SensorData> SensorData { get; set; } = default!;
+        /// <summary>
+        /// Gets or sets the list of Sensor data for the inside temperature.
+        /// <br/>            
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("sensorData", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<SensorData>? SensorData { get; set; } = default!;
 
         /// <summary>
         /// Gets or sets the list of temperature data for the outside location.
         /// <br/>            
         /// </summary>
-        [Newtonsoft.Json.JsonProperty("temperatureOutside", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<TemperatureData> TemperatureOutside { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("temperatureOutside", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<TemperatureData>? TemperatureOutside { get; set; } = default!;
 
     }
 
+    /// <summary>
+    /// Represents an overview of sensor data.
+    /// <br/>            
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class SensorData
     {
 
-        [Newtonsoft.Json.JsonProperty("sensorName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string SensorName { get; set; } = default!;
+        /// <summary>
+        /// Gets or sets the name of the sensor.
+        /// <br/>            
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("sensorName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? SensorName { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("location", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Location { get; set; } = default!;
+        /// <summary>
+        /// Gets or sets the location of the sensor.
+        /// <br/>            
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("location", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Location { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("temperatureDatas", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<TemperatureData> TemperatureDatas { get; set; } = default!;
+        /// <summary>
+        /// Gets or sets the temperature data of the sensor.
+        /// <br/>            
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("temperatureDatas", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<TemperatureData>? TemperatureDatas { get; set; } = default!;
 
     }
 
@@ -3043,6 +3101,10 @@ namespace IntegrationTests.ApiClient
         [Newtonsoft.Json.JsonProperty("temperature", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Temperature { get; set; } = default!;
 
+        /// <summary>
+        /// Gets or sets the plausibility of the temperature data.
+        /// <br/>            
+        /// </summary>
         [Newtonsoft.Json.JsonProperty("plausibility", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Plausibility { get; set; } = default!;
 

@@ -38,6 +38,7 @@ public class Receiver : IReceiver
     /// <param name="serviceProvider">Service provider for dependency injection.</param>
     /// <param name="connection">Connection manager for the MQTT client.</param>
     /// <param name="logger">Logger for diagnostic information.</param>
+    /// <param name="configuration"></param>
     public Receiver(IServiceProvider serviceProvider, IConnection connection, ILogger<Receiver> logger,
         IConfiguration configuration)
     {

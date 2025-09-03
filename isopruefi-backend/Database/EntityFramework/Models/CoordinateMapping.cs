@@ -16,7 +16,7 @@ public class CoordinateMapping
     /// <summary>
     ///     Gets or sets the name of the location.
     /// </summary>
-    public string Location { get; set; }
+    public string Location { get; set; } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the latitude for the location.

@@ -172,9 +172,9 @@ public class TemperatureDataController : ControllerBase
         {
             if (string.IsNullOrEmpty(sensor.SensorName) && string.IsNullOrEmpty(sensor.SensorLocation)) return;
 
-            var sensorTempData = await GetSensorTemperatureDataAsync(start, end, sensor.SensorName);
+            var sensorTempData = await GetSensorTemperatureDataAsync(start, end, sensor.SensorName!);
 
-            sensorTempData = CheckPlausibility(sensorTempData, sensor.SensorName, sensor.SensorLocation, isFahrenheit);
+            sensorTempData = CheckPlausibility(sensorTempData, sensor.SensorName!, sensor.SensorLocation!, isFahrenheit);
 
             var sensorData = new SensorData
             {
@@ -251,11 +251,11 @@ public class TemperatureDataController : ControllerBase
             await foreach (var row in _influxRepo.GetOutsideWeatherData(start, end, place))
             {
                 var temperature = Convert.ToDouble(row[2]);
-                var bigInt = (BigInteger)row[1];
+                var bigInt = (BigInteger)row[1]!;
                 var nanoSec = (long)bigInt;
                 var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(nanoSec / 1_000_000).UtcDateTime;
 
-                if (timestamp == null || temperature == null || place == null)
+                if (place == null)
                 {
                     _logger.LogWarning(
                         "Received incomplete data from InfluxDB: Timestamp: {Timestamp}, Value: {Value}, Place: {Place}",
@@ -305,11 +305,11 @@ public class TemperatureDataController : ControllerBase
             await foreach (var row in _influxRepo.GetSensorWeatherData(start, end, sensor))
             {
                 var temperature = Convert.ToDouble(row[2]);
-                var bigInt = (BigInteger)row[1];
+                var bigInt = (BigInteger)row[1]!;
                 var nanoSec = (long)bigInt;
                 var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(nanoSec / 1_000_000).UtcDateTime;
 
-                if (timestamp == null || temperature == null || sensor == null)
+                if (sensor == null)
                 {
                     _logger.LogWarning(
                         "Received incomplete data from InfluxDB: Timestamp: {Timestamp}, Value: {Value}",

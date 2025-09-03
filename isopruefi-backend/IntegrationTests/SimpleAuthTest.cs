@@ -15,6 +15,7 @@ namespace IntegrationTests;
 ///     Simple authentication integration tests to verify basic login functionality and JWT token generation.
 /// </summary>
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class SimpleAuthTest : ApiClientTestBase
 {
     /// <summary>

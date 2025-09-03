@@ -29,18 +29,18 @@ public class MqttHealthCheck : IHealthCheck
     /// <param name="context">Context in which the check is executed.</param>
     /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>A task that represents the asynchronous health check.</returns>
-    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
+    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            return _connection.IsConnected
+            return Task.FromResult(_connection.IsConnected
                 ? HealthCheckResult.Healthy("MQTT connection is active")
-                : HealthCheckResult.Unhealthy("MQTT connection is not active");
+                : HealthCheckResult.Unhealthy("MQTT connection is not active"));
         }
         catch (Exception ex)
         {
-            return HealthCheckResult.Unhealthy("Error checking MQTT connection", ex);
+            return Task.FromResult(HealthCheckResult.Unhealthy("Error checking MQTT connection", ex));
         }
     }
 }

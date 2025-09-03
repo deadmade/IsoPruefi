@@ -83,6 +83,9 @@ public class Connection : IConnection
     /// </summary>
     public bool IsConnected => _isConnected && _mqttClient?.IsConnected == true;
 
+    /// <summary>
+    /// Gets a value indicating whether the client is subscribed to the necessary topics.
+    /// </summary>
     public bool IsSubscribed { get; set; }
 
     /// <summary>
@@ -199,10 +202,11 @@ public class Connection : IConnection
     /// <returns>
     ///     A task that represents the asynchronous handling of the disconnection event.
     /// </returns>
-    private async Task Disconnected(MqttClientDisconnectedEventArgs e)
+    private Task Disconnected(MqttClientDisconnectedEventArgs e)
     {
         _isConnected = false;
         _logger.LogWarning("Disconnected from MQTT broker: {Reason}", e.Reason);
+        return Task.CompletedTask;
 
         // Don't immediately reconnect here - let the worker handle it with proper timing
     }
@@ -341,9 +345,9 @@ public class Connection : IConnection
             return Task.FromResult(Task.CompletedTask);
         }
 
-        if (tempSensorReading.Meta.Sequence.Length != 0
-            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Timestamp.Length
-            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Value.Length)
+        if (tempSensorReading!.Meta!.Sequence!.Length != 0
+            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Timestamp!.Length
+            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Value!.Length)
         {
             var tempDataMeta = tempSensorReading.Meta;
             await Parallel.ForEachAsync(Enumerable.Range(0, tempDataMeta.Sequence.Length - 1),

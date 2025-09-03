@@ -55,7 +55,7 @@ public class SeedUser
             logger.LogInformation("Using admin configuration - UserName: {AdminUserName}", adminUserName);
 
             // Check if any users exist to prevent duplicate seeding
-            if (!userManager.Users.Any())
+            if (!userManager!.Users.Any())
             {
                 var user = new ApiUser
                 {
@@ -65,7 +65,7 @@ public class SeedUser
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
                 // Create Admin role if it doesn't exist
-                if (!await roleManager.RoleExistsAsync(Roles.Admin))
+                if (!await roleManager!.RoleExistsAsync(Roles.Admin))
                 {
                     logger.LogInformation("Admin role is creating");
                     var roleResult = await roleManager

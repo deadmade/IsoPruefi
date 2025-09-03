@@ -34,11 +34,9 @@ If not obvious, or the method is more than 5 lines, it should be commented.
 
 ### Documentation Comments (C#)
 
-We use the <a href="https://learn.microsoft.com/de-de/dotnet/csharp/language-reference/xmldoc/">xml documentation
-convention by Microsoft</a>
+We use the <a href="https://learn.microsoft.com/de-de/dotnet/csharp/language-reference/xmldoc/">xml documentation convention by Microsoft</a>
 
-In short: You can use the following tags structures in your documentation comment to specify properties of the following
-code:
+In short: You can use the following tags structures in your documentation comment to specify properties of the following code:
 
 - ```<summary>Your code summary</summary>```
 - ```<param name="str">Describe parameter.</param>```: Usage may also be nested within summary
@@ -46,10 +44,9 @@ code:
 - ```<example>Put a example here</example>```
 
 There are plenty more tags. You can even reference other doc segments.
-If you need other tags, take a
-look <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/recommended-tags">here</a>
+If you need other tags, take a look <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/recommended-tags">here</a>
 
-#### Doxygen (C/C++)
+### Doxygen (C/C++)
 
 For Arduino and C++ code, we use [Doxygen](https://www.doxygen.nl/manual/docblocks.html) style comments:
 
@@ -62,7 +59,7 @@ For Arduino and C++ code, we use [Doxygen](https://www.doxygen.nl/manual/docbloc
 
 More tags: [Doxygen documentation](https://www.doxygen.nl/manual/commands.html)
 
-#### TypeDoc (TypeScript)
+### TypeDoc (TypeScript)
 
 For TypeScript, we use [TypeDoc](https://typedoc.org/guides/doccomments/) style comments:
 

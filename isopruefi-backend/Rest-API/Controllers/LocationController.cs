@@ -52,7 +52,13 @@ public class LocationController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error fetching all postalcodes");
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = e.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = e.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 
@@ -74,13 +80,25 @@ public class LocationController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogError(ex, "Forbidden while inserting a new location");
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = ex.Message });
+            _logger.LogError(ex, "Bad request while inserting a new location");
+            return BadRequest(new ProblemDetails
+            {
+                Detail = ex.Message,
+                Status = StatusCodes.Status400BadRequest,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Title = "Bad Request"
+            });
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error while inserting a location");
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = e.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = e.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 
@@ -98,12 +116,18 @@ public class LocationController : ControllerBase
         try
         {
             await _coordinateRepo.DeletePostalCode(postalCode);
-            return StatusCode(StatusCodes.Status200OK);
+            return Ok();
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error fetching all postalcodes");
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Detail = e.Message });
+            _logger.LogError(e, "Error deleting postalcode");
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = e.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 }

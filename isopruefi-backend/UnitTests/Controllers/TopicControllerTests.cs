@@ -97,9 +97,13 @@ public class TopicControllerTests
         result.Result.Should().BeOfType<ObjectResult>();
         var objectResult = (ObjectResult)result.Result!;
         objectResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+        objectResult.Value.Should().BeOfType<ProblemDetails>();
 
-        var errorResponse = objectResult.Value;
-        errorResponse.Should().NotBeNull();
+        var problemDetails = (ProblemDetails)objectResult.Value!;
+        problemDetails.Detail.Should().Be("Database connection failed");
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.6.1");
+        problemDetails.Title.Should().Be("Internal Server Error");
     }
 
     /// <summary>
@@ -162,9 +166,13 @@ public class TopicControllerTests
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
         var badRequestResult = (BadRequestObjectResult)result;
+        badRequestResult.Value.Should().BeOfType<ProblemDetails>();
 
-        var errorResponse = badRequestResult.Value;
-        errorResponse.Should().NotBeNull();
+        var problemDetails = (ProblemDetails)badRequestResult.Value!;
+        problemDetails.Detail.Should().Be("Topic setting is required");
+        problemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        problemDetails.Title.Should().Be("Bad Request");
 
         _mockSettingsRepo.Verify(x => x.AddTopicSettingAsync(It.IsAny<TopicSetting>()), Times.Never);
     }
@@ -190,7 +198,11 @@ public class TopicControllerTests
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
         var badRequestResult = (BadRequestObjectResult)result;
-        badRequestResult.Value.Should().BeOfType<SerializableError>();
+        badRequestResult.Value.Should().BeOfType<ValidationProblemDetails>();
+
+        var validationProblemDetails = (ValidationProblemDetails)badRequestResult.Value!;
+        validationProblemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        validationProblemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
 
         _mockSettingsRepo.Verify(x => x.AddTopicSettingAsync(It.IsAny<TopicSetting>()), Times.Never);
     }
@@ -219,9 +231,13 @@ public class TopicControllerTests
         result.Should().BeOfType<ObjectResult>();
         var objectResult = (ObjectResult)result;
         objectResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+        objectResult.Value.Should().BeOfType<ProblemDetails>();
 
-        var errorResponse = objectResult.Value;
-        errorResponse.Should().NotBeNull();
+        var problemDetails = (ProblemDetails)objectResult.Value!;
+        problemDetails.Detail.Should().Be("Database insertion failed");
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.6.1");
+        problemDetails.Title.Should().Be("Internal Server Error");
     }
 
     /// <summary>
@@ -245,9 +261,7 @@ public class TopicControllerTests
         var result = await _controller.UpdateTopic(topicSetting);
 
         // Assert
-        result.Should().BeOfType<StatusCodeResult>();
-        var statusResult = (StatusCodeResult)result;
-        statusResult.StatusCode.Should().Be(StatusCodes.Status200OK);
+        result.Should().BeOfType<OkResult>();
 
         _mockSettingsRepo.Verify(x => x.UpdateTopicSettingAsync(topicSetting), Times.Once);
     }
@@ -263,6 +277,15 @@ public class TopicControllerTests
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
+        var badRequestResult = (BadRequestObjectResult)result;
+        badRequestResult.Value.Should().BeOfType<ProblemDetails>();
+
+        var problemDetails = (ProblemDetails)badRequestResult.Value!;
+        problemDetails.Detail.Should().Be("Topic setting is required");
+        problemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        problemDetails.Title.Should().Be("Bad Request");
+
         _mockSettingsRepo.Verify(x => x.UpdateTopicSettingAsync(It.IsAny<TopicSetting>()), Times.Never);
     }
 
@@ -314,9 +337,7 @@ public class TopicControllerTests
         var result = await _controller.DeleteTopic(topicSetting);
 
         // Assert
-        result.Should().BeOfType<StatusCodeResult>();
-        var statusResult = (StatusCodeResult)result;
-        statusResult.StatusCode.Should().Be(StatusCodes.Status200OK);
+        result.Should().BeOfType<OkResult>();
 
         _mockSettingsRepo.Verify(x => x.RemoveTopicSettingAsync(topicSetting), Times.Once);
     }
@@ -332,6 +353,15 @@ public class TopicControllerTests
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
+        var badRequestResult = (BadRequestObjectResult)result;
+        badRequestResult.Value.Should().BeOfType<ProblemDetails>();
+
+        var problemDetails = (ProblemDetails)badRequestResult.Value!;
+        problemDetails.Detail.Should().Be("Topic setting is required");
+        problemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        problemDetails.Title.Should().Be("Bad Request");
+
         _mockSettingsRepo.Verify(x => x.RemoveTopicSettingAsync(It.IsAny<TopicSetting>()), Times.Never);
     }
 

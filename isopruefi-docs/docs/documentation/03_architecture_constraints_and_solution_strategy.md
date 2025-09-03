@@ -16,12 +16,11 @@
 
 ## System Decomposition Strategy
 
-All services are containerized and grouped under a shared container orchestration layer (labelled "Gruppen Container
-Sammlung"). The system is fronted by a load balancer, ensuring scalability and high availability. MQTT acts as the
-bridge between the hardware (Arduino sensors) and the backend. Logging and observability are handled via the Loki stack,
-and external visibility is offered via a user-facing website and Grafana deshboards.
+All services are containerized and grouped under a shared container orchestration layer. The system is fronted by a load balancer, ensuring scalability and high availability. MQTT acts as the bridge between the hardware (Arduino sensors) and the backend. Logging and observability are handled via the Loki stack, and external visibility is offered via a user-facing website and Grafana deshboards.
 
 > [!info]- Old Architecture
+> All services are containerized and grouped under a shared container orchestration layer (labelled "Gruppen Container Sammlung"). The system is fronted by a load balancer, ensuring scalability and high availability. MQTT acts as the bridge between the hardware (Arduino sensors) and the backend. Logging and observability are handled via the Loki stack, and external visibility is offered via a user-facing website and Grafana deshboards.
+>
 > ![IsoPrüfi System Architecture](../images/docker_architecture.jpg)
 
 ![IsoPrüfi System Architecture](../images/docker_architecture2.svg)
@@ -33,8 +32,7 @@ and external visibility is offered via a user-facing website and Grafana deshboa
 - **Source Control**: GitHub with structured branches and CI pipelines
 - **Documentation**: Based on **arc42 template**, managed in MkDocs
 - **Infrastructure as Code:** All services defined in `docker-compose.yml` and version-controlled
-- **Architecture Decisions**: Documented using ADRs (Architecture Decision Records). The detailed technology choices are
-  documented in [04 Architecture Decisions](04_architecture_decisions.md)
+- **Architecture Decisions**: Documented using ADRs (Architecture Decision Records). The detailed technology choices are documented in [04 Architecture Decisions](04_architecture_decisions.md)
 
 ---
 
@@ -50,8 +48,7 @@ The following concepts ensure consistency and support the quality goals:
 
 ### Fault Tolerance
 
-- **Redundant logging:** Default to central database, with SD card fallback on network/MQTT outages (buffering up to
-  24h).
+- **Redundant logging:** Default to central database, with SD card fallback on network/MQTT outages (buffering up to 24h).
 - **MQTT QoS (1):** Guarantees at-least-once delivery.
 - **Stateless services:** Enable fast restart and failover without data inconsistencies.
 

@@ -55,8 +55,7 @@ clearly using diagrams.
 - The system should achieve an availability of 99.5%
 - The system must remain reliable even if one container fails
 - Data must be persistently stored in the database
-- Automated unit tests must cover core functionalities, including correct data transmission, successful data storage,
-  and simulation of failure scenarios
+- Automated unit tests must cover core functionalities, including correct data transmission, successful data storage, and simulation of failure scenarios
 
 ---
 

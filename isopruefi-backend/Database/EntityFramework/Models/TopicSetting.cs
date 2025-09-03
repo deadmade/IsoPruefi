@@ -17,12 +17,12 @@ public class TopicSetting
     public int TopicSettingId { get; set; }
 
     /// <summary>
-    ///     Gets or sets the id for the CoordinateMapping entity.
+    ///     Gets or sets the foreign key for the related CoordinateMapping entity.
     /// </summary>
-    public int CoordinateMappingId { get; set; }  
-    
+    public int CoordinateMappingId { get; set; }
+
     /// <summary>
-    ///     Gets or sets the CoordinateMapping associated with this entity.
+    ///     Navigation property for the related CoordinateMapping entity.
     /// </summary>
     [ForeignKey(nameof(CoordinateMappingId))]
     public virtual CoordinateMapping? CoordinateMapping { get; set; }

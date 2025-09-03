@@ -46,8 +46,7 @@
 - Compatibility issues due to software or hardware updates
 - Security vulnerabilities
 - **Temperature Measurement:**
-    - Sensor errors (e.g., incorrect calibration, hardware malfunction, sensor failure, power supply issues, incorrect
-      interval configuration)
+    - Sensor errors (e.g., incorrect calibration, hardware malfunction, sensor failure, power supply issues, incorrect interval configuration)
     - Misassignment of data (e.g., north/south confusion)
     - Weather service outages
     - Outage of containers processing data

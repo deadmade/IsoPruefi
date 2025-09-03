@@ -1,6 +1,13 @@
 import {useEffect, useMemo, useState} from "react";
-import {createTopic, deleteTopic, getAllTopics, updateTopic, fetchPostalLocations, type PostalLocation} from "../api/clients";
-import {TopicSetting, SensorType} from "../api/api-client";
+import {
+    createTopic,
+    deleteTopic,
+    fetchPostalLocations,
+    getAllTopics,
+    type PostalLocation,
+    updateTopic
+} from "../api/clients";
+import {SensorType, TopicSetting} from "../api/api-client";
 
 // Keep table state as a plain shape
 type Row = {
@@ -194,19 +201,19 @@ export default function ManageTopics() {
                 </div>
                 <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">Sensor Type</label>
-                        <select
-                            value={sensorTypeEnum}
-                            onChange={e => setSensorTypeEnum(Number(e.target.value) as SensorType)}
-                            disabled={busy}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
-                        >
-                            <option value={SensorType.Temp}>Temperature</option>
-                            <option value={SensorType.Spl}>SPL</option>
-                            <option value={SensorType.Hum}>Humidity</option>
-                            <option value={SensorType.Ikea}>IKEA</option>
-                            <option value={SensorType.Co2}>CO2</option>
-                            <option value={SensorType.Mic}>Microphone</option>
-                        </select>
+                    <select
+                        value={sensorTypeEnum}
+                        onChange={e => setSensorTypeEnum(Number(e.target.value) as SensorType)}
+                        disabled={busy}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 disabled:bg-gray-100"
+                    >
+                        <option value={SensorType.Temp}>Temperature</option>
+                        <option value={SensorType.Spl}>SPL</option>
+                        <option value={SensorType.Hum}>Humidity</option>
+                        <option value={SensorType.Ikea}>IKEA</option>
+                        <option value={SensorType.Co2}>CO2</option>
+                        <option value={SensorType.Mic}>Microphone</option>
+                    </select>
                 </div>
                 <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">Topic Path</label>
@@ -279,7 +286,9 @@ export default function ManageTopics() {
                             Topic Path
                         </th>
                         <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Group</th>
-                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Coord Mapping</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Coord
+                            Mapping
+                        </th>
                         <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200">Recovery</th>
                         <th className="px-3 py-2 border-b border-gray-200">Actions</th>
                     </tr>
@@ -328,7 +337,8 @@ export default function ManageTopics() {
                                         <option value={SensorType.Mic}>Microphone</option>
                                     </select>
                                 ) : (
-                                    <span className="text-sm text-gray-900">{r.sensorTypeEnum !== undefined ? SensorType[r.sensorTypeEnum] : "—"}</span>
+                                    <span
+                                        className="text-sm text-gray-900">{r.sensorTypeEnum !== undefined ? SensorType[r.sensorTypeEnum] : "—"}</span>
                                 )}
                             </td>
 

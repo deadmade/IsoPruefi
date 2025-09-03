@@ -82,8 +82,13 @@ public class TopicController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                new { message = "An error occurred while retrieving topics", error = ex.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 
@@ -110,8 +115,13 @@ public class TopicController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                new { message = "An error occurred while retrieving sensor types", error = ex.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 
@@ -166,20 +176,35 @@ public class TopicController : ControllerBase
     {
         try
         {
-            if (topicSetting == null) return BadRequest(new { message = "Topic setting is required" });
+            if (topicSetting == null)
+                return BadRequest(new ProblemDetails
+                {
+                    Detail = "Topic setting is required",
+                    Status = StatusCodes.Status400BadRequest,
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    Title = "Bad Request"
+                });
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(new ValidationProblemDetails(ModelState)
+                {
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    Status = StatusCodes.Status400BadRequest
+                });
+
             topicSetting.TopicSettingId = 0;
-
             var topicId = await _settingsRepo.AddTopicSettingAsync(topicSetting);
-
-            return CreatedAtAction(
-                nameof(CreateTopic), null);
+            return CreatedAtAction(nameof(CreateTopic), null);
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                new { message = "An error occurred while creating the topic", error = ex.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 
@@ -205,18 +230,34 @@ public class TopicController : ControllerBase
     {
         try
         {
-            if (topicSetting == null) return BadRequest(new { message = "Topic setting is required" });
+            if (topicSetting == null)
+                return BadRequest(new ProblemDetails
+                {
+                    Detail = "Topic setting is required",
+                    Status = StatusCodes.Status400BadRequest,
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    Title = "Bad Request"
+                });
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(new ValidationProblemDetails(ModelState)
+                {
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    Status = StatusCodes.Status400BadRequest
+                });
 
             await _settingsRepo.UpdateTopicSettingAsync(topicSetting);
-
-            return StatusCode(StatusCodes.Status200OK);
+            return Ok();
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                new { message = "An error occurred while creating the topic", error = ex.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
 
@@ -242,20 +283,34 @@ public class TopicController : ControllerBase
     {
         try
         {
-            if (topicSetting == null) return BadRequest(new { message = "Topic setting is required" });
+            if (topicSetting == null)
+                return BadRequest(new ProblemDetails
+                {
+                    Detail = "Topic setting is required",
+                    Status = StatusCodes.Status400BadRequest,
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    Title = "Bad Request"
+                });
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(new ValidationProblemDetails(ModelState)
+                {
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    Status = StatusCodes.Status400BadRequest
+                });
 
             await _settingsRepo.RemoveTopicSettingAsync(topicSetting);
-
-            return StatusCode(StatusCodes.Status200OK);
+            return Ok();
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                new { message = "An error occurred while creating the topic", error = ex.Message });
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error"
+            });
         }
     }
-    
-    
 }

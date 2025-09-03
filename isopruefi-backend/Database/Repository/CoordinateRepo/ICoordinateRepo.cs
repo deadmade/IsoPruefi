@@ -3,7 +3,7 @@ using Database.EntityFramework.Models;
 namespace Database.Repository.CoordinateRepo;
 
 /// <summary>
-///     Repository interface for accessing and managing locations.
+///     Repository interface for accessing and managing coordinate locations.
 /// </summary>
 public interface ICoordinateRepo
 {
@@ -16,22 +16,35 @@ public interface ICoordinateRepo
     /// <summary>
     ///     Deletes postalcode from the database.
     /// </summary>
-    /// <param name="postalCode">postalcode</param>
+    /// <param name="postalCode">The postal code to delete from the database.</param>
     Task DeletePostalCode(int postalCode);
 
     /// <summary>
-    ///     Checks if there is an entry for that postal code in the database.
-    /// </summary>
-    /// <param name="postalcode">postalcode</param>
-    /// <returns>Returns a boolean value.</returns>
-    Task<bool> ExistsPostalCode(int postalcode);
-    
-    /// <summary>
     ///     Retrieves the coordinates of the postalcode that was inserted last.
     /// </summary>
-    /// <param name="place">Name of the location</param>
     /// <returns>Returns coordinates of the location that was last chosen by the User.</returns>
+    Task<CoordinateMapping?> GetLocation();
+
+    /// <summary>
+    ///     Retrieves the coordinates for a specific place/location.
+    /// </summary>
+    /// <param name="place">The name of the place to retrieve coordinates for.</param>
+    /// <returns>Returns the CoordinateMapping for the specified place, or null if not found.</returns>
     Task<CoordinateMapping?> GetLocation(string place);
+
+    /// <summary>
+    ///     Checks if there is an entry for that opstal code in the database.
+    /// </summary>
+    /// <param name="postalcode">Defines which entry will be checked.</param>
+    /// <returns>Returns a boolean values for the existence of an entry in the database associated with the postalcode.</returns>
+    Task<bool> ExistsPostalCode(int postalcode);
+
+    /// <summary>
+    ///     Updates the timestamp of an entry in the Coordinates Database.
+    /// </summary>
+    /// <param name="postalcode">Defines which entry will be updated.</param>
+    /// <param name="newTime">Defines the new time for that entry.</param>
+    Task UpdateTime(int postalcode, DateTime newTime);
 
     /// <summary>
     ///     Gets all postalcodes that are saved in the database.
@@ -42,5 +55,6 @@ public interface ICoordinateRepo
     /// <summary>
     ///     Gets the next unlocked entry in CoordinateMappings and locks it for the next minute.
     /// </summary>
+    /// <returns>Returns the next available unlocked CoordinateMapping, or null if none available.</returns>
     Task<CoordinateMapping?> GetUnlockedLocation();
 }

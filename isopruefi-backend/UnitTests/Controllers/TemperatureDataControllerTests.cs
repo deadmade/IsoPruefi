@@ -1,8 +1,10 @@
+using Database.EntityFramework.Enums;
 using Database.EntityFramework.Models;
 using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -152,7 +154,8 @@ public class TemperatureDataControllerTests
         };
 
         _mockCoordinateRepo.Setup(x => x.GetLocation(place)).ReturnsAsync(location);
-        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync(location.PostalCode, Database.EntityFramework.Enums.SensorType.temp)).ReturnsAsync(topicSettings);
+        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync(location.PostalCode, SensorType.temp))
+            .ReturnsAsync(topicSettings);
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
             .Returns(_influxReturnData);
         _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[0].SensorName!))
@@ -193,7 +196,8 @@ public class TemperatureDataControllerTests
         };
 
         _mockCoordinateRepo.Setup(x => x.GetLocation(place)).ReturnsAsync(location);
-        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync(location.PostalCode, Database.EntityFramework.Enums.SensorType.temp)).ReturnsAsync(topicSettings);
+        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync(location.PostalCode, SensorType.temp))
+            .ReturnsAsync(topicSettings);
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
             .Returns(_influxReturnData);
         _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[0].SensorName!))
@@ -225,9 +229,10 @@ public class TemperatureDataControllerTests
         var place = "TestCity";
 
         var location = new CoordinateMapping { PostalCode = 12345, Latitude = 52.5, Longitude = 13.4 };
-        
+
         _mockCoordinateRepo.Setup(x => x.GetLocation(place)).ReturnsAsync(location);
-        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync(location.PostalCode, Database.EntityFramework.Enums.SensorType.temp)).ReturnsAsync(new List<TopicSetting>());
+        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync(location.PostalCode, SensorType.temp))
+            .ReturnsAsync(new List<TopicSetting>());
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
             .Returns(_influxReturnData);
 
@@ -285,5 +290,32 @@ public class TemperatureDataControllerTests
         expectedStartFormat.Should().Be("2022-01-01 00:00:00");
         expectedEndFormat.Should().Be("2022-01-02 00:00:00");
     }
-}
 
+    /// <summary>
+    ///     Tests that GetTemperature returns BadRequest when location is not found.
+    /// </summary>
+    [Test]
+    public async Task GetTemperature_WithInvalidLocation_ShouldReturnBadRequest()
+    {
+        // Arrange
+        var start = DateTime.UtcNow.AddDays(-1);
+        var end = DateTime.UtcNow;
+        var place = "InvalidCity";
+
+        _mockCoordinateRepo.Setup(x => x.GetLocation(place)).ReturnsAsync((CoordinateMapping?)null);
+
+        // Act
+        var result = await _controller.GetTemperature(start, end, place);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();
+        var badRequestResult = (BadRequestObjectResult)result;
+        badRequestResult.Value.Should().BeOfType<ProblemDetails>();
+
+        var problemDetails = (ProblemDetails)badRequestResult.Value!;
+        problemDetails.Detail.Should().Be("Location not found");
+        problemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        problemDetails.Title.Should().Be("Bad Request");
+    }
+}

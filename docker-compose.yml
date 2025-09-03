@@ -62,7 +62,6 @@ services:
       # - ./influx/bootstrap.sh:/docker-entrypoint-initdb.d/bootstrap.sh:ro
     networks:
       - isopruefi-network
-      - isopruefi-monitoring
 
   influxdb-explorer:
     image: influxdata/influxdb3-ui:1.0.3
@@ -154,81 +153,42 @@ services:
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls=true"
       - traefik.http.services.grafana.loadbalancer.server.port=3000
-    env_file:
-      - ./secrets.env
+    volumes:
+      - ./isopruefi-docker/grafana/datasources:/etc/grafana/provisioning/datasources:ro
     environment:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_BASIC_ENABLED=false
       - GF_LOG_LEVEL=warn
-    ports:
-     - 3000:3000/tcp
+    env_file:
+      - ./secrets.env
+    #ports:
+    # - 3000:3000/tcp
     networks:
       - isopruefi-monitoring
     depends_on:
       - loki
       - alloy
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-        - name: Loki
-          type: loki
-          access: proxy
-          orgId: 1
-          url: http://loki:3100
-          basicAuth: false
-          isDefault: false
-          version: 1
-          editable: false
-        - name: Prometheus
-          type: prometheus
-          orgId: 1
-          url: http://prometheus:9090
-          basicAuth: false
-          isDefault: true
-          version: 1
-          editable: false
-        - name: Influxdb
-          type: influxdb
-          access: proxy
-          orgId: 1
-          url: http://influxdb3:8181
-          jsonData:
-            version: SQL
-            dbName: IsoPruefi
-            httpMode: POST
-            insecureGrpc: true
-            tlsSkipVerify: true
-          secureJsonData:
-            token: ${Influx__InfluxDBToken}
-        EOF
-        /run.sh
+      - influxdb3
 
   isopruefi-frontend-1:
     build:
       context: ./isopruefi-frontend
-      dockerfile: Dockerfile-Dev
+      dockerfile: Dockerfile
     container_name: isopruefi-frontend-1
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
     volumes:
       - ./isopruefi-frontend:/app
       - /app/node_modules
     networks:
       - isopruefi-network
-    environment:
-      VITE_DEV_PROXY_TARGET: https://aicon.dhbw-heidenheim.de:5001/backend
-    ports:
-      - "5173:5173"
+    env_file:
+      - ./secrets.env
     stdin_open: true
     tty: true
 

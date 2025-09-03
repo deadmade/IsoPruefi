@@ -13,6 +13,8 @@ public interface IConnection
     /// </summary>
     bool IsConnected { get; }
 
+    bool IsSubscribed { get; set; }
+
     /// <summary>
     ///     Establishes a connection to the MQTT broker and configures message handlers.
     /// </summary>

@@ -19,7 +19,7 @@ datasources:
   editable: false
 - name: InfluxDB
   type: influxdb
-  url: http://host.docker.internal:8181
+  url: http://influxdb3:8181
   secureJsonData:
     token: ${Influx__InfluxDBToken}
   jsonData:

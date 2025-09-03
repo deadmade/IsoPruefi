@@ -86,7 +86,7 @@ To work on the Arduino/PlatformIO part of the project:
 
 1. Install the PlatformIO Extension in Visual Studio Code
 
-2. Open the folder code/arduino/ (or wherever the firmware is located)
+2. Open the folder IsoPruefi/isopruefi-arduino
 
 3. Build and upload the firmware using the PlatformIO toolbar or PlatformIO terminal
 

@@ -172,6 +172,7 @@ services:
       - ./secrets.env
     networks:
       - isopruefi-monitoring
+      - isopruefi-network
     depends_on:
       - loki
       - alloy

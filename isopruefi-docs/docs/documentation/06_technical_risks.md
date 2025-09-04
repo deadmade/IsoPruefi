@@ -134,9 +134,7 @@
 |-------------------------------------------------|-----------------------------------------------------|---------------------------------------------------------------------------------|----------|
 | Single-server deployment (no HA for DB/Traefik) | Outage stops whole system; RTO/RPO undefined        | Define RTO/RPO; periodic restore drills; consider DB replication later          | High     |
 | External single MQTT broker                     | Ingestion is SPOF; no controlled failover           | Document broker SLA; add reconnect/backoff; plan broker redundancy/bridge later | High     |
-| SD-card buffering deduplication                 | Risk of duplicate inserts on reconnect              | Idempotent writes (sensorId + timestamp + seq unique); DB upsert/unique index   | High     |
 | Time synchronisation of sensors                 | Clock drift → wrong ΔT and ordering                 | Regular NTP sync or backend time anchor; RTC drift check procedure              | High     |
-| Missing/uneven health/readiness endpoints       | Load balancer may route to bad pods                 | Standardize `/health` and `/ready`; Traefik forward-auth or ping checks         | Medium   |
 | No alerting rules/SLOs                          | Failures unnoticed; 99.5% not enforced              | Prometheus alert rules + Grafana alerts; SLO dashboards for availability        | Medium   |
 | Secrets in env files                            | Leakage risk; no rotation                           | Use Docker secrets; rotate regularly; restrict file perms; avoid committing     | High     |
 | TLS/auth on MQTT not specified                  | Data spoofing/sniffing possible                     | Enable TLS; client auth (user/pass or certs); topic ACLs                        | High     |

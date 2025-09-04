@@ -43,7 +43,7 @@ jobs:
       - name: Generate MQTT-Receiver-Worker Documentation
         working-directory: ./isopruefi-backend/MQTT-Receiver-Worker
         run: dotnet xmldoc2md ./bin/Debug/net9.0/MQTT-Receiver-Worker.dll ../../isopruefi-docs/docs/code/MQTT-Receiver-Worker
-      
+
       - name: Generate MQTT-Sender Documentation
         working-directory: ./isopruefi-backend/MQTT-Sender
         run: dotnet xmldoc2md ./bin/Debug/net9.0/MQTT-Sender.dll ../../isopruefi-docs/docs/code/MQTT-Sender
@@ -51,6 +51,14 @@ jobs:
       - name: Generate UnitTest Documentation
         working-directory: ./isopruefi-backend/UnitTests
         run: dotnet xmldoc2md ./bin/Debug/net9.0/UnitTests.dll ../../isopruefi-docs/docs/code/UnitTests
+
+      - name: Generate IntegrationTests Documentation
+        working-directory: ./isopruefi-backend/IntegrationTests
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/IntegrationTests.dll ../../isopruefi-docs/docs/code/IntegrationTests
+
+      - name: Generate LoadTests Documentation
+        working-directory: ./isopruefi-backend/LoadTests
+        run: dotnet xmldoc2md ./bin/Debug/net9.0/LoadTests.dll ../../isopruefi-docs/docs/code/LoadTests
 
       - name: Install frontend dependencies
         working-directory: ./isopruefi-frontend
@@ -62,14 +70,17 @@ jobs:
 
       - name: Install Doxygen
         run: sudo apt-get update && sudo apt-get install -y doxygen
+      
+      - name: Install Weasyprint
+        run: sudo apt-get install -y weasyprint
 
       - name: Generate Arduino Documentation
         working-directory: ./isopruefi-arduino
         run: doxygen Doxyfile
-        
+
       - name: Install npm dependencies
         run: npm ci
-       
+
       - name: Generate Arduino Documentation
         working-directory: ./isopruefi-docs/docs/code/arduino
         run: npx seaborg xml md

@@ -52,7 +52,7 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 5,
+        "x": 0,
         "y": 0
       },
       "id": 8,
@@ -85,7 +85,239 @@
           "useBackend": false
         }
       ],
-      "title": "Overall_Uptime",
+      "title": "Overall_Uptime_Healthchecks",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red"
+              },
+              {
+                "color": "green",
+                "value": 99.5
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 11,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "up{job=\"isopruefi-frontend\"} * 100",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "up{job=\"isopruefi-backend-api\"} * 100",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "up{job=\"isopruefi-mqtt-receiver\"} * 100",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "up{job=\"isopruefi-weather-data-worker\"} * 100",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "up{job=\"traefik\"} * 100",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "up{job=\"grafana\"} * 100",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "up{job=\"alloy\"} * 100",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "G"
+        }
+      ],
+      "title": "Container_Uptime",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "dewym2ald7t34a"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red"
+              },
+              {
+                "color": "green",
+                "value": 99.5
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 12,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "dewym2ald7t34a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  sensor,\r\n  COUNT(DISTINCT date_trunc('minute', time)) * 100.0 / 1440\r\n    AS uptime_percent\r\nFROM uptime\r\nWHERE time >= now() - interval '24 hour' AND time <= now()\r\nGROUP BY sensor;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "*",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          },
+          "table": "uptime"
+        }
+      ],
+      "title": "Sensor_Availability(24Hours)",
       "type": "gauge"
     },
     {
@@ -94,7 +326,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 16
       },
       "id": 10,
       "panels": [
@@ -130,7 +362,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 9
+            "y": 17
           },
           "id": 7,
           "options": {
@@ -194,7 +426,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 9
+            "y": 17
           },
           "id": 6,
           "options": {
@@ -258,7 +490,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 17
+            "y": 25
           },
           "id": 3,
           "options": {
@@ -322,7 +554,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 17
+            "y": 25
           },
           "id": 4,
           "options": {
@@ -385,7 +617,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 25
+            "y": 33
           },
           "id": 1,
           "options": {
@@ -455,7 +687,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 25
+            "y": 33
           },
           "id": 2,
           "options": {
@@ -509,12 +741,12 @@
     "list": []
   },
   "time": {
-    "from": "now-30d",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Healthchecks",
   "uid": "226c2a2a-2283-44b8-81ba-344647ad55ad",
-  "version": 37
+  "version": 41
 }

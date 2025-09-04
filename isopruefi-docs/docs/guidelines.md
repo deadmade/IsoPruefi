@@ -1,15 +1,18 @@
 # Guidelines / Conventions
+
 ## General Formatting Guidelines
 
 - Preserve Settings: Follow the existing project formatting rules.
 - Automatic Formatting: Regularly use Rider's automatic formatting function (Ctrl+Alt+L).
 
 ## Code Layout
+
 - Line Length: Maximum of 120 characters per line.
 - Indented Blocks: Use tabs or 4 spaces for indentation (depending on project settings).
 - Blank Lines: Use blank lines to separate logical code blocks.
 
 ## Indentation and Spacing
+
 - Indent Blocks: Always use 4 spaces per indentation level.
 - Braces: Opening braces on the same line as the statement, closing braces on a new line.
 - Operator Spacing: Add spaces around operators like +, -, *, /, =, ==, etc.
@@ -22,6 +25,7 @@
 - Constants: Use SCREAMING_SNAKE_CASE.
 
 ## Documentation Comments
+
 If not obvious, or the method is more than 5 lines, it should be commented.
 
 - Single-line Comments: Use // for single-line comments
@@ -29,6 +33,7 @@ If not obvious, or the method is more than 5 lines, it should be commented.
 - Documentation Comments: Use /// for documentation comments.
 
 ### Documentation Comments (C#)
+
 We use the <a href="https://learn.microsoft.com/de-de/dotnet/csharp/language-reference/xmldoc/">xml documentation convention by Microsoft</a>
 
 In short: You can use the following tags structures in your documentation comment to specify properties of the following code:
@@ -38,10 +43,10 @@ In short: You can use the following tags structures in your documentation commen
 - ```<code>Use a codeblock within</code>```
 - ```<example>Put a example here</example>```
 
-There are plenty more tags. You can even reference other doc segments. 
+There are plenty more tags. You can even reference other doc segments.
 If you need other tags, take a look <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/recommended-tags">here</a>
 
-#### Doxygen (C/C++)
+### Doxygen (C/C++)
 
 For Arduino and C++ code, we use [Doxygen](https://www.doxygen.nl/manual/docblocks.html) style comments:
 
@@ -54,7 +59,7 @@ For Arduino and C++ code, we use [Doxygen](https://www.doxygen.nl/manual/docbloc
 
 More tags: [Doxygen documentation](https://www.doxygen.nl/manual/commands.html)
 
-#### TypeDoc (TypeScript)
+### TypeDoc (TypeScript)
 
 For TypeScript, we use [TypeDoc](https://typedoc.org/guides/doccomments/) style comments:
 
@@ -77,6 +82,7 @@ More tags: [TypeDoc tags](https://typedoc.org/guides/doccomments/#supported-tags
 - Exceptions: Always catch specific exceptions when possible.
 
 ## Unit Tests
+
 Every method should be unit testable and have a unit test for it.
 
 ## Commit Messages

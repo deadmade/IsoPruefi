@@ -9,30 +9,56 @@ using MQTTnet.Formatter;
 namespace MQTT_Receiver_Worker.MQTT;
 
 /// <summary>
-/// Handles MQTT broker connection and message processing.
-/// Establishes a connection to the MQTT broker, subscribes to topics,
-/// and processes incoming temperature sensor messages.
+///     Handles MQTT broker connection and message processing.
+///     Establishes a connection to the MQTT broker, subscribes to topics,
+///     and processes incoming temperature sensor messages.
 /// </summary>
 public class Connection : IConnection
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly MqttClientOptions _options;
-    private IMqttClient? _mqttClient;
-    private readonly ILogger<Connection> _logger;
+    /// <summary>
+    ///     Application configuration used to retrieve settings related to MQTT or other services.
+    /// </summary>
     private readonly IConfiguration _configuration;
-    private readonly JsonSerializerOptions _jsonSerializerOptions;
+    
+    /// <summary>
+    ///     Semaphore used to ensure that only one connection attempt happens at a time.
+    /// </summary>
     private readonly SemaphoreSlim _connectionSemaphore = new(1, 1);
-    private bool _isConnected = false;
+    
+    /// <summary>
+    ///     JSON serializer options used to serialize and deserialize messages sent/received via MQTT.
+    /// </summary>
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
+    
+    /// <summary>
+    ///     Logger instance used to capture diagnostic and error information.
+    /// </summary>
+    private readonly ILogger<Connection> _logger;
+    
+    /// <summary>
+    ///     Options used to configure the MQTT client connection.
+    /// </summary>
+    private readonly MqttClientOptions _options;
+    
+    /// <summary>
+    ///     Provides access to the application's service container for resolving dependencies.
+    /// </summary>
+    private readonly IServiceProvider _serviceProvider;
+    
+    /// <summary>
+    ///     Indicates whether the MQTT client is currently connected to the broker.
+    /// </summary>
+    private bool _isConnected;
+    
+    /// <summary>
+    ///     The MQTT client instance used to communicate with the broker.
+    /// </summary>
+    private IMqttClient? _mqttClient;
 
     /// <summary>
-    /// Gets a value indicating whether the MQTT client is currently connected.
+    ///     Initializes a new instance of the <see cref="Connection" /> class.
     /// </summary>
-    public bool IsConnected => _isConnected && _mqttClient?.IsConnected == true;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Connection"/> class.
-    /// </summary>
-    /// <param name="serviceProvider"></param>
+    /// <param name="serviceProvider">Service Provider for services.</param>
     /// <param name="logger">Logger for recording connection events</param>
     /// <param name="configuration">Configuration for MQTT settings</param>
     public Connection(ILogger<Connection> logger, IServiceProvider serviceProvider, IConfiguration configuration)
@@ -48,31 +74,27 @@ public class Connection : IConnection
             PropertyNameCaseInsensitive = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
+
+        IsSubscribed = false;
     }
 
     /// <summary>
-    /// Creates the MQTT client configuration with settings from configuration.
+    ///     Gets a value indicating whether the MQTT client is currently connected.
     /// </summary>
-    private MqttClientOptions CreateMqttOptions()
-    {
-        var broker = _configuration["Mqtt:BrokerHost"];
-        var port = _configuration.GetValue("Mqtt:BrokerPort", 1883);
-        var clientId = Guid.NewGuid().ToString();
-
-        _logger.LogDebug("Creating MQTT client options with broker: {Broker}:{Port}, ClientId: {ClientId}", broker,
-            port, clientId);
-
-        return new MqttClientOptionsBuilder()
-            .WithTcpServer(broker, port)
-            .WithProtocolVersion(MqttProtocolVersion.V500)
-            .WithClientId(clientId)
-            .Build();
-    }
+    public bool IsConnected => _isConnected && _mqttClient?.IsConnected == true;
 
     /// <summary>
-    /// Attempts to connect to the MQTT broker.
+    /// Gets a value indicating whether the client is subscribed to the necessary topics.
     /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result indicates whether the connection was successful.</returns>
+    public bool IsSubscribed { get; set; }
+
+    /// <summary>
+    ///     Attempts to connect to the MQTT broker.
+    /// </summary>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result indicates whether the connection was
+    ///     successful.
+    /// </returns>
     public async Task<bool> TryConnectAsync()
     {
         await _connectionSemaphore.WaitAsync();
@@ -109,9 +131,12 @@ public class Connection : IConnection
     }
 
     /// <summary>
-    /// Establishes a connection to the MQTT broker and configures message handlers.
+    ///     Establishes a connection to the MQTT broker and configures message handlers.
     /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the connected MQTT client, or null if connection failed.</returns>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains the connected MQTT client, or null
+    ///     if connection failed.
+    /// </returns>
     public async Task<IMqttClient?> GetConnectionAsync()
     {
         if (IsConnected) return _mqttClient;
@@ -121,7 +146,7 @@ public class Connection : IConnection
     }
 
     /// <summary>
-    /// Disconnects from the MQTT broker.
+    ///     Disconnects from the MQTT broker.
     /// </summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DisconnectAsync()
@@ -132,7 +157,7 @@ public class Connection : IConnection
             if (_mqttClient?.IsConnected == true)
             {
                 _logger.LogInformation("Disconnecting from MQTT broker");
-                await _mqttClient.DisconnectAsync();
+                await _mqttClient.DisconnectAsync(new MqttClientDisconnectOptions());
             }
 
             _isConnected = false;
@@ -148,14 +173,54 @@ public class Connection : IConnection
         }
     }
 
-    private async Task Disconnected(MqttClientDisconnectedEventArgs e)
+    /// <summary>
+    ///     Creates the MQTT client configuration with settings from configuration.
+    /// </summary>
+    private MqttClientOptions CreateMqttOptions()
+    {
+        var broker = _configuration["Mqtt:BrokerHost"];
+        var port = _configuration.GetValue("Mqtt:BrokerPort", 1883);
+        var clientId = Guid.NewGuid().ToString();
+
+        _logger.LogDebug("Creating MQTT client options with broker: {Broker}:{Port}, ClientId: {ClientId}", broker,
+            port, clientId);
+
+        return new MqttClientOptionsBuilder()
+            .WithTcpServer(broker, port)
+            .WithProtocolVersion(MqttProtocolVersion.V500)
+            .WithClientId(clientId)
+            .Build();
+    }
+
+    /// <summary>
+    ///     Handles the event when the MQTT client is disconnected from the broker.
+    /// </summary>
+    /// <param name="e">
+    ///     Event arguments containing information about the disconnection,
+    ///     including the reason and any exceptions that occurred.
+    /// </param>
+    /// <returns>
+    ///     A task that represents the asynchronous handling of the disconnection event.
+    /// </returns>
+    private Task Disconnected(MqttClientDisconnectedEventArgs e)
     {
         _isConnected = false;
         _logger.LogWarning("Disconnected from MQTT broker: {Reason}", e.Reason);
+        return Task.CompletedTask;
 
         // Don't immediately reconnect here - let the worker handle it with proper timing
     }
 
+    
+    /// <summary>
+    ///     Handles incoming MQTT messages from subscribed topics asynchronously.
+    /// </summary>
+    /// <param name="e">
+    ///     Event arguments containing the received MQTT application message.
+    /// </param>
+    /// <returns>
+    ///     A task that represents the asynchronous processing of the incoming message.
+    /// </returns>
     private async Task<Task> ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
     {
         try
@@ -203,6 +268,15 @@ public class Connection : IConnection
         return Task.FromResult(Task.CompletedTask);
     }
 
+    /// <summary>
+    ///     Processes a single temperature sensor reading asynchronously and writes it to the provided InfluxDB repository.
+    /// </summary>
+    /// <param name="tempSensorReading">The temperature sensor reading to process.</param>
+    /// <param name="sensorName">The name of the sensor that produced the reading.</param>
+    /// <param name="influxRepo">The InfluxDB repository used to persist the reading.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous processing operation.
+    /// </returns>
     private async Task<Task> ProcessSensorReading(TempSensorReading tempSensorReading, string sensorName,
         IInfluxRepo influxRepo)
     {
@@ -244,6 +318,15 @@ public class Connection : IConnection
         return Task.FromResult(Task.CompletedTask);
     }
 
+    /// <summary>
+    ///     Processes a batch of temperature sensor readings asynchronously writes them to the provided InfluxDB repository.
+    /// </summary>
+    /// <param name="tempSensorReading">The temperature sensor reading to process in batch.</param>
+    /// <param name="sensorName">The name of the sensor that produced the reading.</param>
+    /// <param name="influxRepo">The InfluxDB repository used to persist the batch of readings.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous batch processing operation.
+    /// </returns>
     private async Task<Task> ProcessBatchSensorReading(TempSensorReading tempSensorReading, string sensorName,
         IInfluxRepo influxRepo)
     {
@@ -262,9 +345,9 @@ public class Connection : IConnection
             return Task.FromResult(Task.CompletedTask);
         }
 
-        if (tempSensorReading.Meta.Sequence.Length != 0
-            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Timestamp.Length
-            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Value.Length)
+        if (tempSensorReading!.Meta!.Sequence!.Length != 0
+            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Timestamp!.Length
+            && tempSensorReading.Meta.Sequence.Length == tempSensorReading.Meta.Value!.Length)
         {
             var tempDataMeta = tempSensorReading.Meta;
             await Parallel.ForEachAsync(Enumerable.Range(0, tempDataMeta.Sequence.Length - 1),

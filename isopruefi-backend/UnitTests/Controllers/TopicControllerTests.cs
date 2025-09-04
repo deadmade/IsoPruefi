@@ -3,23 +3,19 @@ using Database.Repository.SettingsRepo;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;
 using Rest_API.Controllers;
 
 namespace UnitTests.Controllers;
 
 /// <summary>
-/// Unit tests for the TopicController class, verifying MQTT topic management functionality.
+///     Unit tests for the TopicController class, verifying MQTT topic management functionality.
 /// </summary>
 [TestFixture]
 public class TopicControllerTests
 {
-    private Mock<ISettingsRepo> _mockSettingsRepo;
-    private TopicController _controller;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -28,10 +24,11 @@ public class TopicControllerTests
         _controller = new TopicController(_mockSettingsRepo.Object);
     }
 
-    #region Constructor Tests
+    private Mock<ISettingsRepo> _mockSettingsRepo;
+    private TopicController _controller;
 
     /// <summary>
-    /// Tests that the constructor creates a valid instance when provided with valid parameters.
+    ///     Tests that the constructor creates a valid instance when provided with valid parameters.
     /// </summary>
     [Test]
     public void Constructor_WithValidParameters_ShouldCreateInstance()
@@ -44,7 +41,7 @@ public class TopicControllerTests
     }
 
     /// <summary>
-    /// Tests that the constructor throws ArgumentNullException when settings repository is null.
+    ///     Tests that the constructor throws ArgumentNullException when settings repository is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullSettingsRepo_ShouldThrowArgumentNullException()
@@ -55,12 +52,8 @@ public class TopicControllerTests
         act.Should().Throw<ArgumentNullException>();
     }
 
-    #endregion
-
-    #region GetAllTopics Tests
-
     /// <summary>
-    /// Tests that GetAllTopics returns OK with topics when service returns data.
+    ///     Tests that GetAllTopics returns OK with topics when service returns data.
     /// </summary>
     [Test]
     public async Task GetAllTopics_WithValidData_ShouldReturnOkWithTopics()
@@ -87,7 +80,7 @@ public class TopicControllerTests
     }
 
     /// <summary>
-    /// Tests that GetAllTopics returns InternalServerError when service throws exception.
+    ///     Tests that GetAllTopics returns InternalServerError when service throws exception.
     /// </summary>
     [Test]
     public async Task GetAllTopics_WithException_ShouldReturnInternalServerError()
@@ -104,13 +97,17 @@ public class TopicControllerTests
         result.Result.Should().BeOfType<ObjectResult>();
         var objectResult = (ObjectResult)result.Result!;
         objectResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+        objectResult.Value.Should().BeOfType<ProblemDetails>();
 
-        var errorResponse = objectResult.Value;
-        errorResponse.Should().NotBeNull();
+        var problemDetails = (ProblemDetails)objectResult.Value!;
+        problemDetails.Detail.Should().Be("Database connection failed");
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.6.1");
+        problemDetails.Title.Should().Be("Internal Server Error");
     }
 
     /// <summary>
-    /// Tests that GetAllTopics returns OK with empty list when no topics exist.
+    ///     Tests that GetAllTopics returns OK with empty list when no topics exist.
     /// </summary>
     [Test]
     public async Task GetAllTopics_WithEmptyData_ShouldReturnOkWithEmptyList()
@@ -129,12 +126,8 @@ public class TopicControllerTests
         okResult.Value.Should().Be(expectedTopics);
     }
 
-    #endregion
-
-    #region CreateTopic Tests
-
     /// <summary>
-    /// Tests that CreateTopic returns Created when topic is created successfully.
+    ///     Tests that CreateTopic returns Created when topic is created successfully.
     /// </summary>
     [Test]
     public async Task CreateTopic_WithValidTopic_ShouldReturnCreated()
@@ -162,7 +155,7 @@ public class TopicControllerTests
     }
 
     /// <summary>
-    /// Tests that CreateTopic returns BadRequest when topic setting is null.
+    ///     Tests that CreateTopic returns BadRequest when topic setting is null.
     /// </summary>
     [Test]
     public async Task CreateTopic_WithNullTopic_ShouldReturnBadRequest()
@@ -173,15 +166,19 @@ public class TopicControllerTests
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
         var badRequestResult = (BadRequestObjectResult)result;
+        badRequestResult.Value.Should().BeOfType<ProblemDetails>();
 
-        var errorResponse = badRequestResult.Value;
-        errorResponse.Should().NotBeNull();
+        var problemDetails = (ProblemDetails)badRequestResult.Value!;
+        problemDetails.Detail.Should().Be("Topic setting is required");
+        problemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        problemDetails.Title.Should().Be("Bad Request");
 
         _mockSettingsRepo.Verify(x => x.AddTopicSettingAsync(It.IsAny<TopicSetting>()), Times.Never);
     }
 
     /// <summary>
-    /// Tests that CreateTopic returns BadRequest when model state is invalid.
+    ///     Tests that CreateTopic returns BadRequest when model state is invalid.
     /// </summary>
     [Test]
     public async Task CreateTopic_WithInvalidModelState_ShouldReturnBadRequest()
@@ -201,13 +198,17 @@ public class TopicControllerTests
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
         var badRequestResult = (BadRequestObjectResult)result;
-        badRequestResult.Value.Should().BeOfType<SerializableError>();
+        badRequestResult.Value.Should().BeOfType<ValidationProblemDetails>();
+
+        var validationProblemDetails = (ValidationProblemDetails)badRequestResult.Value!;
+        validationProblemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        validationProblemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
 
         _mockSettingsRepo.Verify(x => x.AddTopicSettingAsync(It.IsAny<TopicSetting>()), Times.Never);
     }
 
     /// <summary>
-    /// Tests that CreateTopic returns InternalServerError when service throws exception.
+    ///     Tests that CreateTopic returns InternalServerError when service throws exception.
     /// </summary>
     [Test]
     public async Task CreateTopic_WithException_ShouldReturnInternalServerError()
@@ -230,17 +231,17 @@ public class TopicControllerTests
         result.Should().BeOfType<ObjectResult>();
         var objectResult = (ObjectResult)result;
         objectResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+        objectResult.Value.Should().BeOfType<ProblemDetails>();
 
-        var errorResponse = objectResult.Value;
-        errorResponse.Should().NotBeNull();
+        var problemDetails = (ProblemDetails)objectResult.Value!;
+        problemDetails.Detail.Should().Be("Database insertion failed");
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.6.1");
+        problemDetails.Title.Should().Be("Internal Server Error");
     }
 
-    #endregion
-
-    #region UpdateTopic Tests
-
     /// <summary>
-    /// Tests that UpdateTopic returns OK when topic is updated successfully.
+    ///     Tests that UpdateTopic returns OK when topic is updated successfully.
     /// </summary>
     [Test]
     public async Task UpdateTopic_WithValidTopic_ShouldReturnOk()
@@ -260,15 +261,13 @@ public class TopicControllerTests
         var result = await _controller.UpdateTopic(topicSetting);
 
         // Assert
-        result.Should().BeOfType<StatusCodeResult>();
-        var statusResult = (StatusCodeResult)result;
-        statusResult.StatusCode.Should().Be(StatusCodes.Status200OK);
+        result.Should().BeOfType<OkResult>();
 
         _mockSettingsRepo.Verify(x => x.UpdateTopicSettingAsync(topicSetting), Times.Once);
     }
 
     /// <summary>
-    /// Tests that UpdateTopic returns BadRequest when topic setting is null.
+    ///     Tests that UpdateTopic returns BadRequest when topic setting is null.
     /// </summary>
     [Test]
     public async Task UpdateTopic_WithNullTopic_ShouldReturnBadRequest()
@@ -278,11 +277,20 @@ public class TopicControllerTests
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
+        var badRequestResult = (BadRequestObjectResult)result;
+        badRequestResult.Value.Should().BeOfType<ProblemDetails>();
+
+        var problemDetails = (ProblemDetails)badRequestResult.Value!;
+        problemDetails.Detail.Should().Be("Topic setting is required");
+        problemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        problemDetails.Title.Should().Be("Bad Request");
+
         _mockSettingsRepo.Verify(x => x.UpdateTopicSettingAsync(It.IsAny<TopicSetting>()), Times.Never);
     }
 
     /// <summary>
-    /// Tests that UpdateTopic returns InternalServerError when service throws exception.
+    ///     Tests that UpdateTopic returns InternalServerError when service throws exception.
     /// </summary>
     [Test]
     public async Task UpdateTopic_WithException_ShouldReturnInternalServerError()
@@ -308,12 +316,8 @@ public class TopicControllerTests
         objectResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
     }
 
-    #endregion
-
-    #region DeleteTopic Tests
-
     /// <summary>
-    /// Tests that DeleteTopic returns OK when topic is deleted successfully.
+    ///     Tests that DeleteTopic returns OK when topic is deleted successfully.
     /// </summary>
     [Test]
     public async Task DeleteTopic_WithValidTopic_ShouldReturnOk()
@@ -333,15 +337,13 @@ public class TopicControllerTests
         var result = await _controller.DeleteTopic(topicSetting);
 
         // Assert
-        result.Should().BeOfType<StatusCodeResult>();
-        var statusResult = (StatusCodeResult)result;
-        statusResult.StatusCode.Should().Be(StatusCodes.Status200OK);
+        result.Should().BeOfType<OkResult>();
 
         _mockSettingsRepo.Verify(x => x.RemoveTopicSettingAsync(topicSetting), Times.Once);
     }
 
     /// <summary>
-    /// Tests that DeleteTopic returns BadRequest when topic setting is null.
+    ///     Tests that DeleteTopic returns BadRequest when topic setting is null.
     /// </summary>
     [Test]
     public async Task DeleteTopic_WithNullTopic_ShouldReturnBadRequest()
@@ -351,11 +353,20 @@ public class TopicControllerTests
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
+        var badRequestResult = (BadRequestObjectResult)result;
+        badRequestResult.Value.Should().BeOfType<ProblemDetails>();
+
+        var problemDetails = (ProblemDetails)badRequestResult.Value!;
+        problemDetails.Detail.Should().Be("Topic setting is required");
+        problemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        problemDetails.Title.Should().Be("Bad Request");
+
         _mockSettingsRepo.Verify(x => x.RemoveTopicSettingAsync(It.IsAny<TopicSetting>()), Times.Never);
     }
 
     /// <summary>
-    /// Tests that DeleteTopic returns InternalServerError when service throws exception.
+    ///     Tests that DeleteTopic returns InternalServerError when service throws exception.
     /// </summary>
     [Test]
     public async Task DeleteTopic_WithException_ShouldReturnInternalServerError()
@@ -380,6 +391,4 @@ public class TopicControllerTests
         var objectResult = (ObjectResult)result;
         objectResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
     }
-
-    #endregion
 }

@@ -5,15 +5,13 @@ using MQTT_Receiver_Worker.MQTT.Models;
 namespace UnitTests.MqttReceiver;
 
 /// <summary>
-/// Unit tests for the TempSensorReading model, verifying JSON serialization and property behavior.
+///     Unit tests for the TempSensorReading model, verifying JSON serialization and property behavior.
 /// </summary>
 [TestFixture]
 public class TempSensorReadingTests
 {
-    private JsonSerializerOptions _options;
-
     /// <summary>
-    /// Sets up test fixtures and initializes JSON serialization options.
+    ///     Sets up test fixtures and initializes JSON serialization options.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -24,10 +22,10 @@ public class TempSensorReadingTests
         };
     }
 
-    #region JSON Serialization Tests
+    private JsonSerializerOptions _options;
 
     /// <summary>
-    /// Tests that a complete TempSensorReading object serializes correctly to JSON.
+    ///     Tests that a complete TempSensorReading object serializes correctly to JSON.
     /// </summary>
     [Test]
     public void Serialize_CompleteTempSensorReading_ProducesCorrectJson()
@@ -54,7 +52,7 @@ public class TempSensorReadingTests
     }
 
     /// <summary>
-    /// Tests that a minimal TempSensorReading object serializes correctly to JSON.
+    ///     Tests that a minimal TempSensorReading object serializes correctly to JSON.
     /// </summary>
     [Test]
     public void Serialize_MinimalTempSensorReading_ProducesCorrectJson()
@@ -73,12 +71,8 @@ public class TempSensorReadingTests
         json.Should().NotContain("\"meta\"");
     }
 
-    #endregion
-
-    #region JSON Deserialization Tests
-
     /// <summary>
-    /// Tests that a complete JSON string deserializes correctly to TempSensorReading.
+    ///     Tests that a complete JSON string deserializes correctly to TempSensorReading.
     /// </summary>
     [Test]
     public void Deserialize_CompleteJson_ProducesCorrectObject()
@@ -105,13 +99,13 @@ public class TempSensorReadingTests
         reading.Sequence.Should().Be(42);
         reading.Meta.Should().NotBeNull();
         reading.Meta.Should().NotBeNull();
-        reading.Meta.Timestamp[0].Should().Be(1234567888);
-        reading.Meta.Value[0].Should().Be(24.0);
-        reading.Meta.Sequence[0].Should().Be(40);
+        reading.Meta.Timestamp![0].Should().Be(1234567888);
+        reading.Meta.Value![0].Should().Be(24.0);
+        reading.Meta.Sequence![0].Should().Be(40);
     }
 
     /// <summary>
-    /// Tests that a minimal JSON string deserializes correctly to TempSensorReading.
+    ///     Tests that a minimal JSON string deserializes correctly to TempSensorReading.
     /// </summary>
     [Test]
     public void Deserialize_MinimalJson_ProducesCorrectObject()
@@ -133,7 +127,7 @@ public class TempSensorReadingTests
     }
 
     /// <summary>
-    /// Tests that timestamp can be read from string format (JsonNumberHandling.AllowReadingFromString).
+    ///     Tests that timestamp can be read from string format (JsonNumberHandling.AllowReadingFromString).
     /// </summary>
     [Test]
     public void Deserialize_TimestampAsString_ParsesCorrectly()
@@ -152,7 +146,7 @@ public class TempSensorReadingTests
     }
 
     /// <summary>
-    /// Tests that timestamp can be read from number format.
+    ///     Tests that timestamp can be read from number format.
     /// </summary>
     [Test]
     public void Deserialize_TimestampAsNumber_ParsesCorrectly()
@@ -171,7 +165,7 @@ public class TempSensorReadingTests
     }
 
     /// <summary>
-    /// Tests that null values in the value array are handled correctly.
+    ///     Tests that null values in the value array are handled correctly.
     /// </summary>
     [Test]
     public void Deserialize_NullValuesInArray_HandlesCorrectly()
@@ -193,7 +187,7 @@ public class TempSensorReadingTests
     }
 
     /// <summary>
-    /// Tests that null meta list is handled by the NullMetaListConverter.
+    ///     Tests that null meta list is handled by the NullMetaListConverter.
     /// </summary>
     [Test]
     public void Deserialize_NullMetaList_ConvertedToNull()
@@ -212,12 +206,8 @@ public class TempSensorReadingTests
         reading!.Meta.Should().BeNull();
     }
 
-    #endregion
-
-    #region Property Tests
-
     /// <summary>
-    /// Tests that all properties can be set and retrieved correctly.
+    ///     Tests that all properties can be set and retrieved correctly.
     /// </summary>
     [Test]
     public void Properties_SetAndGet_WorkCorrectly()
@@ -240,7 +230,7 @@ public class TempSensorReadingTests
     }
 
     /// <summary>
-    /// Tests that default property values are as expected.
+    ///     Tests that default property values are as expected.
     /// </summary>
     [Test]
     public void DefaultValues_AreCorrect()
@@ -252,6 +242,4 @@ public class TempSensorReadingTests
         reading.Sequence.Should().BeNull();
         reading.Meta.Should().BeNull();
     }
-
-    #endregion
 }

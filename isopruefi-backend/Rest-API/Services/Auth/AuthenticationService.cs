@@ -15,7 +15,6 @@ namespace Rest_API.Services.Auth;
 public class AuthenticationService(
     ILogger<AuthenticationService> logger,
     UserManager<ApiUser> userManager,
-    RoleManager<IdentityRole> roleManager,
     ITokenService tokenService,
     ITokenRepo tokenRepo)
     : IAuthenticationService
@@ -55,7 +54,7 @@ public class AuthenticationService(
 
             var addUserToRoleResult = await userManager.AddToRoleAsync(newUser, Roles.User);
 
-            if (addUserToRoleResult.Succeeded == false)
+            if (!addUserToRoleResult.Succeeded)
             {
                 var errors = addUserToRoleResult.Errors.Select(e => e.Description);
                 logger.LogError("Failed to add role to the user. Errors : {Join}", string.Join(",", errors));
@@ -91,10 +90,8 @@ public class AuthenticationService(
 
                 throw new AuthenticationException("Invalid Login Attempt");
             }
-            else
-            {
-                logger.LogInformation("Login for User {InputUserName} successful", input.UserName.SanitizeString());
-            }
+
+            logger.LogInformation("Login for User {InputUserName} successful", input.UserName.SanitizeString());
 
             var claims = new List<Claim>
             {
@@ -232,17 +229,7 @@ public class AuthenticationService(
         }
     }
 
-    /// <summary>
-    /// Changes the password of a user.
-    /// </summary>
-    /// <param name="user">The Object of the user.</param>
-    /// <param name="currentPassword">The current password of the user.</param>
-    /// <param name="newPassword">The new password to set.</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation. The task result contains a message
-    /// indicating the result of the password change.
-    /// </returns>
-    /// <exception cref="Exception">Thrown when the password change fails.</exception>
+    /// <inheritdoc />
     public async Task ChangePassword(ApiUser user, string currentPassword, string newPassword)
     {
         try
@@ -266,15 +253,7 @@ public class AuthenticationService(
         }
     }
 
-    /// <summary>
-    /// Changes the username of a user.
-    /// </summary>
-    /// <param name="user">The User Object of the user.</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation. The task result contains a message
-    /// indicating the result of the username change.
-    /// </returns>
-    /// <exception cref="Exception">Thrown when the username change fails.</exception>
+    /// <inheritdoc />
     public async Task ChangeUser(ApiUser user)
     {
         try

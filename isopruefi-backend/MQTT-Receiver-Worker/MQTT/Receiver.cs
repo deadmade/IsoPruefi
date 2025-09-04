@@ -6,32 +6,51 @@ using MQTTnet.Protocol;
 namespace MQTT_Receiver_Worker.MQTT;
 
 /// <summary>
-/// Handles MQTT topic subscription and message receiving functionality.
-/// This class is responsible for subscribing to configured topics from the settings repository
-/// and managing the connection to the MQTT broker.
+///     Handles MQTT topic subscription and message receiving functionality.
+///     This class is responsible for subscribing to configured topics from the settings repository
+///     and managing the connection to the MQTT broker.
 /// </summary>
 public class Receiver : IReceiver
 {
+    /// <summary>
+    ///     Configuration for retrieving settings.
+    /// </summary>
+    private readonly IConfiguration _configuration;
+    
+    /// <summary>
+    ///     Service provider for accessing the application's services.
+    /// </summary>
     private readonly IServiceProvider _serviceProvider;
+    
+    /// <summary>
+    ///     Connection instance for receiving messages.
+    /// </summary>
     private readonly IConnection _connection;
+    
+    /// <summary>
+    ///     Logger instance for documenting diagnostics.
+    /// </summary>
     private readonly ILogger<Receiver> _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Receiver"/> class.
+    ///     Initializes a new instance of the <see cref="Receiver" /> class.
     /// </summary>
     /// <param name="serviceProvider">Service provider for dependency injection.</param>
     /// <param name="connection">Connection manager for the MQTT client.</param>
     /// <param name="logger">Logger for diagnostic information.</param>
-    public Receiver(IServiceProvider serviceProvider, IConnection connection, ILogger<Receiver> logger)
+    /// <param name="configuration"></param>
+    public Receiver(IServiceProvider serviceProvider, IConnection connection, ILogger<Receiver> logger,
+        IConfiguration configuration)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _connection = connection ?? throw new ArgumentNullException(nameof(connection));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
     /// <summary>
-    /// Subscribes to configured MQTT topics using shared subscriptions.
-    /// Retrieves topic settings from the repository and establishes subscriptions
+    ///     Subscribes to configured MQTT topics using shared subscriptions.
+    ///     Retrieves topic settings from the repository and establishes subscriptions
     /// </summary>
     /// <returns>A task that represents the asynchronous subscribe operation.</returns>
     public async Task SubscribeToTopics()
@@ -63,13 +82,15 @@ public class Receiver : IReceiver
 #endif
 
                 var sharedTopic =
-                    $"$share/{groupName}/{topic.DefaultTopicPath}/{topic.GroupId}/{topic.SensorType}/{topic.SensorName}";
+                    $"$share/{groupName}/{topic.DefaultTopicPath}/{topic.GroupId}/{topic.SensorTypeEnum}/{topic.SensorName}";
 
-                if (Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") == "Development")
+                if (_configuration["DOTNET_ENVIRONMENT"] == "Development")
                     sharedTopic = sharedTopic + "_Dev";
 
                 await SubscribeToTopic(sharedTopic, mqttClient, topic.HasRecovery);
             }
+
+            _connection.IsSubscribed = true;
 
             _logger.LogInformation("Successfully subscribed to all {TopicCount} topics", topics.Count());
         }
@@ -80,6 +101,12 @@ public class Receiver : IReceiver
         }
     }
 
+    /// <summary>
+    ///     Subscribes the client to the specified topic.
+    /// </summary>
+    /// <param name="topic">Specified topic</param>
+    /// <param name="mqttClient">Client used for subscription</param>
+    /// <param name="hasRecovery">Includes recovery topic</param>
     private async Task SubscribeToTopic(string topic, IMqttClient mqttClient, bool hasRecovery)
     {
         try

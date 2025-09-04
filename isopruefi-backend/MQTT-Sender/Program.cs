@@ -4,8 +4,15 @@ using MQTTnet;
 
 namespace MQTT_Sender;
 
+/// <summary>
+///     This class is the entry point for the MQTT Sender application.
+/// </summary>
 internal class Program
 {
+    /// <summary>
+    ///     Entry point for the Sender application.
+    /// </summary>
+    /// <param name="args">Arguments passed to the application.</param>
     private static async Task Main(string[] args)
     {
         var client = await Connection.GetConnection();
@@ -20,7 +27,9 @@ internal class Program
             double?[]? value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             var tempGen = new TempSensorReading
-                { Timestamp = timestamp, Value = value, Sequence = sequenceOne++, Meta = { } };
+            {
+                Timestamp = timestamp, Value = value, Sequence = sequenceOne++
+            };
             var json = JsonSerializer.Serialize(tempGen);
 
 
@@ -55,7 +64,9 @@ internal class Program
             value = [Math.Round(rnd.NextDouble() * 100, 1)];
 
             tempGen = new TempSensorReading
-                { Timestamp = timestamp, Value = value, Sequence = sequenceTwo++, Meta = { } };
+            {
+                Timestamp = timestamp, Value = value, Sequence = sequenceTwo++
+            };
             json = JsonSerializer.Serialize(tempGen);
 
             applicationMessage = new MqttApplicationMessageBuilder()

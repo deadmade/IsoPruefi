@@ -1,8 +1,30 @@
 {
-  "entryPoints": ["src/Weather.tsx", "src/App.tsx"],
+  "entryPoints": [
+    "src/main.tsx",
+    "src/App.tsx",
+    "src//utils/authApi.ts",
+    "src/utils/config.ts",
+    "src/utils/tokenHelpers.ts",
+    "src/pages/AdminPage.tsx",
+    "src/pages/UserPage.tsx",
+    "src/pages/Welcome.tsx",
+    "src/components/Navbar.tsx",
+    "src/components/ProtectedRoute.tsx",
+    "src/components/Weather.tsx",
+    "src/auth/AuthForm.tsx",
+    "src/auth/SignIn.tsx",
+    "src/auth/SignUp.tsx",
+    "src/api/api-client.ts",
+    "src/api/clients.ts"
+  ],
   "entryPointStrategy": "resolve",
   "out": "../isopruefi-docs/docs/code/frontend",
-  "plugin": ["typedoc-plugin-markdown"],
+  "excludeExternals": true,
+  "theme": "markdown",
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
   "includeVersion": true,
+  "readme": "none",
   "tsconfig": "./tsconfig.json"
 }

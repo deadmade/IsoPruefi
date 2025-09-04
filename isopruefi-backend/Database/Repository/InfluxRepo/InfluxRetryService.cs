@@ -1,6 +1,7 @@
-using Database.Repository.InfluxRepo;
+using System.Reflection;
+using Database.Repository.InfluxRepo.InfluxCache;
+using InfluxDB3.Client;
 using InfluxDB3.Client.Write;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -8,17 +9,28 @@ using Microsoft.Extensions.Logging;
 namespace Database.Repository.InfluxRepo;
 
 /// <summary>
-/// Background service that periodically retries failed InfluxDB writes from the memory cache.
-/// Runs every 5 minutes to attempt flushing cached PointData objects to InfluxDB.
+///     Background service that periodically retries failed InfluxDB writes from the memory cache.
+///     Runs every 5 minutes to attempt flushing cached PointData objects to InfluxDB.
 /// </summary>
 public class InfluxRetryService : BackgroundService
 {
+    /// <summary>
+    ///     Factory for creating service scopes.
+    /// </summary>
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    
+    /// <summary>
+    ///     Logger instance to record diagnostics.
+    /// </summary>
     private readonly ILogger<InfluxRetryService> _logger;
+    
+    /// <summary>
+    ///     Time between retry attempts.
+    /// </summary>
     private readonly TimeSpan _retryInterval = TimeSpan.FromMinutes(5);
 
     /// <summary>
-    /// Constructor for the InfluxRetryService.
+    ///     Constructor for the InfluxRetryService.
     /// </summary>
     /// <param name="serviceScopeFactory">Factory for creating service scopes</param>
     /// <param name="logger">Logger instance</param>
@@ -29,7 +41,7 @@ public class InfluxRetryService : BackgroundService
     }
 
     /// <summary>
-    /// Main execution loop for the background service.
+    ///     Main execution loop for the background service.
     /// </summary>
     /// <param name="stoppingToken">Cancellation token</param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -54,7 +66,7 @@ public class InfluxRetryService : BackgroundService
     }
 
     /// <summary>
-    /// Attempts to retry all cached PointData writes to InfluxDB.
+    ///     Attempts to retry all cached PointData writes to InfluxDB.
     /// </summary>
     private async Task RetryFailedWrites()
     {
@@ -98,7 +110,7 @@ public class InfluxRetryService : BackgroundService
     }
 
     /// <summary>
-    /// Attempts to retry writing a single cached PointData object to InfluxDB.
+    ///     Attempts to retry writing a single cached PointData object to InfluxDB.
     /// </summary>
     /// <param name="cachedRepo">The cached repository instance</param>
     /// <param name="cacheKey">Cache key for the point</param>
@@ -109,9 +121,9 @@ public class InfluxRetryService : BackgroundService
         {
             // Use reflection to access the private _client field
             var clientField = typeof(CachedInfluxRepo).GetField("_client",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                BindingFlags.NonPublic | BindingFlags.Instance);
 
-            if (clientField?.GetValue(cachedRepo) is InfluxDB3.Client.InfluxDBClient client)
+            if (clientField?.GetValue(cachedRepo) is InfluxDBClient client)
             {
                 await client.WritePointAsync(point);
                 cachedRepo.RemoveCachedPoint(cacheKey);

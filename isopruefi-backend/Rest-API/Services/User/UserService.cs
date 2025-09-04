@@ -5,15 +5,22 @@ using Microsoft.EntityFrameworkCore;
 namespace Rest_API.Services.User;
 
 /// <summary>
-/// Provides user-related operations such as retrieving, updating, deleting users, and changing passwords.
+///     Provides user-related operations such as retrieving, updating, deleting users, and changing passwords.
 /// </summary>
 public class UserService : IUserService
 {
+    /// <summary>
+    ///     Logger instance used to capture diagnostic and error information for the <see cref="UserService"/>.
+    /// </summary>
     private readonly ILogger<UserService> _logger;
+    
+    /// <summary>
+    ///     ASP.NET Core Identity UserManager used to manage <see cref="ApiUser"/> accounts.
+    /// </summary>
     private readonly UserManager<ApiUser> _userManager;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserService"/> class.
+    ///     Initializes a new instance of the <see cref="UserService" /> class.
     /// </summary>
     /// <param name="logger">The logger instance for logging actions and errors.</param>
     /// <param name="userManager">The user manager for user operations.</param>
@@ -55,10 +62,7 @@ public class UserService : IUserService
             throw;
         }
     }
-
-    /// <summary>
-    /// Changes the password of a user.
-    /// </summary>
+    
     /// <inheritdoc />
     public async Task ChangePassword(ApiUser user, string currentPassword, string newPassword)
     {

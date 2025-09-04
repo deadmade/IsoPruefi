@@ -158,6 +158,9 @@ namespace Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TopicSettingId"));
 
+                    b.Property<int>("CoordinateMappingId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("DefaultTopicPath")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -177,12 +180,12 @@ namespace Database.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("SensorType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("SensorTypeEnum")
+                        .HasColumnType("integer");
 
                     b.HasKey("TopicSettingId");
+
+                    b.HasIndex("CoordinateMappingId");
 
                     b.ToTable("TopicSettings");
 
@@ -190,22 +193,24 @@ namespace Database.Migrations
                         new
                         {
                             TopicSettingId = 1,
+                            CoordinateMappingId = 89518,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
                             HasRecovery = true,
                             SensorLocation = "North",
                             SensorName = "Sensor_One",
-                            SensorType = "temp"
+                            SensorTypeEnum = 0
                         },
                         new
                         {
                             TopicSettingId = 2,
+                            CoordinateMappingId = 89518,
                             DefaultTopicPath = "dhbw/ai/si2023",
                             GroupId = 2,
                             HasRecovery = true,
                             SensorLocation = "South",
                             SensorName = "Sensor_Two",
-                            SensorType = "temp"
+                            SensorTypeEnum = 0
                         });
                 });
 
@@ -339,6 +344,17 @@ namespace Database.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Database.EntityFramework.Models.TopicSetting", b =>
+                {
+                    b.HasOne("Database.EntityFramework.Models.CoordinateMapping", "CoordinateMapping")
+                        .WithMany()
+                        .HasForeignKey("CoordinateMappingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CoordinateMapping");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

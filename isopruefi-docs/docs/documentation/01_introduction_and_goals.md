@@ -2,11 +2,13 @@
 
 ## Aim of our project IsoPrüfi:
 
-Our project aims to test the effectiveness of building insulation based on outside temperature and present the data clearly using diagrams.
+Our project aims to test the effectiveness of building insulation based on outside temperature and present the data
+clearly using diagrams.
 
 ---
 
 ## Features
+
 ### Must-Have
 
 - A website for a user-friendly presentation of temperature comparison diagrams
@@ -18,14 +20,18 @@ Our project aims to test the effectiveness of building insulation based on outsi
 - Clusterization of containers that we create ourselves
 
 ### Should-Have
-- Sensors should be capable of storing temperature data for a period of one day, even in the absence of an internet connection or synchronization with the server
+
+- Sensors should be capable of storing temperature data for a period of one day, even in the absence of an internet
+  connection or synchronization with the server
 
 - A website should be used to offer configuration options
 
 ### Could-Have
+
 - Database clustering
 
 ### Won't Have
+
 - The containers will only run on one server, however they are designed to function independently of each other
 
 - Since this is a software project, we won't implement any resilience on the hardware side
@@ -55,20 +61,20 @@ Our project aims to test the effectiveness of building insulation based on outsi
 
 ## Quality Goals {#_quality_goals}
 
-| Quality Goal   |Description                                                                                            |
-|----------------|-------------------------------------------------------------------------------------------------------|
+| Quality Goal   | Description                                                                                            |
+|----------------|--------------------------------------------------------------------------------------------------------|
 | Persistence    | Sensor readings must be logged centrally (database) and  locally (SD card), if offline -> No data loss |
-| Data Integrity | Data must include timestamps and sequance to prevent corruption or duplication                      |
-| Availability   | The system must remain partially operational during network outages and recover automatically        |
+| Data Integrity | Data must include timestamps and sequance to prevent corruption or duplication                         |
+| Availability   | The system must remain partially operational during network outages and recover automatically          |
 
 ---
 
 ## Stakeholders {#_stakeholders}
 
-| Role/Name | Expectations | Influence |
-|-----------|--------------|-------------------|
-| Developer | Solution that is easy to maintain and fulfills all requirements for the project | Quality of Code, Clean Architecture, Final product |
-| Supervisor | Correct methodology, clear documentation and tracability of results | Sets expectations and reviews the final product |
-| Coaches | Clear documentation, preparation of meetings and clear presentation of the results for each meeting | Review of the final product and support for the implementation |
-| User/Owner | Want to reduce their heating costs through stable temperature measurements and correct assessment of the building's isolation | Requires easy usability and trustworthy temperature data |
-| Systemadministrator | Stable infrastructure, easy deployments and clear logs for easy maintenance | Configuration of the system |
+| Role/Name           | Expectations                                                                                                                  | Influence                                                      |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------|
+| Developer           | Solution that is easy to maintain and fulfills all requirements for the project                                               | Quality of Code, Clean Architecture, Final product             |
+| Supervisor          | Correct methodology, clear documentation and tracability of results                                                           | Sets expectations and reviews the final product                |
+| Coaches             | Clear documentation, preparation of meetings and clear presentation of the results for each meeting                           | Review of the final product and support for the implementation |
+| User/Owner          | Want to reduce their heating costs through stable temperature measurements and correct assessment of the building's isolation | Requires easy usability and trustworthy temperature data       |
+| Systemadministrator | Stable infrastructure, easy deployments and clear logs for easy maintenance                                                   | Configuration of the system                                    |

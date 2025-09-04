@@ -1,6 +1,7 @@
-# Contribute & Build 
+# Contribute & Build
 
 ## How do I contribute as a developer?
+
 <p style="color: red;"><b>READ THIS GUIDE BEFORE CONTRIBUTING</b></p>
 
 Since our project is secured by two pre-commit hocks, it is important to set up the project correctly before contributing.
@@ -60,10 +61,12 @@ To get the development environment up and running, follow these steps:
      "DEFAULT_SERVER_NAME": "IsoPrüfi"
    }
    ```
-   
-6. Run dotnet user-secrets set "Influx:InfluxDBToken" "<Token>" --project isopruefi-backend\MQTT-Receiver-Worker\MQTT-Receiver-Worker.csproj 
 
-7. Restart the Containers
+6. Run dotnet user-secrets set "Influx:InfluxDBToken" "<Token>" --project <Path to .csproj>
+   
+7. Paste InfluxDBToken in secrets.env
+
+8. Restart the Containers
 
 ---
 
@@ -85,7 +88,7 @@ To work on the Arduino/PlatformIO part of the project:
 
 1. Install the PlatformIO Extension in Visual Studio Code
 
-2. Open the folder code/arduino/ (or wherever the firmware is located)
+2. Open the folder IsoPruefi/isopruefi-arduino
 
 3. Build and upload the firmware using the PlatformIO toolbar or PlatformIO terminal
 
@@ -105,6 +108,7 @@ lib_deps =
 	gyverlibs/UnixTime
 	bblanchon/ArduinoJson@^7.4.2
 ```
+
 Tips:
 
 - PlatformIO installs the required libraries automatically on first build

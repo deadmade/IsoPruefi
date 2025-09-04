@@ -1,18 +1,22 @@
 using Database.EntityFramework;
+using Database.EntityFramework.Enums;
 using Database.EntityFramework.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Database.Repository.SettingsRepo;
 
 /// <summary>
-/// Repository implementation for accessing and managing topic settings in the database.
+///     Repository implementation for accessing and managing topic settings in the database.
 /// </summary>
 public class SettingsRepo : ISettingsRepo
 {
-    private ApplicationDbContext _applicationDbContext;
+    /// <summary>
+    ///     The ApplicationDbContext that is used for accessing the database.
+    /// </summary>
+    private readonly ApplicationDbContext _applicationDbContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SettingsRepo"/> class with the specified settings context.
+    ///     Initializes a new instance of the <see cref="SettingsRepo" /> class with the specified settings context.
     /// </summary>
     /// <param name="applicationDbContext">The database context for settings.</param>
     public SettingsRepo(ApplicationDbContext applicationDbContext)
@@ -20,11 +24,17 @@ public class SettingsRepo : ISettingsRepo
         _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
     }
 
-
     /// <inheritdoc />
     public Task<List<TopicSetting>> GetTopicSettingsAsync()
     {
         return _applicationDbContext.TopicSettings.ToListAsync();
+    }
+
+    /// <inheritdoc />
+    public Task<List<TopicSetting>> GetTopicSettingsAsync(int placeId, SensorType sensorType)
+    {
+        return _applicationDbContext.TopicSettings
+            .Where(x => x.CoordinateMappingId == placeId && x.SensorTypeEnum == sensorType).ToListAsync();
     }
 
     /// <inheritdoc />
@@ -36,8 +46,7 @@ public class SettingsRepo : ISettingsRepo
         _applicationDbContext.TopicSettings.Add(topicSetting);
         return await _applicationDbContext.SaveChangesAsync();
     }
-
-
+    
     /// <inheritdoc />
     public async Task<int> RemoveTopicSettingAsync(TopicSetting topicSetting)
     {
@@ -47,7 +56,6 @@ public class SettingsRepo : ISettingsRepo
         _applicationDbContext.TopicSettings.Remove(topicSetting);
         return await _applicationDbContext.SaveChangesAsync();
     }
-
 
     /// <inheritdoc />
     public async Task<int> UpdateTopicSettingAsync(TopicSetting topicSetting)

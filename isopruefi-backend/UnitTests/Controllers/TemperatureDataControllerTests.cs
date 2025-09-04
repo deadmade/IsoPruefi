@@ -1,9 +1,10 @@
+using Database.EntityFramework.Enums;
 using Database.EntityFramework.Models;
+using Database.Repository.CoordinateRepo;
 using Database.Repository.InfluxRepo;
 using Database.Repository.SettingsRepo;
 using FluentAssertions;
-using Google.Protobuf.WellKnownTypes;
-using InfluxDB3.Client.Write;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -13,19 +14,14 @@ using Rest_API.Models;
 namespace UnitTests.Controllers;
 
 /// <summary>
-/// Unit tests for the TemperatureDataController class, verifying temperature data retrieval and formatting functionality.
+///     Unit tests for the TemperatureDataController class, verifying temperature data retrieval and formatting
+///     functionality.
 /// </summary>
 [TestFixture]
 public class TemperatureDataControllerTests
 {
-    private Mock<ILogger<TemperatureDataController>> _mockLogger;
-    private Mock<ISettingsRepo> _mockSettingsRepo;
-    private Mock<IInfluxRepo> _mockInfluxRepo;
-    private TemperatureDataController _controller;
-    private IAsyncEnumerable<object?[]> _influxReturnData;
-
     /// <summary>
-    /// Sets up test fixtures and initializes mocks before each test execution.
+    ///     Sets up test fixtures and initializes mocks before each test execution.
     /// </summary>
     [SetUp]
     public void Setup()
@@ -33,24 +29,32 @@ public class TemperatureDataControllerTests
         _mockLogger = new Mock<ILogger<TemperatureDataController>>();
         _mockSettingsRepo = new Mock<ISettingsRepo>();
         _mockInfluxRepo = new Mock<IInfluxRepo>();
+        _mockCoordinateRepo = new Mock<ICoordinateRepo>();
 
         _controller = new TemperatureDataController(
             _mockLogger.Object,
             _mockSettingsRepo.Object,
-            _mockInfluxRepo.Object);
+            _mockInfluxRepo.Object,
+            _mockCoordinateRepo.Object);
 
         _influxReturnData = GetData();
 
-        async IAsyncEnumerable<object?[]> GetData()
+        static async IAsyncEnumerable<object?[]> GetData()
         {
+            await Task.CompletedTask;
             yield break;
         }
     }
 
-    #region Constructor Tests
+    private Mock<ILogger<TemperatureDataController>> _mockLogger;
+    private Mock<ISettingsRepo> _mockSettingsRepo;
+    private Mock<IInfluxRepo> _mockInfluxRepo;
+    private Mock<ICoordinateRepo> _mockCoordinateRepo;
+    private TemperatureDataController _controller;
+    private IAsyncEnumerable<object?[]> _influxReturnData;
 
     /// <summary>
-    /// Tests that the constructor creates a valid instance when provided with valid parameters.
+    ///     Tests that the constructor creates a valid instance when provided with valid parameters.
     /// </summary>
     [Test]
     public void Constructor_WithValidParameters_ShouldCreateInstance()
@@ -59,14 +63,15 @@ public class TemperatureDataControllerTests
         Action act = () => new TemperatureDataController(
             _mockLogger.Object,
             _mockSettingsRepo.Object,
-            _mockInfluxRepo.Object);
+            _mockInfluxRepo.Object,
+            _mockCoordinateRepo.Object);
 
         // Assert
         act.Should().NotThrow();
     }
 
     /// <summary>
-    /// Tests that the constructor throws ArgumentNullException when logger parameter is null.
+    ///     Tests that the constructor throws ArgumentNullException when logger parameter is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
@@ -75,13 +80,14 @@ public class TemperatureDataControllerTests
         Action act = () => new TemperatureDataController(
             null!,
             _mockSettingsRepo.Object,
-            _mockInfluxRepo.Object);
+            _mockInfluxRepo.Object,
+            _mockCoordinateRepo.Object);
 
         act.Should().Throw<ArgumentNullException>().WithMessage("*logger*");
     }
 
     /// <summary>
-    /// Tests that the constructor throws ArgumentNullException when settings repository parameter is null.
+    ///     Tests that the constructor throws ArgumentNullException when settings repository parameter is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullSettingsRepo_ShouldThrowArgumentNullException()
@@ -90,13 +96,14 @@ public class TemperatureDataControllerTests
         Action act = () => new TemperatureDataController(
             _mockLogger.Object,
             null!,
-            _mockInfluxRepo.Object);
+            _mockInfluxRepo.Object,
+            _mockCoordinateRepo.Object);
 
         act.Should().Throw<ArgumentNullException>().WithMessage("*settingsRepo*");
     }
 
     /// <summary>
-    /// Tests that the constructor throws ArgumentNullException when InfluxDB repository parameter is null.
+    ///     Tests that the constructor throws ArgumentNullException when InfluxDB repository parameter is null.
     /// </summary>
     [Test]
     public void Constructor_WithNullInfluxRepo_ShouldThrowArgumentNullException()
@@ -105,17 +112,30 @@ public class TemperatureDataControllerTests
         Action act = () => new TemperatureDataController(
             _mockLogger.Object,
             _mockSettingsRepo.Object,
-            null!);
+            null!,
+            _mockCoordinateRepo.Object);
 
         act.Should().Throw<ArgumentNullException>().WithMessage("*influxRepo*");
     }
 
-    #endregion
+    /// <summary>
+    ///     Tests that the constructor throws ArgumentNullException when coordinate repository parameter is null.
+    /// </summary>
+    [Test]
+    public void Constructor_WithNullCoordinateRepo_ShouldThrowArgumentNullException()
+    {
+        // Act & Assert
+        Action act = () => new TemperatureDataController(
+            _mockLogger.Object,
+            _mockSettingsRepo.Object,
+            _mockInfluxRepo.Object,
+            null!);
 
-    #region GetTemperature Tests
+        act.Should().Throw<ArgumentNullException>().WithMessage("*coordinateRepo*");
+    }
 
     /// <summary>
-    /// Tests that GetTemperature with valid parameters returns an OK result with temperature data.
+    ///     Tests that GetTemperature with valid parameters returns an OK result with temperature data.
     /// </summary>
     [Test]
     public async Task GetTemperature_WithValidParameters_ShouldReturnOkWithTemperatureData()
@@ -126,18 +146,21 @@ public class TemperatureDataControllerTests
         var place = "TestCity";
         var isFahrenheit = false;
 
+        var location = new CoordinateMapping { PostalCode = 12345, Latitude = 52.5, Longitude = 13.4 };
         var topicSettings = new List<TopicSetting>
         {
             new() { SensorLocation = "North", SensorName = "sensor1" },
             new() { SensorLocation = "South", SensorName = "sensor2" }
         };
 
-        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync()).ReturnsAsync(topicSettings);
+        _mockCoordinateRepo.Setup(x => x.GetLocation(place)).ReturnsAsync(location);
+        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync(location.PostalCode, SensorType.temp))
+            .ReturnsAsync(topicSettings);
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
             .Returns(_influxReturnData);
-        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[0].SensorName))
+        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[0].SensorName!))
             .Returns(_influxReturnData);
-        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[1].SensorName))
+        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[1].SensorName!))
             .Returns(_influxReturnData);
 
         // Act
@@ -150,13 +173,12 @@ public class TemperatureDataControllerTests
 
         var temperatureData = (TemperatureDataOverview)okResult.Value!;
         temperatureData.Should().NotBeNull();
-        temperatureData.TemperatureNord.Should().NotBeNull();
-        temperatureData.TemperatureSouth.Should().NotBeNull();
+        temperatureData.SensorData.Should().NotBeNull();
         temperatureData.TemperatureOutside.Should().NotBeNull();
     }
 
     /// <summary>
-    /// Tests that GetTemperature with Fahrenheit conversion returns temperatures converted from Celsius to Fahrenheit.
+    ///     Tests that GetTemperature with Fahrenheit conversion returns temperatures converted from Celsius to Fahrenheit.
     /// </summary>
     [Test]
     public async Task GetTemperature_WithFahrenheitConversion_ShouldReturnConvertedTemperatures()
@@ -167,15 +189,18 @@ public class TemperatureDataControllerTests
         var place = "TestCity";
         var isFahrenheit = true;
 
+        var location = new CoordinateMapping { PostalCode = 12345, Latitude = 52.5, Longitude = 13.4 };
         var topicSettings = new List<TopicSetting>
         {
             new() { SensorLocation = "North", SensorName = "sensor1" }
         };
 
-        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync()).ReturnsAsync(topicSettings);
+        _mockCoordinateRepo.Setup(x => x.GetLocation(place)).ReturnsAsync(location);
+        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync(location.PostalCode, SensorType.temp))
+            .ReturnsAsync(topicSettings);
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
             .Returns(_influxReturnData);
-        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[0].SensorName))
+        _mockInfluxRepo.Setup(x => x.GetSensorWeatherData(start, end, topicSettings[0].SensorName!))
             .Returns(_influxReturnData);
 
         // Act
@@ -193,7 +218,7 @@ public class TemperatureDataControllerTests
     }
 
     /// <summary>
-    /// Tests that GetTemperature handles gracefully when no sensor settings are available.
+    ///     Tests that GetTemperature handles gracefully when no sensor settings are available.
     /// </summary>
     [Test]
     public async Task GetTemperature_WithNoSensorSettings_ShouldHandleGracefully()
@@ -203,29 +228,28 @@ public class TemperatureDataControllerTests
         var end = DateTime.UtcNow;
         var place = "TestCity";
 
-        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync()).ReturnsAsync(new List<TopicSetting>());
+        var location = new CoordinateMapping { PostalCode = 12345, Latitude = 52.5, Longitude = 13.4 };
+
+        _mockCoordinateRepo.Setup(x => x.GetLocation(place)).ReturnsAsync(location);
+        _mockSettingsRepo.Setup(x => x.GetTopicSettingsAsync(location.PostalCode, SensorType.temp))
+            .ReturnsAsync(new List<TopicSetting>());
         _mockInfluxRepo.Setup(x => x.GetOutsideWeatherData(start, end, place))
             .Returns(_influxReturnData);
 
         // Act
-        var result = await _controller.GetTemperature(start, end, place, false);
+        var result = await _controller.GetTemperature(start, end, place);
 
         // Assert
         result.Should().BeOfType<OkObjectResult>();
         var okResult = (OkObjectResult)result;
         var temperatureData = (TemperatureDataOverview)okResult.Value!;
 
-        temperatureData.TemperatureNord.Should().BeEmpty();
-        temperatureData.TemperatureSouth.Should().BeEmpty();
+        temperatureData.SensorData.Should().BeEmpty();
         temperatureData.TemperatureOutside.Should().BeEmpty();
     }
 
-    #endregion
-
-    #region Temperature Conversion Tests
-
     /// <summary>
-    /// Tests that ConvertToFahrenheit method correctly converts Celsius values to Fahrenheit.
+    ///     Tests that ConvertToFahrenheit method correctly converts Celsius values to Fahrenheit.
     /// </summary>
     [Test]
     public void ConvertToFahrenheit_WithCelsiusValues_ShouldReturnCorrectFahrenheitValues()
@@ -251,7 +275,7 @@ public class TemperatureDataControllerTests
     }
 
     /// <summary>
-    /// Tests that date formatting produces correctly formatted date strings.
+    ///     Tests that date formatting produces correctly formatted date strings.
     /// </summary>
     [Test]
     public void DateFormatting_ShouldFormatCorrectly()
@@ -267,15 +291,31 @@ public class TemperatureDataControllerTests
         expectedEndFormat.Should().Be("2022-01-02 00:00:00");
     }
 
-    #endregion
-
-    #region Helper Methods
-
-    private static async IAsyncEnumerable<PointDataValues> CreateEmptyAsyncEnumerable()
+    /// <summary>
+    ///     Tests that GetTemperature returns BadRequest when location is not found.
+    /// </summary>
+    [Test]
+    public async Task GetTemperature_WithInvalidLocation_ShouldReturnBadRequest()
     {
-        await Task.CompletedTask;
-        yield break;
-    }
+        // Arrange
+        var start = DateTime.UtcNow.AddDays(-1);
+        var end = DateTime.UtcNow;
+        var place = "InvalidCity";
 
-    #endregion
+        _mockCoordinateRepo.Setup(x => x.GetLocation(place)).ReturnsAsync((CoordinateMapping?)null);
+
+        // Act
+        var result = await _controller.GetTemperature(start, end, place);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();
+        var badRequestResult = (BadRequestObjectResult)result;
+        badRequestResult.Value.Should().BeOfType<ProblemDetails>();
+
+        var problemDetails = (ProblemDetails)badRequestResult.Value!;
+        problemDetails.Detail.Should().Be("Location not found");
+        problemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails.Type.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        problemDetails.Title.Should().Be("Bad Request");
+    }
 }

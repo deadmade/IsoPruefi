@@ -9,11 +9,18 @@ namespace Rest_API.Services.Token;
 /// <inheritdoc />
 public class TokenService : ITokenService
 {
+    /// <summary>
+    ///     Application configuration used to retrieve settings.
+    /// </summary>
     private readonly IConfiguration _configuration;
+    
+    /// <summary>
+    ///     Logger instance used to capture diagnostic and error information for the <see cref="TokenService"/>.
+    /// </summary>
     private readonly ILogger<TokenService> _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TokenService"/> class.
+    ///     Initializes a new instance of the <see cref="TokenService" /> class.
     /// </summary>
     /// <param name="configuration">Application configuration for JWT settings.</param>
     /// <param name="logger">Logger instance for logging operations.</param>

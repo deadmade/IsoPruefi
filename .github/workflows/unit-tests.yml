@@ -30,4 +30,5 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Test
+        working-directory: ./isopruefi-backend/UnitTests
         run: dotnet test --no-build --verbosity normal

@@ -4,12 +4,12 @@ using MQTTnet.Formatter;
 namespace MQTT_Sender;
 
 /// <summary>
-/// This class provides a method to establish a connection to an MQTT broker.
+///     This class provides a method to establish a connection to an MQTT broker.
 /// </summary>
 public static class Connection
 {
     /// <summary>
-    /// Gets a connection to the MQTT broker.
+    ///     Gets a connection to the MQTT broker.
     /// </summary>
     /// <returns></returns>
     public static async Task<IMqttClient> GetConnection()
@@ -43,7 +43,7 @@ public static class Connection
             }
         };
 
-        var response = await mqttClient.ConnectAsync(options, CancellationToken.None);
+        await mqttClient.ConnectAsync(options, CancellationToken.None);
         return mqttClient;
     }
 }

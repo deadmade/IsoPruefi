@@ -166,53 +166,31 @@ services:
       - 5005:3000
     volumes:
       - "./grafana/grafana.ini:/etc/grafana/grafana.ini:ro"
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources:ro
       - grafana:/var/lib/grafana
     env_file:
       - ./secrets.env
     networks:
       - isopruefi-monitoring
+      - isopruefi-network
     depends_on:
       - loki
       - alloy
+      - influxdb3
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-        - name: Loki
-          type: loki
-          access: proxy
-          orgId: 1
-          url: http://loki:3100
-          basicAuth: false
-          isDefault: false
-          version: 1
-          editable: false
-        - name: Prometheus
-          type: prometheus
-          orgId: 1
-          url: http://prometheus:9090
-          basicAuth: false
-          isDefault: true
-          version: 1
-          editable: false
-        EOF
-        /run.sh
 
   isopruefi-frontend-1:
     image: ghcr.io/deadmade/isopruefi-frontend:latest
     container_name: isopruefi-frontend-1
+    env_file:
+      - ./secrets.env
     ports:
-      - 5556:80
+      - 5007:80
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=PathPrefix(`/frontend`)"
@@ -222,19 +200,16 @@ services:
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
       - "logging.isopruefi.enabled=true"
-    volumes:
-      - ./isopruefi-frontend:/app
-      - /app/node_modules
     networks:
       - isopruefi-network
-    environment:
-      - NODE_ENV=development
     stdin_open: true
     tty: true
 
   isopruefi-frontend-2:
     image: ghcr.io/deadmade/isopruefi-frontend:latest
     container_name: isopruefi-frontend-2
+    env_file:
+      - ./secrets.env
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=PathPrefix(`/frontend`)"
@@ -244,13 +219,8 @@ services:
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
       - "logging.isopruefi.enabled=true"
-    volumes:
-      - ./isopruefi-frontend:/app
-      - /app/node_modules
     networks:
       - isopruefi-network
-    environment:
-      - NODE_ENV=development
     stdin_open: true
     tty: true
 
@@ -382,29 +352,29 @@ services:
       loki:
          condition: service_healthy
 
-  backup:
-    image: offen/docker-volume-backup:v2.44.0
-    container_name: isopruefi-backup
-    restart: always
-    labels:
-      - "logging.isopruefi.enabled=true"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - influxdb3:/backup/influxdb3:ro
-      - postgres:/backup/postgres:ro
-      - loki:/backup/loki:ro
-      - prometheus:/backup/prometheus:ro
-      - ./backups:/archive
-      - ./backup:/etc/dockervolumebackup/conf.d
-    depends_on:
-      influxdb3:
-         condition: service_healthy
-      postgres:
-         condition: service_healthy
-      loki:
-         condition: service_healthy
-      prometheus:
-         condition: service_healthy
+  #backup:
+  #  image: offen/docker-volume-backup:v2.44.0
+  #  container_name: isopruefi-backup
+  #  restart: always
+  #  labels:
+  #    - "logging.isopruefi.enabled=true"
+  #  volumes:
+  #    - /var/run/docker.sock:/var/run/docker.sock:ro
+  #    - influxdb3:/backup/influxdb3:ro
+  #    - postgres:/backup/postgres:ro
+  #    - loki:/backup/loki:ro
+  #    - prometheus:/backup/prometheus:ro
+  #    - ./backups:/archive
+  #    - ./backup:/etc/dockervolumebackup/conf.d
+  #  depends_on:
+  #    influxdb3:
+  #      condition: service_healthy
+  #    postgres:
+  #       condition: service_healthy
+  #    loki:
+  #       condition: service_healthy
+  #    prometheus:
+  #       condition: service_healthy
 
 volumes:
   influxdb3:

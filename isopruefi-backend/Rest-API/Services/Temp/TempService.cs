@@ -1,25 +1,44 @@
-using Database.EntityFramework.Models;
 using System.Globalization;
 using System.Net;
 using System.Text.Json;
+using Database.EntityFramework.Models;
 using Database.Repository.CoordinateRepo;
 
 namespace Rest_API.Services.Temp;
 
 /// <summary>
-/// Provides operations related to the location for the outside temperature data, for example getting the right coordinates for the postalcode.
+///     Provides operations related to the location for the outside temperature data, for example getting the right
+///     coordinates for the postalcode.
 /// </summary>
 public class TempService : ITempService
 {
-    private readonly ILogger<TempService> _logger;
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ICoordinateRepo _coordinateRepo;
+    /// <summary>
+    ///     Application configuration used to retrieve settings such as API keys or URLs.
+    /// </summary>
     private readonly IConfiguration _configuration;
-
+    
+    /// <summary>
+    ///     Repository used to access coordinate data and mappings.
+    /// </summary>
+    private readonly ICoordinateRepo _coordinateRepo;
+    
+    /// <summary>
+    ///     The base URL or API key for the geocoding service used in this service.
+    /// </summary>
     private readonly string _geocodingApi;
+    
+    /// <summary>
+    ///     Factory used to create <see cref="HttpClient"/> instances for making HTTP requests.
+    /// </summary>
+    private readonly IHttpClientFactory _httpClientFactory;
+    
+    /// <summary>
+    ///     Logger instance used to capture diagnostic and error information for the <see cref="TempService"/>.
+    /// </summary>
+    private readonly ILogger<TempService> _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TempService"/> class.
+    ///     Initializes a new instance of the <see cref="TempService" /> class.
     /// </summary>
     /// <param name="logger">The logger instance for logging actions and errors.</param>
     /// <param name="httpClientFactory">The httpClient for API calls.</param>
@@ -70,16 +89,16 @@ public class TempService : ITempService
                             rootElement.TryGetProperty("lon", out var lon) &&
                             rootElement.TryGetProperty("display_name", out var location))
                         {
-                            var latDouble = double.Parse(lat.GetString(), CultureInfo.InvariantCulture);
-                            var lonDouble = double.Parse(lon.GetString(), CultureInfo.InvariantCulture);
+                            var latDouble = double.Parse(lat.GetString()!, CultureInfo.InvariantCulture);
+                            var lonDouble = double.Parse(lon.GetString()!, CultureInfo.InvariantCulture);
                             var locationString = location.GetString();
-                            var splitLocation = locationString.Split(",");
+                            var splitLocation = locationString!.Split(",");
                             var locationName = splitLocation[1];
 
                             var postalCodeLocation = new CoordinateMapping
                             {
                                 PostalCode = postalCode,
-                                Location = locationName,
+                                Location = locationName.Trim(),
                                 Latitude = latDouble,
                                 Longitude = lonDouble
                             };
@@ -121,6 +140,27 @@ public class TempService : ITempService
         }
     }
 
+    /// <inheritdoc />
+    public async Task<List<Tuple<int, string>>?> ShowAvailableLocations()
+    {
+        try
+        {
+            var allPostalcodes = await _coordinateRepo.GetAllLocations();
+            return allPostalcodes;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error while fetching postalcodes from the database");
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Calls an API to retrieve coordinates for a location.
+    /// </summary>
+    /// <param name="postalCode">Postalcode.</param>
+    /// <returns>The API response message.</returns>
     private async Task<HttpResponseMessage?> GetCoordinatesApi(int postalCode)
     {
         // If there is no entry an API will be used to get the coordinates.
@@ -140,22 +180,6 @@ public class TempService : ITempService
         catch (Exception e)
         {
             _logger.LogError(e, "Calling the API was not successful");
-        }
-
-        return null;
-    }
-
-    /// <inheritdoc />
-    public async Task<List<Tuple<int, string>>?> ShowAvailableLocations()
-    {
-        try
-        {
-            var allPostalcodes = await _coordinateRepo.GetAllLocations();
-            return allPostalcodes;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error while fetching postalcodes from the database");
         }
 
         return null;

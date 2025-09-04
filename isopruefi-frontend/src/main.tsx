@@ -25,6 +25,7 @@ async function start() {
 
     ReactDOM.createRoot(document.getElementById("root")!).render(
         <React.StrictMode>
+            <title>IsoPruefi</title>
             <BrowserRouter basename={basename}>
                 <AuthProvider>
                     <App />
